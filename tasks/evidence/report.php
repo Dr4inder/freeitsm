@@ -94,7 +94,7 @@ function evExplain(?array $e): string {
     <title><?php echo htmlspecialchars(pageTitle('tasks', $r ? t('tasks.evidence.report_title', ['title' => $r['series']['title']]) : t('tasks.nav.evidence'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=49">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=51">
     <link rel="stylesheet" href="../../assets/css/task-evidence.css?v=1">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -219,9 +219,41 @@ function evExplain(?array $e): string {
                                 <td class="ev-sub"><?php echo htmlspecialchars(trim(($it['by'] ?? '') . ' ' . TaskEvidence::when($it['at_utc']))); ?></td>
                             </tr>
                             <?php endforeach; ?>
+
+        <?php /* GH #190 phase 2: each procedure text the occurrences above were completed
+                 against, ONCE - and only for a viewer who may read Knowledge. Shown as text:
+                 this is the record of the words, not a rendering of the article. */ ?>
+        <?php if (!empty($r['procedure_texts'])): ?>
+            <h3 class="ev-section"><?php echo $T('procedures_used'); ?></h3>
+            <?php foreach ($r['procedure_texts'] as $sid => $pt): ?>
+                <details class="ev-detail">
+                    <summary><strong><?php echo htmlspecialchars($pt['title']); ?></strong>
+                        <span class="ev-sub"><?php echo $T('procedure_ref', ['ref' => (int)$sid, 'hash' => substr((string)$pt['content_hash'], 0, 12)]); ?></span></summary>
+                    <div style="white-space:pre-wrap"><?php echo htmlspecialchars(trim(html_entity_decode(strip_tags(preg_replace('#<(br\s*/?|/p|/li|/h[1-6]|/div|/tr)>#i', "\n", (string)$pt['body'])), ENT_QUOTES | ENT_HTML5, 'UTF-8'))); ?></div>
+                </details>
+            <?php endforeach; ?>
+        <?php elseif (!empty($r['procedure_texts_hidden'])): ?>
+            <p class="ev-sub"><?php echo $T('procedures_hidden'); ?></p>
+        <?php endif; ?>
                         </table>
                     </div>
                 <?php endforeach; ?>
+                <?php /* GH #190 phase 2: the procedures this occurrence followed, and the version
+                         whose text was frozen when it was completed (the text itself is listed
+                         once, under "Procedures used"). */ ?>
+                <?php if (!empty($row['procedures'])): ?>
+                    <div class="ev-checklist">
+                        <div class="ev-checklist-title"><?php echo $T('procedures_heading'); ?></div>
+                        <ul>
+                        <?php foreach ($row['procedures'] as $p): ?>
+                            <li><?php echo htmlspecialchars((string)$p['title']); ?>
+                                <span class="ev-sub"><?php echo !empty($p['snapshot_id'])
+                                    ? $T('procedure_frozen', ['n' => $p['article_version'] ?? '-', 'ref' => (int)$p['snapshot_id']])
+                                    : $T('procedure_not_frozen'); ?></span></li>
+                        <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
                 <?php /* GH #190: the forms this occurrence needed, who submitted them, and the
                          answers - only where the viewer may read them (TaskForms::mayReadAnswers). */ ?>
                 <?php foreach ($row['forms'] ?? [] as $f): ?>

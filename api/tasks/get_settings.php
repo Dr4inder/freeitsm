@@ -54,6 +54,8 @@ try {
     }
     // Forms on tasks (GH #190). Off by default, like checklists.
     $settings['forms_enabled'] = (string)($settings['forms_enabled'] ?? '0') === '1' ? '1' : '0';
+    // Procedures on tasks (GH #190 phase 2). Off by default.
+    $settings['procedures_enabled'] = (string)($settings['procedures_enabled'] ?? '0') === '1' ? '1' : '0';
     // Repeating task evidence (#181) - each defaults to the forgiving choice.
     $settings['evidence_completed_checklist'] = ($settings['evidence_completed_checklist'] ?? '') === 'refuse' ? 'refuse' : 'allow';
     $settings['evidence_delete_occurrence']   = ($settings['evidence_delete_occurrence'] ?? '') === 'refuse' ? 'refuse' : 'allow';

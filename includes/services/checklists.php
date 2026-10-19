@@ -480,6 +480,7 @@ class ChecklistsService
         } catch (Throwable $e) {
             $resultCols = '';   // before Database Verification has added #181's columns
         }
+        if (self::hasStepDescription($conn)) $resultCols .= ', description';   // GH #190
         $items = $conn->prepare("SELECT id, title, suggested_role, is_mandatory, requires_input, input_placeholder,
                                         response_value, is_completed, completed_by_id, completed_by_name, completed_datetime{$resultCols}
                                    FROM task_checklist_items WHERE task_checklist_id = ?
@@ -569,19 +570,22 @@ class ChecklistsService
             }
 
             $hasResult = self::hasResultColumns($conn);
-            $steps = $conn->prepare("SELECT title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order"
+            // GH #190: the step's description comes along, so a task's step reads in place.
+            $hasDesc = self::hasStepDescription($conn);
+            $steps = $conn->prepare("SELECT title, description, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order"
                                     . ($hasResult ? ', result_mode' : '') . "
                                        FROM checklist_template_items WHERE template_id = ? ORDER BY sort_order ASC, id ASC");
             $steps->execute([$templateId]);
             $ins = $conn->prepare("INSERT INTO task_checklist_items
                                      (task_checklist_id, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order"
-                                   . ($hasResult ? ', result_mode' : '') . ")
-                                   VALUES (?, ?, ?, ?, ?, ?, ?" . ($hasResult ? ', ?' : '') . ")");
+                                   . ($hasResult ? ', result_mode' : '') . ($hasDesc ? ', description' : '') . ")
+                                   VALUES (?, ?, ?, ?, ?, ?, ?" . ($hasResult ? ', ?' : '') . ($hasDesc ? ', ?' : '') . ")");
             foreach ($steps->fetchAll(PDO::FETCH_ASSOC) as $i => $s) {
                 $vals = [$chkId, $s['title'], $s['suggested_role'] ?: null, !empty($s['is_mandatory']) ? 1 : 0,
                          !empty($s['requires_input']) ? 1 : 0, $s['input_placeholder'] ?: null,
                          $s['sort_order'] ?? ($i + 1)];
                 if ($hasResult) $vals[] = ($s['result_mode'] ?? 'none') === 'pass_fail' ? 'pass_fail' : 'none';
+                if ($hasDesc) $vals[] = ($s['description'] ?? '') !== '' ? $s['description'] : null;
                 $ins->execute($vals);
             }
             if ($own) $conn->commit();
@@ -814,6 +818,19 @@ class ChecklistsService
             return (bool)$s->fetchColumn();
         } catch (Throwable $e) {
             return false;
+        }
+    }
+
+    /** Has GH #190's step description column been added yet? Cached per request. */
+    private static function hasStepDescription(PDO $conn): bool
+    {
+        static $has = null;
+        if ($has !== null) return $has;
+        try {
+            $conn->query("SELECT description FROM task_checklist_items LIMIT 0");
+            return $has = true;
+        } catch (Throwable $e) {
+            return $has = false;
         }
     }
 
@@ -1071,7 +1088,7 @@ class ChecklistsService
                      ->execute([$toTaskId, $c['title'], $c['closure_mode'] ?: 'warn',
                                 self::nextTaskChecklistOrder($conn, $toTaskId), $c['created_by_id']]);
                 $newId = (int)$conn->lastInsertId();
-                $rm = self::hasResultColumns($conn) ? ', result_mode' : '';
+                $rm = (self::hasResultColumns($conn) ? ', result_mode' : '') . (self::hasStepDescription($conn) ? ', description' : '');
                 $conn->prepare("INSERT INTO task_checklist_items
                                   (task_checklist_id, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order{$rm})
                                 SELECT ?, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order{$rm}

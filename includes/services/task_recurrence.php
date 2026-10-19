@@ -945,6 +945,8 @@ class TaskRecurrence
         try {
             require_once __DIR__ . '/task_forms.php';
             TaskForms::copyForOccurrence($conn, $sourceTaskId, $newId);
+            require_once __DIR__ . '/task_procedures.php';
+            TaskProcedures::copyForOccurrence($conn, $sourceTaskId, $newId);
         } catch (Throwable $e) {
             error_log('Recurrence: form copy failed for task ' . $newId . ': ' . $e->getMessage());
         }

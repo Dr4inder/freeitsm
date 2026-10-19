@@ -88,8 +88,8 @@ return [
             'id'           => 'checklists',
             'cap'          => Cap::TASKS_CHECKLISTS,
             'label_key'    => 'tasks.settings.tab_checklists',
-            'grant'        => 'Switch checklists and forms on tasks on or off',
-            'setting_keys' => ['tasks_checklists_enabled', 'tasks_forms_enabled'],
+            'grant'        => 'Switch checklists, forms and procedures on tasks on or off',
+            'setting_keys' => ['tasks_checklists_enabled', 'tasks_forms_enabled', 'tasks_procedures_enabled'],
         ],
         [
             // Repeating task evidence (#181): what deleting an occurrence and changing a

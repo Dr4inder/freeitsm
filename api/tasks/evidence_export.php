@@ -138,6 +138,16 @@ if ($file === 'occurrences') {
                            $c['created_datetime'], $local($c['created_datetime']), $c['comment']];
             }
         }
+        // GH #190 phase 2: each procedure it followed - the frozen text's sha256 as the fingerprint.
+        if (!empty($o['procedures'])) {
+            $texts = TaskProcedures::snapshots($conn, array_column($o['procedures'], 'snapshot_id'));
+            foreach ($o['procedures'] as $p) {
+                $rows[] = [$rid, $o['task_id'], $o['scheduled'], 'procedure', 'knowledge_article:' . $p['article_id'], $p['title'], '',
+                           isset($texts[(int)$p['snapshot_id']]) ? $texts[(int)$p['snapshot_id']]['content_hash'] : '', '',
+                           $p['frozen_datetime'] ?? '', $local($p['frozen_datetime'] ?? null),
+                           !empty($p['snapshot_id']) ? 'version ' . ($p['article_version'] ?? '-') : 'not completed yet'];
+            }
+        }
         // GH #190: each form submission, as evidence beside the attachments.
         foreach ($o['forms'] ?? [] as $f) {
             if ($f['submission_id']) $rows[] = [$rid, $o['task_id'], $o['scheduled'], 'form_submission', 'form_submission:' . $f['submission_id'],

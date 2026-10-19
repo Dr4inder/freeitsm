@@ -228,11 +228,14 @@ final class TaskEvidence
         // GH #190: an occurrence's form answers follow the ONE answers rule
         // (TaskForms::mayReadAnswers) - on screen, in print and in the CSV alike.
         require_once __DIR__ . '/services/task_forms.php';
+        require_once __DIR__ . '/services/task_procedures.php';
         $mayReadAnswers = TaskForms::mayReadAnswers($conn, $analystId);
         foreach ($live as $t) {
             if (!self::tenantVisible($conn, $analystId, $t['tenant_id'])) { $hidden++; continue; }
             $o = self::occurrenceFromLive($conn, $t, $events[(int)$t['id']] ?? []);
             $o['forms'] = self::formsOf(TaskForms::snapshot($conn, (int)$t['id']), $mayReadAnswers);
+            // GH #190 phase 2: the procedures it followed, and the frozen text each points at.
+            $o['procedures'] = TaskProcedures::snapshot($conn, (int)$t['id']);
             $occ[] = $o;
         }
         foreach ($removed as $r) {
@@ -240,6 +243,7 @@ final class TaskEvidence
             $o = self::occurrenceFromRemoved($r);
             $snap = json_decode((string)$r['snapshot_json'], true) ?: [];
             $o['forms'] = self::formsOf($snap['forms'] ?? [], $mayReadAnswers);
+            $o['procedures'] = $snap['procedures'] ?? [];
             $occ[] = $o;
         }
 
@@ -328,7 +332,15 @@ final class TaskEvidence
         $exports = $q("SELECT created_datetime, actor_name, to_value, detail_json FROM task_events
                         WHERE recurrence_id = ? AND event_type = 'evidence_exported' ORDER BY id DESC LIMIT 50", [$rid]);
 
+        // GH #190 phase 2: each frozen procedure text ONCE, for the "Procedures used" section.
+        // Its words follow Knowledge access: without it the report names the procedure and version only.
+        $procIds = [];
+        foreach ($rows as $row) foreach ($row['procedures'] ?? [] as $p) if (!empty($p['snapshot_id'])) $procIds[] = (int)$p['snapshot_id'];
+        $procedureTexts = TaskProcedures::mayReadKnowledge($conn, $analystId) ? TaskProcedures::snapshots($conn, $procIds) : [];
+
         return [
+            'procedure_texts'        => $procedureTexts,
+            'procedure_texts_hidden' => $procIds && !$procedureTexts,
             'series'   => $series,
             'period'   => ['from' => $from, 'to' => $to, 'today' => $today, 'tz' => date_default_timezone_get(),
                            'produced_utc' => gmdate('Y-m-d H:i:s'), 'recording_since' => $recordedFrom],

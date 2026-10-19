@@ -55,13 +55,15 @@ $taskHideDone = false;
 // "hide them once all are complete", which is the same idea for a card whose
 // subtasks are ALL done; anybody who had that on starts on 'open'.
 $taskBoardSubtasks = null;
+// GH #190: does a task with working material open on its Work tab? On unless turned off.
+$taskWorkOpen = true;
 $taskSubtaskCards = [];
 try {
     $__p = connectToDatabase()->prepare(
         "SELECT preference_key, preference_value FROM user_preferences
          WHERE analyst_id = ? AND preference_key IN
                ('tasks_detail_view', 'tasks_modal_layout', 'tasks_view', 'tasks_filter', 'tasks_board_group',
-                'tasks_hide_done_subtasks', 'tasks_hide_done', 'tasks_board_subtasks', 'tasks_subtask_cards', 'tasks_board_sort')"
+                'tasks_hide_done_subtasks', 'tasks_hide_done', 'tasks_board_subtasks', 'tasks_subtask_cards', 'tasks_board_sort', 'tasks_work_open')"
     );
     $__p->execute([(int) ($_SESSION['analyst_id'] ?? 0)]);
     foreach ($__p->fetchAll(PDO::FETCH_KEY_PAIR) as $__k => $__v) {
@@ -76,6 +78,7 @@ try {
         // change: a user_preferences row, like the board/list choice above.
         if ($__k === 'tasks_board_group' && $__v === 'analyst') { $taskBoardGroup = 'analyst'; }
         if ($__k === 'tasks_board_sort' && $__v === 'due') { $taskBoardSort = 'due'; }
+        if ($__k === 'tasks_work_open' && $__v === 'off') { $taskWorkOpen = false; }
         // System -> Preferences: stop listing subtasks under a card once all are done.
         if ($__k === 'tasks_hide_done_subtasks' && $__v === 'on') { $taskHideDoneSubtasks = true; }
         if ($__k === 'tasks_hide_done' && $__v === 'on') { $taskHideDone = true; }
@@ -113,7 +116,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks')); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/tasks.css?v=49">
+    <link rel="stylesheet" href="../assets/css/tasks.css?v=51">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
@@ -392,6 +395,7 @@ $translationNamespaces = ['common', 'tasks'];
     window.APP_BASE = '<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>';
     window.TASK_DETAIL_VIEW = <?php echo json_encode($taskDetailView); ?>;
     window.TASK_MODAL_LAYOUT = <?php echo json_encode($taskModalLayout); ?>;
+    window.TASK_WORK_OPEN = <?php echo json_encode($taskWorkOpen); ?>;
     window.TASK_VIEW = <?php echo json_encode($taskView); ?>;
     window.TASK_BOARD_GROUP = <?php echo json_encode($taskBoardGroup); ?>;
     window.TASK_BOARD_SORT = <?php echo json_encode($taskBoardSort); ?>;
@@ -402,7 +406,9 @@ $translationNamespaces = ['common', 'tasks'];
     window.TASK_CAN_PROJECTS = <?php echo json_encode($taskCanProjects); ?>;</script>
     <script src="../assets/js/tasks-priority.js?v=1"></script>
     <script src="../assets/js/tasks-ctx-menu.js?v=4"></script>
-    <script src="../assets/js/tasks.js?v=58"></script>
+    <!-- The one cleaner for HTML from elsewhere: Knowledge procedure bodies and task instructions in the Work view (GH #190). -->
+    <script src="../assets/js/safe-html.js?v=1"></script>
+    <script src="../assets/js/tasks.js?v=61"></script>
     <script src="../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

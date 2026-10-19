@@ -353,6 +353,18 @@ return [
         'link'     => 'tasks/',
         'check'    => ['rows', 'form_submissions', "task_id IS NOT NULL AND is_demo = 0"],
     ],
+    [
+        'id'       => 'tasks.procedure_followed',
+        'module'   => 'tasks',
+        'tier'     => 'extra',
+        'category' => 'governance',
+        'title'    => 'A task done against a Knowledge procedure',
+        'what'     => 'A task that references a Knowledge article as its procedure and has been completed, so the text it was done against is kept with it.',
+        'why'      => 'The procedure is read where the work is done, and editing the article later never rewrites what an earlier check was done against.',
+        'done'     => 'At least one completed task has a frozen procedure text.',
+        'link'     => 'tasks/',
+        'check'    => ['rows', 'task_procedures', "snapshot_id IS NOT NULL AND is_demo = 0"],
+    ],
     // 2.10.0: board columns by analyst, and subtasks under their card.
     [
         'id'       => 'tasks.board_by_analyst',

@@ -602,6 +602,8 @@ class TasksService
         // Their form requirements (GH #190). The submissions themselves stay - evidence.
         require_once __DIR__ . '/task_forms.php';
         TaskForms::deleteForTasks($conn, $ids);
+        require_once __DIR__ . '/task_procedures.php';
+        TaskProcedures::deleteForTasks($conn, $ids);
         foreach (array_reverse($ids) as $id) {
             $conn->prepare("DELETE FROM tasks WHERE id = ?")->execute([$id]);
         }

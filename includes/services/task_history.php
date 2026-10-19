@@ -148,6 +148,9 @@ final class TaskHistory
                 } catch (Throwable $e) { /* before Database Verification */ }
                 self::record($conn, $taskId, 'completed', $ctx, null, $before['due_date'] ?? null, $detail, $rid);
             }
+            // GH #190: freeze the procedure texts this occurrence was done against.
+            require_once __DIR__ . '/task_procedures.php';
+            TaskProcedures::freeze($conn, $taskId);
             // Top-level occurrences only: a subtask is a step inside the work, never a repeat of it.
             if (empty($before['parent_task_id'])) {
                 try {
@@ -285,6 +288,8 @@ final class TaskHistory
             'documents'   => $docs,
             // GH #190: its forms and every submission made for them, answers and labels included.
             'forms'       => (function () use ($conn, $taskId) { require_once __DIR__ . '/task_forms.php'; return TaskForms::snapshot($conn, $taskId); })(),
+            // ...and the procedures it followed, with the frozen text each points at (GH #190 phase 2).
+            'procedures'  => (function () use ($conn, $taskId) { require_once __DIR__ . '/task_procedures.php'; return TaskProcedures::snapshot($conn, $taskId); })(),
         ];
     }
 

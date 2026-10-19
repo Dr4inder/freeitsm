@@ -7860,10 +7860,48 @@ CREATE TABLE IF NOT EXISTS `task_forms` (
     KEY `idx_task_forms_submission` (`submission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- The procedures a task occurrence is carried out against (GH #190 phase 2):
+-- references to Knowledge articles, shown in the task's Work view through
+-- Knowledge's own visibility rules. When the occurrence is completed (or
+-- skipped), each article's text AS IT STOOD is frozen into a snapshot, because
+-- an ordinary Knowledge save edits an article in place - only "save as a new
+-- version" keeps the old text - so the version number alone cannot promise
+-- the words behind historical evidence. No foreign keys: evidence outlives
+-- the article, the task and the series.
+CREATE TABLE IF NOT EXISTS `task_procedures` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `task_id` INT NOT NULL,
+    `article_id` INT NOT NULL,
+    `title` VARCHAR(255) NOT NULL,              -- the article's title when added
+    `sort_order` INT NOT NULL DEFAULT 0,
+    `added_by_id` INT NULL,
+    `added_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `snapshot_id` INT NULL,                     -- the text it was completed against
+    `article_version` INT NULL,                 -- knowledge_articles.version at that moment
+    `frozen_datetime` DATETIME NULL,
+    `is_demo` tinyint(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    KEY `idx_task_procedures_task` (`task_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Each distinct procedure text ONCE, keyed by its hash: 365 daily occurrences
+-- done against the same SOP store it once.
+CREATE TABLE IF NOT EXISTS `task_procedure_snapshots` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `content_hash` CHAR(64) NOT NULL,
+    `article_id` INT NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `body` LONGTEXT NULL,
+    `created_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_task_procedure_snapshots_hash` (`content_hash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `task_checklist_items` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `task_checklist_id` INT NOT NULL,
     `title` VARCHAR(255) NOT NULL,
+    `description` TEXT NULL,                    -- GH #190: the template step's description, copied so the step reads in place
     `suggested_role` VARCHAR(100) NULL,
     `is_mandatory` TINYINT(1) NOT NULL DEFAULT 1,
     `is_completed` TINYINT(1) NOT NULL DEFAULT 0,

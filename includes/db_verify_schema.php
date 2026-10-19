@@ -5223,6 +5223,30 @@ return [
         'is_demo' => 'TINYINT(1) NOT NULL DEFAULT 0',
     ],
 
+    // GH #190 phase 2: Knowledge procedures on a task occurrence, and the frozen
+    // text each was completed against (deduplicated by hash). No foreign keys.
+    'task_procedures' => [
+        'id' => 'INT NOT NULL AUTO_INCREMENT',
+        'task_id' => 'INT NOT NULL',
+        'article_id' => 'INT NOT NULL',
+        'title' => 'VARCHAR(255) NOT NULL',
+        'sort_order' => 'INT NOT NULL DEFAULT 0',
+        'added_by_id' => 'INT NULL',
+        'added_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'snapshot_id' => 'INT NULL',
+        'article_version' => 'INT NULL',
+        'frozen_datetime' => 'DATETIME NULL',
+        'is_demo' => 'TINYINT(1) NOT NULL DEFAULT 0',
+    ],
+    'task_procedure_snapshots' => [
+        'id' => 'INT NOT NULL AUTO_INCREMENT',
+        'content_hash' => 'CHAR(64) NOT NULL',
+        'article_id' => 'INT NOT NULL',
+        'title' => 'VARCHAR(255) NOT NULL',
+        'body' => 'LONGTEXT NULL',
+        'created_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+    ],
+
     'task_checklists' => [
         'id'                => 'INT NOT NULL AUTO_INCREMENT',
         'task_id'           => 'INT NOT NULL',
@@ -5239,6 +5263,7 @@ return [
         'id'                  => 'INT NOT NULL AUTO_INCREMENT',
         'task_checklist_id'   => 'INT NOT NULL',
         'title'               => 'VARCHAR(255) NOT NULL',
+        'description' => 'TEXT NULL',   // GH #190: the template step's description, copied
         'suggested_role'      => 'VARCHAR(100) DEFAULT NULL',
         'is_mandatory'        => 'TINYINT(1) NOT NULL DEFAULT 1',
         'is_completed'        => 'TINYINT(1) NOT NULL DEFAULT 0',

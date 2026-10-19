@@ -20,6 +20,9 @@ if (analystModuleLevel(connectToDatabase(), (int)$_SESSION['analyst_id'], 'forms
 }
 
 $current_page = 'forms';
+// GH #190 phase 2: ?embed=1 is this page inside a task's Work view - no header, no
+// navigation, only for a task's form. The same page, so filling is never copied.
+$embed = !empty($_GET['embed']) && !empty($_GET['task_form']);
 $path_prefix = '../';
 $translationNamespaces = ['common', 'forms', 'tasks'];   // tasks: filling a task's form (GH #190)
 ?>
@@ -356,13 +359,19 @@ $translationNamespaces = ['common', 'forms', 'tasks'];   // tasks: filling a tas
          mobile rules must win on equal specificity, and a link placed above it
          would silently lose to the desktop block below (the load-order trap). -->
     <style>
+        /* Inside a task's Work view (GH #190): no page chrome, no outer scroll. */
+        body.fill-embed { background: transparent; overflow: hidden; }
+        body.fill-embed .fill-container { padding: 0; margin: 0; max-width: none; height: auto; }
+        body.fill-embed .fill-content { padding: 0; max-width: none; }
+        body.fill-embed .fill-card { box-shadow: none; margin: 0; border: 0; padding: 4px 2px; }
+        body.fill-embed .fill-title, body.fill-embed .fill-task-banner, body.fill-embed .form-logo { display: none; }
         .fill-task-banner { margin: -4px 0 14px; padding: 8px 12px; border-radius: 6px; font-size: 13px;
             background: var(--accent-soft, #eef4ff); color: var(--text, #333); border: 1px solid var(--border, #ddd); }
     </style>
     <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
 </head>
-<body>
-    <?php include 'includes/header.php'; ?>
+<body<?php echo $embed ? ' class="fill-embed"' : ''; ?>>
+    <?php if (!$embed) include 'includes/header.php'; ?>
 
     <div class="main-container fill-container">
         <div class="fill-content">
@@ -393,8 +402,21 @@ $translationNamespaces = ['common', 'forms', 'tasks'];   // tasks: filling a tas
         let taskLastAction = null;
 
         /** Tells the task window (another tab) that this occurrence's form changed. */
-        function announceTaskForm() {
-            try { new BroadcastChannel('freeitsm-task-forms').postMessage({ task_id: taskFill && taskFill.task.id }); } catch (e) {}
+        function announceTaskForm(submitted) {
+            try { new BroadcastChannel('freeitsm-task-forms').postMessage({ task_id: taskFill && taskFill.task.id, task_form_id: taskFill && taskFill.task_form_id, submitted: !!submitted }); } catch (e) {}
+            // Embedded, the Work view is the parent window - tell it directly as well.
+            if (window.parent !== window) {
+                try { window.parent.postMessage({ type: 'tf-saved', task_id: taskFill && taskFill.task.id, task_form_id: taskFill && taskFill.task_form_id, submitted: !!submitted }, location.origin); } catch (e) {}
+            }
+        }
+
+        // Embedded: say how tall the form is, whenever it changes, so the Work view sizes the frame to fit.
+        if (window.parent !== window && TASK_FORM_ID) {
+            const sendHeight = () => {
+                try { window.parent.postMessage({ type: 'tf-height', task_form_id: Number(TASK_FORM_ID), height: document.documentElement.scrollHeight }, location.origin); } catch (e) {}
+            };
+            window.addEventListener('load', sendHeight);
+            try { new ResizeObserver(sendHeight).observe(document.body); } catch (e) { setInterval(sendHeight, 1000); }
         }
 
         /** Posts a task form action. */
@@ -1067,7 +1089,7 @@ $translationNamespaces = ['common', 'forms', 'tasks'];   // tasks: filling a tas
                                                          client_reference: taskClientRef, data: data });
                     if (d.conflict) { showTaskConflict(d.conflict); return; }
                     if (!d.success) { showMsg(window.t('forms.fill.error_prefix', { message: d.error }), 'error'); return; }
-                    announceTaskForm();
+                    announceTaskForm(true);
                     document.getElementById('fillForm').style.display = 'none';
                     const msgEl = document.getElementById('submitMessage');
                     msgEl.className = 'submit-message success';

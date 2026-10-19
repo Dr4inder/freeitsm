@@ -1477,7 +1477,7 @@ function applyModalLayout(body) {
 
     // The blocks that earn the wide column: prose and conversation. Everything
     // else is a short field and reads better in a narrow stack.
-    const WIDE = '.detail-description, .subtask-section, .comments-section';
+    const WIDE = '.detail-description, .subtask-section, .comments-section, #taskWorkSection';
     const layout = document.createElement('div');
     layout.className = 'tdm-layout';
     const main = document.createElement('div');
@@ -1525,6 +1525,7 @@ function modalLayoutIsTabs() {
  */
 const TASK_MODAL_TABS = [
     { key: 'details',  match: null },     // the catch-all, and deliberately first
+    { key: 'work',     match: '#taskWorkSection' },   // GH #190 - opened first when the task has work in it
     { key: 'subtasks', match: '.subtask-section',  count: '.subtask-item, .subtask-row' },
     { key: 'time',     match: '#taskTimeSection' },
     { key: 'comments', match: '.comments-section', count: '.comment-item' },
@@ -1752,8 +1753,10 @@ async function openDetailPanel(taskId) {
         paintViewToggle();
         detailTaskStatus = data.task.status || null;
         renderDetailPanel(data.task);
-        loadTaskChecklists(taskId);
+        workState = { taskId, task: data.task, loaded: {}, autoOpened: false };
+    loadTaskChecklists(taskId);
     loadTaskForms(taskId);
+    loadTaskProcedures(taskId);
         loadTaskHistory(taskId);
         // Who else is on it (GH #89). Fetched separately from the task itself
         // because the same call returns the CANDIDATE list, which is a different
@@ -1932,11 +1935,18 @@ function renderDetailPanel(task) {
 
         <!-- Checklists (discussion #138). Filled by loadTaskChecklists(); stays
              hidden unless Tasks → Settings → Checklists is switched on. -->
-        <div class="detail-field" id="taskChecklistSection" style="display:none"></div>
-
-        <!-- Forms the task needs (GH #190). Filled by loadTaskForms(); hidden unless
-             Tasks → Settings → Checklists → Forms on tasks is switched on. -->
-        <div class="detail-field" id="taskFormsSection" style="display:none"></div>
+        <!-- The WORK view (GH #190 phase 2): the occurrence's working material in one
+             place - progress and Complete, its instructions, the Knowledge procedures it
+             follows, its checklists and the forms it needs. One block, so the tabs layout
+             files it as the Work tab, columns put it in the wide column, and the panel
+             shows it in line. Hidden unless one of the three is switched on. -->
+        <div class="detail-field work-section" id="taskWorkSection" style="display:none">
+            <div class="work-head" id="taskWorkHead"></div>
+            <div class="work-instructions" id="taskWorkInstructions" style="display:none"></div>
+            <div class="detail-field" id="taskProcedureSection" style="display:none"></div>
+            <div class="detail-field" id="taskChecklistSection" style="display:none"></div>
+            <div class="detail-field" id="taskFormsSection" style="display:none"></div>
+        </div>
 
         <div class="detail-field">
             <label>${esc(window.t('tasks.detail.tags'))}</label>
@@ -2354,9 +2364,10 @@ async function loadTaskChecklists(taskId) {
     if (!host) return;
     try {
         const data = await fetch(API_BASE + 'checklists.php?task_id=' + taskId).then(r => r.json());
-        if (!data.success || !data.enabled) { host.innerHTML = ''; host.style.display = 'none'; return; }
+        if (!data.success || !data.enabled) { host.innerHTML = ''; host.style.display = 'none'; workLoaded(taskId, 'checklists', false, 0); return; }
         checklistState = { taskId, enabled: true, checklists: data.checklists || [], templates: data.templates || [] };
         renderTaskChecklists();
+        workLoaded(taskId, 'checklists', true, checklistState.checklists.length);
     } catch (e) { console.error(e); host.innerHTML = ''; host.style.display = 'none'; }
 }
 
@@ -2406,6 +2417,7 @@ function renderTaskChecklists() {
                             ${Number(i.is_mandatory) === 1 ? `<span class="chk-mandatory">${esc(T('checklist_mandatory'))}</span>` : ''}
                             ${i.suggested_role ? `<span class="chk-role">${esc(i.suggested_role)}</span>` : ''}
                         </div>
+                        ${i.description ? `<div class="chk-step-desc">${esc(i.description)}</div>` : ''}
                         ${value}${results}${by}
                     </div>
                 </div>`;
@@ -2512,6 +2524,7 @@ async function postTaskChecklist(payload) {
         checklistState.checklists = data.checklists || [];
         checklistState.templates  = data.templates || [];
         renderTaskChecklists();
+        workLoaded(selectedTaskId, 'checklists', true, checklistState.checklists.length);
         if (selectedTaskId) loadTaskHistory(selectedTaskId);   // the step change is on the record now (#181)
         return true;
     } catch (e) {
@@ -2592,9 +2605,10 @@ async function loadTaskForms(taskId) {
     if (!host) return;
     try {
         const data = await fetch(API_BASE + 'forms.php?answers=1&task_id=' + taskId).then(r => r.json());
-        if (!data.success || !data.enabled) { host.innerHTML = ''; host.style.display = 'none'; return; }
-        formState = { taskId, forms: data.forms || [], available: data.available || [] };
+        if (!data.success || !data.enabled) { host.innerHTML = ''; host.style.display = 'none'; workLoaded(taskId, 'forms', false, 0); return; }
+        formState = { taskId, forms: data.forms || [], available: data.available || [], open: formState.taskId === taskId ? (formState.open || {}) : {} };
         renderTaskForms();
+        workLoaded(taskId, 'forms', true, formState.forms.length);
     } catch (e) { console.error(e); host.innerHTML = ''; host.style.display = 'none'; }
 }
 
@@ -2623,7 +2637,7 @@ function renderTaskForms() {
         const fill = !f.form_exists
             ? `<div class="tf-note">${esc(T('form_gone'))}</div>`
             : f.may_fill
-                ? `<button type="button" class="btn btn-secondary btn-sm tf-fill" onclick="openTaskForm(${f.id})">${esc(T(f.submission_id ? 'correct' : 'fill'))}</button>`
+                ? `<button type="button" class="btn btn-secondary btn-sm tf-fill" onclick="toggleTaskFormInline(${f.id})">${esc(T(formState.open && formState.open[f.id] ? 'close' : (f.submission_id ? 'correct' : 'fill')))}</button>`
                 : `<div class="tf-note">${esc(T('need_forms_access'))}</div>`;
         return `
             <div class="tf-card${f.submission_id ? ' done' : ''}">
@@ -2635,6 +2649,10 @@ function renderTaskForms() {
                     <button type="button" class="btn-link-small" onclick="removeTaskForm(${f.id})">${esc(T('remove'))}</button>
                 </div>
                 <div class="tf-row">${state}${fill}</div>
+                ${formState.open && formState.open[f.id] ? `<div class="tf-inline">
+                    <iframe class="tf-frame" id="tfFrame${f.id}" title="${esc(f.title)}" src="${(window.APP_BASE || '/')}forms/fill.php?embed=1&task_form=${f.id}"></iframe>
+                    <a class="btn-link-small" href="#" onclick="openTaskForm(${f.id}); return false;">${esc(T('new_tab'))}</a>
+                </div>` : ''}
                 ${answers}
             </div>`;
     }).join('');
@@ -2668,7 +2686,7 @@ async function postTaskForm(payload) {
             return false;
         }
         formState.forms = data.forms || [];
-        loadTaskForms(selectedTaskId);          // answers too
+        loadTaskForms(selectedTaskId);          // answers too - and the Work head with them
         if (selectedTaskId) loadTaskHistory(selectedTaskId);
         return true;
     } catch (e) {
@@ -2712,11 +2730,214 @@ function openTaskForm(taskFormId) {
 try {
     new BroadcastChannel('freeitsm-task-forms').onmessage = e => {
         if (e.data && formState.taskId && Number(e.data.task_id) === Number(formState.taskId)) {
+            // A submit closes the form in line; a draft save leaves it open where it is.
+            if (e.data.submitted && formState.open) delete formState.open[e.data.task_form_id];
             loadTaskForms(formState.taskId);
             loadTaskHistory(formState.taskId);
         }
     };
 } catch (e) { /* no BroadcastChannel: the section refreshes the next time the task opens */ }
+
+/** Fills a form in line in the Work view (GH #190 phase 2), or closes it. The page inside is fill.php's, so nothing about filling is copied. */
+function toggleTaskFormInline(taskFormId) {
+    formState.open = formState.open || {};
+    if (formState.open[taskFormId]) delete formState.open[taskFormId];
+    else formState.open[taskFormId] = true;
+    renderTaskForms();
+}
+// The embedded form says how tall it is, so the Work view never scrolls inside a scroll.
+window.addEventListener('message', e => {
+    if (e.origin !== location.origin || !e.data) return;
+    // Saved or submitted in line: the same refresh the BroadcastChannel gives a separate tab.
+    if (e.data.type === 'tf-saved' && formState.taskId && Number(e.data.task_id) === Number(formState.taskId)) {
+        if (e.data.submitted && formState.open) delete formState.open[e.data.task_form_id];
+        loadTaskForms(formState.taskId);
+        loadTaskHistory(formState.taskId);
+        return;
+    }
+    if (e.data.type !== 'tf-height') return;
+    const frame = document.getElementById('tfFrame' + e.data.task_form_id);
+    if (frame) frame.style.height = Math.max(200, Number(e.data.height) || 0) + 'px';
+});
+
+// ── The Work view (GH #190 phase 2) ──────────────────────────────────────────
+//
+// One block - progress and Complete, instructions, procedures, checklists, forms -
+// assembled from sections that load on their own. Each loader reports in through
+// workLoaded(); once all three have, the block shows if any is switched on, and a
+// task with working material opens on its Work tab (a personal preference).
+
+let workState = { taskId: null, task: null, loaded: {}, autoOpened: false };
+
+/** One of the three sections has loaded: whether it is switched on, and how many things it holds. */
+function workLoaded(taskId, part, enabled, count) {
+    if (workState.taskId !== taskId) return;
+    workState.loaded[part] = { enabled, count };
+    renderWorkHead();
+}
+
+/** Draws the Work block's head - progress and Complete - and decides whether the block and its tab show. */
+function renderWorkHead() {
+    const section = document.getElementById('taskWorkSection');
+    const head = document.getElementById('taskWorkHead');
+    if (!section || !head || workState.taskId !== selectedTaskId) return;
+    const L = workState.loaded;
+    const parts = ['checklists', 'forms', 'procedures'];
+    const anyOn = parts.some(p => L[p] && L[p].enabled);
+    const material = parts.reduce((n, p) => n + ((L[p] && L[p].count) || 0), 0);
+    const allIn = parts.every(p => L[p]);
+    section.style.display = anyOn ? '' : 'none';
+    const tabBtn = document.querySelector('.tdm-tab[data-tab="work"]');
+    if (tabBtn) tabBtn.style.display = anyOn ? '' : 'none';
+    if (!anyOn) return;
+
+    /** Shorthand for a tasks.work translation. */
+    const T = (k, p) => window.t('tasks.work.' + k, p);
+    // Progress: every checklist step, and every REQUIRED form.
+    let done = 0, total = 0;
+    (checklistState.taskId === selectedTaskId ? checklistState.checklists : []).forEach(c => (c.items || []).forEach(i => {
+        total++; if (Number(i.is_completed) === 1) done++;
+    }));
+    (formState.taskId === selectedTaskId ? formState.forms : []).filter(f => f.is_required).forEach(f => {
+        total++; if (f.submission_id) done++;
+    });
+    const task = workState.task || {};
+    const closed = Number(task.status_is_closed) === 1;
+    const pct = total ? Math.round(done * 100 / total) : 0;
+    head.innerHTML = `
+        <div class="work-title">
+            <label>${esc(T('heading'))}</label>
+            ${task.scheduled_date ? `<span class="work-sub">${esc(T('for_day', { date: formatDate(task.scheduled_date) }))}</span>` : ''}
+        </div>
+        ${total ? `<div class="work-progress"><div class="chk-bar"><div class="chk-bar-fill" style="width:${pct}%"></div></div>
+                   <span class="work-sub">${esc(T('progress', { done, total }))}</span></div>` : ''}
+        <div class="work-actions">
+            ${modalLayoutIsTabs() ? `<label class="work-open-pref" title="${esc(T('open_here_title'))}"><input type="checkbox" ${window.TASK_WORK_OPEN !== false ? 'checked' : ''} onchange="setWorkOpenPref(this.checked)"> ${esc(T('open_here'))}</label>` : ''}
+            ${closed ? `<span class="work-sub">${esc(T('done_already'))}</span>`
+                     : `<button type="button" class="btn btn-primary btn-sm work-complete" onclick="completeFromWork()">${esc(T('complete'))}</button>`}
+        </div>`;
+
+    // Instructions: the task's description, read-only - in the tabs layout only, where
+    // the editable description sits on the Details tab out of sight.
+    const ins = document.getElementById('taskWorkInstructions');
+    if (ins) {
+        const html = modalLayoutIsTabs() && task.description && typeof safeHtmlFragment === 'function' ? safeHtmlFragment(task.description) : '';
+        ins.style.display = html ? '' : 'none';
+        ins.innerHTML = html ? `<label>${esc(T('instructions'))}</label><div class="work-instructions-body">${html}</div>` : '';
+    }
+
+    // Open on the Work tab when the task has something to work through - once per opening.
+    if (allIn && material && !workState.autoOpened && modalLayoutIsTabs() && window.TASK_WORK_OPEN !== false && tabBtn) {
+        workState.autoOpened = true;
+        showModalTab('work');
+    }
+}
+
+/** Whether a task with work in it opens on its Work tab - a personal preference (GH #190 decision 1). */
+async function setWorkOpenPref(on) {
+    window.TASK_WORK_OPEN = !!on;
+    try {
+        const r = await fetch(APP_BASE + 'api/system/set_user_preference.php', {
+            method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: 'tasks_work_open', value: on ? 'on' : 'off' })
+        }).then(r => r.json());
+        if (!r || !r.success) showToast(window.t('tasks.detail.view_not_saved'), 'error');
+    } catch (e) { showToast(window.t('tasks.detail.view_not_saved'), 'error'); }
+}
+
+/**
+ * Complete, from the Work view: the first closed status, through saveField() - so the
+ * same questions are asked (people involved, the completion check) as from the status box.
+ */
+async function completeFromWork() {
+    const target = (statusList || []).find(s => Number(s.is_closed) === 1);
+    if (!target) { showToast(window.t('tasks.context.no_status_for_that'), 'error'); return; }
+    const id = selectedTaskId;
+    await saveField('status', target.name);
+    // Redraw the window: the head now says the task is complete, and the procedures show
+    // the text they were completed against.
+    if (id && selectedTaskId === id) await openDetailPanel(id);
+}
+
+// ── Procedures: Knowledge articles the task follows (GH #190 phase 2) ────────
+
+let procState = { taskId: null, procedures: [], mayAdd: false };
+
+/** Fetches the task's procedures, hiding the section while procedures on tasks are switched off. */
+async function loadTaskProcedures(taskId) {
+    const host = document.getElementById('taskProcedureSection');
+    if (!host) return;
+    try {
+        const data = await fetch(API_BASE + 'procedures.php?task_id=' + taskId).then(r => r.json());
+        if (!data.success || !data.enabled) { host.innerHTML = ''; host.style.display = 'none'; workLoaded(taskId, 'procedures', false, 0); return; }
+        procState = { taskId, procedures: data.procedures || [], mayAdd: !!data.may_add };
+        renderTaskProcedures();
+        workLoaded(taskId, 'procedures', true, procState.procedures.length);
+    } catch (e) { console.error(e); host.innerHTML = ''; host.style.display = 'none'; }
+}
+
+/** Draws each procedure - the article in line where the viewer may read it - and the picker. */
+function renderTaskProcedures() {
+    const host = document.getElementById('taskProcedureSection');
+    if (!host || procState.taskId !== selectedTaskId) return;
+    host.style.display = '';
+    /** Shorthand for a tasks.work translation. */
+    const T = (k, p) => window.t('tasks.work.' + k, p);
+    const clean = h => typeof safeHtmlFragment === 'function' ? safeHtmlFragment(h || '') : esc(h || '');
+    const cards = procState.procedures.map(p => `
+        <div class="tp-card">
+            <div class="tp-head">
+                <span class="tp-title">${p.may_read ? esc(p.title) : esc(T('procedure_hidden'))}</span>
+                ${p.may_read ? `<span class="work-sub">${esc(T('version', { n: p.version }))}</span>
+                    <a class="btn-link-small" href="${(window.APP_BASE || '/')}knowledge/?article=${p.article_id}" target="_blank" rel="noopener">${esc(T('open'))}</a>` : ''}
+                <button type="button" class="btn-link-small tp-remove" onclick="removeTaskProcedure(${p.id})">${esc(T('remove'))}</button>
+            </div>
+            ${p.frozen ? `<div class="work-sub">${esc(T('frozen', { n: p.frozen.version ?? '-', when: formatDateTime(p.frozen.at_utc) }))}</div>` : ''}
+            ${p.may_read ? `<details class="tp-body"${procState.procedures.length === 1 ? ' open' : ''}><summary>${esc(T('read'))}</summary>
+                <div class="tp-article">${clean(p.body)}</div></details>` : ''}
+        </div>`).join('');
+    const add = procState.mayAdd ? `
+        <div class="tp-add">
+            <input type="search" id="tpSearch" class="detail-input" placeholder="${esc(T('search'))}" oninput="searchTaskProcedures(this.value)" autocomplete="off">
+            <div class="tp-results" id="tpResults"></div>
+        </div>` : `<div class="tf-empty">${esc(T('need_knowledge'))}</div>`;
+    host.innerHTML = `<label>${esc(T('procedures'))}</label>${cards || `<div class="tf-empty">${esc(T('no_procedures'))}</div>`}${add}`;
+}
+
+let tpSearchTimer = null;
+/** Searches Knowledge for an article to add, as the analyst types. */
+function searchTaskProcedures(q) {
+    clearTimeout(tpSearchTimer);
+    const box = document.getElementById('tpResults');
+    if (!box) return;
+    if (q.trim().length < 2) { box.innerHTML = ''; return; }
+    tpSearchTimer = setTimeout(async () => {
+        const d = await fetch(API_BASE + 'procedures.php?task_id=' + selectedTaskId + '&search=' + encodeURIComponent(q.trim())).then(r => r.json()).catch(() => null);
+        if (!d || !d.success) return;
+        box.innerHTML = (d.results || []).map(a => `<button type="button" class="tp-result" onclick="addTaskProcedure(${a.id})">${esc(a.title)}</button>`).join('')
+            || `<div class="tf-empty">${esc(window.t('tasks.work.no_results'))}</div>`;
+    }, 250);
+}
+
+/** Sends a procedures action and redraws from what comes back. */
+async function postTaskProcedure(payload) {
+    try {
+        const d = await fetch(API_BASE + 'procedures.php', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        }).then(r => r.json());
+        if (!d.success) { showToast(d.error || window.t('tasks.work.failed'), 'error'); return; }
+        procState.procedures = d.procedures || [];
+        renderTaskProcedures();
+        workLoaded(selectedTaskId, 'procedures', true, procState.procedures.length);
+        loadTaskHistory(selectedTaskId);
+    } catch (e) { showToast(window.t('tasks.work.failed'), 'error'); }
+}
+
+/** Adds a Knowledge article to the task as a procedure. */
+function addTaskProcedure(articleId) { postTaskProcedure({ action: 'add', task_id: selectedTaskId, article_id: articleId }); }
+
+/** Takes a procedure off the task. */
+function removeTaskProcedure(procedureId) { postTaskProcedure({ action: 'remove', procedure_id: procedureId }); }
 
 /**
  * Before completing a task from ANY route in this page (the status box, a drag
@@ -3356,6 +3577,8 @@ async function loadTaskHistory(taskId) {
             case 'form_removed':   return T('form_removed', { name: h.from || '' });
             case 'form_submitted': return T('form_submitted', { name: h.to || '' });
             case 'form_replaced':  return T('form_replaced', { name: h.to || '' });
+            case 'procedure_added':   return T('procedure_added', { name: h.to || '' });
+            case 'procedure_removed': return T('procedure_removed', { name: h.from || '' });
         }
         return h.type;
     };

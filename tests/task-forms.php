@@ -30,6 +30,7 @@ require_once __DIR__ . '/../includes/services/forms.php';
 require_once __DIR__ . '/../includes/services/checklists.php';
 require_once __DIR__ . '/../includes/services/task_forms.php';
 require_once __DIR__ . '/../includes/task_evidence.php';
+require_once __DIR__ . '/../includes/services/task_procedures.php';
 
 $BASE = isset($argv[1]) ? rtrim($argv[1], '/') . '/' : null;
 $pass = 0; $fail = 0;
@@ -49,7 +50,9 @@ $other = new ActorContext($admin, null, 'ui', 'en', 'ZZ second analyst');
 $open  = (int)$conn->query("SELECT id FROM task_statuses WHERE is_active=1 AND is_closed=0 ORDER BY is_default DESC, display_order, id LIMIT 1")->fetchColumn();
 
 $tids = []; $formIds = []; $rids = [];
-$keys = ['tasks_forms_enabled', 'tasks_evidence_completed_checklist'];
+$keys = ['tasks_forms_enabled', 'tasks_evidence_completed_checklist', 'tasks_procedures_enabled', 'tasks_checklists_enabled'];
+$maxSnap = (int)$conn->query("SELECT COALESCE(MAX(id), 0) FROM task_procedure_snapshots")->fetchColumn();
+$tplIds = [];
 $settingsBefore = $conn->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('" . implode("','", $keys) . "')")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 function setSetting(PDO $c, string $k, string $v): void {
@@ -62,8 +65,14 @@ function zzTask(PDO $c, string $title = 'ZZ-TF occurrence'): int {
     return $tids[] = (int)$c->lastInsertId();
 }
 function cleanup(): void {
-    global $conn, $tids, $formIds, $settingsBefore, $keys, $rids;
+    global $conn, $tids, $formIds, $settingsBefore, $keys, $rids, $maxSnap, $tplIds;
     try {
+        $conn->exec("DELETE FROM task_procedure_snapshots WHERE id > " . (int)$maxSnap);
+        foreach ($tplIds as $tid) {
+            $conn->exec("DELETE FROM checklist_template_items WHERE template_id = " . (int)$tid);
+            $conn->exec("DELETE FROM checklist_template_versions WHERE template_id = " . (int)$tid);
+            $conn->exec("DELETE FROM checklist_templates WHERE id = " . (int)$tid);
+        }
         foreach ($rids as $rid) {
             $conn->exec("DELETE FROM task_events WHERE recurrence_id = " . (int)$rid);
             $conn->exec("DELETE FROM task_recurrence_versions WHERE recurrence_id = " . (int)$rid);
@@ -76,6 +85,10 @@ function cleanup(): void {
             $conn->exec("DELETE FROM task_removed_records WHERE task_id IN ($p)");
             $conn->exec("DELETE FROM task_audit WHERE task_id IN ($p)");
             $conn->exec("DELETE FROM task_forms WHERE task_id IN ($p)");
+            $conn->exec("DELETE FROM task_procedures WHERE task_id IN ($p)");
+            $conn->exec("DELETE i FROM task_checklist_items i JOIN task_checklists c ON c.id = i.task_checklist_id WHERE c.task_id IN ($p)");
+            $conn->exec("DELETE FROM task_checklist_item_events WHERE task_id IN ($p)");
+            $conn->exec("DELETE FROM task_checklists WHERE task_id IN ($p)");
             $conn->exec("DELETE FROM tasks WHERE id IN ($p)");
         }
         if ($formIds) {
@@ -263,6 +276,68 @@ if ($noForms) {
     ok('for a viewer who may not: submitted, by whom - but no answers', $row2 && $row2['forms'][0]['answers'] === null && $row2['forms'][0]['answers_hidden'] === true
         && ($row2['forms'][0]['by'] ?? '') !== '', $row2 ? json_encode($row2['forms'][0]) : 'no row (company scope?)');
 }
+
+section('P2. Procedures (phase 2)');
+setSetting($conn, 'tasks_procedures_enabled', '1');
+$article = (int)$conn->query("SELECT id FROM knowledge_articles WHERE is_published = 1 AND is_archived = 0 ORDER BY id LIMIT 1")->fetchColumn();
+if (!$article) {
+    echo "  SKIP  no published Knowledge article here to reference\n";
+} else {
+    $t3 = zzTask($conn, 'ZZ-TF procedure occurrence');
+    $pid = TaskProcedures::add($conn, $ctx, $t3, $article);
+    $list = TaskProcedures::forTask($conn, $t3, $admin);
+    ok('a procedure is listed with the live article for a reader', ($list[0]['may_read'] ?? false) === true && ($list[0]['body'] ?? null) !== null);
+    ok('...not frozen while the occurrence is open', $list[0]['frozen'] === null);
+    ok('history: procedure_added', (int)$conn->query("SELECT COUNT(*) FROM task_events WHERE task_id = $t3 AND event_type = 'procedure_added'")->fetchColumn() === 1);
+    if ($noForms && !TaskProcedures::mayReadKnowledge($conn, $noForms)) {
+        $l2 = TaskProcedures::forTask($conn, $t3, $noForms);
+        ok('for a viewer without Knowledge: no title, no text', $l2[0]['may_read'] === false && $l2[0]['title'] === null && $l2[0]['body'] === null);
+    }
+    $closedName = (string)$conn->query("SELECT name FROM task_statuses WHERE is_active=1 AND is_closed=1 ORDER BY display_order, id LIMIT 1")->fetchColumn();
+    TasksService::saveTask($conn, $ctx, ['id' => $t3, 'status' => $closedName]);
+    $row = $conn->query("SELECT * FROM task_procedures WHERE id = $pid")->fetch(PDO::FETCH_ASSOC);
+    ok('completing the occurrence freezes the text it was done against', $row['snapshot_id'] !== null && $row['article_version'] !== null);
+    $snapRow = $conn->query("SELECT * FROM task_procedure_snapshots WHERE id = " . (int)$row['snapshot_id'])->fetch(PDO::FETCH_ASSOC);
+    $live = $conn->query("SELECT title, body FROM knowledge_articles WHERE id = $article")->fetch(PDO::FETCH_ASSOC);
+    ok('...the frozen text is the article as it stood', $snapRow && $snapRow['body'] === $live['body'] && $snapRow['title'] === $live['title']);
+    $t4 = zzTask($conn, 'ZZ-TF procedure occurrence 2');
+    TaskProcedures::add($conn, $ctx, $t4, $article);
+    TasksService::saveTask($conn, $ctx, ['id' => $t4, 'status' => $closedName]);
+    $s4 = (int)$conn->query("SELECT snapshot_id FROM task_procedures WHERE task_id = $t4")->fetchColumn();
+    ok('a second occurrence done against the same text shares ONE snapshot', $s4 === (int)$row['snapshot_id']);
+    $t5 = zzTask($conn, 'ZZ-TF procedure next');
+    TaskProcedures::copyForOccurrence($conn, $t3, $t5);
+    $c5 = $conn->query("SELECT article_id, snapshot_id FROM task_procedures WHERE task_id = $t5")->fetch(PDO::FETCH_ASSOC);
+    ok('the repeat copies the procedure, unfrozen', $c5 && (int)$c5['article_id'] === $article && $c5['snapshot_id'] === null);
+    $snapT3 = TaskHistory::snapshot($conn, $t3);
+    ok('the #181 frozen record carries the procedure and its snapshot', (int)($snapT3['procedures'][0]['snapshot_id'] ?? 0) === (int)$row['snapshot_id']);
+    $conn->exec("INSERT INTO task_recurrences (mode, freq, interval_n, ends_mode, occurrences_created, is_active, created_datetime, updated_datetime)
+                 VALUES ('schedule', 'daily', 1, 'never', 1, 1, UTC_TIMESTAMP(), UTC_TIMESTAMP())");
+    $rid2 = $rids[] = (int)$conn->lastInsertId();
+    $conn->exec("UPDATE tasks SET recurrence_id = $rid2 WHERE id IN ($t3, $t4)");
+    $rep = TaskEvidence::report($conn, $rid2, date('Y-m-d', strtotime('-3 days')), date('Y-m-d', strtotime('+1 day')), $admin);
+    ok('the evidence report lists each distinct procedure text once', count($rep['procedure_texts']) === 1 && isset($rep['procedure_texts'][(int)$row['snapshot_id']]));
+    if ($noForms && !TaskProcedures::mayReadKnowledge($conn, $noForms)) {
+        $rep2 = TaskEvidence::report($conn, $rid2, date('Y-m-d', strtotime('-3 days')), date('Y-m-d', strtotime('+1 day')), $noForms);
+        if ($rep2['rows']) {
+            ok('...and to a viewer without Knowledge, says the text is kept but not shown', $rep2['procedure_texts'] === [] && $rep2['procedure_texts_hidden'] === true);
+        }
+    }
+}
+
+section('P2. Step descriptions are copied to the task');
+setSetting($conn, 'tasks_checklists_enabled', '1');
+$conn->exec("INSERT INTO checklist_templates (title, scope, closure_mode, is_active, created_datetime) VALUES ('ZZ-TF template', 'task', 'warn', 1, UTC_TIMESTAMP())");
+$tpl = $tplIds[] = (int)$conn->lastInsertId();
+$conn->prepare("INSERT INTO checklist_template_items (template_id, title, description, is_mandatory, sort_order) VALUES (?, 'Check job 4', 'Open the console and read the last run', 1, 1)")->execute([$tpl]);
+$t6 = zzTask($conn, 'ZZ-TF checklist occurrence');
+ChecklistsService::attachTemplateToTask($conn, $ctx, $t6, $tpl);
+$lists = ChecklistsService::taskChecklists($conn, $t6);
+ok('a template step\'s description is on the task\'s step', ($lists[0]['items'][0]['description'] ?? '') === 'Open the console and read the last run', json_encode($lists[0]['items'][0] ?? null));
+$t7 = zzTask($conn, 'ZZ-TF checklist next');
+ChecklistsService::copyTaskChecklists($conn, $t6, $t7);
+$lists7 = ChecklistsService::taskChecklists($conn, $t7);
+ok('...and the repeat copies it to the next occurrence', ($lists7[0]['items'][0]['description'] ?? '') === 'Open the console and read the last run');
 
 if ($BASE) {
     section('13. Over HTTP (api/tasks/forms.php)');

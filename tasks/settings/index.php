@@ -39,7 +39,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks', t('tasks.nav.settings'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=49">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=51">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
@@ -290,6 +290,13 @@ $translationNamespaces = ['common', 'tasks'];
                 <div>
                     <div class="card-field-name"><?php echo htmlspecialchars(t('tasks.settings.forms_enabled_name')); ?></div>
                     <div class="card-field-desc"><?php echo htmlspecialchars(t('tasks.settings.forms_enabled_desc')); ?></div>
+                </div>
+            </label>
+            <label class="card-field-row" style="margin-top: 16px;">
+                <input type="checkbox" id="taskProceduresEnabled" onchange="saveTaskSwitch('procedures_enabled', this.checked)">
+                <div>
+                    <div class="card-field-name"><?php echo htmlspecialchars(t('tasks.settings.procedures_enabled_name')); ?></div>
+                    <div class="card-field-desc"><?php echo htmlspecialchars(t('tasks.settings.procedures_enabled_desc')); ?></div>
                 </div>
             </label>
         </div>
@@ -773,6 +780,8 @@ $translationNamespaces = ['common', 'tasks'];
                 box.disabled = false;
                 const forms = document.getElementById('taskFormsEnabled');
                 if (forms) forms.checked = String(data.settings.forms_enabled || '0') === '1';
+                const procs = document.getElementById('taskProceduresEnabled');
+                if (procs) procs.checked = String(data.settings.procedures_enabled || '0') === '1';
             } catch (e) { console.error(e); }
         }
 
@@ -781,6 +790,19 @@ $translationNamespaces = ['common', 'tasks'];
                 const res = await fetch(API_BASE + 'save_settings.php', {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ settings: { checklists_enabled: on ? '1' : '0' } })
+                });
+                const data = await res.json();
+                if (data.success) showToast(t('tasks.toast.saved'), 'success');
+                else showToast(data.error || t('tasks.toast.save_failed'), 'error');
+            } catch (e) { showToast(t('tasks.toast.save_failed'), 'error'); }
+        }
+
+        /** One of the Checklists tab's on/off switches (GH #190), saved on its own. */
+        async function saveTaskSwitch(key, on) {
+            try {
+                const res = await fetch(API_BASE + 'save_settings.php', {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ settings: { [key]: on ? '1' : '0' } })
                 });
                 const data = await res.json();
                 if (data.success) showToast(t('tasks.toast.saved'), 'success');
