@@ -14,7 +14,7 @@ return array (
         'file_name'=>['type'=>'string'], 'file_size'=>['type'=>'integer','nullable'=>true],
         'file_type'=>['type'=>'string','nullable'=>true], 'sha256'=>['type'=>'string','nullable'=>true],
         'uploaded_by_id'=>['type'=>'integer','nullable'=>true], 'uploaded_at'=>['type'=>'string','format'=>'date-time'],
-        'external_reference'=>['type'=>'string','nullable'=>true], 'content_url'=>['type'=>'string'],
+        'client_reference'=>['type'=>'string','nullable'=>true], 'content_url'=>['type'=>'string'],
       ],
     ],
     'Analyst' => 
@@ -15335,7 +15335,7 @@ return array (
       'type'=>'object', 'required'=>['file'],
       'properties'=>[
         'file'=>['type'=>'string','format'=>'binary'],
-        'external_reference'=>['type'=>'string','maxLength'=>128,'pattern'=>'^[A-Za-z0-9._:-]{1,128}$',
+        'client_reference'=>['type'=>'string','maxLength'=>128,'pattern'=>'^[A-Za-z0-9._:-]{1,128}$',
           'description'=>'Optional retry key, unique per change and acting analyst. Same filename/bytes returns the original (200); conflicting reuse is 409.'],
       ],
     ],

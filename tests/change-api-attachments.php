@@ -31,7 +31,11 @@ try {
     $download=$openapi['paths']['/changes/{id}/attachments/{attachment_id}/content']['get'] ?? [];
     $ok('OpenAPI describes a binary download',
         ($download['responses'][200]['content']['application/octet-stream']['schema']['format'] ?? '')==='binary');
-    $changeId=ChangesService::createChange($conn,$ctx,getDefaultTenantId($conn),['title'=>$prefix]);
+    /* Review fix: the row is written directly. createChange() fires the real change.created
+       workflows - on a development database that is somebody's real automation (emails, tickets). */
+    $conn->prepare('INSERT INTO changes (title, tenant_id, created_by_id) VALUES (?, ?, ?)')
+        ->execute([$prefix, getDefaultTenantId($conn), $actor]);
+    $changeId=(int)$conn->lastInsertId();
     $before=$conn->query('SELECT status_id,test_plan,approver_id FROM changes WHERE id=' . $changeId)->fetch(PDO::FETCH_ASSOC);
     $conn->prepare('INSERT INTO analysts (username,password_hash,full_name,email,is_active,is_admin,can_access_all_modules)
         VALUES (?,?,?,?,1,0,0)')->execute([$prefix,password_hash(bin2hex(random_bytes(20)),PASSWORD_DEFAULT),$prefix,$prefix . '@example.invalid']);
@@ -50,7 +54,8 @@ try {
         $keyIds[]=(int)$conn->lastInsertId();
     }
     $request=function(string $method,string $path,string $key,?array $body=null) use ($base): array {
-        $ch=curl_init($base . '/api/v1/index.php?path=/' . rawurlencode($path));
+        [$p,$q]=array_pad(explode('?',$path,2),2,'');
+        $ch=curl_init($base . '/api/v1/index.php?path=/' . rawurlencode($p) . ($q!=='' ? '&' . $q : ''));
         $options=[CURLOPT_RETURNTRANSFER=>true,CURLOPT_TIMEOUT=>20,CURLOPT_CUSTOMREQUEST=>$method,
             CURLOPT_HTTPHEADER=>['Authorization: Bearer ' . $key]];
         if ($body!==null) $options[CURLOPT_POSTFIELDS]=$body;
@@ -59,18 +64,23 @@ try {
         curl_close($ch); return [$code,json_decode($raw,true),$raw];
     };
     file_put_contents($temp,"Synthetic evidence for $prefix\n");
-    $upload=['file'=>new CURLFile($temp,'text/plain','evidence.txt'),'external_reference'=>'report-1'];
+    $upload=['file'=>new CURLFile($temp,'text/plain','evidence.txt'),'client_reference'=>'report-1'];
     [$code,$data]=$request('POST',"changes/$changeId/attachments",$keys['read'],$upload);
     $ok('read-only key cannot upload', $code===403);
     [$code,$data]=$request('POST',"changes/$changeId/attachments",$keys['evidence'],$upload);
     $id=(int)($data['data']['id'] ?? 0);
     $ok('evidence-only key uploads native evidence with digest and stable reference', $code===201 && $id>0
         && ($data['data']['sha256'] ?? '')===hash_file('sha256',$temp)
-        && ($data['data']['external_reference'] ?? '')==='report-1');
+        && ($data['data']['client_reference'] ?? '')==='report-1');
     [$code,$data]=$request('POST',"changes/$changeId/attachments",$keys['evidence'],$upload);
     $ok('retry returns original attachment instead of duplicating', $code===200 && ($data['data']['id'] ?? 0)===$id);
     [$code,$data]=$request('GET',"changes/$changeId/attachments",$keys['evidence']);
     $ok('evidence can be reconciled through scoped listing', $code===200 && count($data['data'] ?? [])===1);
+    // Review fix: the design's "did it arrive?" question, without sending the file again.
+    [$code,$data]=$request('GET',"changes/$changeId/attachments?client_reference=report-1",$keys['read']);
+    $ok('?client_reference= finds the upload (and a read-only key may ask)', $code===200 && count($data['data'] ?? [])===1 && (int)($data['data'][0]['id'] ?? 0)===$id);
+    [$code,$data]=$request('GET',"changes/$changeId/attachments?client_reference=report-2",$keys['read']);
+    $ok('...and an unknown reference is an empty list, not an error', $code===200 && ($data['data'] ?? null)===[]);
     if ($id) {
         [$code,,$raw]=$request('GET',"changes/$changeId/attachments/$id/content",$keys['evidence']);
         $ok('authorized content round-trips', $code===200 && $raw===file_get_contents($temp));
@@ -90,7 +100,7 @@ try {
     [$code]=$request('POST',"changes/$changeId/attachments",$keys['evidence'],
         ['file'=>new CURLFile($temp,'image/png','renamed.png')]);
     $ok('native MIME validation rejects renamed content', $code===422);
-    [$code]=$request('POST',"changes/$changeId/attachments",$keys['evidence'],['external_reference'=>'no-file']);
+    [$code]=$request('POST',"changes/$changeId/attachments",$keys['evidence'],['client_reference'=>'no-file']);
     $ok('missing multipart file is rejected', $code===422);
     [$code]=$request('POST',"changes/2147483647/attachments",$keys['evidence'],$upload);
     $ok('unknown change is rejected before writing bytes', $code===404);

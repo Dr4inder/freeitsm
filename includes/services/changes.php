@@ -1244,7 +1244,7 @@ class ChangesService
     {
         self::assertCanWrite($conn, $ctx);
         if ($reference !== null && !preg_match('/\A[A-Za-z0-9._:-]{1,128}\z/D', $reference)) {
-            throw new ServiceError('validation', 'invalid_field', 'external_reference must be 1-128 ASCII letters, digits, dots, underscores, colons or hyphens.');
+            throw new ServiceError('validation', 'invalid_field', 'client_reference must be 1-128 ASCII letters, digits, dots, underscores, colons or hyphens.');
         }
         if ($conn->inTransaction()) { throw new LogicException('Attachment uploads must own their transaction.'); }
         require_once __DIR__ . '/../uploads.php';
@@ -1262,11 +1262,11 @@ class ChangesService
             if ($sha256 === false) { throw new RuntimeException('Could not hash stored evidence.'); }
             if ($reference !== null) {
                 $find = $conn->prepare('SELECT id, file_name, sha256 FROM change_attachments
-                    WHERE change_id=? AND uploaded_by_id=? AND external_reference=?');
+                    WHERE change_id=? AND uploaded_by_id=? AND client_reference=?');
                 $find->execute([$changeId, $ctx->actorId, $reference]);
                 if ($existing = $find->fetch(PDO::FETCH_ASSOC)) {
                     if ($existing['file_name'] !== $stored['original_name'] || $existing['sha256'] !== $sha256) {
-                        throw new ServiceError('conflict', 'reference_conflict', 'This external_reference already names different evidence.');
+                        throw new ServiceError('conflict', 'reference_conflict', 'This client_reference already names different evidence.');
                     }
                     unlink($stored['path']); $stored = null;
                     $conn->commit();
@@ -1274,7 +1274,7 @@ class ChangesService
                 }
             }
             $conn->prepare('INSERT INTO change_attachments
-                (change_id,file_name,file_path,file_size,file_type,uploaded_by_id,uploaded_datetime,sha256,external_reference)
+                (change_id,file_name,file_path,file_size,file_type,uploaded_by_id,uploaded_datetime,sha256,client_reference)
                 VALUES (?,?,?,?,?,?,UTC_TIMESTAMP(),?,?)')->execute([
                 $changeId,$stored['original_name'],$changeId . '/' . $stored['stored_name'],$stored['size'],
                 $stored['mime'],$ctx->actorId,$sha256,$reference,

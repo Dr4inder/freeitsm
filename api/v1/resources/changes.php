@@ -6,15 +6,17 @@ function apiSerializeChangeAttachment(array $row): array {
         'file_name'=>$row['file_name'], 'file_size'=>$row['file_size']===null ? null : (int)$row['file_size'],
         'file_type'=>$row['file_type'], 'sha256'=>$row['sha256'],
         'uploaded_by_id'=>$row['uploaded_by_id']===null ? null : (int)$row['uploaded_by_id'],
-        'uploaded_at'=>apiIsoDate($row['uploaded_datetime']), 'external_reference'=>$row['external_reference'],
+        'uploaded_at'=>apiIsoDate($row['uploaded_datetime']), 'client_reference'=>$row['client_reference'],
         'content_url'=>'/api/v1/changes/' . (int)$row['change_id'] . '/attachments/' . (int)$row['id'] . '/content',
     ];
 }
 
 function apiChangeAttachmentsList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiLoadChange($conn, $apiKey, $params[0]);
-    $stmt=$conn->prepare('SELECT * FROM change_attachments WHERE change_id=? ORDER BY id');
-    $stmt->execute([$params[0]]);
+    // ?client_reference= answers "did my upload arrive?" without sending the file again (#194 design).
+    $ref = isset($_GET['client_reference']) && is_string($_GET['client_reference']) ? $_GET['client_reference'] : null;
+    $stmt=$conn->prepare('SELECT * FROM change_attachments WHERE change_id=?' . ($ref !== null ? ' AND client_reference=?' : '') . ' ORDER BY id');
+    $stmt->execute($ref !== null ? [$params[0], $ref] : [$params[0]]);
     apiRespond(array_map('apiSerializeChangeAttachment', $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
@@ -22,12 +24,12 @@ function apiChangeAttachmentsCreate(PDO $conn, array $apiKey, array $params, arr
     // Route permission is deliberately independent of changes.update/CAB powers.
     apiLoadChange($conn, $apiKey, $params[0]);
     if (!isset($_FILES['file'])) { apiError(422, 'missing_file', 'Send a multipart/form-data file part named file.'); }
-    if (isset($_POST['external_reference']) && !is_string($_POST['external_reference'])) {
-        apiError(422,'invalid_field','external_reference must be a string.');
+    if (isset($_POST['client_reference']) && !is_string($_POST['client_reference'])) {
+        apiError(422,'invalid_field','client_reference must be a string.');
     }
     try {
         $result=ChangesService::uploadAttachment($conn,ActorContext::fromApiKey($apiKey),$params[0],
-            $_FILES['file'],$_POST['external_reference'] ?? null);
+            $_FILES['file'],$_POST['client_reference'] ?? null);
     } catch (ServiceError $e) { apiFailFromService($e); }
     $stmt=$conn->prepare('SELECT * FROM change_attachments WHERE id=?'); $stmt->execute([$result['id']]);
     $attachment=apiSerializeChangeAttachment($stmt->fetch(PDO::FETCH_ASSOC));

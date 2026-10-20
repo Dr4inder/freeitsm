@@ -2764,16 +2764,22 @@
                     "p": "\/changes\/{id}\/attachments",
                     "perm": "change_attachments.read",
                     "s": "List Change evidence attachments",
-                    "d": "Lists native Change attachments with digest, actor, external reference and authenticated content URL. Company scope is enforced.",
+                    "d": "Lists the change's attachments - those added in the app as well as over REST - with their sha256, who uploaded them, client_reference and an authenticated content URL. Add ?client_reference= to ask whether an upload arrived without sending it again: the answer is the matching attachments, or an empty list. Company scope is enforced.",
                     "params": [
                         {
                             "name": "id",
                             "in": "path",
                             "req": true,
                             "desc": "Change id"
+                        },
+                        {
+                            "name": "client_reference",
+                            "in": "query",
+                            "req": false,
+                            "desc": "Only attachments uploaded with this reference (case-sensitive)"
                         }
                     ],
-                    "section": "Changes",
+                    "section": "Change comments, history & CAB",
                     "slug": "get-changes-id-attachments",
                     "extras": {
                         "examples": [],
@@ -2785,7 +2791,7 @@
                     "p": "\/changes\/{id}\/attachments",
                     "perm": "change_attachments.create",
                     "s": "Upload Change evidence",
-                    "d": "Send multipart\/form-data with file and optional external_reference. Uses native file extension, MIME, configured size limit, protected storage and attachment audit. Returns 201 for new evidence or 200 for a retry with identical filename and bytes. Reference uniqueness is per Change and acting analyst and survives API key rotation. Conflicting reuse is 409. Does not change status, approval or planning, and grants no deletion rights. For uploads use a multipart client rather than the JSON request editor.",
+                    "d": "Send multipart\/form-data with file and optional client_reference. Uses native file extension, MIME, configured size limit, protected storage and attachment audit. Returns 201 for new evidence or 200 for a retry with identical filename and bytes. Reference uniqueness is per Change and acting analyst and survives API key rotation. Conflicting reuse is 409. Does not change status, approval or planning, and grants no deletion rights. For uploads use a multipart client rather than the JSON request editor.",
                     "params": [
                         {
                             "name": "id",
@@ -2800,13 +2806,13 @@
                             "desc": "Multipart file part; native attachment policy applies"
                         },
                         {
-                            "name": "external_reference",
+                            "name": "client_reference",
                             "in": "body",
                             "req": false,
                             "desc": "Case-sensitive retry reference, 1-128 ASCII letters, digits, dots, underscores, colons or hyphens"
                         }
                     ],
-                    "section": "Changes",
+                    "section": "Change comments, history & CAB",
                     "slug": "post-changes-id-attachments",
                     "extras": {
                         "examples": [],
@@ -2814,7 +2820,7 @@
                             {
                                 "code": 409,
                                 "slug": "reference_conflict",
-                                "when": "external_reference already identifies different evidence."
+                                "when": "client_reference already identifies different evidence."
                             }
                         ]
                     }
@@ -2839,7 +2845,7 @@
                             "desc": "Attachment id on this Change"
                         }
                     ],
-                    "section": "Changes",
+                    "section": "Change comments, history & CAB",
                     "slug": "get-changes-id-attachments-attachment-id-content",
                     "extras": {
                         "examples": [],
@@ -13720,7 +13726,7 @@
                 {
                     "code": 409,
                     "slug": "reference_conflict",
-                    "when": "external_reference already identifies different evidence."
+                    "when": "client_reference already identifies different evidence."
                 }
             ]
         },
