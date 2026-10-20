@@ -259,6 +259,6 @@ $row = function (string $label, string $desc, string $control) {
     <script src="../../assets/js/projects.js?v=10"></script>
     <script src="../../assets/js/projects-settings.js?v=18"></script>
     <script src="../../assets/js/ai-settings.js?v=4"></script>
-    <script src="../../assets/js/mobile.js?v=80"></script>
+    <script src="../../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

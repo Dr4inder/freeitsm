@@ -103,7 +103,7 @@ function renderObjects() {
         list.innerHTML = `
             <div class="empty-state">
                 <h3>${window.t('cmdb.list.no_objects_heading', { name: `<em>${escapeHtml(activeClass.name)}</em>` })}</h3>
-                <p>${window.t('cmdb.list.no_objects_hint', { new: `<strong>${escapeHtml(window.t('cmdb.list.new'))}</strong>` })}</p>
+                <p>${window.t('cmdb.list.no_objects_hint', { new: `<strong>${escapeHtml(window.t('common.action_row.new'))}</strong>` })}</p>
             </div>`;
         return;
     }

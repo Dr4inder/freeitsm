@@ -44,6 +44,15 @@ $translationNamespaces = ['common', 'domains'];
 </head>
 <body data-mobile-module="domains" data-mobile-page="domains-register">
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185) is what was the register's toolbar: the count
+             beside the title, then Paste list and Import CSV, then New. The ids
+             are the ones domains-register.js wires. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('domains.title'), [
+              ['label' => t('domains.list.add_many'), 'id' => 'btnAddMany'],
+              ['label' => t('domains.list.import'), 'id' => 'btnImport'],
+              actionRowNew('', t('domains.list.new_domain'), false, 'btnAdd'),
+          ], ['count_id' => 'domCount']); ?>
 
     <div class="dom-layout">
         <aside class="dom-sidebar">
@@ -65,17 +74,6 @@ $translationNamespaces = ['common', 'domains'];
 
         <main class="dom-main">
             <div class="dom-stats" id="domStats"></div>
-
-            <div class="dom-toolbar">
-                <button type="button" class="dom-btn primary" id="btnAdd">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    <?php echo htmlspecialchars(t('domains.list.add')); ?>
-                </button>
-                <button type="button" class="dom-btn" id="btnAddMany"><?php echo htmlspecialchars(t('domains.list.add_many')); ?></button>
-                <button type="button" class="dom-btn" id="btnImport"><?php echo htmlspecialchars(t('domains.list.import')); ?></button>
-                <span class="spacer"></span>
-                <span id="domCount" class="dom-sub" style="font-size:13px"></span>
-            </div>
 
             <div class="dom-selbar" id="domSelBar">
                 <strong id="domSelCount"></strong>
@@ -206,6 +204,6 @@ $translationNamespaces = ['common', 'domains'];
 
     <script src="../assets/js/domains.js?v=2"></script>
     <script src="../assets/js/domains-register.js?v=3"></script>
-    <script src="../assets/js/mobile.js?v=80"></script>
+    <script src="../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

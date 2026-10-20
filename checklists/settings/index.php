@@ -439,6 +439,6 @@ if (!in_array($activeTab, ['categories', 'roles', 'layout'])) {
             if (ev.target === this) lkCloseRename();
         });
     </script>
-    <script src="../../assets/js/mobile.js?v=80"></script>
+    <script src="../../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

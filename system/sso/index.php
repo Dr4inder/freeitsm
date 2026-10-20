@@ -1542,6 +1542,6 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
     loadGlobal();
     loadProviders();
     </script>
-    <script src="../../assets/js/mobile.js?v=80"></script>
+    <script src="../../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

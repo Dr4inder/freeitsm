@@ -929,6 +929,6 @@ $translationNamespaces = ['common', 'software'];
             return div.innerHTML;
         }
     </script>
-    <script src="../assets/js/mobile.js?v=80"></script>
+    <script src="../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

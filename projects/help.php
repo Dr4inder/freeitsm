@@ -296,6 +296,6 @@ $prjHelpIcon = fn(string $paths) => '<svg xmlns="http://www.w3.org/2000/svg" wid
             });
         });
     </script>
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=80"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=81"></script>
 </body>
 </html>

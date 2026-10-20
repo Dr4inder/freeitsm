@@ -346,6 +346,6 @@ $event = json_decode($body, true);   // trusted from here</code></pre>
         });
     })();
     </script>
-    <script src="../assets/js/mobile.js?v=80"></script>
+    <script src="../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

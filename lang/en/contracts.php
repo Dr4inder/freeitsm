@@ -466,7 +466,7 @@ return [
         'feature_settings'  => 'Configure the dropdown options that drive the module &mdash; supplier types, supplier statuses, contract statuses, payment schedules, and custom contract term tabs.',
 
         'managing_intro'     => 'Contracts are the core of this module. Each contract record captures everything you need to know about a supplier agreement &mdash; who it\'s with, how long it runs, what it costs, and what documents support it.',
-        'managing_step1'     => '<strong>Create a contract</strong> &mdash; from the contracts dashboard, click the Add button. Fill in the contract name, choose who it is with (a supplier, or a customer), and set the status.',
+        'managing_step1'     => '<strong>Create a contract</strong> &mdash; click <strong>New</strong> at the top right of the contracts page. Fill in the contract name, choose who it is with (a supplier, or a customer), and set the status.',
         'managing_step2'     => '<strong>Set the dates</strong> &mdash; enter the start date, end date, and review date. The review date acts as your early warning so you have time to renegotiate or renew before the contract expires.',
         'managing_step3'     => '<strong>Record the financials</strong> &mdash; enter the total contract value and select the payment schedule (monthly, quarterly, annually, or a custom schedule configured in settings).',
         'managing_step4'     => '<strong>Add contract terms</strong> &mdash; use the rich text tabs to write out SLAs, KPIs, special conditions, or any other terms. Each tab uses the TinyMCE editor for full formatting.',

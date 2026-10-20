@@ -620,6 +620,6 @@ $translationNamespaces = ['common', 'cmdb'];
     <script src="../../assets/js/ai-settings.js?v=4"></script>
     <script src="../options-editor.js?v=3"></script>
     <script src="settings.js?v=7"></script>
-    <script src="../../assets/js/mobile.js?v=80"></script>
+    <script src="../../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

@@ -31,7 +31,7 @@ $translationNamespaces = ['common', 'contracts'];
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <style>
-        body { --accent: var(--con-accent, #f59e0b); }
+        body { --accent: var(--con-accent, #f59e0b); --accent-hover: var(--con-accent-hover, #d97706); --on-accent: var(--con-on-accent, #fff); }
 
         /* Sidebar layout */
         .contracts-layout {
@@ -194,6 +194,10 @@ $translationNamespaces = ['common', 'contracts'];
 </head>
 <body data-mobile-module="contracts" data-mobile-page="contracts-list">
     <?php include 'includes/header.php'; ?>
+    <?php /* New contract moved from the bottom of the sidebar to the action row
+             (#185) - on a phone too, where it was in the footer bar. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('contracts.nav.contracts'), [actionRowNew('edit.php', t('contracts.list.new_contract'), true)]); ?>
 
     <div class="contracts-layout">
         <!-- Left Sidebar -->
@@ -251,9 +255,6 @@ $translationNamespaces = ['common', 'contracts'];
                 </div>
             </div>
 
-            <div class="sidebar-section">
-                <a href="edit.php" class="sidebar-add-btn">+ <?php echo htmlspecialchars(t('contracts.list.new_contract')); ?></a>
-            </div>
         </div>
 
         <!-- Main Content -->
@@ -568,6 +569,6 @@ $translationNamespaces = ['common', 'contracts'];
             return div.innerHTML;
         }
     </script>
-    <script src="../assets/js/mobile.js?v=80"></script>
+    <script src="../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

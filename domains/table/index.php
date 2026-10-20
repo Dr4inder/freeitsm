@@ -45,12 +45,15 @@ $dtSearchPlaceholder = t('domains.table.search');
 </head>
 <body data-mobile-module="domains" data-mobile-page="domains-table">
     <?php include '../includes/header.php'; ?>
+    <?php /* New in the table view opens the register's Add (?add=1) - #185. */
+          require_once '../../includes/action_row.php';
+          renderActionRow(t('domains.title'), [actionRowNew('../?add=1', t('domains.list.new_domain'), true)]); ?>
     <div class="dt-page">
         <?php include '../../includes/data-table-skeleton.php'; ?>
     </div>
     <script src="../../assets/js/domains.js?v=2"></script>
     <script src="../../assets/js/data-table.js?v=6"></script>
     <script src="../../assets/js/domains-table.js?v=3"></script>
-    <script src="../../assets/js/mobile.js?v=80"></script>
+    <script src="../../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

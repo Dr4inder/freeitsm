@@ -5478,8 +5478,7 @@
           icon: SVG('<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>') },
         { id: 'search', label: tr('common.search', 'Search'),
           icon: SVG('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>') },
-        { id: 'add', label: tr('common.add', 'Add'),
-          icon: SVG('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>') },
+        // New contract is in the action row at the top of the page (#185).
         { id: 'filter', label: tr('common.filter', 'Filter'),
           icon: SVG('<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>') }
     ];
@@ -5558,16 +5557,12 @@
     }
 
     /**
-     * Runs a Contracts list phone footer action - switch view, open the search modal, go to New contract
-     * or open the filter sheet.
+     * Runs a Contracts list phone footer action - switch view, open the search modal or open the
+     * filter sheet.
      */
     function act(id) {
         if (id === 'overview' || id === 'list') setView(id);
         else if (id === 'search' && typeof window.openSearchModal === 'function') window.openSearchModal();
-        else if (id === 'add') {
-            var a = document.querySelector('.sidebar-add-btn');
-            window.location.href = a ? a.getAttribute('href') : 'edit.php';
-        }
         else if (id === 'filter') openSheet();
     }
 

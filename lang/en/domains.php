@@ -34,6 +34,7 @@ return [
         'filters'            => 'Filters',
         'clear'              => 'Clear',
         'add'                => 'Add',
+        'new_domain'         => 'New domain',
         'add_many'           => 'Paste list',
         'import'             => 'Import CSV',
         'bulk_edit'          => 'Edit',
