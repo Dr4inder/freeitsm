@@ -1,8 +1,24 @@
 <?php
+/**
+ * POST /assets/{id}/inventory (#194). 200 when every section applied, was replayed or
+ * was stale; 207 when some failed and others did not (each failed one names why, and
+ * sending the same report again retries only those); 422 when every section failed.
+ */
 function apiAssetInventorySubmit(PDO $conn,array $apiKey,array $params,array $body): void {
     apiLoadAsset($conn,$apiKey,$params[0]);
     require_once dirname(__DIR__,3) . '/includes/services/asset_inventory.php';
     try { $result=AssetInventoryService::submit($conn,ActorContext::fromApiKey($apiKey),$params[0],$body); }
+    catch (ServiceError $e) { apiFailFromService($e); }
+    $failed = count(array_filter($result['sections'], fn($s) => $s['result'] === 'failed'));
+    if ($failed && $failed === count($result['sections'])) {
+        apiError(422, 'all_sections_failed', 'No section of the report could be applied.', $result['sections']);
+    }
+    apiRespond($result, $failed ? 207 : 200);
+}
+function apiAssetInventoryUnlink(PDO $conn,array $apiKey,array $params,array $body): void {
+    apiLoadAsset($conn,$apiKey,$params[0]);
+    require_once dirname(__DIR__,3) . '/includes/services/asset_inventory.php';
+    try { $result=AssetInventoryService::unlink($conn,ActorContext::fromApiKey($apiKey),(int)$params[0],$params[1]); }
     catch (ServiceError $e) { apiFailFromService($e); }
     apiRespond($result);
 }

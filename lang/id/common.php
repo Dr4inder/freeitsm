@@ -5,7 +5,6 @@
  * Mirrors lang/en/common.php structure exactly. Only values change.
  */
 return [
-    'inventory_source' => 'Sumber',
     // Left-panel visibility preference — shared labels (mirrors lang/en/common.php).
     'left_panel' => [
         'tab'        => 'Panel kiri',

@@ -11,7 +11,6 @@
  */
 
 return [
-    'inventory_source' => 'સ્રોત',
     'currency' => [
         'favourites' => 'મનપસંદ',
         'all' => 'બધા ચલણ',

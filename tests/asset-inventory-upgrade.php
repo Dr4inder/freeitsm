@@ -4,13 +4,27 @@ if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
  * GH #194: widening software identity must preserve the installation on a grown
  * database, then admit multiple sources without admitting duplicates of one.
  * MySQL's connection-local TEMPORARY table shadows the real detail table here;
- * it is dropped in finally. Run after Database Verification has added the new
- * inventory schema. No persistent inventory data is modified by this test.
+ * it is dropped in finally.
+ *
+ * Review fix: dbVerifyInventoryUpgrade() also widens asset_disks / asset_network_adapters
+ * and adds two foreign keys - on the REAL tables, which no temporary table shadows. So
+ * this refuses to run until Database Verification has done all of that already; on the
+ * real tables the upgrade is then a no-op, and no persistent schema or data changes.
  */
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../includes/db_verify_inventory.php';
 $conn=connectToDatabase(); $pass=0; $fail=0;
+$pending=[];
+foreach (['asset_disks','asset_network_adapters'] as $t) {
+    $col=$conn->query("SHOW COLUMNS FROM `$t` LIKE 'source'")->fetch(PDO::FETCH_ASSOC);
+    if (!$col || !preg_match('/varchar\((\d+)\)/i',$col['Type'],$m) || (int)$m[1]<64) $pending[]="$t.source";
+}
+foreach (['fk_inventory_source_asset','fk_inventory_section_source'] as $fk) {
+    $q=$conn->prepare('SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_NAME=?');
+    $q->execute([$fk]); if (!$q->fetchColumn()) $pending[]=$fk;
+}
+if ($pending) { fwrite(STDERR,'Run Database Verification first - not yet upgraded: ' . implode(', ',$pending) . "\n"); exit(1); }
 $ok=function(string $label,bool $cond) use (&$pass,&$fail): void {
     if ($cond) { ++$pass; echo "PASS $label\n"; } else { ++$fail; echo "FAIL $label\n"; }
 };

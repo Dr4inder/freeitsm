@@ -142,6 +142,9 @@ function analystReferenceRegistry(): array {
         ['domain_registrar_accounts', 'owner_analyst_id', 'setup'],
         ['project_raid', 'owner_analyst_id', 'setup', "closed_datetime IS NULL"],
         ['project_benefits', 'owner_analyst_id', 'setup'],
+        // The service account an inventory integration writes as (#194): a leaver's source
+        // name has to be handed to whoever runs that integration now.
+        ['asset_inventory_source_owners', 'owner_analyst_id', 'setup'],
         ['project_gate_items', 'analyst_id', 'setup'],
 
         // ── history: who did what; kept and credited ────────────────────────
@@ -167,6 +170,7 @@ function analystReferenceRegistry(): array {
         ['ticket_checklist_items', 'completed_by_id', 'history'],
         ['users_assets', 'assigned_by_analyst_id', 'history'],
         ['asset_history', 'analyst_id', 'history'],
+        ['asset_inventory_sections', 'imported_by_id', 'history'],
         ['asset_field_set_assets', 'created_by_analyst_id', 'history'],
         ['asset_checkout_log', 'analyst_id', 'history'],
         ['asset_disk_hide_rules', 'created_by_analyst_id', 'history'],
@@ -193,6 +197,15 @@ function analystReferenceRegistry(): array {
         ['problem_audit', 'analyst_id', 'history'],
         ['problem_notes', 'analyst_id', 'history'],
         ['tasks', 'created_by_id', 'history'],
+        ['tasks', 'completed_by_id', 'history'],
+        ['task_events', 'analyst_id', 'history'],
+        ['task_recurrence_versions', 'analyst_id', 'history'],
+        ['task_forms', 'added_by_id', 'history'],
+        ['task_procedures', 'added_by_id', 'history'],
+        ['task_follow_ups', 'created_by_id', 'history'],
+        ['task_checklist_item_events', 'analyst_id', 'history'],
+        ['checklist_template_versions', 'analyst_id', 'history'],
+        ['job_runs', 'analyst_id', 'history'],
         ['task_audit', 'analyst_id', 'history'],
         ['task_time_entries', 'analyst_id', 'history'],
         ['task_comments', 'analyst_id', 'history'],

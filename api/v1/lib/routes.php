@@ -26,6 +26,7 @@ return [
 
     ['GET', '#^/assets/(\\d+)/inventory$#', ['asset_inventory','read'], 'apiAssetInventoryProvenance'],
     ['POST', '#^/assets/(\\d+)/inventory$#', ['asset_inventory','create'], 'apiAssetInventorySubmit'],
+    ['DELETE', '#^/assets/(\\d+)/inventory/([a-z0-9][a-z0-9._-]{0,47})$#', ['asset_inventory','delete'], 'apiAssetInventoryUnlink'],
     ['GET',    '#^/assets$#',                              ['assets', 'read'],                'apiAssetsList'],
     ['POST',   '#^/assets$#',                              ['assets', 'create'],              'apiAssetsCreate'],
     ['GET',    '#^/assets/(\d+)$#',                        ['assets', 'read'],                'apiAssetsGet'],

@@ -284,7 +284,10 @@ try {
     if (!reportHas($data['disks']['logical'] ?? null)) {
         $leftUnchanged[] = 'disks';
     } else {
-        $conn->prepare("DELETE FROM asset_disks WHERE asset_id = ? AND source = 'agent'")->execute([$hostId]);
+        // TRAP: 'intune' too. Intune's volumes are only a stand-in until the agent reports
+        // (intuneSyncDisks() skips an asset with agent rows), so the agent replaces them as it
+        // always has. REST sources ('rest:...') are another tool's view and are left alone.
+        $conn->prepare("DELETE FROM asset_disks WHERE asset_id = ? AND source IN ('agent', 'intune')")->execute([$hostId]);
         $stmt = $conn->prepare("
             INSERT INTO asset_disks (asset_id, drive, label, file_system, size_bytes, free_bytes, used_percent, source)
             VALUES (?, ?, ?, ?, ?, ?, ?, 'agent')

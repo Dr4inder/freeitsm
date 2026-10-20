@@ -1942,10 +1942,23 @@ return [
         'created_datetime'  => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
     ],
 
+    // REST inventory (#194 Part B). Which analyst - an integration's service account -
+    // owns a source name in a company: the first to write it. A rotated key acts as
+    // the same analyst, so it keeps the source.
+    'asset_inventory_source_owners' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'tenant_id'        => 'INT NOT NULL',
+        'source'           => 'VARCHAR(48) CHARACTER SET ascii COLLATE ascii_bin NOT NULL',
+        'owner_analyst_id' => 'INT NOT NULL',
+        'created_datetime' => 'DATETIME NOT NULL',
+    ],
+    // Which asset each (source, the tool's own device reference) is linked to.
     'asset_inventory_sources' => [
-        'id'=>'INT NOT NULL AUTO_INCREMENT', 'asset_id'=>'INT NOT NULL', 'tenant_id'=>'INT NOT NULL',
-        'source_id'=>'VARCHAR(48) CHARACTER SET ascii COLLATE ascii_bin NOT NULL',
-        'external_device_id'=>'VARCHAR(128) COLLATE utf8mb4_bin NOT NULL', 'owner_analyst_id'=>'INT NOT NULL',
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'asset_id'          => 'INT NOT NULL',
+        'tenant_id'         => 'INT NOT NULL',
+        'source'            => 'VARCHAR(48) CHARACTER SET ascii COLLATE ascii_bin NOT NULL',
+        'source_device_ref' => 'VARCHAR(128) COLLATE utf8mb4_bin NOT NULL',
     ],
     'asset_inventory_sections' => [
         'id'=>'INT NOT NULL AUTO_INCREMENT', 'inventory_source_id'=>'INT NOT NULL',

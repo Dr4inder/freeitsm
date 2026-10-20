@@ -64,8 +64,8 @@ return array (
       'type'=>'object',
       'properties'=>[
         'schema_version'=>['type'=>'integer', 'enum'=>[1]],
-        'source_id'=>['type'=>'string', 'maxLength'=>48, 'pattern'=>'^[a-z0-9][a-z0-9._-]*$'],
-        'external_device_id'=>['type'=>'string', 'maxLength'=>128],
+        'source'=>['type'=>'string', 'maxLength'=>48, 'pattern'=>'^[a-z0-9][a-z0-9._-]*$', 'description'=>'Your tool\'s name. Owned by the first analyst to write it in the company; built-in names (agent, intune, proxmox, vcloud, vcenter, manual, api, system, freeitsm) are refused.'],
+        'source_device_ref'=>['type'=>'string', 'maxLength'=>128, 'description'=>'Your tool\'s own id for the device; linked to one asset per company.'],
         'observed_at'=>['type'=>'string', 'format'=>'date-time', 'description'=>'Original observation: RFC3339 seconds and explicit timezone, at most five minutes in future.'],
         'sections'=>[
           'type'=>'object',
@@ -94,18 +94,30 @@ return array (
           'minProperties'=>1
         ]
       ],
-      'required'=>['schema_version', 'source_id', 'external_device_id', 'observed_at', 'sections'],
+      'required'=>['schema_version', 'source', 'source_device_ref', 'observed_at', 'sections'],
       'additionalProperties'=>false
     ],
     'AssetInventoryResult'=>[
       'type'=>'object',
       'properties'=>[
         'asset_id'=>['type'=>'integer'],
-        'source_id'=>['type'=>'string'],
-        'external_device_id'=>['type'=>'string'],
-        'applied'=>['type'=>'array', 'items'=>['type'=>'string', 'enum'=>['software', 'disks', 'network_adapters']]],
-        'stale'=>['type'=>'array', 'items'=>['type'=>'string', 'enum'=>['software', 'disks', 'network_adapters']]],
-        'replayed'=>['type'=>'array', 'items'=>['type'=>'string', 'enum'=>['software', 'disks', 'network_adapters']]]
+        'source'=>['type'=>'string'],
+        'source_device_ref'=>['type'=>'string'],
+        'observed_at'=>['type'=>'string', 'format'=>'date-time'],
+        'sections'=>[
+          'type'=>'object',
+          'description'=>'One entry per section sent, keyed software / disks / network_adapters.',
+          'additionalProperties'=>[
+            'type'=>'object',
+            'properties'=>[
+              'result'=>['type'=>'string', 'enum'=>['applied', 'replayed', 'stale', 'failed']],
+              'added'=>['type'=>'integer'], 'updated'=>['type'=>'integer'], 'removed'=>['type'=>'integer'],
+              'newer_observed_at'=>['type'=>'string', 'format'=>'date-time', 'description'=>'stale: the observation already applied'],
+              'error'=>['type'=>'object', 'properties'=>['code'=>['type'=>'string'], 'message'=>['type'=>'string']]],
+            ],
+            'required'=>['result'],
+          ],
+        ],
       ],
 
       'additionalProperties'=>false
@@ -113,9 +125,9 @@ return array (
     'AssetInventoryProvenance'=>[
       'type'=>'object',
       'properties'=>[
-        'source_id'=>['type'=>'string'],
-        'external_device_id'=>['type'=>'string'],
-        'owner_analyst_id'=>['type'=>'integer'],
+        'source'=>['type'=>'string'],
+        'source_device_ref'=>['type'=>'string'],
+        'owner_analyst_id'=>['type'=>'integer', 'nullable'=>true],
         'sections'=>[
           'type'=>'object',
           'additionalProperties'=>[
@@ -13433,6 +13445,10 @@ return array (
     'POST /changes/{id}/attachments' => ['$ref'=>'#/components/schemas/ChangeEvidenceAttachment'],
     'GET /assets/{id}/inventory'=>['type'=>'array','items'=>['$ref'=>'#/components/schemas/AssetInventoryProvenance']],
     'POST /assets/{id}/inventory'=>['$ref'=>'#/components/schemas/AssetInventoryResult'],
+    'DELETE /assets/{id}/inventory/{source}'=>['type'=>'object', 'properties'=>[
+      'asset_id'=>['type'=>'integer'], 'source'=>['type'=>'string'],
+      'removed'=>['type'=>'object', 'properties'=>['software'=>['type'=>'integer'], 'disks'=>['type'=>'integer'], 'network_adapters'=>['type'=>'integer']]],
+    ]],
     'DELETE /domains/{id}' => 
     array (
       '$ref' => '#/components/schemas/DeleteAck',

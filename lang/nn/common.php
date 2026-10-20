@@ -11,7 +11,6 @@
  */
 
 return [
-    'inventory_source' => 'Kjelde',
     'currency' => [
         'favourites' => 'Favorittar',
         'all' => 'Alle valutaer',

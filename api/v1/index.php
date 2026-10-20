@@ -81,7 +81,9 @@ foreach ($routes as [$routeMethod, $pattern, $permission, $handler]) {
     }
     array_shift($matches); // drop the full-match element
     try {
-        $handler($conn, $apiKey, array_map('intval', $matches), apiJsonBody());
+        // Ids arrive as ints. A route whose pattern allows a name (the inventory source,
+        // #194) gets it as the string its pattern already validated.
+        $handler($conn, $apiKey, array_map(fn($m) => ctype_digit($m) ? (int)$m : $m, $matches), apiJsonBody());
     } catch (Exception $e) {
         error_log('API v1 handler error [' . $method . ' ' . $path . ']: ' . $e->getMessage());
         apiError(500, 'server_error', 'An unexpected server error occurred.');
@@ -113,7 +115,7 @@ function apiHandleRoot(PDO $conn, array $apiKey, array $params, array $body): vo
             'DELETE /assets/{id}/assignments/{user_id}', 'GET /assets/{id}/history',
             'GET /assets/{id}/custody', 'GET /assets/{id}/disks', 'GET /assets/{id}/network-adapters',
             'GET /assets/{id}/devices', 'GET /assets/{id}/software',
-            'GET /assets/{id}/inventory', 'POST /assets/{id}/inventory',
+            'GET /assets/{id}/inventory', 'POST /assets/{id}/inventory', 'DELETE /assets/{id}/inventory/{source}',
             'GET /problems', 'POST /problems', 'GET /problems/{id}', 'PATCH /problems/{id}',
             'DELETE /problems/{id}', 'GET /problems/{id}/notes', 'POST /problems/{id}/notes',
             'GET /problems/{id}/audit', 'POST /problems/{id}/tickets',

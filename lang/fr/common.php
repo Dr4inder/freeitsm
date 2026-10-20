@@ -11,7 +11,6 @@
  */
 
 return [
-    'inventory_source' => 'Source',
     'currency' => [
         'favourites' => 'Favoris',
         'all' => 'Toutes les devises',

@@ -3002,17 +3002,31 @@ CREATE TABLE IF NOT EXISTS `asset_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- REST observation provenance; the native inventory rows remain the inventory.
-CREATE TABLE IF NOT EXISTS `asset_inventory_sources` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `asset_id` INT NOT NULL,
-    `tenant_id` INT NOT NULL,
-    `source_id` VARCHAR(48) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-    `external_device_id` VARCHAR(128) COLLATE utf8mb4_bin NOT NULL,
+-- REST inventory (#194 Part B). The rows an external tool reports live in the
+-- inventory tables themselves (source = 'rest:<source>'); these say who owns a
+-- source name, which asset each of its devices is, and when each section was seen.
+--
+-- One analyst per (company, source name) - the integration's service account,
+-- the first to write it. A rotated key acts as the same analyst.
+CREATE TABLE IF NOT EXISTS `asset_inventory_source_owners` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `tenant_id`        INT NOT NULL,
+    `source`           VARCHAR(48) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
     `owner_analyst_id` INT NOT NULL,
+    `created_datetime` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uq_inventory_external_device` (`tenant_id`, `source_id`, `external_device_id`),
-    UNIQUE KEY `uq_inventory_asset_source` (`asset_id`, `source_id`),
+    UNIQUE KEY `uq_inventory_source_owner` (`tenant_id`, `source`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `asset_inventory_sources` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `asset_id`          INT NOT NULL,
+    `tenant_id`         INT NOT NULL,
+    `source`            VARCHAR(48) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+    `source_device_ref` VARCHAR(128) COLLATE utf8mb4_bin NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_inventory_device_ref` (`tenant_id`, `source`, `source_device_ref`),
+    UNIQUE KEY `uq_inventory_asset_source` (`asset_id`, `source`),
     CONSTRAINT `fk_inventory_source_asset` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -4896,6 +4910,7 @@ CREATE TABLE IF NOT EXISTS `software_inventory_apps` (
     -- seat count and a cost had nowhere to hang.
     --
     -- 'agent'  = found by the inventory agent, system-info submit or Intune
+    -- 'api'    = first reported by a REST inventory import (#194)
     -- 'manual' = typed in by a person
     --
     -- ⚠️ THE AGENT MAY ADOPT A MANUAL ROW, BUT MUST NEVER OVERWRITE IT.

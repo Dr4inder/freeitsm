@@ -11,7 +11,6 @@
  */
 
 return [
-    'inventory_source' => 'स्रोत',
     'currency' => [
         'favourites' => 'पसंदीदा',
         'all' => 'सभी मुद्राएँ',
