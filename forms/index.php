@@ -274,19 +274,17 @@ $translationNamespaces = ['common', 'forms'];
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=195">
 </head>
 <body class="<?php echo trim(($formsLevel === 'read' ? 'module-read-only ' : '') . ($formsMayDesign ? '' : 'forms-no-design')); ?>">    <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185) is what was the list's toolbar: title, search,
+             New. New only for someone who may design forms - Read only access
+             or no Design forms permission gets the row without it. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('forms.list.title'), $formsMayDesign ? [actionRowNew(BASE_URL . 'forms/edit/', t('forms.list.new_form'), true)] : [], [
+              'accent' => 'forms',
+              'extra' => '<input type="text" id="formSearch" class="forms-list-search action-row-search" placeholder="'
+                       . htmlspecialchars(t('forms.list.search_placeholder')) . '" oninput="filterForms()">',
+          ]); ?>
 
     <div class="forms-list-container">
-        <div class="forms-list-toolbar">
-            <h1><?php echo htmlspecialchars(t('forms.list.title')); ?></h1>
-            <div class="toolbar-actions">
-                <input type="text" id="formSearch" class="forms-list-search" placeholder="<?php echo htmlspecialchars(t('forms.list.search_placeholder')); ?>" oninput="filterForms()">
-                <a href="<?php echo BASE_URL; ?>forms/edit/" class="new-form-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <?php echo htmlspecialchars(t('forms.list.new_form')); ?>
-                </a>
-            </div>
-        </div>
-
         <div class="forms-table-card">
             <table class="forms-table" id="formsTable">
                 <thead>

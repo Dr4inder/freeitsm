@@ -42,6 +42,7 @@ return [
         'tags_heading'       => 'Filter by Tags',
         'folders_heading'    => 'Folders',
         'new_article'        => '+ New Article',
+        'new_article_tip'    => 'New article',
         'recycle_bin'        => 'Recycle Bin',
         'no_tags'            => 'No tags yet',
     ],
@@ -698,7 +699,7 @@ return [
 
         'writing_heading' => 'Writing articles — step by step',
         'writing_intro'   => "A good knowledge article answers a single question clearly and completely. Whether it's a how-to guide, a troubleshooting runbook, or a policy document, the goal is the same: someone who reads it should be able to act on it without needing to ask a colleague.",
-        'writing_step1'   => '<strong>Click "+ New Article"</strong> in the sidebar to open the article editor. This gives you a blank canvas with all the fields you need.',
+        'writing_step1'   => '<strong>Click New</strong> at the top right to open the article editor. This gives you a blank canvas with all the fields you need.',
         'writing_step2'   => '<strong>Give it a clear title</strong> &mdash; use the kind of phrasing someone would actually search for. "How to reset a user\'s password in Active Directory" is better than "Password Reset Procedure v2.1".',
         'writing_step3'   => '<strong>Add tags</strong> &mdash; type in the tag input and press Enter or comma to add. Tags let people find your article through filtering as well as search. Use a mix of broad tags (e.g. "Active Directory") and specific ones (e.g. "password-reset").',
         'writing_step4'   => '<strong>Assign an owner</strong> &mdash; the owner is the person responsible for keeping the article up to date. When it comes up for review, the owner gets notified.',

@@ -70,6 +70,9 @@ $sidebarHoverClass = $sidebarMode === 'hover' ? ' sidebar-hover' : '';
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185): New moved here from the foot of the sidebar - on a phone that was inside the Tags sheet. */ ?>
+    <?php require_once '../includes/action_row.php';
+          renderActionRow(t('knowledge.title'), [actionRowNew('openCreateArticle()', t('knowledge.sidebar.new_article_tip'))], ['accent' => 'kb']); ?>
 
     <div class="knowledge-container<?php echo $sidebarHoverClass; ?>">
         <!-- Sidebar with search and tags -->
@@ -97,9 +100,6 @@ $sidebarHoverClass = $sidebarMode === 'hover' ? ' sidebar-hover' : '';
                 <div class="tag-filter-list" id="tagFilterList">
                     <div class="loading"><div class="spinner"></div></div>
                 </div>
-            </div>
-            <div class="sidebar-section">
-                <button class="btn btn-primary btn-full" onclick="openCreateArticle()"><?php echo htmlspecialchars(t('knowledge.sidebar.new_article')); ?></button>
             </div>
             <!-- Shown only to someone who may manage access; see knowledge.js. -->
             <div class="sidebar-section" id="kbExceptionsSection" style="display:none;">

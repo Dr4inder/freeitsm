@@ -56,6 +56,7 @@ return [
         'heading'        => 'Courses',
         'upload'         => 'Upload',
         'create'         => 'Create',
+        'new_tip'        => 'New course',
         'col_title'      => 'Title',
         'col_version'    => 'SCORM Version',
         'col_uploaded'   => 'Uploaded',
@@ -203,6 +204,7 @@ return [
     'groups' => [
         'heading'      => 'Learning Groups',
         'new'          => 'New',
+        'new_tip'      => 'New group',
         'col_name'     => 'Name',
         'col_description' => 'Description',
         'col_members'  => 'Members',
@@ -404,7 +406,7 @@ return [
 
         // 2. Writing your own course
         'authoring_heading' => 'Writing your own course',
-        'authoring_intro'   => 'You do not need Articulate, Rise or any other authoring tool to publish training. Press <strong>Create</strong> on the Courses tab and write the course here — lessons in a rich-text editor, questions at the end of each one, and a pass mark you set yourself.',
+        'authoring_intro'   => 'You do not need Articulate, Rise or any other authoring tool to publish training. Press <strong>New</strong> at the top right of the Courses tab and write the course here — lessons in a rich-text editor, questions at the end of each one, and a pass mark you set yourself.',
         'authoring_step1'   => '<strong>Create the course.</strong> Give it a title, a description and — if you want it to be pass-or-fail — a pass mark. Leave the pass mark blank and the course is simply marked complete when someone reaches the end.',
         'authoring_step2'   => '<strong>Add lessons.</strong> Each lesson is a page of content, written in the same editor as a knowledge article. Drag them in the left-hand list to reorder them; the learner works through them in that order.',
         'authoring_step3'   => '<strong>Add questions</strong> to any lesson — choose one, choose several, or true/false. Mark the correct answer, and write an explanation the learner sees afterwards.',

@@ -75,6 +75,8 @@
     color: var(--on-accent, #fff);
 }
 .action-row-btn:active { transform: scale(0.97); }
+/* display: inline-flex above would otherwise beat the hidden attribute. */
+.action-row-btn[hidden] { display: none; }
 .action-row-btn:disabled,
 .action-row-btn:disabled:hover {
     opacity: 0.5;
@@ -118,7 +120,13 @@
     body:has(> .action-row) > .changes-container,
     body:has(> .action-row) > .calendar-container,
     body:has(> .action-row) > .pm-container,
-    body:has(> .action-row) > .tasks-container {
+    body:has(> .action-row) > .tasks-container,
+    body:has(> .action-row) > .knowledge-container,
+    body:has(> .action-row) > .chk-layout,
+    body:has(> .action-row) > .pm-layout,
+    body:has(> .action-row) > .forms-list-container,
+    body:has(> .action-row) > .lms-container,
+    body:has(> .action-row) > .nm-page {
         height: auto;
         flex: 1 1 auto;
         min-height: 0;

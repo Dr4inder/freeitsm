@@ -82,6 +82,8 @@ foreach ($templates as $t) {
         .chk-main { flex: 1; overflow-y: auto; padding: 28px 36px; }
         .chk-btn-primary { background: #0d9488; color: #fff; border: none; border-radius: 6px; padding: 10px 16px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
         .chk-btn-primary:hover { background: #0f766e; }
+        /* Checklists has no theme token; the row's New takes the same teal. */
+        .action-row { --accent: #0d9488; --accent-hover: #0f766e; --on-accent: #fff; }
         .chk-search { width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid var(--border-soft, #cbd5e1); border-radius: 6px; font-size: 13px; background: var(--app-bg, #f8fafc); color: var(--text, #1e293b); }
         .chk-filter-link { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-radius: 6px; color: var(--text, #334155); text-decoration: none; font-size: 13px; font-weight: 500; cursor: pointer; }
         .chk-filter-link:hover, .chk-filter-link.active { background: rgba(13, 148, 136, 0.1); color: #0d9488; font-weight: 600; }
@@ -98,15 +100,13 @@ foreach ($templates as $t) {
 </head>
 <body data-mobile-page="checklists" data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>">
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185): New moved here from the top of the sidebar - on a phone that was inside the Filters sheet. */ ?>
+    <?php require_once '../includes/action_row.php';
+          renderActionRow(t('common.modules.checklists.name'), [actionRowNew('edit/', t('checklists.list.new_template'), true)]); ?>
 
     <div class="chk-layout">
         <!-- Sidebar -->
         <aside class="chk-sidebar">
-            <button class="chk-btn-primary" onclick="location.href='edit/'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <?php echo htmlspecialchars(t('checklists.list.new_template')); ?>
-            </button>
-
             <div>
                 <input type="text" class="chk-search" id="chkSearchInput" placeholder="<?php echo htmlspecialchars(t('checklists.list.search_ph')); ?>" oninput="filterTemplates()">
             </div>

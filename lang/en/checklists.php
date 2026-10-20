@@ -180,7 +180,7 @@ return [
 
         // 2 ---------------------------------------------------------------
         'building_heading' => 'Writing a checklist',
-        'building_intro'   => 'Templates live on the main Checklists screen. <strong>New template</strong> opens the editor on its own screen - it is a writing job, not a dialogue, and it needs the room.',
+        'building_intro'   => 'Templates live on the main Checklists screen. <strong>New</strong>, at the top right, opens the editor on its own screen - it is a writing job, not a dialogue, and it needs the room.',
         'building_step1'   => '<strong>Title</strong> - what the checklist is, as somebody searching would say it. <em>New starter onboarding</em>, not <em>Process 4b</em>.',
         'building_step2'   => '<strong>Category</strong> - groups templates on the list and colours their pill. Categories are yours to define, in <strong>Settings &rarr; Categories</strong>.',
         'building_step3'   => '<strong>Applies to</strong> - whether the checklist is offered on tickets, on tasks, or on both.',

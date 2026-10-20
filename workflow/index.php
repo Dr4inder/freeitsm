@@ -46,16 +46,16 @@ $translationNamespaces = ['common', 'workflow'];
 </head>
 <body data-mobile-module="workflow" data-mobile-page="wf-list">
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185) is what was the list's section header: New from
+             template, then New. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('workflow.list.page_title'), [
+              ['label' => t('workflow.templates.btn'), 'onclick' => 'WF.openTemplates()'],
+              actionRowNew('editor.php', t('workflow.list.new_tip'), true),
+          ], ['accent' => 'wf']); ?>
 
     <div class="container">
         <div class="tab-content active">
-            <div class="section-header">
-                <h2><?php echo htmlspecialchars(t('workflow.list.page_title')); ?></h2>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <button class="add-btn" style="background: var(--surface, #fff); color: var(--text, #333); border: 1px solid var(--border, #d0d0d0);" onclick="WF.openTemplates()"><?php echo htmlspecialchars(t('workflow.templates.btn')); ?></button>
-                    <a class="add-btn" href="editor.php"><?php echo htmlspecialchars(t('workflow.list.add_btn')); ?></a>
-                </div>
-            </div>
             <p style="margin-bottom: 20px; color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('workflow.list.intro')); ?></p>
 
             <table>

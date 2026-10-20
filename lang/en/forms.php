@@ -50,7 +50,7 @@ return [
         'status_inactive'    => 'Inactive',
         'empty_none_title'   => 'No forms yet',
         'empty_match_title'  => 'No matching forms',
-        'empty_none_body'    => 'Click <strong>New form</strong> to create your first one.',
+        'empty_none_body'    => 'Click <strong>New</strong> to create your first one.',
         'empty_match_body'   => 'Try a different search term, or clear the search box.',
         'unknown_user'       => '—',
         'fill_title'         => 'Fill in this form',
@@ -877,7 +877,7 @@ return [
         // Section 2: Building forms
         'building_title' => 'Building forms',
         'building_intro' => 'The form builder is where you design your forms. You start with a title and optional description, then add fields one by one. The builder gives you a live preview so you can see exactly how the finished form will look before sharing it.',
-        'building_step1' => '<strong>Create a new form</strong> &mdash; click the "New Form" button in the sidebar. Give your form a title and, optionally, a description that explains what the form is for.',
+        'building_step1' => '<strong>Create a new form</strong> &mdash; click <strong>New</strong> at the top right. Give your form a title and, optionally, a description that explains what the form is for.',
         'building_step2' => '<strong>Add fields</strong> &mdash; click the "Add" button to open the field type menu. There are eleven types: <strong>Text input</strong> for short answers, <strong>Text area</strong> for longer responses, <strong>Email</strong> and <strong>Number</strong> for values that need checking as they are typed, <strong>Dropdown</strong> and <strong>Radio buttons</strong> for one choice from a list, <strong>Checkbox</strong> for a single yes/no, <strong>Checkboxes</strong> for several answers at once, <strong>Date / time</strong>, <strong>Lookup</strong> to pick a real record from elsewhere in FreeITSM, and <strong>Section heading</strong> to break a long form into parts.',
         'building_step3' => '<strong>Configure each field</strong> &mdash; give every field a label and decide whether it should be required. For dropdowns, enter the list of options that users can choose from.',
         'building_step4' => '<strong>Reorder fields</strong> &mdash; drag and drop fields using the handle to arrange them in the order you want. The form will display fields in exactly this order when filled in.',

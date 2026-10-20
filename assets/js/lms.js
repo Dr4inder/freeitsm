@@ -7,6 +7,7 @@ const LMS = (() => {
     let groups = [];
     let analysts = [];
     let assignments = [];
+    let currentTab = 'courses';
 
     const ICON_LAUNCH = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
     const ICON_EDIT   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>';
@@ -62,10 +63,34 @@ const LMS = (() => {
     // =========================================================
     //  Tab switching
     // =========================================================
+    /**
+     * The action row (#185) shows what this tab can do: Upload and New on
+     * Courses, New on Groups, Assign on Assignments, nothing on Progress.
+     */
+    function syncActionRow(tab) {
+        const show = (id, on) => { const b = document.getElementById(id); if (b) b.hidden = !on; };
+        show('lmsUploadBtn', tab === 'courses');
+        show('lmsNewBtn', tab === 'courses' || tab === 'groups');
+        show('lmsAssignBtn', tab === 'assignments');
+        const nb = document.getElementById('lmsNewBtn');
+        if (nb) {
+            const tip = window.t(tab === 'groups' ? 'lms.groups.new_tip' : 'lms.courses.new_tip');
+            nb.title = tip;
+            nb.setAttribute('aria-label', tip);
+        }
+    }
+
+    /** New in the action row: a course on Courses, a group on Groups. */
+    function newForTab() {
+        if (currentTab === 'groups') openGroupModal(); else openCreateModal();
+    }
+
     function switchTab(tab) {
         document.querySelectorAll('.lms-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
         document.querySelectorAll('.lms-panel').forEach(p => p.style.display = 'none');
         document.getElementById('panel-' + tab).style.display = '';
+        currentTab = tab;
+        syncActionRow(tab);
 
         if (tab === 'courses') loadCourses();
         if (tab === 'groups') loadGroups();
@@ -916,7 +941,7 @@ const LMS = (() => {
     document.addEventListener('DOMContentLoaded', init);
 
     return {
-        switchTab, openUploadModal, openCreateModal, deleteCourse,
+        switchTab, newForTab, openUploadModal, openCreateModal, deleteCourse,
         openGroupModal, editGroup, deleteGroup,
         openAssignModal, deleteAssignment, assignTargetChanged, searchAssignPeople,
         loadProgress, viewLearnerData, closeModal

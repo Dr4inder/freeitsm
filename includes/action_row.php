@@ -49,7 +49,8 @@ function actionRowNew(string $onclick, string $what, bool $isHref = false, strin
  * @param string $title    what this page is, e.g. "Inbox" or "Software inventory"
  * @param array $actions   buttons, rightmost last: each ['label', 'onclick' or 'href', optional
  *                         'title', 'primary' (bool), 'id', 'disabled' (bool - a button the page
- *                         enables later, e.g. CMDB's New once a class is picked)]; actionRowNew()
+ *                         enables later, e.g. CMDB's New once a class is picked), 'hidden' (bool -
+ *                         one the page shows later, e.g. LMS's Assign on its Assignments tab)]; actionRowNew()
  *                         builds the usual one
  * @param array $opts      'count_id' => id of a span after the title that the page fills with a count;
  *                         'title_id' => id for the title itself, for a page that rewrites it;
@@ -63,7 +64,7 @@ function renderActionRow(string $title, array $actions = [], array $opts = []): 
     static $cssDone = false;
     if (!$cssDone) {
         $cssDone = true;
-        echo '<link rel="stylesheet" href="' . htmlspecialchars(BASE_URL) . 'assets/css/action-row.css?v=4">' . "\n";
+        echo '<link rel="stylesheet" href="' . htmlspecialchars(BASE_URL) . 'assets/css/action-row.css?v=5">' . "\n";
     }
     $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 
@@ -83,7 +84,8 @@ function renderActionRow(string $title, array $actions = [], array $opts = []): 
         $attrs = ' class="' . $cls . '"'
                . (!empty($a['id']) ? ' id="' . $h($a['id']) . '"' : '')
                . (!empty($a['title']) ? ' title="' . $h($a['title']) . '" aria-label="' . $h($a['title']) . '"' : '')
-               . (!empty($a['disabled']) ? ' disabled' : '');
+               . (!empty($a['disabled']) ? ' disabled' : '')
+               . (!empty($a['hidden']) ? ' hidden' : '');
         $inner = $h($a['label']);
         if (isset($a['href'])) {
             echo '<a href="' . $h($a['href']) . '"' . $attrs . '>' . $inner . '</a>';

@@ -242,16 +242,16 @@ $translationNamespaces = ['common', 'network-mapper'];
 </head>
 <body data-mobile-module="network-mapper" data-mobile-page="nm-list">
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185) is what was the list's toolbar: title, filter,
+             New. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('network-mapper.index.heading'), [actionRowNew('openNewModal()', t('network-mapper.index.new'))], [
+              'accent' => 'nm',
+              'extra' => '<input type="text" id="searchInput" class="action-row-search" placeholder="'
+                       . htmlspecialchars(t('network-mapper.index.filter_placeholder')) . '" oninput="filterDiagrams(this.value)">',
+          ]); ?>
 
     <div class="nm-page">
-        <div class="nm-toolbar">
-            <h1><?php echo htmlspecialchars(t('network-mapper.index.heading')); ?></h1>
-            <div class="actions">
-                <input type="text" id="searchInput" placeholder="<?php echo htmlspecialchars(t('network-mapper.index.filter_placeholder')); ?>" oninput="filterDiagrams(this.value)">
-                <button class="nm-btn" onclick="openNewModal()">+ <?php echo htmlspecialchars(t('network-mapper.index.new')); ?></button>
-            </div>
-        </div>
-
         <div class="nm-list-wrap">
             <div id="diagramListContainer">
                 <div class="nm-empty"><p><?php echo htmlspecialchars(t('network-mapper.index.loading')); ?></p></div>

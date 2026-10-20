@@ -65,13 +65,13 @@ try {
 </head>
 <body data-mobile-module="process-mapper">
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185): New moved here from the top of the process list. */ ?>
+    <?php require_once '../includes/action_row.php';
+          renderActionRow(t('process-mapper.nav.processes'), [actionRowNew('PM.createProcess()', t('process-mapper.sidebar.new_process_tip'))], ['accent' => 'pmap']); ?>
 
     <div class="pm-layout">
         <!-- Sidebar: process list -->
         <div class="pm-sidebar" id="pmSidebar">
-            <div class="pm-sidebar-header">
-                <button class="btn btn-primary btn-full" onclick="PM.createProcess()"><?php echo htmlspecialchars(t('process-mapper.sidebar.new_process')); ?></button>
-            </div>
             <div class="pm-sidebar-search">
                 <input type="text" id="processSearch" placeholder="<?php echo htmlspecialchars(t('process-mapper.sidebar.search_placeholder')); ?>" oninput="PM.filterProcesses(this.value)">
             </div>

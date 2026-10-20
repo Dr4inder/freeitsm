@@ -46,6 +46,16 @@ $translationNamespaces = ['common', 'lms'];
 </head>
 <body data-mobile-module="lms">
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185). Each tab creates something different, so the
+             row shows what the active tab can do (lms.js syncActionRow): Upload
+             and New on Courses, New on Groups, Assign on Assignments - Assign is
+             not "creating a record", so it keeps its own word. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('lms.title'), [
+              ['label' => t('lms.courses.upload'), 'onclick' => 'LMS.openUploadModal()', 'id' => 'lmsUploadBtn'],
+              actionRowNew('LMS.newForTab()', t('lms.courses.new_tip'), false, 'lmsNewBtn'),
+              ['label' => t('lms.assignments.assign'), 'onclick' => 'LMS.openAssignModal()', 'primary' => true, 'id' => 'lmsAssignBtn', 'hidden' => true],
+          ], ['accent' => 'lms']); ?>
 
     <div class="lms-container">
         <!-- Tabs -->
@@ -60,10 +70,6 @@ $translationNamespaces = ['common', 'lms'];
         <div class="lms-panel" id="panel-courses">
             <div class="lms-panel-header">
                 <h2><?php echo htmlspecialchars(t('lms.courses.heading')); ?></h2>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-secondary" onclick="LMS.openUploadModal()"><?php echo htmlspecialchars(t('lms.courses.upload')); ?></button>
-                    <button class="btn btn-primary" onclick="LMS.openCreateModal()"><?php echo htmlspecialchars(t('lms.courses.create')); ?></button>
-                </div>
             </div>
             <table class="lms-table">
                 <thead>
@@ -85,7 +91,6 @@ $translationNamespaces = ['common', 'lms'];
         <div class="lms-panel" id="panel-groups" style="display:none;">
             <div class="lms-panel-header">
                 <h2><?php echo htmlspecialchars(t('lms.groups.heading')); ?></h2>
-                <button class="btn btn-primary" onclick="LMS.openGroupModal()"><?php echo htmlspecialchars(t('lms.groups.new')); ?></button>
             </div>
             <table class="lms-table">
                 <thead>
@@ -106,7 +111,6 @@ $translationNamespaces = ['common', 'lms'];
         <div class="lms-panel" id="panel-assignments" style="display:none;">
             <div class="lms-panel-header">
                 <h2><?php echo htmlspecialchars(t('lms.assignments.heading')); ?></h2>
-                <button class="btn btn-primary" onclick="LMS.openAssignModal()"><?php echo htmlspecialchars(t('lms.assignments.assign')); ?></button>
             </div>
             <table class="lms-table">
                 <thead>
@@ -305,7 +309,7 @@ $translationNamespaces = ['common', 'lms'];
 
     <!-- Toast -->
     <script>window.API_BASE = '../api/lms/';</script>
-    <script src="../assets/js/lms.js?v=9"></script>
+    <script src="../assets/js/lms.js?v=10"></script>
     <script src="../assets/js/mobile.js?v=81"></script>
 </body>
 </html>

@@ -111,6 +111,7 @@ return [
         'page_title'      => 'Workflows',
         'intro'           => 'Automation rules that listen for events from other modules and act on them. Each rule is a trigger, optional conditions, and one or more actions.',
         'add_btn'         => 'New',
+        'new_tip'         => 'New workflow',
         'no_workflows'    => 'No workflows yet — click "New" to create your first automation.',
         'col_name'        => 'Name',
         'col_trigger'     => 'Trigger',
