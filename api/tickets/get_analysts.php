@@ -89,7 +89,25 @@ try {
         }
     }
 
-    echo json_encode(['success' => true, 'analysts' => $analysts]);
+    // GH #176. ?with_access=1 (the ticket inbox) adds the companies each active
+    // analyst can work in, so the assign lists offer only people who can open the
+    // ticket's company. TRAP: decided by getAccessibleTenantIds(), never a copy of
+    // its rule here or in the JS - it unions the analyst's grants with every team's.
+    $multiCompany = false;
+    if (!empty($_GET['with_access'])) {
+        require_once '../../includes/tenancy.php';
+        $multiCompany = isMultiTenant($conn);
+        if ($multiCompany) {
+            foreach ($analysts as &$analyst) {
+                $analyst['accessible_tenant_ids'] = $analyst['is_active']
+                    ? array_values(array_map('intval', getAccessibleTenantIds($conn, $analyst['id'])))
+                    : [];
+            }
+            unset($analyst);
+        }
+    }
+
+    echo json_encode(['success' => true, 'analysts' => $analysts, 'multi_company' => $multiCompany]);
 
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);

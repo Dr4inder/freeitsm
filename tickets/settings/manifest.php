@@ -264,6 +264,8 @@ return [
                                 'ticket_collapse_remember',
                                 // Long TICKETS, as distinct from long messages.
                                 'ticket_group_older', 'ticket_group_show', 'ticket_flag_duplicates',
+                                // Which team folders analysts see (GH #176).
+                                'ticket_team_folders',
                                 // The two AI reading aids. Both default to OFF —
                                 // they are the only settings here that spend money.
                                 'ticket_ai_summary_enabled', 'ticket_ai_summary_auto_after',

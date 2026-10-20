@@ -387,6 +387,27 @@ let ticketCategories = [];
 let ticketResolutionCodes = [];
 let ticketClassification = { category: false, closure_category: false, resolution_code: false };
 let analysts = [];
+let analystsMultiCompany = false;   // GH #176: set by loadAnalysts()
+
+/**
+ * GH #176. The analysts a ticket can be given to: on a multi-company install,
+ * those who can work in the company of every one of these tickets (the server
+ * decides who can work where - see get_analysts.php). One company: everybody.
+ *
+ * TRAP: this filters only what is OFFERED. `analysts` itself stays complete,
+ * because getDisplayName('owner') reads it - filtering it would blank the name of
+ * an owner outside the company.
+ *
+ * @param {Array} tickets  ticket rows (each with tenant_id)
+ * @param {?number} keepId  always kept - the current owner, so a dropdown never loses its value
+ */
+function assignableAnalysts(tickets, keepId) {
+    if (!analystsMultiCompany) return analysts;
+    const companies = [...new Set((tickets || []).map(ticketCompanyId).filter(id => id != null))];
+    return analysts.filter(a => (keepId != null && a.id == keepId)
+        || !Array.isArray(a.accessible_tenant_ids)
+        || companies.every(c => a.accessible_tenant_ids.includes(c)));
+}
 let currentEmail = null;
 let currentRecordings = [];
 let folderCounts = {};
@@ -1047,11 +1068,12 @@ async function loadTicketPriorities() {
 // Load analysts
 async function loadAnalysts() {
     try {
-        const response = await fetch(API_BASE + 'get_analysts.php');
+        const response = await fetch(API_BASE + 'get_analysts.php?with_access=1');
         const data = await response.json();
 
         if (data.success) {
             analysts = data.analysts.filter(a => a.is_active);
+            analystsMultiCompany = !!data.multi_company;
         }
     } catch (error) {
         console.error('Error loading analysts:', error);
@@ -2712,7 +2734,7 @@ function openSelectionMenu(event, kind) {
     } else if (kind === 'assignee') {
         items = [{ label: t('tickets.context.clear_assignee'), italic: true,
                    run: () => bulkSetField({ assigned_analyst_id: null }, t('tickets.bulk.label_assignee')) }]
-            .concat(analysts.map(a => ({
+            .concat(assignableAnalysts(Array.from(selectedEmailIds).map(id => emails.find(e => e.id == id)).filter(Boolean)).map(a => ({
                 label: a.full_name || a.username,
                 run: () => bulkSetField({ assigned_analyst_id: a.id }, t('tickets.bulk.label_assignee'))
             })));
@@ -3019,7 +3041,7 @@ function displayEmail(email, recordings) {
     `;
 
     // Build owner/analyst dropdown
-    const ownerOptions = analysts.map(analyst =>
+    const ownerOptions = assignableAnalysts([email], email.owner_id).map(analyst =>
         `<option value="${analyst.id}" ${email.owner_id == analyst.id ? 'selected' : ''}>${escapeHtml(analyst.full_name)}</option>`
     ).join('');
 
@@ -10303,7 +10325,10 @@ function populateContextAssigneeSubmenu() {
         <span class="ctx-status-name" style="color:#888; font-style: italic;">${escapeHtml(t('tickets.context.clear_assignee'))}</span>
         ${(currentOwnerId === null) ? '<span class="ctx-status-check">&#10003;</span>' : ''}
     </div>`;
-    sub.innerHTML = clearRow + analysts.map(a => {
+    // GH #176: only people who can work in this ticket's company (plus its owner).
+    const ctxRow = (currentEmail && currentEmail.ticket_id == ctxTargetTicketId)
+        ? currentEmail : emails.find(e => e.ticket_id == ctxTargetTicketId);
+    sub.innerHTML = clearRow + assignableAnalysts(ctxRow ? [ctxRow] : [], currentOwnerId).map(a => {
         const isCurrent = (currentOwnerId != null && a.id == currentOwnerId);
         // Use the first letter of the name as a colourless initial chip — keeps
         // the row visually aligned with status / priority swatches without

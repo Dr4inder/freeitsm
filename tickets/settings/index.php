@@ -1950,6 +1950,18 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.settings.general.flag_duplicates_help')); ?></small>
                 </div>
 
+                <!-- GH #176. Which team folders analysts see. Display only - it never
+                     changes which tickets anyone can open. Default 'all' = as before. -->
+                <h3 style="margin-top: 34px;"><?php echo htmlspecialchars(t('tickets.settings.general.team_folders_heading')); ?></h3>
+                <div class="form-group">
+                    <label for="teamFolders"><?php echo htmlspecialchars(t('tickets.settings.general.team_folders_label')); ?></label>
+                    <select id="teamFolders" style="max-width: 360px;">
+                        <option value="all"><?php echo htmlspecialchars(t('tickets.settings.general.team_folders_all')); ?></option>
+                        <option value="mine"><?php echo htmlspecialchars(t('tickets.settings.general.team_folders_mine')); ?></option>
+                    </select>
+                    <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.settings.general.team_folders_help')); ?></small>
+                </div>
+
                 <!-- The two AI reading aids (#104, ideas 7 and 12).
                      ⚠️ Both are OFF by default and that is deliberate. Every other
                      setting on this page changes how something already free is
@@ -6753,6 +6765,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     cb('collapseRemember',     'ticket_collapse_remember',      true);
                     cb('groupOlder',          'ticket_group_older',            true);
                     cb('flagDuplicates',      'ticket_flag_duplicates',        true);
+                    document.getElementById('teamFolders').value = data.settings.ticket_team_folders === 'mine' ? 'mine' : 'all';
                     document.getElementById('groupShow').value = parseInt(data.settings.ticket_group_show, 10) || 6;
                     // ⚠️ '|| N' would turn a saved 0 into N, and 0 is the setting that
                     // means "never refresh by itself" — the one an administrator is most
@@ -7120,7 +7133,8 @@ function renderOversizeFields(string $px, bool $withLimits): void
                 ticket_collapse_remember:      document.getElementById('collapseRemember').checked ? '1' : '0',
                 ticket_group_older:            document.getElementById('groupOlder').checked ? '1' : '0',
                 ticket_group_show:             String(document.getElementById('groupShow').value || 6),
-                ticket_flag_duplicates:        document.getElementById('flagDuplicates').checked ? '1' : '0'
+                ticket_flag_duplicates:        document.getElementById('flagDuplicates').checked ? '1' : '0',
+                ticket_team_folders:           document.getElementById('teamFolders').value === 'mine' ? 'mine' : 'all'
             };
 
             try {

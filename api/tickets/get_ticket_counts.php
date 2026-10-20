@@ -545,6 +545,23 @@ try {
             ];
         }
 
+        // Team folders: everyone's, or only your own (GH #176, Tickets -> Settings ->
+        // General). 'mine' keeps the teams you belong to, plus any team holding
+        // tickets you can already see - their tickets are in your list, and hiding
+        // the folder would stop the team folders adding up. Administrators always
+        // see every team. Display only: nobody loses sight of a ticket.
+        $teamFoldersMode = 'all';
+        try {
+            $teamFoldersMode = (string)($conn->query("SELECT setting_value FROM system_settings WHERE setting_key = 'ticket_team_folders'")->fetchColumn() ?: 'all');
+        } catch (Exception $e) { /* setting absent: today's behaviour */ }
+        if ($teamFoldersMode === 'mine' && !analystIsAdmin($conn, $analystId)) {
+            $mineStmt = $conn->prepare("SELECT team_id FROM analyst_teams WHERE analyst_id = ?");
+            $mineStmt->execute([$analystId]);
+            $myTeams = array_flip(array_map('intval', $mineStmt->fetchAll(PDO::FETCH_COLUMN)));
+            $teamStructure = array_values(array_filter($teamStructure,
+                fn($tm) => isset($myTeams[$tm['id']]) || $tm['count'] > 0));
+        }
+
         // "Unassigned" in team grouping means NO TEAM — the same shape the other
         // two groupings already use, where it means no department / nobody
         // working it. Nothing new to explain.
