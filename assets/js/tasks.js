@@ -1957,7 +1957,7 @@ function renderDetailPanel(task) {
 
         <div class="detail-field detail-description">
             <label>${esc(window.t('tasks.detail.description'))}</label>
-            <div id="descriptionEditor">${task.description || ''}</div>
+            <div id="descriptionEditor">${taskDescriptionHtml(task.description)}</div>
         </div>
 
         <!-- Repeats (#94) -->
@@ -4595,6 +4595,20 @@ function linkedRecord(url, label) {
 }
 
 /** Escapes text for safe use in HTML. */
+/**
+ * A task description as markup that is safe to insert. It is rich text, so it is
+ * cleaned rather than escaped - formatting and pasted screenshots survive, event
+ * handlers and scripts do not.
+ *
+ * TRAP: never put task.description into innerHTML or a template directly.
+ * `<img src=x onerror=...>` runs the moment it is inserted - the editor is no
+ * protection. Fails closed (shown as text) if safe-html.js is not loaded.
+ */
+function taskDescriptionHtml(html) {
+    if (!html) return '';
+    return typeof safeHtmlFragment === 'function' ? safeHtmlFragment(html) : esc(html);
+}
+
 function esc(text) {
     if (!text) return '';
     const div = document.createElement('div');

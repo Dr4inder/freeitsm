@@ -136,7 +136,9 @@
             : `<span style="color:#999;font-size:13px;">—</span>`;
 
         const descBlock = task.description
-            ? `<div class="cal-detail-desc-preview">${task.description}</div>
+            // TRAP: rich text - cleaned, never inserted raw (an onerror handler runs on insertion).
+            // Fails closed to plain text if safe-html.js is missing.
+            ? `<div class="cal-detail-desc-preview">${typeof safeHtmlFragment === 'function' ? safeHtmlFragment(task.description) : esc(task.description)}</div>
                <div style="font-size:12px;color:#999;margin-top:6px;">${esc(T('description_preview_hint'))}</div>`
             : `<div style="color:#999;font-size:13px;">${esc(T('no_description'))}</div>`;
 

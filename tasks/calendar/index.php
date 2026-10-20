@@ -151,7 +151,8 @@ $translationNamespaces = ['common', 'tasks'];
         // The stored choice, rendered server-side so the select is already correct.
         window.CAL_SUBTASK_SCOPE = <?php echo json_encode($calSubtaskScope); ?>;
     </script>
-    <script src="../../assets/js/tasks-quick-panel.js?v=1"></script>
+    <script src="../../assets/js/safe-html.js?v=1"></script>
+    <script src="../../assets/js/tasks-quick-panel.js?v=2"></script>
     <script src="../../assets/js/tasks-calendar.js?v=12"></script>
     <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
