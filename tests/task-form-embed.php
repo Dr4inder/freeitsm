@@ -8,12 +8,79 @@ if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
  * clipped at the loading card's 600px, with overflow hidden and no submit button.
  *
  * Run: php tests/task-form-embed.php
- * Requires Node.js 22+ and headless Chromium (CHROME_BIN, or installed Chrome/Edge).
+ * Requires Chrome, Chromium or Edge (CHROME_BIN, or an installed one). Nothing else:
+ * the browser is driven from PHP over its DevTools socket (cdpEvaluate() below).
  * Uses the real fill-page styles, height reporter and task-window receiver in
  * temporary same-origin pages. No database, login, forms or settings are touched.
  * The pre-fix code fails the delayed-growth and shrink assertions (the control).
  */
 
+/**
+ * Evaluates a script in a page over Chrome's DevTools WebSocket and returns its
+ * value - the smallest WebSocket client that does the job (RFC 6455: the client
+ * masks what it sends; the server's frames arrive unmasked). Waits for the
+ * script's promise.
+ *
+ * @param string $wsUrl  the page's webSocketDebuggerUrl, ws://127.0.0.1:port/devtools/page/ID
+ * @param string $expression  JavaScript returning a value or a promise of one
+ * @param int $timeout  seconds before giving up
+ */
+function cdpEvaluate(string $wsUrl, string $expression, int $timeout): string
+{
+    $u = parse_url($wsUrl);
+    $sock = @stream_socket_client('tcp://' . $u['host'] . ':' . $u['port'], $errno, $error, 5);
+    if (!$sock) throw new RuntimeException('Cannot reach the browser: ' . $error);
+    stream_set_timeout($sock, $timeout);
+    $key = base64_encode(random_bytes(16));
+    fwrite($sock, "GET {$u['path']} HTTP/1.1\r\nHost: {$u['host']}:{$u['port']}\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n"
+                . "Sec-WebSocket-Key: $key\r\nSec-WebSocket-Version: 13\r\n\r\n");
+    $head = '';
+    while (strpos($head, "\r\n\r\n") === false && !feof($sock)) $head .= fread($sock, 1);
+    if (strpos($head, ' 101 ') === false) throw new RuntimeException('The browser refused the DevTools connection.');
+
+    $send = function (string $text) use ($sock) {
+        $len = strlen($text);
+        $frame = chr(0x81) . ($len < 126 ? chr(0x80 | $len) : ($len < 65536 ? chr(0x80 | 126) . pack('n', $len) : chr(0x80 | 127) . pack('J', $len)));
+        $mask = random_bytes(4);
+        $masked = '';
+        for ($i = 0; $i < $len; $i++) $masked .= $text[$i] ^ $mask[$i % 4];
+        fwrite($sock, $frame . $mask . $masked);
+    };
+    $read = function (int $n) use ($sock) {
+        $buf = '';
+        while (strlen($buf) < $n) {
+            $chunk = fread($sock, $n - strlen($buf));
+            if ($chunk === '' || $chunk === false) throw new RuntimeException('The browser closed the DevTools connection or timed out.');
+            $buf .= $chunk;
+        }
+        return $buf;
+    };
+    $receive = function () use ($read) {
+        $message = '';
+        do {
+            [$b1, $b2] = array_values(unpack('C2', $read(2)));
+            $len = $b2 & 0x7f;
+            if ($len === 126) $len = unpack('n', $read(2))[1];
+            elseif ($len === 127) $len = unpack('J', $read(8))[1];
+            $message .= $len ? $read($len) : '';
+        } while (!($b1 & 0x80));
+        return $message;
+    };
+
+    $send(json_encode(['id' => 1, 'method' => 'Runtime.evaluate',
+        'params' => ['expression' => $expression, 'awaitPromise' => true, 'returnByValue' => true]]));
+    $deadline = time() + $timeout;
+    while (time() < $deadline) {
+        $msg = json_decode($receive(), true);
+        if (($msg['id'] ?? null) !== 1) continue;           // an event, not our answer
+        fclose($sock);
+        $value = $msg['result']['result']['value'] ?? null;
+        if (!is_string($value)) throw new RuntimeException('Browser harness failed: ' . json_encode($msg));
+        return $value;
+    }
+    fclose($sock);
+    throw new RuntimeException('Browser test timed out.');
+}
 $root = dirname(__DIR__);
 $browser = getenv('CHROME_BIN') ?: null;
 foreach ([
@@ -117,7 +184,6 @@ $tmp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'freeitsm_embed_' . bin2hex(ra
 mkdir($tmp, 0700);
 $server = null;
 $browserProcess = null;
-$driverProcess = null;
 $exit = 1;
 try {
     file_put_contents($tmp . '/index.html', $parent);
@@ -149,51 +215,23 @@ try {
         [0 => ['pipe', 'r'], 1 => ['file', $tmp . '/browser.log', 'a'], 2 => ['file', $tmp . '/browser.log', 'a']], $browserPipes);
     if (!is_resource($browserProcess)) throw new RuntimeException('Cannot start headless Chromium.');
     fclose($browserPipes[0]);
-    // Real animation frames matter to ResizeObserver. A virtual-time --dump-dom
-    // run can advance timers without painting, falsely reporting a resize failure.
-    $driver = <<<'JS'
-const deadline = setTimeout(() => { console.error('Browser test timed out.'); process.exit(1); }, 25000);
-let page;
-for (let i = 0; i < 50; i++) {
-    try {
-        const pages = await (await fetch('http://127.0.0.1:' + process.argv[2] + '/json/list')).json();
-        page = pages.find(p => p.type === 'page' && p.url.endsWith('/index.html'));
-        if (page) break;
-    } catch {}
-    await new Promise(r => setTimeout(r, 100));
-}
-if (!page) throw new Error('Headless browser page unavailable.');
-const socket = new WebSocket(page.webSocketDebuggerUrl);
-socket.addEventListener('open', () => {
-    socket.send(JSON.stringify({id:2,method:'Runtime.enable'}));
-    socket.send(JSON.stringify({id:4,method:'Page.enable'}));
-    socket.send(JSON.stringify({id:5,method:'Page.navigate',params:{url:page.url}}));
-    socket.send(JSON.stringify({id:6,method:'Page.bringToFront'}));
-});
-const run = () => socket.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{
-    expression:`new Promise(resolve => { const poll = setInterval(() => { const result = document.getElementById('result'); if (result && result.textContent.startsWith('[')) { clearInterval(poll); resolve(JSON.parse(result.textContent)); } }, 100); })`,
-    awaitPromise:true,returnByValue:true
-}}));
-let started = false;
-socket.addEventListener('message', event => {
-    const message = JSON.parse(event.data);
-    if (message.method === 'Page.loadEventFired' && !started) { started = true; run(); }
-    if (message.method === 'Runtime.exceptionThrown') console.error(JSON.stringify(message.params.exceptionDetails));
-    if (message.id !== 1) return;
-    if (!message.result?.result?.value) { console.error('Browser harness failed.'); process.exit(1); }
-    process.stdout.write(JSON.stringify(message.result.result.value));
-    clearTimeout(deadline);
-    socket.send(JSON.stringify({id:7,method:'Browser.close'}));
-});
-JS;
-    file_put_contents($tmp . '/driver.mjs', $driver);
-    $driverProcess = proc_open([getenv('NODE_BIN') ?: 'node', $tmp . '/driver.mjs', (string)$debugPort],
-        [0 => ['pipe', 'r'], 1 => ['file', $tmp . '/result.json', 'w'], 2 => ['file', $tmp . '/driver.log', 'w']], $driverPipes);
-    if (!is_resource($driverProcess)) throw new RuntimeException('Cannot start Node.js (NODE_BIN).');
-    fclose($driverPipes[0]);
-    $driverExit = proc_close($driverProcess);
-    $driverProcess = null;
-    if ($driverExit !== 0) throw new RuntimeException('Browser driver failed: ' . file_get_contents($tmp . '/driver.log') . substr(file_get_contents($tmp . '/server.log'), -1500));
+    // Real animation frames matter to ResizeObserver, and the page waits on
+    // them: a virtual-time --dump-dom run never advances them and the checks
+    // stall. So the browser runs in real time and is asked for the result over
+    // its DevTools socket.
+    $page = null;
+    for ($i = 0; $i < 50 && !$page; $i++) {
+        $list = @file_get_contents('http://127.0.0.1:' . $debugPort . '/json/list');
+        foreach ((array)json_decode((string)$list, true) as $p) {
+            if (($p['type'] ?? '') === 'page' && substr($p['url'] ?? '', -11) === '/index.html') { $page = $p; break; }
+        }
+        if (!$page) usleep(100000);
+    }
+    if (!$page) throw new RuntimeException('Headless browser page unavailable.');
+    $value = cdpEvaluate($page['webSocketDebuggerUrl'],
+        "new Promise(resolve => { const poll = setInterval(() => { const r = document.getElementById('result'); if (r && r.textContent.startsWith('[')) { clearInterval(poll); resolve(r.textContent); } }, 100); })",
+        25);
+    file_put_contents($tmp . '/result.json', $value);
     $checks = json_decode(file_get_contents($tmp . '/result.json'), true);
     if (!is_array($checks) || count($checks) !== 9) throw new RuntimeException('Browser did not finish all nine checks.');
     $failed = 0;
@@ -207,7 +245,7 @@ JS;
     $message = str_replace([$tmp, getenv('USERPROFILE') ?: $tmp], ['[temporary directory]', '[user profile]'], $e->getMessage());
     fwrite(STDERR, $message . "\n");
 } finally {
-    foreach ([$driverProcess, $browserProcess, $server] as $process) {
+    foreach ([$browserProcess, $server] as $process) {
         if (is_resource($process)) { proc_terminate($process); proc_close($process); }
     }
     // Only our unique temporary directory, never a user's existing profile.
