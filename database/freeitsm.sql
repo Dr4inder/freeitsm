@@ -8379,6 +8379,26 @@ CREATE TABLE IF NOT EXISTS `cost_centres` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------
+-- Preference templates (discussion #124) - System -> Preference templates.
+-- A named set of preferences captured from somebody's real ones and given to
+-- people in one go. See includes/preference_templates.php.
+-- ----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `preference_templates` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `name`             VARCHAR(100) NOT NULL,
+    `description`      VARCHAR(255) NULL,
+    -- JSON: user_preferences key => value, or null for "the built-in default"
+    -- (applying a null REMOVES the person's own value). Only the keys of the
+    -- sections ticked when it was captured.
+    `settings`         LONGTEXT NOT NULL,
+    -- 1 = given to every analyst the moment they are created. At most one row.
+    `for_new_analysts` TINYINT(1) NOT NULL DEFAULT 0,
+    `created_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_datetime` DATETIME NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------
 -- Leases (3.5.0) - Assets -> Leases. A lease agreement, its schedules (each with
 -- its own dates and cost), and the assets on each schedule with what became of
 -- them. See includes/leases.php.

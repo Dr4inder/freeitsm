@@ -221,6 +221,15 @@ function getSystemAreas() {
             'desc'     => 'system.landing.preferences_desc',
             'keywords' => 'system.landing.preferences_keywords',
         ],
+        // Preference templates (discussion #124): beside Preferences, which is
+        // where a template's settings are set up before it is taken.
+        [
+            'icon'     => 'pref_templates',
+            'url'      => 'preference-templates/',
+            'title'    => 'system.landing.pref_templates_title',
+            'desc'     => 'system.landing.pref_templates_desc',
+            'keywords' => 'system.landing.pref_templates_keywords',
+        ],
         [
             'icon'     => 'demo_data',
             'url'      => 'demo-data/',
@@ -347,6 +356,7 @@ function systemAreaIcon($key) {
         'webhooks'    => '<path d="M18 16.98h-5.99c-1.66 0-3.01-1.34-3.01-3S10.34 11 12 11h.05"></path><path d="M8.5 9.5 12 6l3.5 3.5"></path><circle cx="18" cy="17" r="3"></circle><circle cx="6" cy="7" r="3"></circle><circle cx="15" cy="20" r="1.5" fill="currentColor" stroke="none"></circle>',
         'ai_thinking' => '<path d="M9.5 3A2.5 2.5 0 0 1 12 5.5v13a2.5 2.5 0 0 1-4.96.44A2.5 2.5 0 0 1 4 16.5a2.5 2.5 0 0 1-.9-4.34A2.5 2.5 0 0 1 4.6 7.2 2.5 2.5 0 0 1 7 4.5 2.5 2.5 0 0 1 9.5 3z"></path><path d="M14.5 3A2.5 2.5 0 0 0 12 5.5v13a2.5 2.5 0 0 0 4.96.44A2.5 2.5 0 0 0 20 16.5a2.5 2.5 0 0 0 .9-4.34 2.5 2.5 0 0 0-1.5-4.96A2.5 2.5 0 0 0 17 4.5 2.5 2.5 0 0 0 14.5 3z"></path>',
         'calendar_sync' => '<rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><polyline points="9 15 11 17 15 13"></polyline>',
+        'pref_templates' => '<rect x="3" y="3" width="14" height="14" rx="2"></rect><path d="M7 21h12a2 2 0 0 0 2-2V7"></path><line x1="7" y1="8" x2="13" y2="8"></line><line x1="7" y1="12" x2="11" y2="12"></line>',
         'preferences' => '<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>',
         'demo_data'   => '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line>',
         // An open book with code brackets on its pages - the Engineering wiki.

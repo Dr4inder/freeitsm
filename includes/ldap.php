@@ -595,6 +595,9 @@ function ldapCreateAnalyst(PDO $conn, int $providerId, string $preferredUser, st
         }
     }
     ssoApplyJitCompanies($conn, $providerId, $analystId);   // which companies (3.5.0)
+    // The "for new analysts" preference template (discussion #124).
+    require_once __DIR__ . '/preference_templates.php';
+    prefTemplatesApplyForNew($conn, $analystId);
     return $analystId;
 }
 

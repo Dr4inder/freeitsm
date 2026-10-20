@@ -35,6 +35,8 @@ $DB_VERIFY_TABLE_OVERRIDES = [
     'document_links' => 'system',
     // Feature Bingo's "Not for us" list - administered in System.
     'feature_bingo_dismissed' => 'system',
+    // System -> Preference templates (discussion #124).
+    'preference_templates'    => 'system',
     // The self-service portal's people and their bell sit with the requesters
     // (`users` => tickets), not in "other" (#62).
     'manager_grants'       => 'tickets',

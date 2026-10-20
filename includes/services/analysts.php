@@ -78,7 +78,11 @@ final class AnalystsService
                                    is_admin, can_access_all_modules, can_access_all_tenants, created_datetime, last_modified_datetime)
              VALUES (?, ?, ?, ?, 1, ?, 0, 0, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
         )->execute([$username, $unusable, $fullName, $email, $providerId, $allTenants]);
-        return (int)$conn->lastInsertId();
+        $newId = (int)$conn->lastInsertId();
+        // The "for new analysts" preference template (discussion #124).
+        require_once __DIR__ . '/../preference_templates.php';
+        prefTemplatesApplyForNew($conn, $newId);
+        return $newId;
     }
 
     /**

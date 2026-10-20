@@ -675,6 +675,20 @@ return [
         ]],
     ],
 
+    // ───────────────────────── Preference templates (discussion #124) ─────────────────────────
+    [
+        'id'       => 'system.preference_templates',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'organisation',
+        'title'    => 'Preference templates',
+        'what'     => 'Named sets of preferences - timezone, language, the sidebar and more - taken from a real setup and given to a team in one go, or to every new analyst.',
+        'why'      => 'Everyone starts from the same setup instead of finding every setting alone, and a new starter is ready on their first sign-in.',
+        'done'     => 'At least one preference template exists.',
+        'link'     => 'system/preference-templates/',
+        'check'    => ['rows', 'preference_templates'],
+    ],
+
     // ───────────────────────── Photo Album (just for fun) ─────────────────────────
     [
         'id'       => 'system.photo_album',

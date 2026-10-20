@@ -641,5 +641,8 @@ function oidcCreateAnalyst(PDO $conn, int $providerId, string $preferredUser, st
     ssoApplyJitCompanies($conn, $providerId, $analystId);   // which companies (3.5.0)
     require_once __DIR__ . '/../../includes/sso_claims.php';
     ssoJitStartForTeams($conn, $providerId, $analystId, $defaultModules);   // teams give the modules (3.5.0)
+    // The "for new analysts" preference template (discussion #124).
+    require_once __DIR__ . '/../../includes/preference_templates.php';
+    prefTemplatesApplyForNew($conn, $analystId);
     return $analystId;
 }

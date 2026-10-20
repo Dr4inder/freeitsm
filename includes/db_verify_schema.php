@@ -5552,6 +5552,17 @@ return [
         'is_demo'          => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
     ],
 
+    // ---- Preference templates (discussion #124) - includes/preference_templates.php ----
+    'preference_templates' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'name'             => 'VARCHAR(100) NOT NULL',
+        'description'      => 'VARCHAR(255) NULL',
+        'settings'         => 'LONGTEXT NOT NULL',
+        'for_new_analysts' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'created_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'updated_datetime' => 'DATETIME NULL',
+    ],
+
     // ---- Leases (3.5.0) - Assets -> Leases; see includes/leases.php ----
     // What became of a leased asset (Assets -> Settings -> Leasing). kind:
     // 'active' = still on lease, counts towards Due back; 'closed' = finished.

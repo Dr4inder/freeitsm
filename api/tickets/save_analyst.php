@@ -146,6 +146,9 @@ try {
         $stmt = $conn->prepare($sql);
         $stmt->execute([$username, $passwordHash, $fullName, $email, $isActive ? 1 : 0, $authProviderId, $isAdmin]);
         $analystId = (int)$conn->lastInsertId();
+        // The "for new analysts" preference template (discussion #124).
+        require_once __DIR__ . '/../../includes/preference_templates.php';
+        prefTemplatesApplyForNew($conn, $analystId);
         $message = 'Analyst created successfully';
     }
 
