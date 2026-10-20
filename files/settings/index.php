@@ -116,6 +116,6 @@ $tt = fn(string $k) => htmlspecialchars(t('files.settings.' . $k));
     </div>
     <script>window.FILES_API = <?php echo json_encode(BASE_URL . 'api/files/'); ?>;</script>
     <script src="../../assets/js/files-settings.js?v=1"></script>
-    <script src="../../assets/js/mobile.js?v=81"></script>
+    <script src="../../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

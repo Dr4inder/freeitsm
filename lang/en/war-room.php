@@ -229,7 +229,7 @@ return [
         'channels_own_title'      => 'Channels you create',
         'channels_own_desc'       => 'Any analyst can create one — during an incident, needing an administrator to make you a room is the wrong dependency. Give it a name and a topic, and tick Private to choose who can see it. Archive it when the incident is over.',
         'channels_dm_title'       => 'Direct messages',
-        'channels_dm_desc'        => 'Use New message to start a one-to-one with any analyst. Only the two of you can see it.',
+        'channels_dm_desc'        => 'Use New message, at the top right, to start a one-to-one with any analyst. Only the two of you can see it.',
         'channels_note_title'     => 'Archiving does not hide anything',
         'channels_note_body'      => 'Archiving a channel stops new messages, but the conversation stays readable — it is the record of what was said during the incident. Only the person who created a channel, or somebody who can manage the war room, can rename or archive it.',
 

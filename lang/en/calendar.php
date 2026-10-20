@@ -185,8 +185,8 @@ return [
 
         // Section 3 — Creating events
         'creating_heading' => 'Creating events',
-        'creating_intro'   => 'Adding events to the calendar is straightforward. Click the <strong>+ New Event</strong> button in the sidebar to open the event form. Fill in the details and save &mdash; the event appears on the calendar immediately.',
-        'creating_step1'   => '<strong>Click + New Event</strong> &mdash; the button is in the calendar sidebar on the left. This opens the event creation modal.',
+        'creating_intro'   => 'Adding events to the calendar is straightforward. Click <strong>New</strong> at the top right to open the event form. Fill in the details and save &mdash; the event appears on the calendar immediately.',
+        'creating_step1'   => '<strong>Click New</strong> &mdash; the button is at the top right, on the calendar and in the Table view. This opens the event creation modal.',
         'creating_step2'   => '<strong>Enter a title</strong> &mdash; give the event a clear, descriptive name. For example: "SSL certificate renewal &mdash; webserver01" or "Monthly patching window".',
         'creating_step3'   => '<strong>Choose a category</strong> &mdash; select from the dropdown to colour-code the event. Categories are configured in Settings and help you filter the calendar later.',
         'creating_step4'   => '<strong>Set the dates and times</strong> &mdash; pick a start date and optionally an end date. Add start and end times for timed events, or tick "All day event" for deadlines and full-day entries.',

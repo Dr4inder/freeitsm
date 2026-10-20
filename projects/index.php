@@ -44,6 +44,11 @@ $translationNamespaces = ['common', 'projects'];
 </head>
 <body data-mobile-module="projects" data-mobile-page="projects-portfolio">
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185): New moved here from the toolbar above the
+             list. It starts hidden; projects-portfolio.js shows it when the
+             list says this analyst may create projects (can_create). */
+          require_once __DIR__ . '/../includes/action_row.php';
+          renderActionRow(t('projects.title'), [array_merge(actionRowNew('', t('projects.portfolio.new_tip'), false, 'prjNew'), ['hidden' => true])], ['accent' => 'prj']); ?>
 
     <div class="prj-layout">
         <aside class="prj-sidebar">
@@ -72,10 +77,6 @@ $translationNamespaces = ['common', 'projects'];
             </div>
 
             <div class="prj-toolbar">
-                <button type="button" class="btn btn-primary prj-btn" id="prjNew">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <?php echo htmlspecialchars(t('projects.portfolio.new')); ?>
-                </button>
                 <span class="prj-count" id="prjCount"></span>
                 <!-- 3.3.0: order and layout. The default order is Projects -> Settings -> General. -->
                 <div class="prj-toolbar-right">
@@ -128,6 +129,6 @@ $translationNamespaces = ['common', 'projects'];
     <script src="../assets/js/projects.js?v=10"></script>
     <script src="../assets/js/projects-charts.js?v=9"></script>
     <script src="../assets/js/projects-portfolio.js?v=14"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

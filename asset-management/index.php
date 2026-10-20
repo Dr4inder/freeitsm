@@ -1485,7 +1485,7 @@ $translationNamespaces = ['common', 'asset-management'];
              since #185 it is the action row's title, beside New.
              ⚠️ The static label is the FALLBACK: renderAssetsList() replaces
              the title's whole textContent (#assetCount) once the list arrives. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('asset-management.nav.assets'), [actionRowNew('openNewAssetModal()', t('asset-management.list.new_asset'))], ['title_id' => 'assetCount']); ?>
 
     <div class="main-container assets-container">
@@ -4620,6 +4620,6 @@ $translationNamespaces = ['common', 'asset-management'];
     <script src="../assets/js/network-mapper-icons.js?v=3"></script>
     <script>window.ASSET_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.APP_BASE = window.APP_BASE || <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="../assets/js/project-links.js?v=1"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

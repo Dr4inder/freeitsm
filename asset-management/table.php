@@ -119,7 +119,7 @@ try {
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
-    <?php require_once '../includes/action_row.php';
+    <?php require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('asset-management.nav.assets'), [actionRowNew('./?new=1', t('asset-management.list.new_asset'), true)]); ?>
 
     <div class="dt-page">
@@ -134,6 +134,6 @@ try {
     <script src="../assets/js/data-table.js?v=6"></script>
     <script src="../assets/js/asset-table.js?v=10"></script>
     <?php /* Loaded last so it can wrap this page's globals; inert on desktop. */ ?>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

@@ -60,6 +60,7 @@ return [
 
     'modal' => [
         'new_incident'        => 'New Incident',
+        'new_incident_tip'    => 'New incident',
         'edit_incident'       => 'Edit Incident',
         'title'               => 'Title',
         'title_placeholder'   => 'Brief description of the incident',

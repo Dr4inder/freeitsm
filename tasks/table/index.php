@@ -47,7 +47,7 @@ $translationNamespaces = ['common', 'tasks'];
     <?php /* The action row (#185). Tasks had no general New - only the + at the
              top of each board column, which stays as a shortcut that already
              knows the status. New asks for a title and opens the task. */
-          require_once '../../includes/action_row.php';
+          require_once __DIR__ . '/../../includes/action_row.php';
           renderActionRow(t('tasks.title'), $tasksReadOnly ? [] : [actionRowNew('../?new=1', t('tasks.board.new_task'), true)], ['accent' => 'tsk']); ?>
 
     <div class="tasks-container">
@@ -119,6 +119,6 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../../assets/js/data-table.js?v=6"></script>
     <script src="../../assets/js/tasks-ctx-menu.js?v=4"></script>
     <script src="../../assets/js/tasks-table.js?v=5"></script>
-    <script src="../../assets/js/mobile.js?v=81"></script>
+    <script src="../../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

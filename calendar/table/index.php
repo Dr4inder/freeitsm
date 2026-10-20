@@ -49,6 +49,9 @@ $translationNamespaces = ['common', 'calendar'];
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
+    <?php /* New in the table view opens the calendar's event form (?new=1) - #185. */
+          require_once __DIR__ . '/../../includes/action_row.php';
+          renderActionRow(t('calendar.title'), [actionRowNew('../?new=1', t('calendar.sidebar.new_event'), true)], ['accent' => 'cal']); ?>
 
     <div class="dt-page">
         <?php include '../../includes/data-table-skeleton.php'; ?>
@@ -56,6 +59,6 @@ $translationNamespaces = ['common', 'calendar'];
 
     <script src="../../assets/js/data-table.js?v=6"></script>
     <script src="../../assets/js/calendar-table.js?v=3"></script>
-    <script src="../../assets/js/mobile.js?v=81"></script>
+    <script src="../../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

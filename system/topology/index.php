@@ -314,6 +314,6 @@ if (!isset($_SESSION['analyst_id'])) {
 
     load();
     </script>
-    <script src="../../assets/js/mobile.js?v=81"></script>
+    <script src="../../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

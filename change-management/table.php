@@ -50,9 +50,9 @@ $translationNamespaces = ['common', 'change-management'];
     <?php /* The action row (#185): New change was at the foot of the list's
              sidebar and missing from the Calendar and Table views. Read only
              access (#180) gets the row without New. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('change-management.nav.changes'),
-              $cmLevel !== 'read' ? [actionRowNew('new/', t('change-management.sidebar.new_change_tip'), true)] : [],
+              $cmLevel !== 'read' ? [actionRowNew(BASE_URL . 'change-management/new/', t('change-management.sidebar.new_change_tip'), true)] : [],
               ['accent' => 'cm']); ?>
 
     <div class="dt-page">
@@ -61,6 +61,6 @@ $translationNamespaces = ['common', 'change-management'];
 
     <script src="../assets/js/data-table.js?v=6"></script>
     <script src="../assets/js/change-table.js?v=6"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

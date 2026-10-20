@@ -66,7 +66,7 @@ try {
 <body data-mobile-module="process-mapper">
     <?php include 'includes/header.php'; ?>
     <?php /* The action row (#185): New moved here from the top of the process list. */ ?>
-    <?php require_once '../includes/action_row.php';
+    <?php require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('process-mapper.nav.processes'), [actionRowNew('PM.createProcess()', t('process-mapper.sidebar.new_process_tip'))], ['accent' => 'pmap']); ?>
 
     <div class="pm-layout">
@@ -507,6 +507,6 @@ try {
     <script src="../assets/js/vendor/html2canvas.min.js"></script>
     <script src="../assets/js/vendor/jspdf.umd.min.js"></script>
     <script src="../assets/js/process-mapper.js?v=14"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

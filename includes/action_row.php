@@ -64,7 +64,7 @@ function renderActionRow(string $title, array $actions = [], array $opts = []): 
     static $cssDone = false;
     if (!$cssDone) {
         $cssDone = true;
-        echo '<link rel="stylesheet" href="' . htmlspecialchars(BASE_URL) . 'assets/css/action-row.css?v=5">' . "\n";
+        echo '<link rel="stylesheet" href="' . htmlspecialchars(BASE_URL) . 'assets/css/action-row.css?v=6">' . "\n";
     }
     $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 

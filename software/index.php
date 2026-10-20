@@ -475,7 +475,7 @@ $translationNamespaces = ['common', 'software'];
              platform, so this is the only way Xero or Canva can be recorded -
              and the only way a licence can be attached to one, since
              software_licences.app_id is NOT NULL. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('software.inventory.heading'), [actionRowNew('openAppModal(null)', t('software.inventory.new_app'))], [
               'count_id' => 'softwareCount',
               'extra' => '<input type="text" class="search-box" id="softwareSearch" placeholder="'
@@ -929,6 +929,6 @@ $translationNamespaces = ['common', 'software'];
             return div.innerHTML;
         }
     </script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

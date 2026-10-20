@@ -256,7 +256,7 @@ $translationNamespaces = ['common', 'cmdb'];
              name is its title (browse.js rewrites #mainTitle when a class is
              picked), then the filter box and New. New stays disabled until a
              class is picked - an object cannot exist without one. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('cmdb.list.select_class'),
               [array_merge(actionRowNew('openNewObjectModal()', t('cmdb.list.new_object'), false, 'newObjectBtn'), ['disabled' => true])],
               ['title_id' => 'mainTitle',
@@ -328,6 +328,6 @@ $translationNamespaces = ['common', 'cmdb'];
     <script src="browse.js?v=5"></script>
     <!-- The mobile layer's JS. Without it the module nav has no hamburger and
          sits off-screen — a CSS-only opt-in is not an opt-in (Techniques §25). -->
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

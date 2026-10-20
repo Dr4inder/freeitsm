@@ -126,7 +126,10 @@
     body:has(> .action-row) > .pm-layout,
     body:has(> .action-row) > .forms-list-container,
     body:has(> .action-row) > .lms-container,
-    body:has(> .action-row) > .nm-page {
+    body:has(> .action-row) > .nm-page,
+    body:has(> .action-row) > .prj-layout,
+    body:has(> .action-row) > .status-layout,
+    body:has(> .action-row) > .wr-container {
         height: auto;
         flex: 1 1 auto;
         min-height: 0;

@@ -1509,6 +1509,6 @@ $translationNamespaces = ['common', 'change-management'];
         }
 
     </script>
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=81"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=82"></script>
 </body>
 </html>

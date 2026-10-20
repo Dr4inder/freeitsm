@@ -50,7 +50,7 @@ $translationNamespaces = ['common', 'lms'];
              row shows what the active tab can do (lms.js syncActionRow): Upload
              and New on Courses, New on Groups, Assign on Assignments - Assign is
              not "creating a record", so it keeps its own word. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('lms.title'), [
               ['label' => t('lms.courses.upload'), 'onclick' => 'LMS.openUploadModal()', 'id' => 'lmsUploadBtn'],
               actionRowNew('LMS.newForTab()', t('lms.courses.new_tip'), false, 'lmsNewBtn'),
@@ -310,6 +310,6 @@ $translationNamespaces = ['common', 'lms'];
     <!-- Toast -->
     <script>window.API_BASE = '../api/lms/';</script>
     <script src="../assets/js/lms.js?v=10"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

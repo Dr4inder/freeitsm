@@ -136,7 +136,7 @@ $translationNamespaces = ['common', 'problem-management'];
 <body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>">
     <?php include __DIR__ . '/includes/header.php'; ?>
     <?php /* New problem moved from the top of the sidebar to the action row (#185). */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('common.modules.problems.name_short'), [actionRowNew('pmOpenEditor()', t('problem-management.editor.new'))]); ?>
 
     <div class="pm-container">
@@ -262,6 +262,6 @@ $translationNamespaces = ['common', 'problem-management'];
     <script>window.PM_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.PM_BASE = <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/problem-management.js?v=23"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=81"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=82"></script>
 </body>
 </html>

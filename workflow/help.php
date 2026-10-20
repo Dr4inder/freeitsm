@@ -358,6 +358,6 @@ $translationNamespaces = ['common', 'workflow'];
         });
     })();
     </script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

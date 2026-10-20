@@ -71,7 +71,7 @@ $sidebarHoverClass = $sidebarMode === 'hover' ? ' sidebar-hover' : '';
 <body>
     <?php include 'includes/header.php'; ?>
     <?php /* The action row (#185): New moved here from the foot of the sidebar - on a phone that was inside the Tags sheet. */ ?>
-    <?php require_once '../includes/action_row.php';
+    <?php require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('knowledge.title'), [actionRowNew('openCreateArticle()', t('knowledge.sidebar.new_article_tip'))], ['accent' => 'kb']); ?>
 
     <div class="knowledge-container<?php echo $sidebarHoverClass; ?>">
@@ -577,6 +577,6 @@ $sidebarHoverClass = $sidebarMode === 'hover' ? ' sidebar-hover' : '';
     <script src="../assets/js/vendor/prism-json.min.js"></script>
     <script src="../assets/js/vendor/prism-toolbar.min.js"></script>
     <script src="../assets/js/vendor/prism-copy-to-clipboard.min.js"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

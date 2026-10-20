@@ -41,7 +41,11 @@ function monthNames() { return MONTH_KEYS.map((k, i) => calCommon('months.' + k,
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    loadCategories();
+    // ?new=1: New in the Table view's action row lands here (#185). After the
+    // categories, which the event form's category list is built from.
+    loadCategories().then(function () {
+        if (new URLSearchParams(location.search).get('new') === '1') openEventModal();
+    });
     renderCalendar();
 });
 

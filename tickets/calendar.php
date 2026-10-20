@@ -149,6 +149,6 @@ try {
     </script>
     <script src="../assets/js/schedule.js?v=1"></script>
     <script src="../assets/js/calendar.js?v=10"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

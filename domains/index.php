@@ -47,7 +47,7 @@ $translationNamespaces = ['common', 'domains'];
     <?php /* The action row (#185) is what was the register's toolbar: the count
              beside the title, then Paste list and Import CSV, then New. The ids
              are the ones domains-register.js wires. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('domains.title'), [
               ['label' => t('domains.list.add_many'), 'id' => 'btnAddMany'],
               ['label' => t('domains.list.import'), 'id' => 'btnImport'],
@@ -204,6 +204,6 @@ $translationNamespaces = ['common', 'domains'];
 
     <script src="../assets/js/domains.js?v=2"></script>
     <script src="../assets/js/domains-register.js?v=3"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

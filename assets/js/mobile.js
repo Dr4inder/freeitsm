@@ -312,19 +312,16 @@
             return (!v || v === key) ? fallback : v;
         }
 
-        // ---- sub-bar: the two actions the hidden sidebar used to carry ----
+        // ---- sub-bar: the Categories sheet. New event is in the action row
+        // above (#185), which stays on screen on a phone. ----
         var bar = document.createElement('div');
         bar.className = 'mobile-subbar';
         bar.style.display = 'none';          // @media CSS can't hide injected chrome
         var optLabel = tr('calendar.sidebar.categories', 'Categories');
-        var newLabel = tr('calendar.sidebar.new_event', 'New event');
         bar.innerHTML =
-            '<button type="button" class="msb-calopts">⚙ <span></span></button>' +
-            '<button type="button" class="msb-new">+ <span></span></button>';
+            '<button type="button" class="msb-calopts">⚙ <span></span></button>';
         bar.querySelector('.msb-calopts span').textContent = optLabel;
-        bar.querySelector('.msb-new span').textContent = newLabel;
         bar.querySelector('.msb-calopts').setAttribute('aria-label', optLabel);
-        bar.querySelector('.msb-new').setAttribute('aria-label', newLabel);
         container.parentNode.insertBefore(bar, container);
 
         // ---- sheet chrome (LAYER 7's .mobile-sheet, built twice) ----
@@ -381,9 +378,6 @@
         function sidebarIntoSheet() {
             var sb = container.querySelector('.calendar-sidebar');
             if (!sb) return;                                  // already moved
-            // The sidebar's own New-event button duplicates the sub-bar's.
-            var dup = sb.querySelector('.sidebar-section .btn-full[onclick*="openEventModal"]');
-            if (dup && dup.parentNode) dup.parentNode.classList.add('mc-dup');
             optsSheet.querySelector('.ms-body').appendChild(sb);
         }
         /**
@@ -397,11 +391,6 @@
         bar.querySelector('.msb-calopts').addEventListener('click', function () {
             sidebarIntoSheet();
             openSheet(optsSheet);
-        });
-
-        // ---- 2. New event: straight through to the module's own modal ----
-        bar.querySelector('.msb-new').addEventListener('click', function () {
-            if (typeof _openEventModal === 'function') _openEventModal();
         });
 
         // ---- 3. agenda sheet for a tapped day ----

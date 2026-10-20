@@ -125,6 +125,7 @@ return [
         'tile_due'        => 'Due in 30 days',
         'tile_overdue'    => 'Overdue tasks',
         'new'             => 'New',
+        'new_tip'         => 'New project',
         'count'           => '{count} projects',
         'count_one'       => '1 project',
         'empty_title'     => 'No projects yet',

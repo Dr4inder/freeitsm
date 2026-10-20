@@ -101,7 +101,7 @@ foreach ($templates as $t) {
 <body data-mobile-page="checklists" data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>">
     <?php include 'includes/header.php'; ?>
     <?php /* The action row (#185): New moved here from the top of the sidebar - on a phone that was inside the Filters sheet. */ ?>
-    <?php require_once '../includes/action_row.php';
+    <?php require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('common.modules.checklists.name'), [actionRowNew('edit/', t('checklists.list.new_template'), true)]); ?>
 
     <div class="chk-layout">
@@ -340,6 +340,6 @@ foreach ($templates as $t) {
         }
 
     </script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

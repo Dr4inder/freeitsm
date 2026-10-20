@@ -48,7 +48,7 @@ $translationNamespaces = ['common', 'workflow'];
     <?php include 'includes/header.php'; ?>
     <?php /* The action row (#185) is what was the list's section header: New from
              template, then New. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('workflow.list.page_title'), [
               ['label' => t('workflow.templates.btn'), 'onclick' => 'WF.openTemplates()'],
               actionRowNew('editor.php', t('workflow.list.new_tip'), true),
@@ -296,6 +296,6 @@ $translationNamespaces = ['common', 'workflow'];
         window.WF = { del, openTemplates, closeTemplates, useTemplate, filterTemplates };
     })();
     </script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

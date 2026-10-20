@@ -244,7 +244,7 @@ $translationNamespaces = ['common', 'network-mapper'];
     <?php include 'includes/header.php'; ?>
     <?php /* The action row (#185) is what was the list's toolbar: title, filter,
              New. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('network-mapper.index.heading'), [actionRowNew('openNewModal()', t('network-mapper.index.new'))], [
               'accent' => 'nm',
               'extra' => '<input type="text" id="searchInput" class="action-row-search" placeholder="'
@@ -419,6 +419,6 @@ $translationNamespaces = ['common', 'network-mapper'];
     </script>
     <!-- After the page's own script, so mobile.js can wrap globals it exposes
          rather than edit them (Techniques §1). -->
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

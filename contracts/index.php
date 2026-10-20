@@ -196,7 +196,7 @@ $translationNamespaces = ['common', 'contracts'];
     <?php include 'includes/header.php'; ?>
     <?php /* New contract moved from the bottom of the sidebar to the action row
              (#185) - on a phone too, where it was in the footer bar. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('contracts.nav.contracts'), [actionRowNew('edit.php', t('contracts.list.new_contract'), true)]); ?>
 
     <div class="contracts-layout">
@@ -569,6 +569,6 @@ $translationNamespaces = ['common', 'contracts'];
             return div.innerHTML;
         }
     </script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

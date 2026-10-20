@@ -277,7 +277,7 @@ $translationNamespaces = ['common', 'forms'];
     <?php /* The action row (#185) is what was the list's toolbar: title, search,
              New. New only for someone who may design forms - Read only access
              or no Design forms permission gets the row without it. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('forms.list.title'), $formsMayDesign ? [actionRowNew(BASE_URL . 'forms/edit/', t('forms.list.new_form'), true)] : [], [
               'accent' => 'forms',
               'extra' => '<input type="text" id="formSearch" class="forms-list-search action-row-search" placeholder="'
@@ -952,6 +952,6 @@ $translationNamespaces = ['common', 'forms'];
     </script>
     <!-- Mobile layer. Adds the views hamburger and the module drawer on a phone.
          Loaded last so it can wrap the page's own globals rather than edit them. -->
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=81"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=82"></script>
 </body>
 </html>

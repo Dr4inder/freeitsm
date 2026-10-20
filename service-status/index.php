@@ -463,6 +463,13 @@ $translationNamespaces = ['common', 'service-status'];
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185): Plan (planned maintenance keeps its own word)
+             and New (an incident) moved here from their section titles. */
+          require_once __DIR__ . '/../includes/action_row.php';
+          renderActionRow(t('service-status.title'), [
+              ['label' => t('service-status.planned.new'), 'onclick' => 'openPlannedModal()', 'title' => t('service-status.planned.new_title')],
+              actionRowNew('openIncidentModal()', t('service-status.modal.new_incident_tip')),
+          ], ['accent' => 'ss']); ?>
 
     <div class="status-layout">
         <!-- Service Board -->
@@ -478,7 +485,6 @@ $translationNamespaces = ['common', 'service-status'];
         <div class="planned-section">
             <div class="section-title">
                 <?php echo htmlspecialchars(t('service-status.planned.title')); ?>
-                <button class="new-btn" onclick="openPlannedModal()"><?php echo htmlspecialchars(t('service-status.planned.new')); ?></button>
             </div>
             <div class="planned-list" id="plannedList"></div>
         </div>
@@ -487,7 +493,6 @@ $translationNamespaces = ['common', 'service-status'];
         <div class="incidents-section">
             <div class="section-title">
                 <?php echo htmlspecialchars(t('service-status.board.incidents')); ?>
-                <button class="new-btn" onclick="openIncidentModal()"><?php echo htmlspecialchars(t('service-status.board.new')); ?></button>
             </div>
             <table class="incident-table" id="incidentTable" style="display: none;">
                 <thead>
@@ -1585,6 +1590,6 @@ $translationNamespaces = ['common', 'service-status'];
             if (e.target === this) closeIncidentModal();
         });
     </script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

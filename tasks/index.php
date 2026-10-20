@@ -131,7 +131,7 @@ $translationNamespaces = ['common', 'tasks'];
     <?php /* The action row (#185). Tasks had no general New - only the + at the
              top of each board column, which stays as a shortcut that already
              knows the status. New asks for a title and opens the task. */
-          require_once '../includes/action_row.php';
+          require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('tasks.title'), $tasksReadOnly ? [] : [actionRowNew('openNewTask()', t('tasks.board.new_task'), false)], ['accent' => 'tsk']); ?>
 
     <?php /* `--views` marks the ONE page whose sidebar carries the board/list
@@ -414,6 +414,6 @@ $translationNamespaces = ['common', 'tasks'];
     <!-- The one cleaner for HTML from elsewhere: Knowledge procedure bodies and task instructions in the Work view (GH #190). -->
     <script src="../assets/js/safe-html.js?v=1"></script>
     <script src="../assets/js/tasks.js?v=65"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

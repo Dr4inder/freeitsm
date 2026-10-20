@@ -100,14 +100,17 @@ foreach ($channels as $ch) {
 </head>
 <body data-mobile-module="war-room" data-mobile-page="war-room">
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185): New channel and New message moved here from
+             the top of the channel list. A direct message keeps its own words;
+             a channel is the record, so it is New. war-room.js wires both by id. */
+          require_once __DIR__ . '/../includes/action_row.php';
+          renderActionRow(t('war-room.title'), [
+              ['label' => t('war-room.channel.new_dm'), 'id' => 'wrNewDm'],
+              actionRowNew('', t('war-room.channel.new'), false, 'wrNewChannel'),
+          ]); ?>
 
     <div class="wr-container">
         <aside class="wr-sidebar">
-            <div class="wr-sidebar-actions">
-                <button type="button" class="wr-side-btn" id="wrNewChannel"><?php echo htmlspecialchars(t('war-room.channel.new')); ?></button>
-                <button type="button" class="wr-side-btn" id="wrNewDm"><?php echo htmlspecialchars(t('war-room.channel.new_dm')); ?></button>
-            </div>
-
             <div class="wr-channels" id="wrChannels">
                 <?php if ($allHands !== null): ?>
                     <button type="button" class="wr-channel active" data-channel-id="<?php echo (int) $allHands['id']; ?>" data-kind="all">
@@ -222,6 +225,6 @@ foreach ($channels as $ch) {
         window.WR_MENTION_STYLE = <?php echo json_encode($mentionStyle); ?>;
     </script>
     <script src="../assets/js/war-room.js?v=8"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

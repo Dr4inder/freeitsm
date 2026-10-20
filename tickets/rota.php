@@ -133,6 +133,6 @@ $translationNamespaces = ['common', 'tickets'];
     </div>
 
     <script src="../assets/js/rota.js?v=7"></script>
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

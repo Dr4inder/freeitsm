@@ -43,13 +43,14 @@ $translationNamespaces = ['common', 'calendar'];
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185): New event moved here from the top of the
+             sidebar. On a phone the sub-bar's own New went with it (mobile.js). */
+          require_once __DIR__ . '/../includes/action_row.php';
+          renderActionRow(t('calendar.title'), [actionRowNew('openEventModal()', t('calendar.sidebar.new_event'))], ['accent' => 'cal']); ?>
 
     <div class="calendar-container">
         <!-- Sidebar with category filters -->
         <div class="calendar-sidebar">
-            <div class="sidebar-section">
-                <button class="btn btn-primary btn-full" onclick="openEventModal()">+ <?php echo htmlspecialchars(t('calendar.sidebar.new_event')); ?></button>
-            </div>
             <div class="sidebar-section">
                 <h3><?php echo htmlspecialchars(t('calendar.sidebar.categories')); ?></h3>
                 <div class="category-filter-list" id="categoryFilterList">
@@ -191,7 +192,7 @@ $translationNamespaces = ['common', 'calendar'];
     </div>
 
     <script>window.API_BASE = '../api/calendar/';</script>
-    <script src="../assets/js/itsm_calendar.js?v=3"></script>
+    <script src="../assets/js/itsm_calendar.js?v=4"></script>
     <script src="../assets/js/qrcode.min.js"></script>
     <script src="../assets/js/subscribe.js?v=1"></script>
     <script>
@@ -210,6 +211,6 @@ $translationNamespaces = ['common', 'calendar'];
     </script>
     </script>
     <!-- Loaded last so it can wrap the calendar's own globals. -->
-    <script src="../assets/js/mobile.js?v=81"></script>
+    <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>
