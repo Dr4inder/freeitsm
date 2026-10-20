@@ -47,7 +47,7 @@ function ctHead(string $title): void
     <title><?php echo htmlspecialchars(pageTitle('lms', t('lms.nav.tests'), $title)); ?></title>
     <link rel="stylesheet" href="<?php echo $b; ?>assets/css/theme.css?v=27">
     <link rel="stylesheet" href="<?php echo $b; ?>assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="<?php echo $b; ?>assets/css/lms.css?v=10">
+    <link rel="stylesheet" href="<?php echo $b; ?>assets/css/lms.css?v=11">
     <link rel="stylesheet" href="<?php echo $b; ?>assets/css/lms-tests.css?v=2">
     <?php /* mobile.css LAST, after every module sheet: its @media rules win ties on load order (wiki Mobile-Friendly-Techniques §9). */ ?>
     <link rel="stylesheet" href="<?php echo $b; ?>assets/css/mobile.css?v=195">
