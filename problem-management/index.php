@@ -38,7 +38,7 @@ $translationNamespaces = ['common', 'problem-management'];
            page (the editor modal's .btn-primary + input focus rings, confirm
            dialog) read on-brand. The red header gradient (.header.problems-header)
            is explicit and unaffected. */
-        body { --accent: var(--pm-accent, #dc2626); --accent-hover: var(--pm-accent-hover, #b91c1c); }
+        body { --accent: var(--pm-accent, #dc2626); --accent-hover: var(--pm-accent-hover, #b91c1c); --on-accent: var(--pm-on-accent, #fff); }
         .pm-container { display: flex; height: calc(100vh - 48px); width: 100%; }
         .pm-sidebar { width: 250px; min-width: 250px; border-right: 1px solid var(--border, #e5e7eb); background: var(--surface-2, #fafbfc); padding: 16px; overflow-y: auto; box-sizing: border-box; }
         .pm-sidebar h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-dim, #6b7280); margin: 18px 0 8px; }
@@ -129,17 +129,19 @@ $translationNamespaces = ['common', 'problem-management'];
         .search-btn:hover { border-color: var(--pm-accent, #dc2626); color: var(--pm-accent, #dc2626); }
     </style>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/project-links.css?v=1">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=194">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=195">
     <?php echo Tz::scriptTag(); ?>
     <script src="<?php echo BASE_URL; ?>assets/js/tz.js?v=5"></script>
 </head>
 <body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>">
     <?php include __DIR__ . '/includes/header.php'; ?>
+    <?php /* New problem moved from the top of the sidebar to the action row (#185). */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('common.modules.problems.name_short'), [actionRowNew('pmOpenEditor()', t('problem-management.editor.new'))]); ?>
 
     <div class="pm-container">
         <div class="pm-sidebar">
             <button class="search-btn" onclick="pmOpenSearchModal()"><?php echo htmlspecialchars(t('problem-management.list.search')); ?></button>
-            <button class="pm-new-btn" onclick="pmOpenEditor()"><?php echo htmlspecialchars(t('problem-management.list.new')); ?></button>
             <h3><?php echo htmlspecialchars(t('problem-management.list.status')); ?></h3>
             <div id="pmStatusFilters">
                 <div class="pm-filter active" data-status="all" onclick="pmFilter('all')"><span><?php echo htmlspecialchars(t('problem-management.list.all')); ?></span><span class="cnt" id="pmCountAll">0</span></div>

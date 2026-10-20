@@ -81,6 +81,10 @@ return [
         'no_tasks'             => 'No tasks',
         'add_task'             => 'Add task',
         'quick_add_placeholder'=> 'Task title...',
+        // New in the action row (#185): asks for a title, then opens the task.
+        'new_task'             => 'New task',
+        'new_task_title'       => 'Title',
+        'new_task_create'      => 'Create',
         'overdue'              => 'Overdue',
         'due_today'            => 'Today',
         // Board columns by status or by analyst (2.10.0).
@@ -1115,7 +1119,7 @@ return [
         'tips_heading' => 'Quick tips',
         'tips_intro'   => 'A few shortcuts and habits that make the module quicker to live in.',
         'tip1' => '<strong>Right-click is faster.</strong> Re-assign or re-prioritise a card from its context menu without opening it.',
-        'tip2' => '<strong>Quick-add, then Enter.</strong> Capture a task title with the column + button and flesh it out later.',
+        'tip2' => '<strong>New, or quick-add.</strong> <strong>New</strong> at the top right of every Tasks view asks for a title and opens the task. On the board, the + on a column does the same in that column\'s status - type a title, press Enter, flesh it out later.',
         'tip3' => '<strong>Search is instant.</strong> It filters as you type and matches every word &mdash; no need to wait or press Enter.',
         'tip4' => '<strong>Tag for themes.</strong> Use tags for anything that cuts across statuses &mdash; compliance, security, projects.',
         'tip5' => '<strong>Two dates, two views.</strong> Set a start and a due date and the task draws itself on both the calendar and the timeline.',

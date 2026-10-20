@@ -36,6 +36,7 @@ return [
         'status'     => 'Status',
         'all'        => 'All',
         'new_change' => '+ New change',
+        'new_change_tip' => 'New change',
     ],
 
     'list' => [
@@ -801,7 +802,7 @@ return [
         'lc_cancelled'    => 'Cancelled',
 
         'recording_heading' => 'Recording a change &mdash; step by step',
-        'rec_1' => '<strong>Click "+ New change"</strong> in the sidebar to open the editor.',
+        'rec_1' => '<strong>Click New</strong> at the top right - on the list, the Calendar or the Table - to open the editor.',
         'rec_2' => '<strong>Fill in general info</strong> &mdash; title, type (Standard/Normal/Emergency), priority, and impact.',
         'rec_3' => "<strong>Assign people</strong> &mdash; requester (who wants the change), assigned to (who's doing it), and approver.",
         'rec_4' => '<strong>Set the schedule</strong> &mdash; when the work window starts/ends and any expected outage times.',

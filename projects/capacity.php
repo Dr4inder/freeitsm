@@ -33,7 +33,7 @@ $translationNamespaces = ['common', 'projects'];
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/projects.css?v=48">
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=195">
 </head>
 <body data-mobile-module="projects" data-mobile-page="projects-capacity">
     <?php include 'includes/header.php'; ?>

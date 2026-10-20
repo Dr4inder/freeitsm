@@ -71,6 +71,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadDropdowns().then(() => {
         const taskParam = new URLSearchParams(location.search).get('task');
         if (taskParam) openDetailPanel(parseInt(taskParam, 10));
+        // ?new=1: New in the Calendar, Table or Timeline action row lands here (#185).
+        else if (new URLSearchParams(location.search).get('new') === '1') openNewTask();
     });
     loadTasks();
     TasksCtxMenu.init({
@@ -1005,6 +1007,38 @@ function formatDueBadge(dateStr, done) {
 }
 
 // ── Quick Add ──────────────────────────────────────────────────────
+
+/**
+ * New in the action row (#185). Asks for a title, creates the task the way the
+ * board's quick add does (the default status, assigned to you), then opens it
+ * so everything else can be filled in.
+ */
+async function openNewTask() {
+    let title = '';
+    const ok = await showConfirm({
+        title: window.t('tasks.board.new_task'),
+        okLabel: window.t('tasks.board.new_task_create'),
+        textarea: { label: window.t('tasks.board.new_task_title'), placeholder: window.t('tasks.board.quick_add_placeholder'), focus: true },
+        onConfirm: r => { title = r.text.replace(/\s+/g, ' '); }
+    });
+    if (!ok || !title) return;
+    try {
+        const data = await fetch(API_BASE + 'save.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, assigned_analyst_id: ANALYST_ID || null })
+        }).then(r => r.json());
+        if (!data.success) {
+            showToast(window.t('tasks.toast.error_prefix', { message: data.error || window.t('tasks.toast.create_failed') }));
+            return;
+        }
+        showToast(window.t('tasks.toast.task_created'), 'success');
+        await loadTasks();
+        openDetailPanel(data.id);
+    } catch (e) {
+        showToast(window.t('tasks.toast.create_failed'), 'error');
+    }
+}
 
 /** Opens a column's quick-add box and focuses it, hiding it again on blur if nothing was typed. */
 function showQuickAdd(col) {

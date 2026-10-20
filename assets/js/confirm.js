@@ -42,6 +42,8 @@
  *                   textarea: { placeholder: 'Have a nice day', label: 'Message' }
  *                 The typed value arrives TRIMMED on onConfirm's `text`, so a
  *                 box holding only spaces reads as empty for every caller.
+ *                 Add `focus: true` to start typing straight away (Tasks' New);
+ *                 otherwise OK has the focus, as it always had.
  *
  * Returns: Promise<boolean> — resolves true on confirm, false on cancel.
  *
@@ -286,7 +288,9 @@
             /** Shows the dialog on the next frame so its transition runs, then focuses OK on the frame after. */
             requestAnimationFrame(function() {
                 overlay.classList.add('active');
-                requestAnimationFrame(function() { okBtn.focus(); });
+                requestAnimationFrame(function() {
+                    (opts.textarea && opts.textarea.focus ? textInput : okBtn).focus();
+                });
             });
         });
     };

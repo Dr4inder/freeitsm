@@ -26,7 +26,7 @@ $translationNamespaces = ['common', 'change-management'];
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/theme.css?v=27">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/change-management.css?v=11">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=194">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=195">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="<?php echo BASE_URL; ?>assets/js/tz.js?v=5"></script>
@@ -39,6 +39,13 @@ $translationNamespaces = ['common', 'change-management'];
 <?php $cmLevel = analystModuleLevel(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0), 'changes'); /* #180: 'full' or 'read' */ ?>
 <body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>"<?php echo $cmLevel === 'read' ? ' class="module-read-only"' : ''; ?>>
     <?php include __DIR__ . '/includes/header.php'; ?>
+    <?php /* The action row (#185): New change was at the foot of the list's
+             sidebar and missing from the Calendar and Table views. Read only
+             access (#180) gets the row without New. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('change-management.nav.changes'),
+              $cmLevel !== 'read' ? [actionRowNew('new/', t('change-management.sidebar.new_change_tip'), true)] : [],
+              ['accent' => 'cm']); ?>
 
     <div class="changes-container">
         <!-- Sidebar with search and status filters -->
@@ -58,11 +65,6 @@ $translationNamespaces = ['common', 'change-management'];
                     </div>
                 </div>
             </div>
-            <?php if ($cmLevel !== 'read'): ?>
-            <div class="sidebar-section">
-                <a class="btn btn-primary btn-full" href="new/"><?php echo htmlspecialchars(t('change-management.sidebar.new_change')); ?></a>
-            </div>
-            <?php endif; ?>
         </div>
 
         <!-- Main content area -->

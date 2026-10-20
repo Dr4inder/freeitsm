@@ -190,7 +190,7 @@ $translationNamespaces = ['common', 'contracts'];
         .row-company { font-size: 12px; color: var(--text-muted, #777); margin-top: 2px; }
     </style>
     <!-- Mobile layer: linked AFTER this page's own <style> so its @media rules win on ties. -->
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=195">
 </head>
 <body data-mobile-module="contracts" data-mobile-page="contracts-list">
     <?php include 'includes/header.php'; ?>

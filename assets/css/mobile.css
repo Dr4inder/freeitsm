@@ -3399,9 +3399,8 @@
     .pm-sidebar h3,
     .pm-sidebar #pmStatusFilters { grid-column: 1 / -1; }
     .pm-sidebar h3 { margin: 2px 0 0; }
-    .pm-sidebar .pm-new-btn { margin-top: 0; }
-    .pm-sidebar .search-btn,
-    .pm-sidebar .pm-new-btn { padding: 10px 8px; }
+    /* New problem is in the action row now (#185), so Search has the line. */
+    .pm-sidebar .search-btn { grid-column: 1 / -1; padding: 10px 8px; }
 
     /* Filters: a one-line horizontal scroller. Each chip keeps its count, which
        is the reason not to collapse this into a <select> — the counts are half
@@ -3589,7 +3588,9 @@
         order: 1;
     }
     .changes-sidebar .sidebar-section h3 { margin: 0 0 6px; }
-    .changes-sidebar .btn-full { margin: 0; }
+    /* New change is in the action row now (#185), so Search has the line. */
+    .changes-sidebar .sidebar-section:has(.search-btn) { grid-column: 1 / -1; }
+    .changes-sidebar .search-btn { width: 100%; }
 
     /* Status filters: one scrolling line, counts kept. Same idiom as
        #pmStatusFilters, .detail-tabs and .sw-filter-tabs. */

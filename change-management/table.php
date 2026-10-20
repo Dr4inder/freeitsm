@@ -38,14 +38,22 @@ $translationNamespaces = ['common', 'change-management'];
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/change-management.css?v=6">
     <link rel="stylesheet" href="../assets/css/data-table.css?v=4">
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=195">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
 </head>
+<?php $cmLevel = analystModuleLevel(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0), 'changes'); ?>
 <body>
     <?php include 'includes/header.php'; ?>
+    <?php /* The action row (#185): New change was at the foot of the list's
+             sidebar and missing from the Calendar and Table views. Read only
+             access (#180) gets the row without New. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('change-management.nav.changes'),
+              $cmLevel !== 'read' ? [actionRowNew('new/', t('change-management.sidebar.new_change_tip'), true)] : [],
+              ['accent' => 'cm']); ?>
 
     <div class="dt-page">
         <?php include '../includes/data-table-skeleton.php'; ?>

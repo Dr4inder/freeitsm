@@ -121,7 +121,7 @@ $translationNamespaces = ['common', 'watchtower'];
         }
         .wt-opt-elsewhere a:hover { text-decoration: underline; }
     </style>
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=195">
 </head>
 <body data-mobile-page="settings">
     <?php include '../includes/header.php'; ?>

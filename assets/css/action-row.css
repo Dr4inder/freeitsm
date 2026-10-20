@@ -114,7 +114,11 @@
     body:has(> .action-row) > .dt-page,
     body:has(> .action-row) > .browse-container,
     body:has(> .action-row) > .dom-layout,
-    body:has(> .action-row) > .contracts-layout {
+    body:has(> .action-row) > .contracts-layout,
+    body:has(> .action-row) > .changes-container,
+    body:has(> .action-row) > .calendar-container,
+    body:has(> .action-row) > .pm-container,
+    body:has(> .action-row) > .tasks-container {
         height: auto;
         flex: 1 1 auto;
         min-height: 0;

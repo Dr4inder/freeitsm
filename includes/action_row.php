@@ -53,18 +53,26 @@ function actionRowNew(string $onclick, string $what, bool $isHref = false, strin
  *                         builds the usual one
  * @param array $opts      'count_id' => id of a span after the title that the page fills with a count;
  *                         'title_id' => id for the title itself, for a page that rewrites it;
- *                         'extra'    => trusted HTML (a search box, say) placed before the buttons
+ *                         'extra'    => trusted HTML (a search box, say) placed before the buttons;
+ *                         'accent'   => a theme.css module prefix ('cm', 'tsk') for a page that does not
+ *                                       set --accent on <body> itself - Changes, whose Calendar view
+ *                                       shares calendar.css with the Calendar module
  */
 function renderActionRow(string $title, array $actions = [], array $opts = []): void
 {
     static $cssDone = false;
     if (!$cssDone) {
         $cssDone = true;
-        echo '<link rel="stylesheet" href="' . htmlspecialchars(BASE_URL) . 'assets/css/action-row.css?v=3">' . "\n";
+        echo '<link rel="stylesheet" href="' . htmlspecialchars(BASE_URL) . 'assets/css/action-row.css?v=4">' . "\n";
     }
     $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 
-    echo '<div class="action-row">';
+    $style = '';
+    if (!empty($opts['accent']) && preg_match('/^[a-z]+$/', $opts['accent'])) {
+        $p = $opts['accent'];
+        $style = " style=\"--accent: var(--{$p}-accent); --accent-hover: var(--{$p}-accent-hover); --on-accent: var(--{$p}-on-accent)\"";
+    }
+    echo '<div class="action-row"' . $style . '>';
     echo '<h2 class="action-row-title"' . (!empty($opts['title_id']) ? ' id="' . $h($opts['title_id']) . '"' : '') . '>' . $h($title);
     if (!empty($opts['count_id'])) echo ' <span class="action-row-count" id="' . $h($opts['count_id']) . '"></span>';
     echo '</h2>';

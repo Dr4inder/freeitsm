@@ -74,7 +74,7 @@ $para = fn(string $k) => preg_replace(['/\*\*([^*]+)\*\*/', '/`([^`]+)`/'], ['<s
         .help-container { height: 100vh !important; }
         <?php endif; ?>
     </style>
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=195">
 </head>
 <body data-mobile-module="files" data-mobile-page="files-help">
     <?php include 'includes/header.php'; ?>

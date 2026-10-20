@@ -94,7 +94,7 @@ $prjHelpIcon = fn(string $paths) => '<svg xmlns="http://www.w3.org/2000/svg" wid
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/projects.css?v=48">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/help.css?v=6">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=194">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=195">
     <style>
         /* The only thing a help page should need to say for itself: its colour. */
         body {

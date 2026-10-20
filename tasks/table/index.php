@@ -40,10 +40,15 @@ $translationNamespaces = ['common', 'tasks'];
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
     <script src="../../assets/js/i18n.js?v=3"></script>
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=195">
 </head>
 <body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>"<?php echo $tasksReadOnly ? ' class="module-read-only"' : ''; ?>>
     <?php include '../includes/header.php'; ?>
+    <?php /* The action row (#185). Tasks had no general New - only the + at the
+             top of each board column, which stays as a shortcut that already
+             knows the status. New asks for a title and opens the task. */
+          require_once '../../includes/action_row.php';
+          renderActionRow(t('tasks.title'), $tasksReadOnly ? [] : [actionRowNew('../?new=1', t('tasks.board.new_task'), true)], ['accent' => 'tsk']); ?>
 
     <div class="tasks-container">
         <!-- Sidebar -->
