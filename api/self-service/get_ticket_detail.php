@@ -8,6 +8,7 @@ require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/portal_visibility.php';
 require_once '../../includes/managers.php';   // portalTicketAccess() - who may see this ticket (#62)
+require_once '../../includes/services/ticket_fields.php';   // the requester's answers (#193)
 
 header('Content-Type: application/json');
 
@@ -271,6 +272,11 @@ try {
     // nor find their own name listed as if they were the requester (#62).
     $seenBy = ($isRequester && ticketViewsReady($conn)) ? ticketViewsForRequester($conn, (int)$ticketId, $requesterId) : null;
 
+    // The answers the requester gave (discussion #193). Only for a ticket the
+    // caller sees in full - the confidential stub above returned long before this.
+    $answersPlace = TicketFieldsService::portalAnswersPlace($conn);
+    $fieldAnswers = ['place' => $answersPlace, 'items' => $answersPlace === 'off' ? [] : TicketFieldsService::portalAnswers($conn, $ticketId)];
+
     echo json_encode([
         'success' => true,
         'ticket' => $ticket,
@@ -278,7 +284,8 @@ try {
         'notes' => $notes,
         'recordings' => $recordings,
         'seen_by' => $seenBy,
-        'viewer' => $viewer
+        'viewer' => $viewer,
+        'field_answers' => $fieldAnswers
     ]);
 
 } catch (Exception $e) {

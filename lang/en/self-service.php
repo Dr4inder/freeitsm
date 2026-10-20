@@ -362,6 +362,8 @@ return [
         'load_failed'        => 'Failed to load ticket',
         'load_detail_failed' => 'Failed to load ticket details',
         'created'            => 'Created {date}',
+        // The answers the requester gave in the extra fields (discussion #193).
+        'details_heading'    => 'Your details',
         'screen_recordings'  => 'Screen recordings',
         // Singular: recordings now sit against the message they came with,
         // rather than in one list at the top of the ticket.

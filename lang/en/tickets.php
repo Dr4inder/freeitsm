@@ -1666,6 +1666,13 @@ return [
 
         // Custom fields (#179): Tickets -> Settings -> Custom fields.
         'custom_fields' => [
+            // Where the portal shows the requester their answers (discussion #193).
+            'portal_answers_label'  => 'Show requesters the answers they gave',
+            'portal_answers_off'    => 'Do not show them',
+            'portal_answers_header' => 'Under the ticket\'s title',
+            'portal_answers_side'   => 'In a panel beside the conversation',
+            'portal_answers_help'   => 'On the self-service portal, the answers to the fields marked Ask the requester, as they are now - so a correction shows. Fields analysts fill in are never shown. The panel needs a wide screen; a narrower one shows them under the title.',
+            'portal_answers_saved'  => 'Saved',
             'col_name'        => 'Name',
             'col_kind'        => 'Kind',
             'col_types'       => 'Ticket types',

@@ -123,5 +123,27 @@
         return f ? f.label : null;
     }
 
-    window.TicketFields = { render, control, collect, firstMissing, dateValue };
+    /**
+     * Answers as a read-only list (discussion #193 - the portal shows a requester
+     * what they gave): a yes/no as Yes or No, a date in the reader's own date
+     * format, a number with its unit, long text with its line breaks.
+     *
+     * @param fields  [{label, type, config, value, display}], answered ones only
+     */
+    function readOnly(fields) {
+        const text = f => {
+            if (f.type === 'boolean') return say(f.value ? 'yes' : 'no', f.value ? 'Yes' : 'No');
+            if (f.type === 'date') {
+                // Naive wall-clock values: never shifted by a timezone.
+                const mode = (f.config && f.config.date_mode) || 'date';
+                const fn = mode === 'time' ? window.fmtNaiveTime : mode === 'datetime' ? window.fmtNaiveDateTime : window.fmtNaiveDate;
+                return (typeof fn === 'function' && fn(f.value)) || f.display;
+            }
+            return f.display;
+        };
+        return '<dl class="tf-answers">' + (fields || []).map(f =>
+            '<div class="tf-answer"><dt>' + esc(f.label) + '</dt><dd>' + esc(text(f)) + '</dd></div>').join('') + '</dl>';
+    }
+
+    window.TicketFields = { render, control, collect, firstMissing, dateValue, readOnly };
 })();

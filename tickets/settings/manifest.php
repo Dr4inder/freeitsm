@@ -128,6 +128,8 @@ return [
             'cap'       => Cap::TICKETS_CUSTOM_FIELDS,
             'label_key' => 'tickets.settings.tabs.custom_fields',
             'grant'     => 'Design the custom fields each ticket type carries, and when they must be filled in',
+            // Where the portal shows a requester the answers they gave (discussion #193).
+            'setting_keys' => ['ticket_portal_field_answers'],
         ],
         [
             'id'        => 'statuses',

@@ -17,6 +17,9 @@ $bodyClass    = 'portal-app';
 // Loads assets/js/screen-recorder.js for the reply composer — the same module
 // the compose screen uses. Pairs with includes/record-modal.php below.
 $needsRecorder = true;
+// The read-only answers (discussion #193) use the shared field renderer.
+$pageHead = '<link rel="stylesheet" href="../assets/css/ticket-fields.css?v=2">'
+          . '<script src="../assets/js/ticket-fields.js?v=2"></script>';
 
 // Which list: the person's own tickets, or - for a manager - their team's
 // (discussion #62). Whether they really manage anybody is the endpoint's answer
@@ -344,6 +347,26 @@ $pageStyles = <<<'CSS'
 /* The back control is a phone affordance only; the desktop layout shows both
    panes at once and has nothing to go back to. */
 .tk-back { display: none; }
+
+/* The answers the requester gave (discussion #193). Under the title, or in a
+   panel beside the conversation - Tickets -> Settings -> Custom fields. */
+.tk-answers-head { padding: 12px 24px; background: var(--surface, #fff); border-bottom: 1px solid var(--border, #e5e7eb); flex-shrink: 0; }
+.tk-answers-title { font-size: 12px; font-weight: 600; color: var(--text-muted, #666); text-transform: uppercase; letter-spacing: .4px; margin: 0 0 8px; }
+.tk-read-body { flex: 1; display: flex; min-height: 0; }
+.tk-read-main { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.tk-answers-side { width: 260px; flex-shrink: 0; overflow-y: auto; padding: 16px 18px; background: var(--surface, #fff); border-left: 1px solid var(--border, #e5e7eb); }
+.tk-answers-side .tf-answers { grid-template-columns: 1fr; gap: 12px; }
+/* The panel only where there is room for it; anything narrower shows the same
+   answers under the title instead. */
+.tk-answers-head.tk-answers-narrow { display: none; }
+@media (max-width: 900px) {
+    .tk-answers-side { display: none; }
+    .tk-answers-head.tk-answers-narrow { display: block; }
+    .tk-read-body { display: block; }
+}
+@media (max-width: 768px) {
+    .tk-answers-head { padding: 10px 14px; }
+}
 CSS;
 
 $pageScripts = <<<'JS'
@@ -673,9 +696,12 @@ let ssTickets = [];
               +     '<span>' + esc(window.t('self-service.ticket.created', { date: fullDate(t.created_datetime) })) + '</span>'
               +   '</div>'
               + '</div>'
+              + answersHtml(d.field_answers, 'head')
+              + (answersPlace(d.field_answers) === 'side' ? '<div class="tk-read-body"><div class="tk-read-main">' : '')
               + seenByHtml(d.seen_by)
               + '<div class="tk-thread" id="tkThread">' + (msgs || '<div class="loading-state">' + esc(window.t('self-service.ticket.no_conversation')) + '</div>') + '</div>'
-              + (ssViewer.can_reply ? composerHtml(t) : (ssViewer.can_close ? '<div class="tk-composer"><div class="tk-composer-actions">' + closeButtonHtml(t) + '</div></div>' : ''));
+              + (ssViewer.can_reply ? composerHtml(t) : (ssViewer.can_close ? '<div class="tk-composer"><div class="tk-composer-actions">' + closeButtonHtml(t) + '</div></div>' : ''))
+              + (answersPlace(d.field_answers) === 'side' ? '</div>' + answersHtml(d.field_answers, 'side') + '</div>' : '');
 
             ssCurrentTicketId = Number(t.id) || 0;
             wireComposer();
@@ -685,6 +711,28 @@ let ssTickets = [];
             if (confBtn) confBtn.addEventListener('click', markConfidential);
             const thread = document.getElementById('tkThread');
             if (thread) thread.scrollTop = thread.scrollHeight;   // newest first to the eye
+        }
+
+        /**
+         * Where the requester's answers go (discussion #193): 'off', 'header' or
+         * 'side'; 'off' too when there are none to show.
+         */
+        function answersPlace(fa) {
+            return (fa && fa.items && fa.items.length && window.TicketFields) ? fa.place : 'off';
+        }
+
+        /**
+         * The answers block. 'head' draws under the title - for the header
+         * setting, and for the side setting on a screen too narrow for the
+         * panel; 'side' draws the panel.
+         */
+        function answersHtml(fa, where) {
+            const place = answersPlace(fa);
+            if (place === 'off') return '';
+            const title = '<p class="tk-answers-title">' + esc(window.t('self-service.ticket.details_heading')) + '</p>';
+            const list = window.TicketFields.readOnly(fa.items);
+            if (where === 'side') return place === 'side' ? '<aside class="tk-answers-side">' + title + list + '</aside>' : '';
+            return '<div class="tk-answers-head' + (place === 'side' ? ' tk-answers-narrow' : '') + '">' + title + list + '</div>';
         }
 
         function messageHtml(o) {

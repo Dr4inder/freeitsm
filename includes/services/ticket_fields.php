@@ -230,6 +230,44 @@ final class TicketFieldsService
     }
 
     /**
+     * Where the portal shows a requester the answers they gave (discussion #193):
+     * 'off', 'header' (never saved) or 'side'. Tickets -> Settings -> Custom fields.
+     */
+    public static function portalAnswersPlace(PDO $conn): string
+    {
+        try {
+            $v = $conn->query("SELECT setting_value FROM system_settings WHERE setting_key = 'ticket_portal_field_answers'")->fetchColumn();
+            return in_array($v, ['off', 'header', 'side'], true) ? $v : 'header';
+        } catch (Throwable $e) {
+            return 'header';
+        }
+    }
+
+    /**
+     * The answers to the fields a ticket asks its requester, as they are now -
+     * answered ones only: [{label, type, config, value, display}]. 🔑 The
+     * 'requester' audience, so a field only analysts fill in is never returned.
+     * Authorisation stays with the caller: only call it for a ticket the portal
+     * user has already been allowed to see.
+     *
+     * @param int $ticketId  the ticket
+     */
+    public static function portalAnswers(PDO $conn, int $ticketId): array
+    {
+        $st = $conn->prepare("SELECT id, tenant_id, ticket_type_id FROM tickets WHERE id = ?");
+        $st->execute([$ticketId]);
+        $row = $st->fetch(PDO::FETCH_ASSOC);
+        if (!$row) return [];
+        $out = [];
+        foreach (self::forTicket($conn, $row, 'requester') as $f) {
+            if ($f['display'] === null) continue;
+            $out[] = ['label' => $f['label'], 'type' => $f['type'], 'config' => $f['config'],
+                      'value' => $f['value'], 'display' => $f['display']];
+        }
+        return $out;
+    }
+
+    /**
      * The parts of a definition a screen needs, without the engine's internals.
      *
      * @param array $d  a definition from fieldsFor()
