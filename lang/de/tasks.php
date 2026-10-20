@@ -154,12 +154,6 @@ return [
         'checklist_value_needed' => 'Geben Sie einen Wert ein, bevor Sie diesen Schritt abhaken.',
         'checklist_value_placeholder' => 'Wert',
         'checklist_done_by' => '{name}, {when}',
-        'checklist_block' => 'Diese Aufgabe kann noch nicht abgeschlossen werden. Erledigen Sie zuerst diese Pflichtschritte der Checkliste:
-{list}',
-        'checklist_warn' => 'Diese Pflichtschritte der Checkliste sind nicht erledigt:
-{list}
-
-Aufgabe trotzdem abschließen? Dies wird im Verlauf der Aufgabe festgehalten.',
         'checklist_failed' => 'Die Checkliste konnte nicht aktualisiert werden',
         'start_date' => 'Startdatum',
         'work_start' => 'Arbeit beginnt',
@@ -538,7 +532,6 @@ Aufgabe trotzdem abschließen? Dies wird im Verlauf der Aufgabe festgehalten.',
         'nav_repeats' => 'Wiederkehrende Aufgaben',
         'repeats_heading' => 'Wiederkehrende Aufgaben',
         'repeats_intro' => 'Manche Arbeit kommt immer wieder: eine monatliche Sicherungsprüfung, eine vierteljährliche Zugriffsprüfung, ein wöchentlicher Bericht. Jede Aufgabe kann wiederholt werden, und FreeITSM erstellt die nächste Wiederholung für Sie, statt dass Sie daran denken müssen.',
-        'repeats_cron_warning' => '<strong>Ein fester Zeitplan benötigt einen geplanten Task auf dem Server, und es warnt Sie nichts, wenn er fehlt.</strong> Wiederholungen mit <em>festem Zeitplan</em> werden von <code>cron/task_recurrence.php</code> erstellt. Eine neue Installation hat überhaupt keine geplanten Tasks. Solange dieser nicht eingerichtet ist, erzeugt ein fester Zeitplan also schlicht nichts &mdash; keine Fehlermeldung, kein Protokolleintrag, nur eine Wiederholung, die still nichts tut. Führen Sie ihn <strong>einmal täglich</strong> aus. Wiederholungen mit <em>nach Abschluss dieser Aufgabe</em> sind nicht betroffen: Sie werden innerhalb der Anfrage erstellt, die die vorherige abschließt, und funktionieren daher auch ohne geplante Tasks.',
         'repeats_setup_heading' => 'Einrichten',
         'repeats_setup_body' => 'Öffnen Sie eine Aufgabe und suchen Sie im Bereich <strong>Wiederholungen</strong> die Schaltfläche <strong>Wiederholung einrichten</strong>. Sie können auch mit der rechten Maustaste auf eine Karte im Board klicken und <strong>Wiederholung einrichten</strong> wählen, ohne die Aufgabe zu öffnen. Eine Teilaufgabe kann sich nicht eigenständig wiederholen &mdash; eine Wiederholung gehört zur Arbeit selbst, nicht zu einem Schritt darin.',
         'repeats_mode_heading' => 'Zwei Arten der Wiederholung, und der Unterschied zählt',
@@ -576,7 +569,6 @@ Aufgabe trotzdem abschließen? Dies wird im Verlauf der Aufgabe festgehalten.',
         'tags_body2' => 'Schlagwörter werden unter Einstellungen &rarr; Schlagwörter verwaltet, jedes mit einem Namen und einer Farbe. Fünf Anzeigeoptionen dort legen fest, ob Schlagwörter aus einer Aufgabe heraus erstellt werden können und wo sie erscheinen &mdash; Karten-Chips, der Seitenleisten-Filter, die Suche und Kalender/Zeitleiste.',
         'tags_tip' => 'Ein Schlagwort ist der richtige Platz für ein "irgendwann/vielleicht"-Thema. Versehen Sie eine Handvoll Ideen mit dem Schlagwort <em>Blue Sky</em>, und Sie können sie jederzeit über den Schlagwort-Filter aufrufen, ohne eine eigene Spalte zu benötigen.',
         'settings_heading' => 'Einstellungen',
-        'settings_intro' => 'Die Einstellungsseite hat fünf Tabs &mdash; Status, Prioritäten, Kalender, Karte und Schlagwörter. Die Einstellungen gelten für die gesamte Installation: Eine Änderung hier wirkt sich auf Board, Kalender und Karten für das ganze Team aus, nicht nur für Sie.',
         'settings_lookups_heading' => 'Status &amp; Prioritäten',
         'settings_lookups_body' => 'Diese beiden Tabs verwalten die Auswahllisten, auf die jede Aufgabe zurückgreift. Jede Zeile hat einen Namen, eine Farbe und eine Anzeigereihenfolge; Sie fügen Zeilen mit den Schaltflächen rechts hinzu, bearbeiten oder löschen sie.',
         'settings_field_statuses' => '<strong>Status</strong> &mdash; die Workflow-Zustände, die zugleich als Board-Spalten dienen (in Anzeigereihenfolge angezeigt). Ein Status ist der <em>Standard</em> für neue Aufgaben. Ein als <em>Geschlossen</em> markierter Status gilt als erledigt &mdash; Aufgaben, die dorthin verschoben werden, erhalten einen Abschlusszeitpunkt und fallen aus den Zählern offener Aufgaben heraus. Ein Status kann auch auf inaktiv gesetzt werden, um ihn außer Gebrauch zu nehmen, ohne die Historie zu verlieren.',

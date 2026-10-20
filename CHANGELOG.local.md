@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2492 | i18n              | Fix         | 196 translations across 23 locales whose English had changed between 3.10.0 and 3.12.0 (Reporting's background-jobs tab and Tasks' evidence settings) were evicted (`i18n_evict_stale --since v3.10.0`), so those strings fall back to the current English instead of rendering an out-of-date translation. |
 
 
 

@@ -154,12 +154,6 @@ return [
         'checklist_value_needed' => 'Introduzca un valor antes de marcar este paso.',
         'checklist_value_placeholder' => 'Valor',
         'checklist_done_by' => '{name}, {when}',
-        'checklist_block' => 'Esta tarea todavía no se puede completar. Termine antes estos pasos obligatorios de la lista de comprobación:
-{list}',
-        'checklist_warn' => 'Estos pasos obligatorios de la lista de comprobación no están hechos:
-{list}
-
-¿Completar la tarea de todos modos? Quedará registrado en el historial de la tarea.',
         'checklist_failed' => 'No se pudo actualizar la lista de comprobación',
         'start_date' => 'Fecha de inicio',
         'work_start' => 'El trabajo empieza',
@@ -538,7 +532,6 @@ return [
         'nav_repeats' => 'Tareas repetitivas',
         'repeats_heading' => 'Tareas repetitivas',
         'repeats_intro' => 'Algunos trabajos vuelven: una comprobación mensual de copias de seguridad, una revisión trimestral de accesos, un informe semanal. Cualquier tarea puede recibir una repetición, y FreeITSM crea la siguiente ocurrencia por usted en lugar de dejarle a usted el recordarlo.',
-        'repeats_cron_warning' => '<strong>Un calendario fijo necesita una tarea programada en el servidor, y nada le avisa si falta.</strong> Las repeticiones configuradas como <em>en un calendario fijo</em> las crea <code>cron/task_recurrence.php</code>. Una instalación nueva no tiene ninguna tarea programada, así que hasta que alguien configure esta, un calendario fijo simplemente no producirá nunca nada &mdash; sin error, sin entrada de registro, solo una repetición que en silencio no hace nada. Ejecútela <strong>una vez al día</strong>. Las repeticiones configuradas como <em>después de completar esta</em> no se ven afectadas: se crean dentro de la misma petición que completa la anterior, así que funcionan en una instalación sin ninguna tarea programada.',
         'repeats_setup_heading' => 'Configurar una',
         'repeats_setup_body' => 'Abra una tarea y busque <strong>Repeticiones</strong> en el panel, luego haga clic en <strong>Configurar una repetición</strong>. También puede hacer clic con el botón derecho en una tarjeta del tablero y elegir <strong>Configurar una repetición</strong> sin abrirla en absoluto. Una subtarea no puede repetirse por sí sola &mdash; una repetición pertenece al trabajo en sí, no a un paso dentro de él.',
         'repeats_mode_heading' => 'Dos formas de repetir, y la diferencia importa',
@@ -576,7 +569,6 @@ return [
         'tags_body2' => 'Las etiquetas se gestionan en Ajustes &rarr; Etiquetas, cada una con un nombre y un color. Cinco opciones de visualización allí controlan si se pueden crear etiquetas desde una tarea y dónde aparecen &mdash; marcas en las tarjetas, el filtro de la barra lateral, la coincidencia en la búsqueda, y el calendario o la cronología.',
         'tags_tip' => 'Una etiqueta es el sitio adecuado para un tema de "algún día / quizá". Etiquete un puñado de ideas como <em>Ideas futuras</em> y podrá recuperarlas cuando quiera con el filtro de etiquetas, sin necesitar una columna dedicada.',
         'settings_heading' => 'Ajustes',
-        'settings_intro' => 'La página de Ajustes tiene cinco pestañas &mdash; Estados, Prioridades, Calendario, Tarjeta y Etiquetas. Los ajustes son para toda la instalación: un cambio aquí da forma al tablero, al calendario y a las tarjetas de todo el equipo, no solo para usted.',
         'settings_lookups_heading' => 'Estados &amp; Prioridades',
         'settings_lookups_body' => 'Estas dos pestañas gestionan las listas de referencia de las que parte cada tarea. Cada fila tiene un nombre, un color y un orden de visualización, y añade, edita o elimina filas con los botones de la derecha.',
         'settings_field_statuses' => '<strong>Estados</strong> &mdash; los estados del flujo de trabajo, que también funcionan como columnas del tablero (mostradas en el orden de visualización). Un estado es el <em>predeterminado</em> para las tareas nuevas. Un estado marcado como <em>Cerrado</em> cuenta como terminado &mdash; las tareas que pasan a él registran una hora de finalización y salen de los contadores de tareas abiertas. Un estado también puede marcarse como inactivo para retirarlo sin perder el historial.',

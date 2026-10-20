@@ -154,12 +154,6 @@ return [
         'checklist_value_needed' => 'Saisissez une valeur avant de cocher cette étape.',
         'checklist_value_placeholder' => 'Valeur',
         'checklist_done_by' => '{name}, {when}',
-        'checklist_block' => 'Cette tâche ne peut pas encore être terminée. Terminez d\'abord ces étapes obligatoires de la liste de contrôle :
-{list}',
-        'checklist_warn' => 'Ces étapes obligatoires de la liste de contrôle ne sont pas terminées :
-{list}
-
-Terminer quand même la tâche ? Cela sera consigné dans l\'historique de la tâche.',
         'checklist_failed' => 'Impossible de mettre à jour la liste de contrôle',
         'start_date' => 'Date de début',
         'work_start' => 'Début des travaux',
@@ -538,7 +532,6 @@ Terminer quand même la tâche ? Cela sera consigné dans l\'historique de la t�
         'nav_repeats' => 'Tâches répétitives',
         'repeats_heading' => 'Tâches répétitives',
         'repeats_intro' => 'Certaines tâches reviennent : une vérification mensuelle des sauvegardes, une révision trimestrielle des accès, un rapport hebdomadaire. Toute tâche peut se voir attribuer une répétition, et FreeITSM crée l\'occurrence suivante à votre place plutôt que de vous laisser y penser.',
-        'repeats_cron_warning' => '<strong>Une planification fixe nécessite une tâche planifiée sur le serveur, et rien ne vous avertit si elle est absente.</strong> Les répétitions réglées sur <em>selon une planification fixe</em> sont créées par <code>cron/task_recurrence.php</code>. Une installation neuve n\'a aucune tâche planifiée, donc tant que personne ne configure celle-ci, une planification fixe ne produira tout simplement jamais rien &mdash; aucune erreur, aucune entrée de journal, juste une répétition qui ne fait rien silencieusement. Exécutez-la <strong>une fois par jour</strong>. Les répétitions réglées sur <em>une fois celle-ci terminée</em> ne sont pas concernées : elles sont créées au sein de la requête qui termine la précédente, elles fonctionnent donc sur une installation sans aucune tâche planifiée.',
         'repeats_setup_heading' => 'En configurer une',
         'repeats_setup_body' => 'Ouvrez une tâche et trouvez <strong>Répétitions</strong> dans le panneau, puis cliquez sur <strong>Configurer une répétition</strong>. Vous pouvez aussi faire un clic droit sur une carte du tableau et choisir <strong>Configurer une répétition</strong> sans l\'ouvrir du tout. Une sous-tâche ne peut pas se répéter seule &mdash; une répétition appartient au travail dans son ensemble, pas à une étape à l\'intérieur.',
         'repeats_mode_heading' => 'Deux façons de se répéter, et la différence compte',
@@ -576,7 +569,6 @@ Terminer quand même la tâche ? Cela sera consigné dans l\'historique de la t�
         'tags_body2' => 'Les étiquettes sont gérées dans Paramètres &rarr; Étiquettes, chacune avec un nom et une couleur. Cinq options d\'affichage y contrôlent si des étiquettes peuvent être créées depuis une tâche et où elles apparaissent &mdash; puces sur les cartes, filtre du panneau latéral, correspondance de recherche, et calendrier/chronologie.',
         'tags_tip' => 'Une étiquette est le bon endroit pour un thème « un jour / peut-être ». Étiquetez quelques idées comme <em>Blue Sky</em> et vous pourrez les retrouver à tout moment avec le filtre d\'étiquette, sans colonne dédiée.',
         'settings_heading' => 'Paramètres',
-        'settings_intro' => 'La page Paramètres comporte cinq onglets &mdash; Statuts, Priorités, Calendrier, Carte et Étiquettes. Les paramètres s\'appliquent à toute l\'installation : une modification ici façonne le tableau, le calendrier et les cartes pour toute l\'équipe, pas seulement pour vous.',
         'settings_lookups_heading' => 'Statuts &amp; Priorités',
         'settings_lookups_body' => 'Ces deux onglets gèrent les listes de référence utilisées par chaque tâche. Chaque ligne a un nom, une couleur et un ordre d\'affichage, et vous ajoutez, modifiez ou supprimez des lignes avec les boutons à droite.',
         'settings_field_statuses' => '<strong>Statuts</strong> &mdash; les états du flux de travail, qui servent aussi de colonnes sur le tableau (affichées selon l\'ordre d\'affichage). Un statut est <em>par défaut</em> pour les nouvelles tâches. Un statut marqué <em>Fermé</em> compte comme terminé &mdash; les tâches qui y passent sont horodatées d\'une date d\'achèvement et sortent des compteurs de tâches ouvertes. Un statut peut aussi être rendu inactif pour le retirer sans perdre l\'historique.',

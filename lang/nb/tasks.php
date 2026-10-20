@@ -154,12 +154,6 @@ return [
         'checklist_value_needed' => 'Skriv inn en verdi før du krysser av for dette trinnet.',
         'checklist_value_placeholder' => 'Verdi',
         'checklist_done_by' => '{name}, {when}',
-        'checklist_block' => 'Denne oppgaven kan ikke fullføres ennå. Fullfør først disse obligatoriske sjekklistetrinnene:
-{list}',
-        'checklist_warn' => 'Disse obligatoriske sjekklistetrinnene er ikke gjort:
-{list}
-
-Fullføre oppgaven likevel? Det blir registrert i oppgavens historikk.',
         'checklist_failed' => 'Kunne ikke oppdatere sjekklisten',
         'start_date' => 'Startdato',
         'work_start' => 'Arbeidsstart',
@@ -538,7 +532,6 @@ Fullføre oppgaven likevel? Det blir registrert i oppgavens historikk.',
         'nav_repeats' => 'Gjentakende oppgaver',
         'repeats_heading' => 'Gjentakende oppgaver',
         'repeats_intro' => 'En del arbeid kommer tilbake: en månedlig sikkerhetskopikontroll, en kvartalsvis tilgangsgjennomgang, en ukentlig rapport. Enhver oppgave kan få en gjentakelse, og FreeITSM oppretter neste forekomst for deg i stedet for at du må huske det selv.',
-        'repeats_cron_warning' => '<strong>En fast tidsplan krever en planlagt jobb på serveren, og ingenting varsler deg hvis den mangler.</strong> Gjentakelser satt til <em>på en fast tidsplan</em> opprettes av <code>cron/task_recurrence.php</code>. En fersk installasjon har ingen planlagte jobber i det hele tatt, så inntil noen setter denne opp vil en fast tidsplan rett og slett aldri produsere noe &mdash; ingen feil, ingen loggoppføring, bare en gjentakelse som stille og rolig ikke gjør noe. Kjør den <strong>én gang om dagen</strong>. Gjentakelser satt til <em>etter at denne er fullført</em> påvirkes ikke: de opprettes inne i forespørselen som fullfører den forrige, så de fungerer på en installasjon uten noen planlagte jobber i det hele tatt.',
         'repeats_setup_heading' => 'Sette opp en',
         'repeats_setup_body' => 'Åpne en oppgave og finn <strong>Gjentakelser</strong> i panelet, klikk deretter på <strong>Sett opp en gjentakelse</strong>. Du kan også høyreklikke på et kort på tavlen og velge <strong>Sett opp en gjentakelse</strong> uten å åpne det i det hele tatt. En deloppgave kan ikke gjenta seg på egen hånd &mdash; en gjentakelse hører til selve arbeidsoppgaven, ikke til et steg inni den.',
         'repeats_mode_heading' => 'To måter å gjenta på, og forskjellen betyr noe',
@@ -576,7 +569,6 @@ Fullføre oppgaven likevel? Det blir registrert i oppgavens historikk.',
         'tags_body2' => 'Merkelapper administreres under Innstillinger &rarr; Merkelapper, hver med et navn og en farge. Fem visningsvalg der styrer om merkelapper kan opprettes fra en oppgave, og hvor de dukker opp &mdash; merker på kort, filteret i sidepanelet, treff i søk og kalender/tidslinje.',
         'tags_tip' => 'En merkelapp er det rette stedet for et "en gang / kanskje"-tema. Merk en håndfull idéer som <em>Blue Sky</em>, så kan du hente dem fram når som helst med merkelappfilteret, uten en egen kolonne.',
         'settings_heading' => 'Innstillinger',
-        'settings_intro' => 'Innstillinger-siden har fem faner &mdash; Statuser, Prioriteter, Kalender, Kort og Merkelapper. Innstillingene gjelder hele installasjonen: en endring her former tavlen, kalenderen og kortene for hele teamet, ikke bare for deg.',
         'settings_lookups_heading' => 'Statuser og prioriteter',
         'settings_lookups_body' => 'Disse to fanene styrer oppslagslistene hver oppgave henter fra. Hver rad har et navn, en farge og en visningsrekkefølge, og du legger til, redigerer eller sletter rader med knappene til høyre.',
         'settings_field_statuses' => '<strong>Statuser</strong> &mdash; arbeidsflyttilstandene, som også fungerer som kolonnene på tavlen (vist i visningsrekkefølge). Én status er <em>standard</em> for nye oppgaver. En status merket som <em>Lukket</em> regnes som ferdig &mdash; oppgaver som flyttes dit får satt et fullføringstidspunkt og faller ut av tellerne for åpne oppgaver. En status kan også settes inaktiv for å pensjonere den uten å miste historikken.',

@@ -154,12 +154,6 @@ return [
         'checklist_value_needed' => 'Angiv en værdi, før du afkrydser dette trin.',
         'checklist_value_placeholder' => 'Værdi',
         'checklist_done_by' => '{name}, {when}',
-        'checklist_block' => 'Denne opgave kan ikke gennemføres endnu. Udfør først disse obligatoriske tjeklistetrin:
-{list}',
-        'checklist_warn' => 'Disse obligatoriske tjeklistetrin er ikke udført:
-{list}
-
-Gennemfør opgaven alligevel? Det registreres i opgavens historik.',
         'checklist_failed' => 'Kunne ikke opdatere tjeklisten',
         'start_date' => 'Startdato',
         'work_start' => 'Arbejdet starter',
@@ -538,7 +532,6 @@ Gennemfør opgaven alligevel? Det registreres i opgavens historik.',
         'nav_repeats' => 'Gentagne opgaver',
         'repeats_heading' => 'Gentagne opgaver',
         'repeats_intro' => 'Noget arbejde kommer igen: et månedligt backup-tjek, en kvartalsvis adgangsgennemgang, en ugentlig rapport. Enhver opgave kan sættes til at gentage sig, og FreeITSM opretter den næste gentagelse for dig i stedet for at overlade det til din hukommelse.',
-        'repeats_cron_warning' => '<strong>En fast tidsplan kræver et planlagt job på serveren, og intet advarer dig, hvis det mangler.</strong> Gentagelser med <em>fast tidsplan</em> oprettes af <code>cron/task_recurrence.php</code>. En ny installation har slet ingen planlagte opgaver, så indtil nogen sætter denne op, vil en fast tidsplan simpelthen aldrig producere noget &mdash; ingen fejl, ingen logpost, blot en gentagelse, der stille ikke gør noget. Kør den <strong>en gang om dagen</strong>. Gentagelser sat til <em>når denne er fuldført</em> er upåvirkede: de oprettes inde i den forespørgsel, der fuldfører den forrige, og virker derfor uden planlagte opgaver overhovedet.',
         'repeats_setup_heading' => 'Sådan sætter du en op',
         'repeats_setup_body' => 'Åbn en opgave og find <strong>Gentagelser</strong> i panelet, og klik derefter på <strong>Opret en gentagelse</strong>. Du kan også højreklikke på et kort på tavlen og vælge <strong>Opret en gentagelse</strong> uden at åbne opgaven. En underopgave kan ikke gentage sig selvstændigt &mdash; en gentagelse hører til selve arbejdet, ikke til et trin i det.',
         'repeats_mode_heading' => 'To måder at gentage på, og forskellen betyder noget',
@@ -576,7 +569,6 @@ Gennemfør opgaven alligevel? Det registreres i opgavens historik.',
         'tags_body2' => 'Mærker administreres under Indstillinger &rarr; Mærker, hver med et navn og en farve. Fem visningsindstillinger dér styrer, om mærker kan oprettes fra en opgave, og hvor de vises &mdash; mærkater på kort, filteret i sidepanelet, søgematch og kalenderen/tidslinjen.',
         'tags_tip' => 'Et mærke er det rette sted for et "måske en dag"-tema. Mærk en håndfuld idéer som <em>Fremtidsplaner</em>, og du kan hente dem frem når som helst med mærkefilteret, uden en dedikeret kolonne.',
         'settings_heading' => 'Indstillinger',
-        'settings_intro' => 'Siden Indstillinger har fem faner &mdash; Statusser, Prioriteter, Kalender, Kort og Mærker. Indstillinger gælder for hele installationen: en ændring her former tavlen, kalenderen og kortene for hele teamet, ikke kun for dig.',
         'settings_lookups_heading' => 'Statusser &amp; prioriteter',
         'settings_lookups_body' => 'Disse to faner administrerer de opslagslister, alle opgaver trækker på. Hver række har et navn, en farve og en visningsrækkefølge, og du tilføjer, redigerer eller sletter rækker med knapperne til højre.',
         'settings_field_statuses' => '<strong>Statusser</strong> &mdash; arbejdsgangstilstandene, der også fungerer som tavlens kolonner (vist i visningsrækkefølge). Én status er <em>standard</em> for nye opgaver. En status markeret som <em>Lukket</em> tæller som færdig &mdash; opgaver flyttet til den stemples med et fuldførelsestidspunkt og udgår af tællere for åbne opgaver. En status kan også gøres inaktiv for at udfase den uden at miste historikken.',

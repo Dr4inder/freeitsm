@@ -154,12 +154,6 @@ return [
         'checklist_value_needed' => 'Masukkan nilai sebelum menandakan langkah ini.',
         'checklist_value_placeholder' => 'Nilai',
         'checklist_done_by' => '{name}, {when}',
-        'checklist_block' => 'Tugasan ini belum boleh diselesaikan. Siapkan langkah senarai semak wajib ini dahulu:
-{list}',
-        'checklist_warn' => 'Langkah senarai semak wajib ini belum siap:
-{list}
-
-Selesaikan tugasan juga? Ia akan direkodkan dalam sejarah tugasan.',
         'checklist_failed' => 'Tidak dapat mengemas kini senarai semak',
         'start_date' => 'Tarikh Mula',
         'work_start' => 'Kerja bermula',
@@ -538,7 +532,6 @@ Selesaikan tugasan juga? Ia akan direkodkan dalam sejarah tugasan.',
         'nav_repeats' => 'Tugasan berulang',
         'repeats_heading' => 'Tugasan berulang',
         'repeats_intro' => 'Sesetengah kerja berulang kembali: semakan sandaran bulanan, semakan akses suku tahunan, laporan mingguan. Mana-mana tugasan boleh diberikan ulangan, dan FreeITSM mencipta kejadian seterusnya untuk anda dan bukan membiarkan anda mengingatinya.',
-        'repeats_cron_warning' => '<strong>Jadual tetap memerlukan tugas berjadual pada server, dan tiada apa yang memberi amaran jika ia tiada.</strong> Ulangan yang ditetapkan kepada <em>pada jadual tetap</em> dicipta oleh <code>cron/task_recurrence.php</code>. Pemasangan baharu tidak mempunyai sebarang tugas berjadual, jadi sehingga seseorang menyediakannya, jadual tetap tidak akan menghasilkan apa-apa &mdash; tiada ralat, tiada catatan log, hanya ulangan yang senyap-senyap tidak berbuat apa-apa. Jalankan ia <strong>sekali sehari</strong>. Ulangan yang ditetapkan kepada <em>selepas yang ini selesai</em> tidak terjejas: ia dicipta di dalam permintaan yang menyelesaikan yang sebelumnya, jadi ia berfungsi pada pemasangan yang tiada sebarang tugas berjadual.',
         'repeats_setup_heading' => 'Menyediakannya',
         'repeats_setup_body' => 'Buka tugasan dan cari <strong>Ulangan</strong> dalam panel, kemudian klik <strong>Sediakan ulangan</strong>. Anda juga boleh klik kanan kad pada papan dan pilih <strong>Sediakan ulangan</strong> tanpa membukanya langsung. Subtugasan tidak boleh berulang dengan sendirinya &mdash; ulangan dimiliki oleh keseluruhan kerja, bukan langkah di dalamnya.',
         'repeats_mode_heading' => 'Dua cara untuk berulang, dan perbezaannya penting',
@@ -576,7 +569,6 @@ Selesaikan tugasan juga? Ia akan direkodkan dalam sejarah tugasan.',
         'tags_body2' => 'Tag diuruskan dalam Tetapan &rarr; Tag, setiap satu dengan nama dan warna. Lima pilihan paparan di sana mengawal sama ada tag boleh dicipta daripada tugasan dan di mana ia dipaparkan &mdash; cip kad, penapis bar sisi, padanan carian, dan kalendar/garis masa.',
         'tags_tip' => 'Tag ialah tempat yang sesuai untuk tema "suatu hari nanti / mungkin". Tandakan beberapa idea sebagai <em>Blue Sky</em> dan anda boleh menariknya keluar bila-bila masa dengan penapis tag, tanpa lajur khusus.',
         'settings_heading' => 'Tetapan',
-        'settings_intro' => 'Halaman Tetapan mempunyai lima tab &mdash; Status, Keutamaan, Kalendar, Kad dan Tag. Tetapan ini terpakai untuk seluruh pemasangan: perubahan di sini membentuk papan, kalendar dan kad untuk seluruh pasukan, bukan hanya untuk anda.',
         'settings_lookups_heading' => 'Status &amp; Keutamaan',
         'settings_lookups_body' => 'Kedua-dua tab ini menguruskan senarai carian yang menjadi asas setiap tugasan. Setiap baris mempunyai nama, warna dan susunan paparan, dan anda menambah, mengedit atau memadam baris dengan butang di sebelah kanan.',
         'settings_field_statuses' => '<strong>Status</strong> &mdash; keadaan aliran kerja, yang turut berfungsi sebagai lajur papan (dipaparkan mengikut susunan paparan). Satu status ialah <em>lalai</em> untuk tugasan baharu. Status yang ditandakan sebagai <em>Ditutup</em> dikira sebagai selesai &mdash; tugasan yang dipindahkan ke dalamnya merekodkan masa penyelesaian dan gugur daripada kaunter tugasan terbuka. Status juga boleh dijadikan tidak aktif untuk ditamatkan penggunaannya tanpa kehilangan sejarah.',

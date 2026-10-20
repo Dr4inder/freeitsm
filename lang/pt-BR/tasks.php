@@ -154,12 +154,6 @@ return [
         'checklist_value_needed' => 'Digite um valor antes de marcar esta etapa.',
         'checklist_value_placeholder' => 'Valor',
         'checklist_done_by' => '{name}, {when}',
-        'checklist_block' => 'Esta tarefa ainda não pode ser concluída. Conclua primeiro estas etapas obrigatórias da lista de verificação:
-{list}',
-        'checklist_warn' => 'Estas etapas obrigatórias da lista de verificação não foram concluídas:
-{list}
-
-Concluir a tarefa mesmo assim? Isso será registrado no histórico da tarefa.',
         'checklist_failed' => 'Não foi possível atualizar a lista de verificação',
         'start_date' => 'Data de início',
         'work_start' => 'Início do trabalho',
@@ -538,7 +532,6 @@ Concluir a tarefa mesmo assim? Isso será registrado no histórico da tarefa.',
         'nav_repeats' => 'Tarefas repetitivas',
         'repeats_heading' => 'Tarefas repetitivas',
         'repeats_intro' => 'Alguns trabalhos se repetem: uma verificação mensal de backup, uma revisão trimestral de acessos, um relatório semanal. Qualquer tarefa pode receber uma repetição, e o FreeITSM cria a próxima ocorrência para você, em vez de deixar que você tenha que lembrar.',
-        'repeats_cron_warning' => '<strong>Uma programação fixa precisa de uma tarefa agendada no servidor, e nada avisa se ela estiver faltando.</strong> Repetições definidas como <em>em uma programação fixa</em> são criadas por <code>cron/task_recurrence.php</code>. Uma instalação nova não tem nenhuma tarefa agendada, então, até que alguém configure isso, uma programação fixa simplesmente nunca vai gerar nada &mdash; sem erro, sem registro no log, apenas uma repetição que silenciosamente não faz nada. Execute-a <strong>uma vez por dia</strong>. Repetições definidas como <em>após a conclusão desta</em> não são afetadas: elas são criadas dentro da mesma requisição que conclui a anterior, então funcionam mesmo em uma instalação sem nenhuma tarefa agendada.',
         'repeats_setup_heading' => 'Configurando uma',
         'repeats_setup_body' => 'Abra uma tarefa e encontre <strong>Repetições</strong> no painel, depois clique em <strong>Configurar uma repetição</strong>. Você também pode clicar com o botão direito em um cartão do quadro e escolher <strong>Configurar uma repetição</strong> sem precisar abri-lo. Uma subtarefa não pode repetir sozinha &mdash; uma repetição pertence ao trabalho em si, não a uma etapa dentro dele.',
         'repeats_mode_heading' => 'Duas formas de repetir, e a diferença importa',
@@ -576,7 +569,6 @@ Concluir a tarefa mesmo assim? Isso será registrado no histórico da tarefa.',
         'tags_body2' => 'As etiquetas são gerenciadas em Configurações &rarr; Etiquetas, cada uma com um nome e uma cor. Cinco opções de exibição ali controlam se as etiquetas podem ser criadas a partir de uma tarefa e onde elas aparecem &mdash; chips do cartão, o filtro da barra lateral, a correspondência da pesquisa e o calendário/linha do tempo.',
         'tags_tip' => 'Uma etiqueta é o lar certo para um tema "algum dia / talvez". Etiquete um punhado de ideias como <em>Blue Sky</em> e você pode trazê-las à tona a qualquer momento com o filtro de etiquetas, sem uma coluna dedicada.',
         'settings_heading' => 'Configurações',
-        'settings_intro' => 'A página de Configurações tem cinco abas &mdash; Status, Prioridades, Calendário, Cartão e Etiquetas. As configurações valem para toda a instalação: uma mudança aqui molda o quadro, o calendário e os cartões para toda a equipe, não apenas para você.',
         'settings_lookups_heading' => 'Status e Prioridades',
         'settings_lookups_body' => 'Estas duas abas gerenciam as listas de consulta das quais cada tarefa se baseia. Cada linha tem um nome, uma cor e uma ordem de exibição, e você adiciona, edita ou exclui linhas com os botões à direita.',
         'settings_field_statuses' => '<strong>Status</strong> &mdash; os estados do fluxo de trabalho, que também servem como colunas do quadro (exibidos na ordem de exibição). Um status é o <em>padrão</em> para novas tarefas. Um status marcado como <em>Fechado</em> conta como concluído &mdash; tarefas movidas para ele registram um horário de conclusão e saem dos contadores de tarefas abertas. Um status também pode ser tornado inativo para aposentá-lo sem perder o histórico.',

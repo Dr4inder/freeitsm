@@ -154,12 +154,6 @@ return [
         'checklist_value_needed' => 'Wprowadź wartość przed zaznaczeniem tego kroku.',
         'checklist_value_placeholder' => 'Wartość',
         'checklist_done_by' => '{name}, {when}',
-        'checklist_block' => 'Tego zadania nie można jeszcze ukończyć. Najpierw wykonaj te obowiązkowe kroki listy kontrolnej:
-{list}',
-        'checklist_warn' => 'Te obowiązkowe kroki listy kontrolnej nie są wykonane:
-{list}
-
-Ukończyć zadanie mimo to? Zostanie to zapisane w historii zadania.',
         'checklist_failed' => 'Nie udało się zaktualizować listy kontrolnej',
         'start_date' => 'Data rozpoczęcia',
         'work_start' => 'Rozpoczęcie pracy',
@@ -538,7 +532,6 @@ Ukończyć zadanie mimo to? Zostanie to zapisane w historii zadania.',
         'nav_repeats' => 'Powtarzające się zadania',
         'repeats_heading' => 'Powtarzające się zadania',
         'repeats_intro' => 'Część pracy powraca cyklicznie: comiesięczna kontrola kopii zapasowych, kwartalny przegląd dostępów, cotygodniowy raport. Każdemu zadaniu można nadać powtarzanie, a FreeITSM samo utworzy kolejne wystąpienie zamiast zostawiać to do zapamiętania.',
-        'repeats_cron_warning' => '<strong>Stały harmonogram wymaga zaplanowanego zadania na serwerze, a brak takiego zadania nie jest w żaden sposób sygnalizowany.</strong> Powtarzanie ustawione na <em>stały harmonogram</em> jest tworzone przez <code>cron/task_recurrence.php</code>. Świeża instalacja nie ma żadnych zaplanowanych zadań, więc dopóki ktoś tego nie skonfiguruje, stały harmonogram po prostu nigdy niczego nie wygeneruje &mdash; bez błędu, bez wpisu w logu, po prostu powtarzanie, które cicho nic nie robi. Uruchamiaj je <strong>raz dziennie</strong>. Powtarzanie ustawione na <em>po ukończeniu tego zadania</em> nie jest tym dotknięte: takie wystąpienia są tworzone w ramach żądania, które kończy poprzednie zadanie, więc działają nawet w instalacji bez żadnych zaplanowanych zadań.',
         'repeats_setup_heading' => 'Konfigurowanie powtarzania',
         'repeats_setup_body' => 'Otwórz zadanie i znajdź w panelu sekcję <strong>Powtarzanie</strong>, a następnie kliknij <strong>Skonfiguruj powtarzanie</strong>. Można też kliknąć kartę na tablicy prawym przyciskiem myszy i wybrać <strong>Skonfiguruj powtarzanie</strong> bez otwierania zadania. Podzadanie nie może powtarzać się samodzielnie &mdash; powtarzanie należy do całej pracy, a nie do jej pojedynczego kroku.',
         'repeats_mode_heading' => 'Dwa sposoby powtarzania, a różnica ma znaczenie',
@@ -576,7 +569,6 @@ Ukończyć zadanie mimo to? Zostanie to zapisane w historii zadania.',
         'tags_body2' => 'Tagami zarządza się w Ustawienia &rarr; Tagi, każdy ma nazwę i kolor. Pięć opcji wyświetlania w tym miejscu kontroluje, czy tagi można tworzyć z poziomu zadania oraz gdzie się pojawiają &mdash; plakietki na kartach, filtr na pasku bocznym, dopasowanie w wyszukiwaniu oraz kalendarz/oś czasu.',
         'tags_tip' => 'Tag to dobre miejsce na temat „może kiedyś”. Oznacz kilka pomysłów tagiem <em>Blue Sky</em>, a będzie można je w każdej chwili wywołać filtrem tagów, bez potrzeby osobnej kolumny.',
         'settings_heading' => 'Ustawienia',
-        'settings_intro' => 'Strona Ustawień ma pięć zakładek &mdash; Statusy, Priorytety, Kalendarz, Karta i Tagi. Ustawienia obowiązują dla całej instalacji: zmiana tutaj wpływa na tablicę, kalendarz i karty dla całego zespołu, nie tylko dla Ciebie.',
         'settings_lookups_heading' => 'Statusy i priorytety',
         'settings_lookups_body' => 'Te dwie zakładki zarządzają listami słownikowymi, z których korzysta każde zadanie. Każdy wiersz ma nazwę, kolor i kolejność wyświetlania; wiersze dodaje się, edytuje i usuwa przyciskami po prawej stronie.',
         'settings_field_statuses' => '<strong>Statusy</strong> &mdash; stany przepływu pracy, które jednocześnie są kolumnami tablicy (pokazywanymi w kolejności wyświetlania). Jeden status jest <em>domyślny</em> dla nowych zadań. Status oznaczony jako <em>Zamknięte</em> liczy się jako ukończony &mdash; zadania przeniesione do niego zapisują czas ukończenia i znikają z liczników otwartych zadań. Status można też dezaktywować, aby wycofać go z użycia bez utraty historii.',

@@ -154,12 +154,6 @@ return [
         'checklist_value_needed' => 'Skriv inn ein verdi før du kryssar av dette steget.',
         'checklist_value_placeholder' => 'Verdi',
         'checklist_done_by' => '{name}, {when}',
-        'checklist_block' => 'Denne oppgåva kan ikkje fullførast enno. Fullfør desse obligatoriske sjekklistestega først:
-{list}',
-        'checklist_warn' => 'Desse obligatoriske sjekklistestega er ikkje ferdige:
-{list}
-
-Fullføre oppgåva likevel? Det blir ført inn i historikken til oppgåva.',
         'checklist_failed' => 'Klarte ikkje å oppdatere sjekklista',
         'start_date' => 'Startdato',
         'work_start' => 'Arbeidet startar',
@@ -538,7 +532,6 @@ Fullføre oppgåva likevel? Det blir ført inn i historikken til oppgåva.',
         'nav_repeats' => 'Gjentakande oppgåver',
         'repeats_heading' => 'Gjentakande oppgåver',
         'repeats_intro' => 'Noko arbeid kjem attende: ein månadleg backup-sjekk, ein kvartalsvis tilgangsgjennomgang, ein vekentleg rapport. Kva oppgåve som helst kan få ei gjentaking, og FreeITSM lagar den neste hendinga for deg i staden for at du må hugse det sjølv.',
-        'repeats_cron_warning' => '<strong>Ein fast plan krev ein planlagd jobb på tenaren, og ingenting varslar deg om han manglar.</strong> Gjentakingar sette til <em>fast plan</em> vert oppretta av <code>cron/task_recurrence.php</code>. Ein fersk installasjon har ingen planlagde oppgåver i det heile, så før nokon set opp denne, vil ein fast plan rett og slett aldri produsere noko &mdash; ingen feil, ingen loggoppføring, berre ei gjentaking som stille ikkje gjer noko. Køyr han <strong>éin gong om dagen</strong>. Gjentakingar sette til <em>etter at denne er fullført</em> vert ikkje påverka: dei vert laga inne i førespurnaden som fullfører den førre, så dei fungerer på ein installasjon utan planlagde oppgåver i det heile.',
         'repeats_setup_heading' => 'Sette opp éi',
         'repeats_setup_body' => 'Opne ei oppgåve og finn <strong>Gjentakingar</strong> i panelet, klikk så <strong>Set opp ei gjentaking</strong>. Du kan òg høgreklikke på eit kort på tavla og velje <strong>Set opp ei gjentaking</strong> utan å opne det i det heile. Ei deloppgåve kan ikkje gjenta seg sjølv &mdash; ei gjentaking høyrer til arbeidsstykket, ikkje til eit steg inni det.',
         'repeats_mode_heading' => 'To måtar å gjenta på, og skilnaden har noko å seie',
@@ -576,7 +569,6 @@ Fullføre oppgåva likevel? Det blir ført inn i historikken til oppgåva.',
         'tags_body2' => 'Merkelappane blir styrte i Innstillingar &rarr; Merkelappar, kvar med eit namn og ein farge. Fem visingsval der styrer om merkelappar kan opprettast frå ei oppgåve, og kvar dei dukkar opp &mdash; brikker på kort, filteret i sidepanelet, treff i søk, og kalenderen/tidslinja.',
         'tags_tip' => 'Ein merkelapp er den rette staden for eit “ein gong / kanskje”-tema. Merk nokre idear som <em>Blue Sky</em>, så kan du hente dei fram når som helst med merkelappfilteret, utan ein eigen kolonne.',
         'settings_heading' => 'Innstillingar',
-        'settings_intro' => 'Innstillingssida har fem faner &mdash; Statusar, Prioritetar, Kalender, Kort og Merkelappar. Innstillingane gjeld heile installasjonen: ei endring her formar tavla, kalenderen og korta for heile teamet, ikkje berre for deg.',
         'settings_lookups_heading' => 'Statusar &amp; prioritetar',
         'settings_lookups_body' => 'Desse to fanene styrer oppslagslistene kvar oppgåve hentar frå. Kvar rad har eit namn, ein farge og ei visingsrekkjefølgje, og du legg til, redigerer eller slettar rader med knappane til høgre.',
         'settings_field_statuses' => '<strong>Statusar</strong> &mdash; arbeidsflytstega, som samtidig er kolonnane på tavla (viste i visingsrekkjefølgje). Éin status er <em>standard</em> for nye oppgåver. Ein status som er merkt som <em>Lukka</em>, tel som fullført &mdash; oppgåver som blir flytta dit, får stempla eit tidspunkt for fullføring og fell ut av tellarane for opne oppgåver. Ein status kan òg setjast inaktiv for å ta han ut av bruk utan å miste historikken.',
