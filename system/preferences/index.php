@@ -948,6 +948,14 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                     <span class="toggle-label"><?php echo htmlspecialchars(t('system.preferences.sidebar_label')); ?></span>
                 </label>
                 <div id="appSidebarModules" class="app-sidebar-pick"<?php echo $sbPrefs['on'] ? '' : ' hidden'; ?>>
+                    <?php /* How names show (#124). Icons only is the default - what
+                             the sidebar has always done. */ ?>
+                    <label class="app-sidebar-pick-hint" for="appSidebarNames"><?php echo htmlspecialchars(t('system.preferences.sidebar_names')); ?></label>
+                    <select id="appSidebarNames" class="pref-language-select">
+                        <?php foreach (['icons', 'hover', 'pinned'] as $sbMode): ?>
+                        <option value="<?php echo $sbMode; ?>"<?php echo $sbPrefs['names'] === $sbMode ? ' selected' : ''; ?>><?php echo htmlspecialchars(t('system.preferences.sidebar_names_' . $sbMode)); ?></option>
+                        <?php endforeach; ?>
+                    </select>
                     <p class="app-sidebar-pick-hint"><?php echo htmlspecialchars(t('system.preferences.sidebar_pick')); ?></p>
                     <div class="app-sidebar-pick-list">
                         <?php foreach ($moItems as $sbItem): ?>
@@ -1429,6 +1437,13 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 hint.classList.remove('show');
                 if (ok) showToast(P(toggle.checked ? 'sidebar_on' : 'sidebar_off'), 'success');
                 else toggle.checked = !toggle.checked;
+            });
+            const names = document.getElementById('appSidebarNames');
+            if (names) names.addEventListener('change', async () => {
+                hint.classList.add('show');
+                const ok = await savePref('app_sidebar_names', names.value);
+                hint.classList.remove('show');
+                if (ok) showToast(P('sidebar_saved'), 'success');
             });
             box.addEventListener('change', async e => {
                 if (!e.target.matches('input[type="checkbox"]')) return;

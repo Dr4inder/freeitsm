@@ -44,6 +44,12 @@ return [
     'sidebar' => [
         'label'     => 'Modules',
         'customise' => 'Choose what is on the sidebar',
+        // Beside the icon once names show (#124); the line above is its tooltip.
+        'customise_short' => 'Choose',
+        'pin'       => 'Pin',
+        'unpin'     => 'Unpin',
+        'pin_tip'   => 'Keep the sidebar open with names',
+        'unpin_tip' => 'Open the sidebar only when you point at it',
     ],
     'reorder' => [
         'drag'     => 'Drag to move',
