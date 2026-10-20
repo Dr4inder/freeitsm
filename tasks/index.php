@@ -413,7 +413,7 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../assets/js/tasks-ctx-menu.js?v=4"></script>
     <!-- The one cleaner for HTML from elsewhere: Knowledge procedure bodies and task instructions in the Work view (GH #190). -->
     <script src="../assets/js/safe-html.js?v=1"></script>
-    <script src="../assets/js/tasks.js?v=65"></script>
+    <script src="../assets/js/tasks.js?v=66"></script>
     <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>
