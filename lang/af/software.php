@@ -1,7 +1,13 @@
 <?php
 /**
- * Afrikaans (af) — Software module strings.
- * Missing keys fall back to lang/en/software.php per-key.
+ * FreeITSM — software strings (af).
+ *
+ * Keys mirror lang/en/software.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php af
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
  */
 
 return [
@@ -19,6 +25,7 @@ return [
     ],
     'inventory' => [
         'page_title' => 'Dienstoonbank - Sagteware',
+        'heading' => 'Sagteware-inventaris',
         'search' => 'Soek volgens toepassingsnaam of uitgewer...',
         'tab_apps' => 'Toepassings',
         'tab_components' => 'Komponente',
@@ -26,6 +33,21 @@ return [
         'col_name' => 'Toepassingsnaam',
         'col_publisher' => 'Uitgewer',
         'col_installed' => 'Geïnstalleer op',
+        'col_seats' => 'Setels',
+        'col_actions' => '',
+        'add_app' => 'Voeg toepassing by',
+        'new_app' => 'Nuwe toepassing',
+        'edit_app' => 'Wysig toepassing',
+        'added_by_hand' => 'Met die hand bygevoeg',
+        'f_name' => 'Naam',
+        'f_publisher' => 'Uitgewer of verskaffer',
+        'f_url' => 'Webadres',
+        'f_url_hint' => 'Waar jy dit administreer. Opsioneel.',
+        'f_notes' => 'Notas',
+        'licence_hint' => 'Sodra dit gestoor is, kan jy \'n lisensie daarteen aanteken, met setels, koste en \'n hernuwingsdatum - dieselfde as enige ander toepassing.',
+        'app_saved' => 'Toepassing gestoor',
+        'app_deleted' => 'Toepassing geskrap',
+        'confirm_delete_app' => 'Skrap "{name}"? Enige lisensie wat daarteen aangeteken is, moet eers geskrap word.',
         'count_app' => '{count} toepassing',
         'count_apps' => '{count} toepassings',
         'count_component' => '{count} komponent',
@@ -95,6 +117,7 @@ return [
         'widget_removed' => 'Legstuk verwyder',
     ],
     'library' => [
+        'page_title' => 'Sagteware-legstukbiblioteek',
         'back' => 'Paneelbord',
         'heading' => 'Legstukbiblioteek',
         'search' => 'Soek legstukke...',
@@ -225,6 +248,14 @@ return [
     'settings' => [
         'page_title' => 'Dienstoonbank - Sagteware-instellings',
         'tab_api_keys' => 'API-sleutels',
+        'tab_renewals' => 'Hernuwings',
+        'renewals_intro' => 'Lisensiehernuwingsdatums kan op die Watchtower-paneelbord gewys word, as heeldag-inskrywings in die kalender geskryf word, of albei. Niks word twee keer gestoor nie - die lisensie is steeds die rekord, en hierdie word daaruit gegenereer.',
+        'renewal_show_in' => 'Wys hernuwings in',
+        'renewal_off' => 'Nêrens',
+        'renewal_dashboard_only' => 'Slegs Watchtower-paneelbord',
+        'renewal_calendar_only' => 'Slegs kalender',
+        'renewal_both' => 'Paneelbord en kalender',
+        'renewal_saved' => 'Hernuwingsinstellings gestoor',
         'heading' => 'API-sleutels',
         'label_input' => 'Etiket (opsioneel)',
         'generate' => 'Genereer',
@@ -295,6 +326,14 @@ return [
         'inventory_s5_b' => 'Spoor weergaweverspreiding op',
         'inventory_s5_t' => 'die uitgebreide aansig maak dit maklik om masjiene wat verouderde weergawes loop te identifiseer. As tien masjiene weergawe 5.2 het maar twee nog op 4.8 is, kan jy dit dadelik sien en optree.',
         'inventory_tip' => 'Die installasietelling weerspieël hoeveel unieke masjiene tans die sagteware geïnstalleer het. Wanneer \'n masjien inrapporteer sonder \'n voorheen gesiene toepassing, word die ou rekord outomaties opgeruim.',
+        'manual_heading' => '<strong>\'n Wolkplatform met die hand byvoeg</strong>',
+        'manual_body' => 'Die inventarisagent vind wat op jou masjiene geïnstalleer is, wat glad nie help vir Xero, Canva, Figma of enigiets anders wat in \'n blaaier woon nie. <strong>Voeg toepassing by</strong> laat jou self een invoer, met \'n uitgewer, die webadres waar jy dit administreer, en notas.',
+        'manual_rule_why' => 'Niks installeer \'n wolkplatform nie, so niks kan dit ontdek nie. Dit is die enigste manier waarop een in die lys kom.',
+        'manual_rule_licence' => '<strong>Dit is meer werd as wat dit lyk.</strong> \'n Lisensie moet aan \'n toepassing behoort, so totdat jy een byvoeg is daar nêrens om aan te teken wat \'n wolkintekening kos, hoeveel setels dit het of wanneer dit hernu nie.',
+        'manual_rule_edit' => 'Handmatige inskrywings is gemerk <em>Met die hand bygevoeg</em> en is die enigste wat jy kan wysig. \'n Toepassing wat deur die agent ontdek is, is \'n verslag van wat op iemand se masjien is, en enige wysiging sal met die volgende inventarislopie oorskryf word.',
+        'manual_rule_adopt' => 'As die agent later een van jou handmatige inskrywings werklik êrens geïnstalleer vind, heg dit die masjiene aan <strong>sonder om aan \'n woord wat jy geskryf het te raak</strong>.',
+        'manual_rule_seats' => '<strong>Setels en installasies is aparte kolomme.</strong> \'n Wolkplatform is nêrens geïnstalleer nie, so \'n nul onder Geïnstalleer op sê niks oor of enigiemand dit gebruik nie &mdash; die setels op sy lisensies doen.',
+        'manual_tip' => 'Voeg eers die toepassing by, teken dan \'n lisensie daarteen aan met die setelgetal, koste en hernuwingsdatum. Die hernuwing is wat dan op Watchtower en in jou kalender verskyn.',
         'dashboard_heading' => 'Paneelbord',
         'dashboard_intro' => 'Die Sagteware-paneelbord laat jou toe om jou sagtewarelandskap te visualiseer met aanpasbare Chart.js-legstukke. Elke ontleder het sy eie paneelborduitleg, sodat jy kan fokus op die grafieke en datapunte wat die meeste vir jou rol saak maak.',
         'dashboard_s1_b' => 'Maak die biblioteek oop',
@@ -330,6 +369,16 @@ return [
         'licences_field_over_b' => 'Oorgelisensieer',
         'licences_field_over_t' => 'meer installasies bespeur as lisensies aangekoop. Dit is \'n nakomingsrisiko wat spoedig aangespreek moet word.',
         'licences_tip' => 'Lisensienakoming word intyds teen die lewende sagteware-inventaris bereken. Soos masjiene inrapporteer en sagteware verander, werk die nakomingstatus outomaties by.',
+        'renewals_heading' => '<strong>Waar hernuwings verskyn</strong>',
+        'renewals_body' => '\'n Hernuwingsdatum op \'n lisensie is net nuttig as iemand dit betyds sien. Kies onder <strong>Instellings &rarr; Hernuwings</strong> of hernuwings op die Watchtower-paneelbord, in die kalender, in albei, of nêrens verskyn.',
+        'renewals_card_wt_title' => 'Op Watchtower',
+        'renewals_card_wt_body' => '\'n Sagteware-kaart wat hernuwings tel wat in die volgende 30 en 90 dae verval, plus kennisgewingtydperke wat afloop. Doelbewus dieselfde drie vensters as die Kontrakte-kaart, sodat jy die twee teen mekaar kan lees.',
+        'renewals_card_cal_title' => 'In die kalender',
+        'renewals_card_cal_body' => 'Heeldag-inskrywings wat uit jou lisensies gegenereer word. Hulle word herbou wanneer \'n lisensie verander, so hulle kan nie afdwaal nie &mdash; en niks wat jy self in die kalender getik het, word ooit aangeraak nie.',
+        'renewals_rule_where' => 'Die lisensie is steeds die rekord. Kalenderinskrywings word daaruit gegenereer, so die hernuwingsdatum op die lisensie wysig is wat hulle verander.',
+        'renewals_rule_notice' => '<strong>Twee inskrywings per lisensie, nie een nie.</strong> Die hernuwingsdatum is wanneer die geld uitgaan; die <em>kennisgewing-sperdatum</em> &mdash; uitgewerk uit die kennisgewingtydperk &mdash; is die laaste dag wat jy nog kan wegstap, en dit is die een wat jou werklik kos as jy dit mis. \'n Lisensie sonder kennisgewingtydperk kry geen kennisgewinginskrywing nie.',
+        'renewals_rule_active' => 'Slegs aktiewe lisensies verskyn. \'n Gekanselleerde een het steeds \'n hernuwingsdatum op die rekord, maar dit is geskiedenis eerder as \'n verpligting.',
+        'renewals_tip' => 'As jy niks anders op \'n lisensie aanteken nie, teken die hernuwingsdatum en die kennisgewingtydperk aan. Daardie twee verander \'n lys sagteware in \'n waarskuwing wat jy betyds kry om op te tree.',
         'collection_heading' => 'Hoe data versamel word',
         'collection_intro' => 'Die Sagteware-module versamel nie op sy eie data nie. In plaas daarvan steun dit op die Bate-bestuur PowerShell-skrip ({script}) wat op elke bestuurde Windows-masjien loop en geïnstalleerde sagteware as deel van die breër hardeware- en sagteware-inventaris rapporteer.',
         'collection_p2' => 'Wanneer die PowerShell-skrip op \'n masjien loop, lees dit die Voeg by/Verwyder Programme-registerinskrywings en versamel elke geïnstalleerde toepassing en stelselkomponent. Hierdie data word na die FreeITSM-API gepos, waar dit teen die baterekord gestoor word. Die Sagteware-module voeg dan hierdie data oor alle masjiene saam om jou die landgoedwye aansig te gee.',
