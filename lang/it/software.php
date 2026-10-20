@@ -1,7 +1,13 @@
 <?php
 /**
- * Italiano (it) — Software module strings.
- * Missing keys fall back to lang/en/software.php per-key.
+ * FreeITSM — software strings (it).
+ *
+ * Keys mirror lang/en/software.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php it
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
  */
 
 return [
@@ -19,6 +25,7 @@ return [
     ],
     'inventory' => [
         'page_title' => 'Service Desk - Software',
+        'heading' => 'Inventario software',
         'search' => 'Cerca per nome applicazione o editore...',
         'tab_apps' => 'Applicazioni',
         'tab_components' => 'Componenti',
@@ -26,6 +33,21 @@ return [
         'col_name' => 'Nome applicazione',
         'col_publisher' => 'Editore',
         'col_installed' => 'Installato il',
+        'col_seats' => 'Postazioni',
+        'col_actions' => '',
+        'add_app' => 'Aggiungi applicazione',
+        'new_app' => 'Nuova applicazione',
+        'edit_app' => 'Modifica applicazione',
+        'added_by_hand' => 'Aggiunta manualmente',
+        'f_name' => 'Nome',
+        'f_publisher' => 'Editore o fornitore',
+        'f_url' => 'Indirizzo web',
+        'f_url_hint' => 'Dove la amministri. Facoltativo.',
+        'f_notes' => 'Note',
+        'licence_hint' => 'Dopo il salvataggio puoi registrare una licenza per questa applicazione, con postazioni, costo e data di rinnovo - come per qualsiasi altra applicazione.',
+        'app_saved' => 'Applicazione salvata',
+        'app_deleted' => 'Applicazione eliminata',
+        'confirm_delete_app' => 'Eliminare "{name}"? Eventuali licenze registrate per essa vanno eliminate prima.',
         'count_app' => '{count} applicazione',
         'count_apps' => '{count} applicazioni',
         'count_component' => '{count} componente',
@@ -95,6 +117,7 @@ return [
         'widget_removed' => 'Widget rimosso',
     ],
     'library' => [
+        'page_title' => 'Libreria widget del software',
         'back' => 'Dashboard',
         'heading' => 'Libreria widget',
         'search' => 'Cerca widget...',
@@ -225,6 +248,14 @@ return [
     'settings' => [
         'page_title' => 'Service Desk - Impostazioni software',
         'tab_api_keys' => 'API key',
+        'tab_renewals' => 'Rinnovi',
+        'renewals_intro' => 'Le date di rinnovo delle licenze possono essere mostrate nella dashboard di Watchtower, scritte nel calendario come voci di tutto il giorno, o in entrambi. Nulla viene memorizzato due volte - la licenza resta il dato di riferimento e queste voci sono generate da essa.',
+        'renewal_show_in' => 'Mostra i rinnovi in',
+        'renewal_off' => 'Da nessuna parte',
+        'renewal_dashboard_only' => 'Solo dashboard di Watchtower',
+        'renewal_calendar_only' => 'Solo calendario',
+        'renewal_both' => 'Dashboard e calendario',
+        'renewal_saved' => 'Impostazioni dei rinnovi salvate',
         'heading' => 'API key',
         'label_input' => 'Etichetta (opzionale)',
         'generate' => 'Genera',
@@ -295,6 +326,14 @@ return [
         'inventory_s5_b' => 'Individua la proliferazione delle versioni',
         'inventory_s5_t' => 'la vista espansa rende facile identificare le macchine con versioni obsolete. Se dieci macchine hanno la versione 5.2 ma due sono ancora alla 4.8, lo vedi immediatamente e puoi intervenire.',
         'inventory_tip' => 'Il numero di installazioni riflette quante macchine univoche hanno attualmente il software installato. Quando una macchina effettua una segnalazione senza un\'applicazione vista in precedenza, il vecchio record viene ripulito automaticamente.',
+        'manual_heading' => '<strong>Aggiungere una piattaforma cloud manualmente</strong>',
+        'manual_body' => 'L\'agente di inventario trova ciò che è installato sulle tue macchine, il che non serve a nulla per Xero, Canva, Figma o qualsiasi altro servizio che vive in un browser. <strong>Aggiungi applicazione</strong> ti permette di inserirne una a mano, con un editore, l\'indirizzo web da cui la amministri e delle note.',
+        'manual_rule_why' => 'Nessuno installa una piattaforma cloud, quindi nulla può rilevarla. È l\'unico modo per farla comparire nell\'elenco.',
+        'manual_rule_licence' => '<strong>Vale più di quanto sembri.</strong> Una licenza deve appartenere a un\'applicazione, quindi finché non ne aggiungi una non c\'è un posto dove registrare quanto costa un abbonamento cloud, quante postazioni ha o quando si rinnova.',
+        'manual_rule_edit' => 'Le voci manuali sono contrassegnate come <em>Aggiunta manualmente</em> e sono le uniche che puoi modificare. Un\'applicazione rilevata dall\'agente è un resoconto di ciò che c\'è sulla macchina di qualcuno e qualsiasi modifica verrebbe sovrascritta alla successiva esecuzione dell\'inventario.',
+        'manual_rule_adopt' => 'Se in seguito l\'agente trova una delle tue voci manuali effettivamente installata da qualche parte, collega le macchine <strong>senza toccare una parola di ciò che hai scritto</strong>.',
+        'manual_rule_seats' => '<strong>Postazioni e installazioni sono colonne separate.</strong> Una piattaforma cloud non è installata da nessuna parte, quindi uno zero sotto Installato su non dice nulla sul fatto che qualcuno la usi &mdash; lo dicono le postazioni delle sue licenze.',
+        'manual_tip' => 'Aggiungi prima l\'applicazione, poi registra una licenza con numero di postazioni, costo e data di rinnovo. È il rinnovo che poi compare in Watchtower e nel tuo calendario.',
         'dashboard_heading' => 'Dashboard',
         'dashboard_intro' => 'La dashboard software ti permette di visualizzare il tuo panorama software utilizzando widget Chart.js personalizzabili. Ogni analista ha il proprio layout della dashboard, così puoi concentrarti sui grafici e sui dati più importanti per il tuo ruolo.',
         'dashboard_s1_b' => 'Apri la libreria',
@@ -330,6 +369,16 @@ return [
         'licences_field_over_b' => 'Licenze superate',
         'licences_field_over_t' => 'sono state rilevate più installazioni rispetto alle licenze acquistate. Si tratta di un rischio di conformità che dovrebbe essere affrontato tempestivamente.',
         'licences_tip' => 'La conformità delle licenze viene calcolata in tempo reale rispetto all\'inventario software in tempo reale. Man mano che le macchine effettuano segnalazioni e il software cambia, lo stato di conformità si aggiorna automaticamente.',
+        'renewals_heading' => '<strong>Dove compaiono i rinnovi</strong>',
+        'renewals_body' => 'La data di rinnovo di una licenza serve solo se qualcuno la vede in tempo. Scegli in <strong>Impostazioni &rarr; Rinnovi</strong> se i rinnovi compaiono nella dashboard di Watchtower, nel calendario, in entrambi o da nessuna parte.',
+        'renewals_card_wt_title' => 'In Watchtower',
+        'renewals_card_wt_body' => 'Una scheda Software che conta i rinnovi in scadenza nei prossimi 30 e 90 giorni, più i periodi di preavviso che stanno per scadere. Volutamente le stesse tre finestre usate dalla scheda Contratti, così puoi leggere le due schede a confronto.',
+        'renewals_card_cal_title' => 'Nel calendario',
+        'renewals_card_cal_body' => 'Voci di tutto il giorno generate dalle tue licenze. Vengono ricostruite ogni volta che una licenza cambia, quindi non possono andare fuori sincrono &mdash; e ciò che hai scritto tu nel calendario non viene mai toccato.',
+        'renewals_rule_where' => 'La licenza resta il dato di riferimento. Le voci del calendario sono generate da essa, quindi per cambiarle si modifica la data di rinnovo sulla licenza.',
+        'renewals_rule_notice' => '<strong>Due voci per licenza, non una.</strong> La data di rinnovo è quando il denaro esce; la <em>scadenza del preavviso</em> &mdash; calcolata dal periodo di preavviso &mdash; è l\'ultimo giorno in cui puoi ancora recedere, ed è quella che ti costa davvero se la perdi. Una licenza senza periodo di preavviso non ha la voce del preavviso.',
+        'renewals_rule_active' => 'Compaiono solo le licenze attive. Una annullata ha ancora una data di rinnovo nel registro, ma è storia più che un impegno.',
+        'renewals_tip' => 'Se su una licenza registri una cosa sola, registra la data di rinnovo e il periodo di preavviso. Sono queste due a trasformare un elenco di software in un avviso che ricevi in tempo per agire.',
         'collection_heading' => 'Come vengono raccolti i dati',
         'collection_intro' => 'Il modulo Software non raccoglie i dati da solo. Si basa invece sullo script PowerShell di Asset Management ({script}) che viene eseguito su ogni macchina Windows gestita e segnala il software installato come parte dell\'inventario hardware e software più ampio.',
         'collection_p2' => 'Quando lo script PowerShell viene eseguito su una macchina, legge le voci di registro di Installazione applicazioni e raccoglie ogni applicazione e componente di sistema installato. Questi dati vengono inviati all\'API di FreeITSM, dove sono memorizzati nel record dell\'asset. Il modulo Software aggrega quindi questi dati su tutte le macchine per offrirti la visione dell\'intero parco IT.',
