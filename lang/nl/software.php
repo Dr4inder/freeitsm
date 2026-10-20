@@ -1,7 +1,13 @@
 <?php
 /**
- * Nederlands (nl) — Software module strings.
- * Missing keys fall back to lang/en/software.php per-key.
+ * FreeITSM — software strings (nl).
+ *
+ * Keys mirror lang/en/software.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php nl
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
  */
 
 return [
@@ -19,6 +25,7 @@ return [
     ],
     'inventory' => [
         'page_title' => 'Servicedesk - Software',
+        'heading' => 'Software-inventaris',
         'search' => 'Zoeken op toepassingsnaam of uitgever...',
         'tab_apps' => 'Toepassingen',
         'tab_components' => 'Componenten',
@@ -26,6 +33,21 @@ return [
         'col_name' => 'Toepassingsnaam',
         'col_publisher' => 'Uitgever',
         'col_installed' => 'Geïnstalleerd op',
+        'col_seats' => 'Plekken',
+        'col_actions' => '',
+        'add_app' => 'Toepassing toevoegen',
+        'new_app' => 'Nieuwe toepassing',
+        'edit_app' => 'Toepassing bewerken',
+        'added_by_hand' => 'Handmatig toegevoegd',
+        'f_name' => 'Naam',
+        'f_publisher' => 'Uitgever of leverancier',
+        'f_url' => 'Webadres',
+        'f_url_hint' => 'Waar je het beheert. Optioneel.',
+        'f_notes' => 'Notities',
+        'licence_hint' => 'Zodra dit is opgeslagen kun je er een licentie voor vastleggen, met plekken, kosten en een verlengingsdatum - net als bij elke andere toepassing.',
+        'app_saved' => 'Toepassing opgeslagen',
+        'app_deleted' => 'Toepassing verwijderd',
+        'confirm_delete_app' => '"{name}" verwijderen? Een licentie die ervoor is vastgelegd, moet eerst worden verwijderd.',
         'count_app' => '{count} toepassing',
         'count_apps' => '{count} toepassingen',
         'count_component' => '{count} component',
@@ -95,6 +117,7 @@ return [
         'widget_removed' => 'Widget verwijderd',
     ],
     'library' => [
+        'page_title' => 'Softwarewidgetbibliotheek',
         'back' => 'Dashboard',
         'heading' => 'Widgetbibliotheek',
         'search' => 'Widgets zoeken...',
@@ -225,6 +248,14 @@ return [
     'settings' => [
         'page_title' => 'Servicedesk - Software-instellingen',
         'tab_api_keys' => 'API-sleutels',
+        'tab_renewals' => 'Verlengingen',
+        'renewals_intro' => 'Verlengingsdata van licenties kunnen op het Watchtower-dashboard worden getoond, als hele-dagitems in de agenda worden geschreven, of allebei. Er wordt niets dubbel opgeslagen - de licentie blijft het record en deze worden daaruit gegenereerd.',
+        'renewal_show_in' => 'Verlengingen tonen in',
+        'renewal_off' => 'Nergens',
+        'renewal_dashboard_only' => 'Alleen Watchtower-dashboard',
+        'renewal_calendar_only' => 'Alleen agenda',
+        'renewal_both' => 'Dashboard en agenda',
+        'renewal_saved' => 'Verlengingsinstellingen opgeslagen',
         'heading' => 'API-sleutels',
         'label_input' => 'Label (optioneel)',
         'generate' => 'Genereren',
@@ -295,6 +326,14 @@ return [
         'inventory_s5_b' => 'Versiewildgroei opsporen',
         'inventory_s5_t' => 'de uitgevouwen weergave maakt het eenvoudig om machines met verouderde versies te identificeren. Als tien machines versie 5.2 hebben maar twee nog op 4.8 draaien, ziet u dat meteen en kunt u actie ondernemen.',
         'inventory_tip' => 'Het installatieaantal weerspiegelt hoeveel unieke machines de software momenteel hebben geïnstalleerd. Wanneer een machine zich meldt zonder een eerder geziene toepassing, wordt het oude record automatisch opgeschoond.',
+        'manual_heading' => '<strong>Handmatig een cloudplatform toevoegen</strong>',
+        'manual_body' => 'De inventarisagent vindt wat er op je machines is geïnstalleerd, wat totaal niet helpt voor Xero, Canva, Figma of al het andere dat in een browser leeft. Met <strong>Toepassing toevoegen</strong> voer je er zelf een in, met een uitgever, het webadres waar je het beheert en notities.',
+        'manual_rule_why' => 'Een cloudplatform wordt nergens geïnstalleerd, dus niets kan het ontdekken. Dit is de enige manier waarop er een in de lijst komt.',
+        'manual_rule_licence' => '<strong>Het is meer waard dan het lijkt.</strong> Een licentie moet bij een toepassing horen, dus totdat je er een toevoegt, is er geen plek om vast te leggen wat een cloudabonnement kost, hoeveel plekken het heeft of wanneer het wordt verlengd.',
+        'manual_rule_edit' => 'Handmatige items zijn gemarkeerd met <em>Handmatig toegevoegd</em> en zijn de enige die je kunt bewerken. Een door de agent ontdekte toepassing is een melding van wat er op iemands machine staat, en elke wijziging zou bij de volgende inventarisatie worden overschreven.',
+        'manual_rule_adopt' => 'Als de agent later ontdekt dat een van je handmatige items echt ergens is geïnstalleerd, koppelt hij de machines eraan <strong>zonder een woord van wat je schreef aan te raken</strong>.',
+        'manual_rule_seats' => '<strong>Plekken en installaties zijn aparte kolommen.</strong> Een cloudplatform is nergens geïnstalleerd, dus een nul onder Geïnstalleerd op zegt niets over of iemand het gebruikt &mdash; de plekken op de licenties wel.',
+        'manual_tip' => 'Voeg eerst de toepassing toe en leg daarna een licentie ervoor vast met het aantal plekken, de kosten en de verlengingsdatum. De verlenging verschijnt dan op Watchtower en in je agenda.',
         'dashboard_heading' => 'Dashboard',
         'dashboard_intro' => 'Met het Software-dashboard kunt u uw softwarelandschap visualiseren met aanpasbare Chart.js-widgets. Elke analist heeft zijn eigen dashboardindeling, zodat u zich kunt richten op de grafieken en gegevenspunten die voor uw rol het belangrijkst zijn.',
         'dashboard_s1_b' => 'Open de bibliotheek',
@@ -330,6 +369,16 @@ return [
         'licences_field_over_b' => 'Overlicentieerd',
         'licences_field_over_t' => 'er zijn meer installaties gedetecteerd dan aangekochte licenties. Dit is een nalevingsrisico dat snel moet worden aangepakt.',
         'licences_tip' => 'Licentienaleving wordt in realtime berekend op basis van de live software-inventaris. Naarmate machines zich melden en software verandert, wordt de nalevingsstatus automatisch bijgewerkt.',
+        'renewals_heading' => '<strong>Waar verlengingen verschijnen</strong>',
+        'renewals_body' => 'Een verlengingsdatum op een licentie is alleen nuttig als iemand hem op tijd ziet. Kies onder <strong>Instellingen &rarr; Verlengingen</strong> of verlengingen op het Watchtower-dashboard verschijnen, in de agenda, in beide of nergens.',
+        'renewals_card_wt_title' => 'Op Watchtower',
+        'renewals_card_wt_body' => 'Een Software-kaart die de verlengingen telt die binnen 30 en 90 dagen verschuldigd zijn, plus opzegtermijnen die bijna verlopen. Bewust dezelfde drie vensters als de kaart Contracten, zodat je de twee naast elkaar kunt lezen.',
+        'renewals_card_cal_title' => 'In de agenda',
+        'renewals_card_cal_body' => 'Hele-dagitems die uit je licenties worden gegenereerd. Ze worden opnieuw opgebouwd telkens als een licentie verandert, dus ze kunnen niet afwijken &mdash; en wat je zelf in de agenda hebt getypt, wordt nooit aangeraakt.',
+        'renewals_rule_where' => 'De licentie blijft het record. Agenda-items worden eruit gegenereerd, dus door de verlengingsdatum op de licentie te wijzigen, wijzig je ze.',
+        'renewals_rule_notice' => '<strong>Twee items per licentie, niet een.</strong> De verlengingsdatum is wanneer het geld eruit gaat; de <em>opzegdeadline</em> &mdash; berekend uit de opzegtermijn &mdash; is de laatste dag waarop je nog kunt afhaken, en die kost je daadwerkelijk geld als je hem mist. Een licentie zonder opzegtermijn krijgt geen opzegitem.',
+        'renewals_rule_active' => 'Alleen actieve licenties verschijnen. Een geannuleerde heeft nog wel een verlengingsdatum in het record, maar dat is geschiedenis en geen verplichting.',
+        'renewals_tip' => 'Als je verder niets op een licentie vastlegt, leg dan de verlengingsdatum en de opzegtermijn vast. Die twee maken van een lijst software een waarschuwing die je op tijd krijgt om te handelen.',
         'collection_heading' => 'Hoe gegevens worden verzameld',
         'collection_intro' => 'De Software-module verzamelt zelf geen gegevens. In plaats daarvan vertrouwt deze op het PowerShell-script voor assetbeheer ({script}) dat op elke beheerde Windows-machine draait en geïnstalleerde software rapporteert als onderdeel van de bredere hardware- en software-inventaris.',
         'collection_p2' => 'Wanneer het PowerShell-script op een machine draait, leest het de registervermeldingen van Programma\'s toevoegen/verwijderen en verzamelt het elke geïnstalleerde toepassing en systeemcomponent. Deze gegevens worden naar de FreeITSM-API verzonden, waar ze worden opgeslagen bij het assetrecord. De Software-module voegt deze gegevens vervolgens samen over alle machines om u het overzicht van de hele omgeving te geven.',
