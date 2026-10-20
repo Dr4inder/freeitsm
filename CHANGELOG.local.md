@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2509 | i18n              | Improvement | Indonesian (id) to 100% of every string up to 3.12.0 - 14 whole modules that had never reached this locale (Projects, Domains, Files, People, War Room, Watchtower and more) and every gap; only the 91 strings new in 3.13.0 remain, for the catch-up pass. Checked against Malay with i18n_drift: the 84 'boleh' are all the Indonesian 'may / must not' sense, not Malay drift. |
 
 
 
