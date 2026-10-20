@@ -1,7 +1,13 @@
 <?php
 /**
- * Bahasa Indonesia (id) — Software module strings.
- * Missing keys fall back to lang/en/software.php per-key.
+ * FreeITSM — software strings (id).
+ *
+ * Keys mirror lang/en/software.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php id
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
  */
 
 return [
@@ -19,6 +25,7 @@ return [
     ],
     'inventory' => [
         'page_title' => 'Service Desk - Perangkat Lunak',
+        'heading' => 'Inventaris perangkat lunak',
         'search' => 'Cari berdasarkan nama aplikasi atau penerbit...',
         'tab_apps' => 'Aplikasi',
         'tab_components' => 'Komponen',
@@ -26,6 +33,21 @@ return [
         'col_name' => 'Nama Aplikasi',
         'col_publisher' => 'Penerbit',
         'col_installed' => 'Diinstal Pada',
+        'col_seats' => 'Seat',
+        'col_actions' => '',
+        'add_app' => 'Tambah aplikasi',
+        'new_app' => 'Aplikasi baru',
+        'edit_app' => 'Ubah aplikasi',
+        'added_by_hand' => 'Ditambahkan manual',
+        'f_name' => 'Nama',
+        'f_publisher' => 'Penerbit atau vendor',
+        'f_url' => 'Alamat web',
+        'f_url_hint' => 'Tempat Anda mengelolanya. Opsional.',
+        'f_notes' => 'Catatan',
+        'licence_hint' => 'Setelah ini disimpan, Anda dapat mencatat lisensi untuknya, dengan seat, biaya, dan tanggal perpanjangan - sama seperti aplikasi lainnya.',
+        'app_saved' => 'Aplikasi disimpan',
+        'app_deleted' => 'Aplikasi dihapus',
+        'confirm_delete_app' => 'Hapus "{name}"? Lisensi apa pun yang tercatat untuknya harus dihapus terlebih dahulu.',
         'count_app' => '{count} aplikasi',
         'count_apps' => '{count} aplikasi',
         'count_component' => '{count} komponen',
@@ -95,6 +117,7 @@ return [
         'widget_removed' => 'Widget dihapus',
     ],
     'library' => [
+        'page_title' => 'Pustaka Widget Perangkat Lunak',
         'back' => 'Dasbor',
         'heading' => 'Pustaka Widget',
         'search' => 'Cari widget...',
@@ -225,6 +248,14 @@ return [
     'settings' => [
         'page_title' => 'Service Desk - Pengaturan Perangkat Lunak',
         'tab_api_keys' => 'API key',
+        'tab_renewals' => 'Perpanjangan',
+        'renewals_intro' => 'Tanggal perpanjangan lisensi dapat ditampilkan di dasbor Watchtower, ditulis ke kalender sebagai entri sepanjang hari, atau keduanya. Tidak ada yang disimpan dua kali - lisensi tetap menjadi catatannya, dan semua ini dihasilkan darinya.',
+        'renewal_show_in' => 'Tampilkan perpanjangan di',
+        'renewal_off' => 'Tidak di mana pun',
+        'renewal_dashboard_only' => 'Hanya dasbor Watchtower',
+        'renewal_calendar_only' => 'Hanya kalender',
+        'renewal_both' => 'Dasbor dan kalender',
+        'renewal_saved' => 'Pengaturan perpanjangan disimpan',
         'heading' => 'API key',
         'label_input' => 'Label (opsional)',
         'generate' => 'Hasilkan',
@@ -295,6 +326,14 @@ return [
         'inventory_s5_b' => 'Deteksi penyebaran versi',
         'inventory_s5_t' => 'tampilan yang diperluas memudahkan identifikasi mesin yang menjalankan versi usang. Jika sepuluh mesin memiliki versi 5.2 tetapi dua masih di 4.8, Anda dapat melihatnya segera dan mengambil tindakan.',
         'inventory_tip' => 'Jumlah instalasi mencerminkan berapa banyak mesin unik yang saat ini memiliki perangkat lunak terinstal. Saat sebuah mesin melapor tanpa aplikasi yang sebelumnya terlihat, catatan lama dibersihkan secara otomatis.',
+        'manual_heading' => '<strong>Menambahkan platform cloud secara manual</strong>',
+        'manual_body' => 'Agen inventaris menemukan apa yang terpasang di mesin Anda, yang sama sekali tidak membantu untuk Xero, Canva, Figma, atau apa pun yang berjalan di browser. <strong>Tambah aplikasi</strong> memungkinkan Anda memasukkannya sendiri, dengan penerbit, alamat web tempat Anda mengelolanya, dan catatan.',
+        'manual_rule_why' => 'Tidak ada yang menginstal platform cloud, jadi tidak ada yang dapat menemukannya. Ini satu-satunya cara agar platform semacam itu masuk ke daftar.',
+        'manual_rule_licence' => '<strong>Nilainya lebih besar dari yang terlihat.</strong> Lisensi harus dimiliki oleh sebuah aplikasi, jadi sebelum Anda menambahkannya tidak ada tempat untuk mencatat biaya langganan cloud, berapa seat yang dimilikinya, atau kapan diperpanjang.',
+        'manual_rule_edit' => 'Entri manual ditandai <em>Ditambahkan manual</em> dan merupakan satu-satunya yang dapat Anda ubah. Aplikasi yang ditemukan agen adalah laporan tentang apa yang ada di mesin seseorang, dan perubahan apa pun akan tertimpa pada inventarisasi berikutnya.',
+        'manual_rule_adopt' => 'Jika agen kemudian menemukan salah satu entri manual Anda benar-benar terpasang di suatu tempat, ia melampirkan mesinnya <strong>tanpa menyentuh satu kata pun yang Anda tulis</strong>.',
+        'manual_rule_seats' => '<strong>Seat dan instalasi adalah kolom terpisah.</strong> Platform cloud tidak terpasang di mana pun, jadi angka nol di Terpasang Pada tidak menunjukkan apakah ada yang memakainya &mdash; seat pada lisensinya yang menunjukkan.',
+        'manual_tip' => 'Tambahkan aplikasinya terlebih dahulu, lalu catat lisensi untuknya dengan jumlah seat, biaya, dan tanggal perpanjangan. Perpanjangan itulah yang kemudian muncul di Watchtower dan di kalender Anda.',
         'dashboard_heading' => 'Dasbor',
         'dashboard_intro' => 'Dasbor Perangkat Lunak memungkinkan Anda memvisualisasikan lanskap perangkat lunak menggunakan widget Chart.js yang dapat disesuaikan. Setiap analis memiliki tata letak dasbornya sendiri, sehingga Anda dapat fokus pada grafik dan titik data yang paling penting bagi peran Anda.',
         'dashboard_s1_b' => 'Buka Pustaka',
@@ -330,6 +369,16 @@ return [
         'licences_field_over_b' => 'Kelebihan lisensi',
         'licences_field_over_t' => 'lebih banyak instalasi terdeteksi daripada lisensi yang dibeli. Ini adalah risiko kepatuhan yang harus segera ditangani.',
         'licences_tip' => 'Kepatuhan lisensi dihitung secara real-time terhadap inventaris perangkat lunak langsung. Saat mesin melapor dan perangkat lunak berubah, status kepatuhan diperbarui secara otomatis.',
+        'renewals_heading' => '<strong>Tempat perpanjangan muncul</strong>',
+        'renewals_body' => 'Tanggal perpanjangan pada lisensi hanya berguna jika ada yang melihatnya tepat waktu. Pilih di <strong>Pengaturan &rarr; Perpanjangan</strong> apakah perpanjangan muncul di dasbor Watchtower, di kalender, di keduanya, atau tidak di mana pun.',
+        'renewals_card_wt_title' => 'Di Watchtower',
+        'renewals_card_wt_body' => 'Kartu Perangkat Lunak yang menghitung perpanjangan yang jatuh tempo dalam 30 dan 90 hari ke depan, ditambah masa pemberitahuan yang hampir habis. Sengaja memakai tiga jendela yang sama dengan kartu Kontrak, sehingga keduanya bisa dibaca berdampingan.',
+        'renewals_card_cal_title' => 'Di kalender',
+        'renewals_card_cal_body' => 'Entri sepanjang hari yang dihasilkan dari lisensi Anda. Dibangun ulang setiap kali lisensi berubah, sehingga tidak bisa menyimpang &mdash; dan apa pun yang Anda ketik sendiri ke kalender tidak pernah disentuh.',
+        'renewals_rule_where' => 'Lisensi tetap menjadi catatannya. Entri kalender dihasilkan darinya, jadi mengubah tanggal perpanjangan pada lisensi itulah yang mengubahnya.',
+        'renewals_rule_notice' => '<strong>Dua entri per lisensi, bukan satu.</strong> Tanggal perpanjangan adalah saat uang keluar; <em>batas pemberitahuan</em> &mdash; dihitung dari masa pemberitahuan &mdash; adalah hari terakhir Anda masih bisa mundur, dan itulah yang benar-benar merugikan jika terlewat. Lisensi tanpa masa pemberitahuan tidak mendapat entri pemberitahuan.',
+        'renewals_rule_active' => 'Hanya lisensi aktif yang muncul. Lisensi yang dibatalkan masih memiliki tanggal perpanjangan pada catatannya, tetapi itu riwayat, bukan komitmen.',
+        'renewals_tip' => 'Jika Anda tidak mencatat hal lain pada lisensi, catatlah tanggal perpanjangan dan masa pemberitahuan. Kedua hal itulah yang mengubah daftar perangkat lunak menjadi peringatan yang Anda terima tepat waktu untuk bertindak.',
         'collection_heading' => 'Cara data dikumpulkan',
         'collection_intro' => 'Modul Perangkat Lunak tidak mengumpulkan data sendiri. Sebaliknya, ia mengandalkan skrip PowerShell Asset Management ({script}) yang berjalan di setiap mesin Windows terkelola dan melaporkan perangkat lunak yang terinstal sebagai bagian dari inventaris perangkat keras dan perangkat lunak yang lebih luas.',
         'collection_p2' => 'Saat skrip PowerShell berjalan di sebuah mesin, ia membaca entri registri Add/Remove Programs dan mengumpulkan setiap aplikasi serta komponen sistem yang terinstal. Data ini dikirim ke API FreeITSM, tempat data tersebut disimpan terhadap catatan aset. Modul Perangkat Lunak kemudian mengagregasikan data ini di seluruh mesin untuk memberi Anda tampilan seluruh lingkungan.',
