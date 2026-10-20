@@ -37,6 +37,20 @@ function getContributors(): array
 {
     return [
         [
+            // Public GitHub handle only; asked in the #194 reply how they would like
+            // to be credited - change this if they say otherwise.
+            'name'   => 'Dr4inder',
+            'github' => 'Dr4inder',
+            'date'   => '2026-10-19',
+            'what'   => 'Three pull requests for the REST API, built against an agreed design and each with '
+                      . 'its own tests: custom asset fields on create and update (PR #195), evidence '
+                      . 'attachments on a change with a key that can do nothing else (PR #196), and inventory '
+                      . 'reports from other tools that never touch another source\'s rows (PR #197, 3.12.0). '
+                      . 'Before that, careful reviews of approvals and evidence, repeating tasks, task '
+                      . 'evidence and background job health (#180-#182, #190) that each found a real '
+                      . 'problem - and wrote a reproduction for it.',
+        ],
+        [
             // Public GitHub name; asked in the PR #159 reply how they would like
             // to be credited - change this if they say otherwise.
             'name'   => 'Andrew Turbay',
