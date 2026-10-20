@@ -508,4 +508,16 @@ return [
         'link'     => 'asset-management/table.php',
         'check'    => ['rows', 'table_views', "table_key = 'assets' AND visibility <> 'private'"],
     ],
+    [
+        'id'       => 'assets.inventory_from_tools',
+        'module'   => 'assets',
+        'tier'     => 'extra',
+        'category' => 'integrations',
+        'title'    => 'Inventory from your own tools',
+        'what'     => 'An RMM, Lansweeper or a CMDB export reporting the software, volumes and network adapters it sees on an asset through the REST API (POST /api/v1/assets/{id}/inventory), each row labelled with its source.',
+        'why'      => 'The agent cannot run everywhere. Whatever already scans those machines can fill the gap - without ever touching the agent\'s or Intune\'s rows, or making an old scan look like a fresh check-in.',
+        'done'     => 'At least one asset has had inventory reported by an external source.',
+        'link'     => 'system/api/',
+        'check'    => ['rows', 'asset_inventory_sources'],
+    ],
 ];

@@ -259,4 +259,16 @@ return [
         'link'     => 'change-management/',
         'check'    => ['rows', 'change_comments', 'is_demo = 0'],
     ],
+    [
+        'id'       => 'changes.evidence_api',
+        'module'   => 'changes',
+        'tier'     => 'extra',
+        'category' => 'integrations',
+        'title'    => 'Evidence from your pipeline',
+        'what'     => 'A deployment pipeline attaching its report or log to the change it implemented, through the REST API, with a key that can add evidence and do nothing else.',
+        'why'      => 'The proof that a change was tested lands on the change automatically, recorded in its history, and a retried upload is never stored twice.',
+        'done'     => 'An active API key holds the change_attachments permission.',
+        'link'     => 'system/api/',
+        'check'    => ['rows', 'api_keys', "active = 1 AND permissions LIKE '%change_attachments%'"],
+    ],
 ];
