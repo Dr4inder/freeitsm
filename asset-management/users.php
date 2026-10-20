@@ -135,9 +135,13 @@ $translationNamespaces = ['common', 'asset-management'];
         /* --- people directory (directory sync slice 1) --- */
         .au-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .au-head-btn { padding: 4px 12px; font-size: 12px; }
-        .au-search { display: flex; gap: 8px; }
-        .au-search input[type=search] { flex: 1; }
+        /* The search box gets a line of its own and the filters share the next one -
+           side by side in a narrow panel, the dropdowns took their full text width and
+           squeezed the box to a sliver. */
+        .au-search { display: flex; flex-wrap: wrap; gap: 8px; }
+        .au-search input[type=search] { flex: 1 1 100%; }
         .au-search select {
+            flex: 1 1 0; min-width: 0;
             padding: 7px 10px; border: 1px solid var(--border, #ddd); border-radius: 6px;
             background: var(--surface, #fff); color: var(--text, #333); font-size: 13px;
         }
