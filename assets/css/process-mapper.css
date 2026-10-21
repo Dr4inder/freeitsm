@@ -43,7 +43,8 @@ body {
     transition: width 0.18s ease;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
 }
-.pm-layout.sidebar-hover .pm-sidebar:hover {
+.pm-layout.sidebar-hover .pm-sidebar:hover,
+.pm-layout.sidebar-hover .pm-sidebar:has(.pm-process-item :focus-visible) {
     width: 260px;
 }
 /* When collapsed, fade out the sidebar's children (the "+ New" button, the
@@ -56,7 +57,8 @@ body {
     pointer-events: none;
     transition: opacity 0.12s ease 0s;
 }
-.pm-layout.sidebar-hover .pm-sidebar:hover > * {
+.pm-layout.sidebar-hover .pm-sidebar:hover > *,
+.pm-layout.sidebar-hover .pm-sidebar:has(.pm-process-item :focus-visible) > * {
     opacity: 1;
     pointer-events: auto;
     transition-delay: 0.08s;
@@ -118,7 +120,7 @@ body {
 }
 
 .pm-process-item {
-    padding: 10px 14px;
+    padding: 0 10px 0 0;
     cursor: pointer;
     border-left: 3px solid transparent;
     font-size: 13px;
@@ -135,6 +137,21 @@ body {
     background: var(--accent-soft, #e8f4fd);
     border-left-color: var(--accent, #0078d4);
     font-weight: 500;
+}
+
+/* The open button fills the row (#202), so the whole row still opens it. */
+.pm-process-open {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    padding: 10px 0 10px 14px;
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
 }
 
 .pm-process-item .pm-process-name {
@@ -163,8 +180,29 @@ body {
     margin-left: 4px;
 }
 
-.pm-process-item:hover .pm-process-delete {
+.pm-process-item:hover .pm-process-delete,
+.pm-process-item:has(:focus-visible) .pm-process-delete {
     opacity: 1;
+}
+
+/* Rows are keyboard focusable (#202) - Tab to one, Enter opens it. */
+.pm-process-open:focus-visible,
+.pm-process-delete:focus-visible {
+    outline: 2px solid var(--accent, #0078d4);
+    outline-offset: -2px;
+}
+
+/* The action row's title names the open process in full (#202). The shared
+   row cuts its title to one line; this one wraps instead, breaking even a
+   name with no spaces, so a long name never hides New or scrolls the page.
+   The dash is drawn by CSS so copying the name copies just the name. */
+#pmTitle {
+    display: block;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+#pmTitle .pm-title-name::before {
+    content: ' - ';
 }
 
 .pm-empty {

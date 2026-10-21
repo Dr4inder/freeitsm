@@ -104,6 +104,7 @@ const PM = (() => {
         detailPanel = document.getElementById('detailPanel');
         processList = document.getElementById('processList');
         canvasEmpty = document.getElementById('canvasEmpty');
+        if (window.HoverPreview) HoverPreview.attach(processList, { item: '.pm-process-open', render: renderProcessPreview });
 
         addArrowheadDef();
         bindCanvasEvents();
@@ -185,6 +186,7 @@ const PM = (() => {
             clearCanvas();
             canvasEmpty.style.display = '';
             renderProcessList();
+            updateTitle();
             closeDetail();
         }
     }
@@ -309,6 +311,7 @@ const PM = (() => {
             if (d.success) {
                 processes = d.data;
                 renderProcessList();
+                updateTitle();
             }
         } catch (e) { console.error(e); }
     }
@@ -321,15 +324,57 @@ const PM = (() => {
             processList.innerHTML = '<div class="pm-empty">No processes found</div>';
             return;
         }
+        // Opening is a real <button> (#202): Tab reaches it, Enter and Space
+        // work, and a screen reader reads its whole text - the FULL title,
+        // even where CSS cuts it off on screen. Delete is a sibling, not a
+        // child: everything inside a button is presentational, so a Delete
+        // nested in one would be invisible to assistive technology.
         processList.innerHTML = filtered.map(p => {
-            const active = p.id == currentProcessId ? ' active' : '';
+            const isActive = p.id == currentProcessId;
             const date = p.updated_datetime ? fmtDate(p.updated_datetime) : '';
-            return `<div class="pm-process-item${active}" data-id="${p.id}" onclick="PM.openProcess(${p.id})">
-                <span class="pm-process-name">${esc(p.title)}</span>
-                <span class="pm-process-date">${date}</span>
-                <button class="pm-process-delete" onclick="event.stopPropagation(); PM.deleteProcess(${p.id})" title="Delete">&times;</button>
+            return `<div class="pm-process-item${isActive ? ' active' : ''}" data-id="${p.id}">
+                <button type="button" class="pm-process-open" data-id="${p.id}"${isActive ? ' aria-current="true"' : ''} onclick="PM.openProcess(${p.id})">
+                    <span class="pm-process-name">${esc(p.title)}</span>
+                    <span class="pm-process-date">${date}</span>
+                </button>
+                <button type="button" class="pm-process-delete" onclick="PM.deleteProcess(${p.id})" title="${esc(t('common.delete'))}" aria-label="${esc(t('common.delete'))}">&times;</button>
             </div>`;
         }).join('');
+    }
+
+    /** The hover preview card for a sidebar row: full name, description, counts, who made it and when (#202). */
+    function renderProcessPreview(item) {
+        const p = processes.find(x => x.id == item.dataset.id);
+        if (!p) return '';
+        const facts = [
+            [t('process-mapper.preview.steps'), String(p.step_count ?? 0)],
+            [t('process-mapper.preview.lanes'), String(p.lane_count ?? 0)],
+        ];
+        if (p.created_by_name) facts.push([t('process-mapper.preview.created_by'), p.created_by_name]);
+        if (p.created_datetime) facts.push([t('process-mapper.preview.created'), fmtDateTime(p.created_datetime)]);
+        if (p.updated_datetime) facts.push([t('process-mapper.preview.updated'), fmtDateTime(p.updated_datetime)]);
+        return `<div class="hover-preview-title">${esc(p.title)}</div>`
+            + (p.description ? `<div class="hover-preview-desc">${esc(p.description)}</div>` : '')
+            + `<dl class="hover-preview-facts">${facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
+    }
+
+    /**
+     * The action row's title: "Processes" alone, or "Processes - <full name>"
+     * while a process is open (#202), so the name the sidebar cuts off is
+     * always readable and copyable. Called wherever currentProcessId changes.
+     */
+    function updateTitle(loadedTitle) {
+        const h = document.getElementById('pmTitle');
+        if (!h) return;
+        const p = currentProcessId != null ? processes.find(x => x.id == currentProcessId) : null;
+        const name = currentProcessId != null ? ((p && p.title) || loadedTitle || '') : '';
+        h.textContent = t('process-mapper.nav.processes');
+        if (name) {
+            const span = document.createElement('span');
+            span.className = 'pm-title-name';
+            span.textContent = name;
+            h.appendChild(span);
+        }
     }
 
     /** Filters the sidebar list by the typed text. */
@@ -508,6 +553,7 @@ const PM = (() => {
                 canvasEmpty.style.display = 'none';
                 renderAll();
                 renderProcessList();
+                updateTitle(d.data.title);
                 if (!preserveDetail) closeDetail();
                 setStatus(autosaveOn ? 'saved' : 'off');
             }

@@ -55,7 +55,8 @@ try {
     <title><?php echo htmlspecialchars(pageTitle('process-mapper')); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/process-mapper.css?v=11">
+    <link rel="stylesheet" href="../assets/css/process-mapper.css?v=12">
+    <link rel="stylesheet" href="../assets/css/hover-preview.css?v=1">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
@@ -67,7 +68,7 @@ try {
     <?php include 'includes/header.php'; ?>
     <?php /* The action row (#185): New moved here from the top of the process list. */ ?>
     <?php require_once __DIR__ . '/../includes/action_row.php';
-          renderActionRow(t('process-mapper.nav.processes'), [actionRowNew('PM.createProcess()', t('process-mapper.sidebar.new_process_tip'))], ['accent' => 'pmap']); ?>
+          renderActionRow(t('process-mapper.nav.processes'), [actionRowNew('PM.createProcess()', t('process-mapper.sidebar.new_process_tip'))], ['accent' => 'pmap', 'title_id' => 'pmTitle']); ?>
 
     <div class="pm-layout">
         <!-- Sidebar: process list -->
@@ -506,7 +507,8 @@ try {
          CDN at print time. Same versions used by Network Mapper (#257). -->
     <script src="../assets/js/vendor/html2canvas.min.js"></script>
     <script src="../assets/js/vendor/jspdf.umd.min.js"></script>
-    <script src="../assets/js/process-mapper.js?v=15"></script>
+    <script src="../assets/js/hover-preview.js?v=1"></script>
+    <script src="../assets/js/process-mapper.js?v=16"></script>
     <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

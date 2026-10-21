@@ -39,6 +39,15 @@ return [
         'no_processes_yet'   => 'No processes yet',
     ],
 
+    // The card beside a sidebar item on hover or keyboard focus (#202).
+    'preview' => [
+        'steps'      => 'Steps',
+        'lanes'      => 'Lanes',
+        'created_by' => 'Created by',
+        'created'    => 'Created',
+        'updated'    => 'Last updated',
+    ],
+
     'new_modal' => [
         'title'       => 'New process',
         'field_title' => 'Process name',
@@ -310,7 +319,7 @@ return [
         'saving_heading' => 'Saving &amp; loading',
         'saving_intro'   => 'Every process is stored on the server and accessible from the sidebar. Saving is a single round-trip that captures the whole diagram &mdash; steps, connectors, positions and labels &mdash; in one transaction.',
         'saving_step1' => '<strong>Save the current process</strong> &mdash; click the Save button in the toolbar or press <span class="help-kbd">Ctrl</span>+<span class="help-kbd">S</span>. The process reloads from the server after saving so any IDs assigned by the database are reflected in the canvas.',
-        'saving_step2' => '<strong>Switch processes</strong> &mdash; click any item in the sidebar to load it into the canvas. Use the search box at the top of the sidebar to filter the list when you have lots of processes.',
+        'saving_step2' => '<strong>Switch processes</strong> &mdash; click any item in the sidebar to load it into the canvas, or <span class="help-kbd">Tab</span> to it and press <span class="help-kbd">Enter</span>. Rest the pointer on an item (or Tab to it) to see a preview with its full name, description, how many steps and lanes it has, who created it and when it was last updated &mdash; handy when two names start the same way. The open process\'s full name is shown at the top of the page, next to <strong>Processes</strong>. Use the search box at the top of the sidebar to filter the list when you have lots of processes.',
         'saving_step3' => '<strong>Bookmarkable URLs</strong> &mdash; the address bar updates to <span class="help-kbd">process-mapper/?id=N</span> whenever you open a process, so each diagram has a URL you can share or bookmark. Pasting a deep-link straight into the browser jumps to that diagram. The browser <strong>back / forward</strong> buttons navigate between processes you\'ve opened in the current session.',
         'saving_step4' => '<strong>Delete a process</strong> &mdash; hover over a process in the sidebar and click the &times; that appears. You will be asked to confirm; the process and all its steps and connectors are removed permanently.',
         'saving_tip'   => 'Save replaces all the steps and connectors for a process in one transaction, so the database always matches what is on screen. There is no partial-save state to worry about.',
