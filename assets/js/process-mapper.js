@@ -330,16 +330,16 @@ const PM = (() => {
         // even where CSS cuts it off on screen. Delete is a sibling, not a
         // child: everything inside a button is presentational, so a Delete
         // nested in one would be invisible to assistive technology.
-        // Tab stops ONCE in the list - on the open process, else the first
-        // row - and arrows move within it (bindProcessListKeys). The x buttons
-        // are out of the Tab order (Ed: two Tabs a row) but still clickable
-        // and announced; the Delete key on a row does the same job.
-        const tabRow = filtered.some(p => p.id == currentProcessId) ? filtered.findIndex(p => p.id == currentProcessId) : 0;
-        processList.innerHTML = filtered.map((p, i) => {
+        // Tab moves row to row (Ed's call - a single Tab stop for the whole
+        // list closed the Show on hover sidebar on the next press), and the
+        // arrows do too (bindProcessListKeys). The x buttons are out of the
+        // Tab order so it is one stop a row, not two, but still clickable and
+        // announced; the Delete key on a row does the same job.
+        processList.innerHTML = filtered.map(p => {
             const isActive = p.id == currentProcessId;
             const date = p.updated_datetime ? fmtDate(p.updated_datetime) : '';
             return `<div class="pm-process-item${isActive ? ' active' : ''}" data-id="${p.id}">
-                <button type="button" class="pm-process-open" data-id="${p.id}" tabindex="${i === tabRow ? 0 : -1}" aria-keyshortcuts="Delete"${isActive ? ' aria-current="true"' : ''} onclick="PM.openProcess(${p.id})">
+                <button type="button" class="pm-process-open" data-id="${p.id}" aria-keyshortcuts="Delete"${isActive ? ' aria-current="true"' : ''} onclick="PM.openProcess(${p.id})">
                     <span class="pm-process-name">${esc(p.title)}</span>
                     <span class="pm-process-date">${date}</span>
                 </button>
@@ -432,7 +432,6 @@ const PM = (() => {
             if (next === null) return;
             e.preventDefault();
             if (next < 0) { search.focus(); return; }
-            rows.forEach((r, i) => { r.tabIndex = i === next ? 0 : -1; });
             rows[next].focus();
             rows[next].scrollIntoView({ block: 'nearest' });
         });
