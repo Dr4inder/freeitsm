@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2511 | Process Mapper    | Fix         | **A connector's label is escaped properly in the step's detail panel.** The module's `esc()` now escapes quotes as well, so it is safe inside an attribute, not only in text. |
 | 2510 | i18n              | Improvement | Russian (ru) to 100% of every string up to 3.12.0 - 14 whole modules that had never reached this locale (Projects, Domains, Files, People, War Room, Watchtower and more) and every gap; only the 91 strings new in 3.13.0 remain, for the catch-up pass. 13 lines where translators wrote &mdash; for a plain dash were turned back into the character before merging. Clean against Ukrainian with i18n_drift. Russian has no plural forms in FreeITSM's strings, so counts are written 'Label: {n}' to read correctly for any number. |
 | 2509 | i18n              | Improvement | Indonesian (id) to 100% of every string up to 3.12.0 - 14 whole modules that had never reached this locale (Projects, Domains, Files, People, War Room, Watchtower and more) and every gap; only the 91 strings new in 3.13.0 remain, for the catch-up pass. Checked against Malay with i18n_drift: the 84 'boleh' are all the Indonesian 'may / must not' sense, not Malay drift. |
 

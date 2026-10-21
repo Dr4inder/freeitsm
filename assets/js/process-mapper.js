@@ -3459,10 +3459,14 @@ const PM = (() => {
     }
 
     /** Escapes text for safe use in HTML. */
+    // TRAP: textContent -> innerHTML escapes < > & but NOT quotes, so on its
+    // own it is unsafe inside an attribute - a connector label in value="",
+    // the sidebar's aria-label (#202).
+    // The two replaces make it safe in an attribute as well as in text.
     function esc(str) {
         const div = document.createElement('div');
         div.textContent = str;
-        return div.innerHTML;
+        return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     // =========================================================
