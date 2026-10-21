@@ -105,6 +105,7 @@ const PM = (() => {
         processList = document.getElementById('processList');
         canvasEmpty = document.getElementById('canvasEmpty');
         if (window.HoverPreview) HoverPreview.attach(processList, { item: '.pm-process-open', render: renderProcessPreview });
+        bindProcessListKeys();
 
         addArrowheadDef();
         bindCanvasEvents();
@@ -329,17 +330,117 @@ const PM = (() => {
         // even where CSS cuts it off on screen. Delete is a sibling, not a
         // child: everything inside a button is presentational, so a Delete
         // nested in one would be invisible to assistive technology.
-        processList.innerHTML = filtered.map(p => {
+        // Tab stops ONCE in the list - on the open process, else the first
+        // row - and arrows move within it (bindProcessListKeys). The x buttons
+        // are out of the Tab order (Ed: two Tabs a row) but still clickable
+        // and announced; the Delete key on a row does the same job.
+        const tabRow = filtered.some(p => p.id == currentProcessId) ? filtered.findIndex(p => p.id == currentProcessId) : 0;
+        processList.innerHTML = filtered.map((p, i) => {
             const isActive = p.id == currentProcessId;
             const date = p.updated_datetime ? fmtDate(p.updated_datetime) : '';
             return `<div class="pm-process-item${isActive ? ' active' : ''}" data-id="${p.id}">
-                <button type="button" class="pm-process-open" data-id="${p.id}"${isActive ? ' aria-current="true"' : ''} onclick="PM.openProcess(${p.id})">
+                <button type="button" class="pm-process-open" data-id="${p.id}" tabindex="${i === tabRow ? 0 : -1}" aria-keyshortcuts="Delete"${isActive ? ' aria-current="true"' : ''} onclick="PM.openProcess(${p.id})">
                     <span class="pm-process-name">${esc(p.title)}</span>
                     <span class="pm-process-date">${date}</span>
                 </button>
-                <button type="button" class="pm-process-delete" onclick="PM.deleteProcess(${p.id})" title="${esc(t('common.delete'))}" aria-label="${esc(t('common.delete'))}">&times;</button>
+                <button type="button" class="pm-process-delete" tabindex="-1" onclick="PM.deleteProcess(${p.id})" title="${esc(t('common.delete'))}" aria-label="${esc(t('common.delete'))}">&times;</button>
             </div>`;
         }).join('');
+    }
+
+    // ---- Keyboard route to the process list (#202) ----
+    // "/" from anywhere on the page goes to Search processes - the same key
+    // GitHub, Gmail and YouTube use - and so does Alt+Shift+O (Ed's choice),
+    // which also works from inside a text box. Tab is no route: how many stops lie
+    // before the list depends on the module rail and on where focus was.
+    // From the search box Down goes into the list, Up/Down/Home/End move in
+    // it, Enter opens, Esc goes back to wherever you were before "/".
+    let focusBeforeSlash = null;
+
+    /** True while one of the page's dialogs (new process, export, a confirm) is open. */
+    function dialogOpen() {
+        if ([...document.querySelectorAll('.pm-modal-overlay')].some(m => m.style.display && m.style.display !== 'none')) return true;
+        // TRAP: .active - confirm.js keeps its overlay in the page once shown
+        // and only hides it, so its mere presence means nothing.
+        return !!document.querySelector('.fitsm-confirm-overlay.active');
+    }
+
+    /** True while the analyst is typing somewhere, or a dialog is open - when "/" must stay a plain character. */
+    function slashShouldType(e) {
+        const el = e.target;
+        if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return true;
+        return dialogOpen();
+    }
+
+    /** Focuses Search processes, opening the sidebar in Show on hover mode until focus leaves it. */
+    function focusProcessSearch() {
+        const sidebar = document.getElementById('pmSidebar');
+        const search = document.getElementById('processSearch');
+        if (!sidebar || !search) return;
+        focusBeforeSlash = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
+        sidebar.classList.add('pm-sidebar-kbd');
+        search.focus();
+        search.select();
+    }
+
+    /** Leaves the list: back to where "/" was pressed, or nowhere. */
+    function leaveProcessList() {
+        if (window.HoverPreview) HoverPreview.hide();
+        const back = focusBeforeSlash;
+        focusBeforeSlash = null;
+        if (back && back.isConnected) back.focus();
+        else document.activeElement && document.activeElement.blur();
+    }
+
+    /** Wires "/" and the arrow keys for the sidebar. */
+    function bindProcessListKeys() {
+        const sidebar = document.getElementById('pmSidebar');
+        const search = document.getElementById('processSearch');
+        if (!sidebar || !search) return;
+
+        document.addEventListener('keydown', e => {
+            // TRAP: e.code, not e.key - on a Mac Option+Shift+O types "Ø", so
+            // e.key is never 'O' there.
+            const altShiftO = e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === 'KeyO';
+            const slash = e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && !slashShouldType(e);
+            if (!slash && !(altShiftO && !dialogOpen())) return;
+            e.preventDefault();
+            focusProcessSearch();
+        });
+
+        sidebar.addEventListener('keydown', e => {
+            const rows = [...processList.querySelectorAll('.pm-process-open')];
+            const at = rows.indexOf(document.activeElement);
+            const inSearch = e.target === search;
+            if (e.key === 'Escape' && (inSearch || at >= 0)) {
+                e.preventDefault();
+                leaveProcessList();
+                return;
+            }
+            if (!rows.length || (!inSearch && at < 0)) return;
+            if (e.key === 'Delete' && at >= 0) {
+                e.preventDefault();
+                deleteProcess(parseInt(rows[at].dataset.id, 10));
+                return;
+            }
+            let next = null;
+            if (e.key === 'ArrowDown') next = inSearch ? 0 : Math.min(at + 1, rows.length - 1);
+            else if (e.key === 'ArrowUp' && !inSearch) next = at - 1;   // above the first row is the search box
+            else if (e.key === 'Home' && !inSearch) next = 0;
+            else if (e.key === 'End' && !inSearch) next = rows.length - 1;
+            else if (e.key === 'Enter' && inSearch) next = 0;           // Enter in search moves to the first match
+            if (next === null) return;
+            e.preventDefault();
+            if (next < 0) { search.focus(); return; }
+            rows.forEach((r, i) => { r.tabIndex = i === next ? 0 : -1; });
+            rows[next].focus();
+            rows[next].scrollIntoView({ block: 'nearest' });
+        });
+
+        // The keyboard-opened sidebar closes again once focus leaves it.
+        sidebar.addEventListener('focusout', e => {
+            if (!sidebar.contains(e.relatedTarget)) sidebar.classList.remove('pm-sidebar-kbd');
+        });
     }
 
     /** The hover preview card for a sidebar row: full name, description, counts, who made it and when (#202). */

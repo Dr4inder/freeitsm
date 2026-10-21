@@ -44,7 +44,8 @@ body {
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
 }
 .pm-layout.sidebar-hover .pm-sidebar:hover,
-.pm-layout.sidebar-hover .pm-sidebar:has(.pm-process-item :focus-visible) {
+.pm-layout.sidebar-hover .pm-sidebar:has(.pm-process-item :focus-visible),
+.pm-layout.sidebar-hover .pm-sidebar.pm-sidebar-kbd {
     width: 260px;
 }
 /* When collapsed, fade out the sidebar's children (the "+ New" button, the
@@ -58,7 +59,8 @@ body {
     transition: opacity 0.12s ease 0s;
 }
 .pm-layout.sidebar-hover .pm-sidebar:hover > *,
-.pm-layout.sidebar-hover .pm-sidebar:has(.pm-process-item :focus-visible) > * {
+.pm-layout.sidebar-hover .pm-sidebar:has(.pm-process-item :focus-visible) > *,
+.pm-layout.sidebar-hover .pm-sidebar.pm-sidebar-kbd > * {
     opacity: 1;
     pointer-events: auto;
     transition-delay: 0.08s;
@@ -96,9 +98,31 @@ body {
 }
 
 .pm-sidebar-search {
+    position: relative;
     padding: 8px 12px;
     border-bottom: 1px solid var(--border-soft, #f0f0f0);
 }
+
+/* The "/" badge: says the box has a shortcut (#202). Gone while the box is in
+   use or has text, and on touch screens, which have no "/" key to press. */
+.pm-search-key {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    min-width: 18px;
+    padding: 1px 5px;
+    border: 1px solid var(--border, #ddd);
+    border-radius: 3px;
+    background: var(--surface-2, #fafafa);
+    color: var(--text-dim, #888);
+    font: 11px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+    text-align: center;
+    cursor: default;
+}
+.pm-sidebar-search input:focus ~ .pm-search-key,
+.pm-sidebar-search input:not(:placeholder-shown) ~ .pm-search-key { display: none; }
+@media (hover: none) { .pm-search-key { display: none; } }
 
 .pm-sidebar-search input {
     width: 100%;

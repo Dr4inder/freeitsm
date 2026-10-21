@@ -55,7 +55,7 @@ try {
     <title><?php echo htmlspecialchars(pageTitle('process-mapper')); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/process-mapper.css?v=12">
+    <link rel="stylesheet" href="../assets/css/process-mapper.css?v=13">
     <link rel="stylesheet" href="../assets/css/hover-preview.css?v=1">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -74,7 +74,8 @@ try {
         <!-- Sidebar: process list -->
         <div class="pm-sidebar" id="pmSidebar">
             <div class="pm-sidebar-search">
-                <input type="text" id="processSearch" placeholder="<?php echo htmlspecialchars(t('process-mapper.sidebar.search_placeholder')); ?>" oninput="PM.filterProcesses(this.value)">
+                <input type="text" id="processSearch" aria-keyshortcuts="/ Alt+Shift+O" placeholder="<?php echo htmlspecialchars(t('process-mapper.sidebar.search_placeholder')); ?>" oninput="PM.filterProcesses(this.value)">
+                <kbd class="pm-search-key" aria-hidden="true" title="<?php echo htmlspecialchars(t('process-mapper.sidebar.search_key_tip')); ?>">/</kbd>
             </div>
             <div class="pm-process-list" id="processList">
                 <div class="pm-empty"><?php echo htmlspecialchars(t('process-mapper.sidebar.no_processes_yet')); ?></div>
@@ -508,7 +509,7 @@ try {
     <script src="../assets/js/vendor/html2canvas.min.js"></script>
     <script src="../assets/js/vendor/jspdf.umd.min.js"></script>
     <script src="../assets/js/hover-preview.js?v=1"></script>
-    <script src="../assets/js/process-mapper.js?v=16"></script>
+    <script src="../assets/js/process-mapper.js?v=18"></script>
     <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>
