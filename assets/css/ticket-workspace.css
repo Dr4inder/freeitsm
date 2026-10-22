@@ -8,19 +8,22 @@
 .ticket-workspace .action-toolbar .link-add-wrap { margin-left: auto; position: relative; }
 .ticket-workspace .action-toolbar .link-add-menu { z-index: 40; }
 .ticket-workspace .tw-grid { display: grid; grid-template-columns: minmax(240px, 280px) minmax(0, 1fr); align-items: start; }
-.ticket-workspace .tw-properties { padding: 16px; border-right: 1px solid var(--border); min-width: 0; }
+.ticket-workspace .tw-properties { padding: 16px; border-right: 1px solid var(--border); min-width: 0; background: var(--surface); }
 .ticket-workspace .ticket-properties-container { border: 0; margin: 0; background: transparent; }
-.ticket-workspace .ticket-properties-header { padding: 0 0 12px; cursor: default; display: block; }
+.ticket-workspace .ticket-properties-header { padding: 0; cursor: default; display: none; }
+.reading-pane.ticket-workspace .ticket-properties-header,
+.reading-pane.ticket-workspace .ticket-properties-header:hover { background: transparent; border: 0; }
 .ticket-workspace .ticket-properties-title { display: none; }
 .ticket-workspace .ticket-properties-summary { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
 .ticket-workspace .tw-header .ticket-properties-summary { padding:0 0 8px; }
 .ticket-workspace .tw-sla-summary { border:0; padding:0; background:transparent; color:var(--text-muted); font:inherit; cursor:pointer; }
-.ticket-workspace .ticket-properties-panel { display: block !important; position: static; box-shadow: none; border: 0; padding: 0; max-height: none; overflow: visible; opacity:1; }
+.ticket-workspace .ticket-properties-container .ticket-properties-panel { display: block !important; position: static; background: transparent; box-shadow: none; border: 0; padding: 0; max-height: none; overflow: visible; opacity: 1; transition: none; }
 .ticket-workspace .ticket-toolbar { display: block; padding: 0; background: transparent; }
-.ticket-workspace .tw-field-group { min-width: 0; padding: 0; margin: 0 0 16px; border: 0; }
-.ticket-workspace .tw-field-group legend { padding: 8px 0; font-size: 14px; font-weight: 600; }
+.ticket-workspace .tw-field-group { min-width: 0; padding: 0 0 8px; margin: 0 0 16px; border: 0; border-bottom: 1px solid var(--border); }
+.ticket-workspace .tw-field-group:last-child { padding-bottom: 0; margin-bottom: 0; border-bottom: 0; }
+.ticket-workspace .tw-field-group legend { padding: 0 0 12px; font-size: 14px; font-weight: 600; color: var(--text); }
 .ticket-workspace .toolbar-field { width: 100%; min-width: 0; margin: 0 0 8px; }
-.ticket-workspace .toolbar-label { font-size: 12px; color: var(--text-muted); }
+.ticket-workspace .toolbar-label { font-size: 12px; font-weight: 500; text-transform: none; letter-spacing: normal; color: var(--text-muted); }
 .ticket-workspace .toolbar-select { width: 100%; min-height: 32px; font-size: 14px; background: var(--surface); color: var(--text); border-color: var(--border); }
 .ticket-workspace .tw-main { min-width: 0; }
 .ticket-workspace .tw-tabs { display: flex; gap: 0; flex-wrap: wrap; border-bottom: 1px solid var(--border); padding: 0 16px; background: var(--surface); }
@@ -45,7 +48,8 @@ body.ticket-popout .ticket-workspace .ticket-properties-container { position:sta
     .ticket-workspace .tw-grid { grid-template-columns:minmax(0,1fr); }
     .ticket-workspace .tw-properties { border-right:0; border-bottom:1px solid var(--border); }
     .ticket-workspace .ticket-properties-title { display:flex; }
-    .ticket-workspace .ticket-properties-header { cursor:pointer; }
+    .ticket-workspace .ticket-properties-header { cursor:pointer; display:block; }
+    .ticket-workspace .ticket-properties-container.expanded .ticket-properties-header { padding-bottom:16px; }
     .ticket-workspace .ticket-properties-container:not(.expanded) .ticket-properties-panel { display:none !important; }
 }
 @media (max-width: 768px) {
