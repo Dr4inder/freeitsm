@@ -284,7 +284,7 @@ $shapes = include '../includes/shapes.php';
         function esc(s) {
             const d = document.createElement('div');
             d.textContent = s == null ? '' : String(s);
-            return d.innerHTML;
+            return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
         // Use the shared toast notification system (assets/js/toast.js) so

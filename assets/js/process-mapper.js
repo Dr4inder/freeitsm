@@ -1419,7 +1419,7 @@ const PM = (() => {
     function escapeForAttr(s) {
         const d = document.createElement('div');
         d.textContent = s == null ? '' : String(s);
-        return d.innerHTML;
+        return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     /** Closes the step context menu and forgets its target step. */

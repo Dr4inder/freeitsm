@@ -212,7 +212,7 @@ $__extrasJson = $__spec ? json_encode($__spec['extras']) : '{}';
 
     // Endpoint catalogue (SPEC) + examples/errors (EXTRAS) come from api/v1/spec.json
     // — the single source shared with the OpenAPI generator. Do not hand-edit here.
-    const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+    const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
 
     // Section -> GitHub wiki usage guide.
     const WIKI_BASE = 'https://github.com/edmozley/freeitsm/wiki/';

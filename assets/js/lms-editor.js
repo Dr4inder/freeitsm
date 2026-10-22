@@ -25,7 +25,7 @@ const LMSEditor = (() => {
     let baselineBody = '';
 
     /** Escapes text for safe use in HTML. */
-    const esc = (s) => { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
+    const esc = (s) => { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
 
     // ---------- boot ----------
 

@@ -192,7 +192,7 @@ $translationNamespaces = ['common', 'calendar'];
     </div>
 
     <script>window.API_BASE = '../api/calendar/';</script>
-    <script src="../assets/js/itsm_calendar.js?v=4"></script>
+    <script src="../assets/js/itsm_calendar.js?v=5"></script>
     <script src="../assets/js/qrcode.min.js"></script>
     <script src="../assets/js/subscribe.js?v=1"></script>
     <script>

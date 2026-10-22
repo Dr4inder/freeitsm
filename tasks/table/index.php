@@ -117,7 +117,7 @@ $translationNamespaces = ['common', 'tasks'];
     </div>
 
     <script src="../../assets/js/data-table.js?v=7"></script>
-    <script src="../../assets/js/tasks-ctx-menu.js?v=4"></script>
+    <script src="../../assets/js/tasks-ctx-menu.js?v=5"></script>
     <script src="../../assets/js/tasks-table.js?v=5"></script>
     <script src="../../assets/js/mobile.js?v=82"></script>
 </body>

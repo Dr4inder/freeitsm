@@ -295,7 +295,7 @@ $translationNamespaces = ['common', 'tickets'];
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
     <script src="../../assets/js/i18n.js?v=3"></script>
-    <script src="../../assets/js/widget-editor.js?v=1"></script>
+    <script src="../../assets/js/widget-editor.js?v=2"></script>
     <script>
         const API_BASE = '../../api/tickets/';
         let allWidgets = [];
@@ -499,7 +499,7 @@ $translationNamespaces = ['common', 'tickets'];
         function escapeHtml(str) {
             const div = document.createElement('div');
             div.textContent = str;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
         document.addEventListener('keydown', function(e) {

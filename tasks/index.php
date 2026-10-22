@@ -389,11 +389,11 @@ $translationNamespaces = ['common', 'tasks'];
     window.TASK_FILTER = <?php echo json_encode($taskFilter); ?>;
     window.TASK_CAN_PROJECTS = <?php echo json_encode($taskCanProjects); ?>;</script>
     <script src="../assets/js/tasks-priority.js?v=1"></script>
-    <script src="../assets/js/tasks-ctx-menu.js?v=4"></script>
+    <script src="../assets/js/tasks-ctx-menu.js?v=5"></script>
     <!-- The one cleaner for HTML from elsewhere: Knowledge procedure bodies and task instructions in the Work view (GH #190). -->
-    <script src="../assets/js/safe-html.js?v=1"></script>
+    <script src="../assets/js/safe-html.js?v=2"></script>
     <?php if ($taskEmbedded): ?><script src="../assets/js/task-embed-bridge.js?v=2"></script><?php endif; ?>
-    <script src="../assets/js/tasks.js?v=68"></script>
+    <script src="../assets/js/tasks.js?v=69"></script>
     <?php if (!$taskEmbedded): ?><script src="../assets/js/mobile.js?v=82"></script><?php endif; ?>
 </body>
 </html>

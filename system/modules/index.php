@@ -317,7 +317,7 @@ $translationNamespaces = ['common', 'system'];
     // waffle menu in the shared header), so toasts honour the user's configured
     // position/animation and match every other module.
 
-    function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+    function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 
     loadData();
     </script>

@@ -267,7 +267,7 @@ $paT = fn(string $k) => t('system.photo_album.' . $k);
         const API = '../../api/system/photo_album.php';
         const $ = id => document.getElementById(id);
         const T = (k, p) => t('system.photo_album.' + k, p);
-        const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+        const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
         const toast = (m, k) => { if (typeof showToast === 'function') showToast(m, k); };
 
         // ══ The converter ═══════════════════════════════════════════════════

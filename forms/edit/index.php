@@ -2547,7 +2547,7 @@ foreach ($formActionDefs as $def) {
             if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
         // ===== AI Assist (streaming SSE) =====
@@ -2637,7 +2637,7 @@ foreach ($formActionDefs as $def) {
         function escHtml(s) {
             const d = document.createElement('div');
             d.textContent = s == null ? '' : String(s);
-            return d.innerHTML;
+            return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
         function closeAiModal() {
             if (aiAbortController) { aiAbortController.abort(); aiAbortController = null; }

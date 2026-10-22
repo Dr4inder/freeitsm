@@ -1009,7 +1009,7 @@ $translationNamespaces = ['common', 'change-management'];
             if (text == null) return '';
             const div = document.createElement('div');
             div.textContent = text;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
         function openLookupModal(kind) {
@@ -1212,7 +1212,7 @@ $translationNamespaces = ['common', 'change-management'];
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text == null ? '' : text;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
         function escapeAttr(text) {
             return escapeHtml(text).replace(/"/g, '&quot;');
