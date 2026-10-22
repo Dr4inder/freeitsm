@@ -55,13 +55,26 @@ window.TaskEmbedBridge = (() => {
     function ready() {
         unavailableState = false;
         watch(document);
+        const actions = document.querySelector('.detail-panel-actions');
+        if (actions) {
+            let external = actions.querySelector('.task-embed-open');
+            if (!external) {
+                external = document.createElement('a');
+                external.className = 'btn-icon task-embed-open';
+                external.textContent = text('open_separately');
+                external.target = '_blank';
+                external.rel = 'noopener';
+                actions.prepend(external);
+            }
+            external.href = 'index.php?task=' + (typeof selectedTaskId !== 'undefined' && selectedTaskId ? selectedTaskId : context.taskId);
+        }
         if (observer) observer.disconnect();
         const panel = document.getElementById('detailPanel');
         if (panel && typeof ResizeObserver !== 'undefined') {
             observer = new ResizeObserver(measure); observer.observe(panel);
         }
         requestAnimationFrame(measure);
-        post('ready');
+        post('ready', {hasActions: !!actions});
     }
 
     function saved(payload) {

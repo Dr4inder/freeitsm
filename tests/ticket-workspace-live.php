@@ -44,6 +44,9 @@ try {
  await wait(()=>document.querySelector('.tw-task-frame')?.contentDocument?.getElementById('detailTitle'));
  const frame=document.querySelector('.tw-task-frame');const doc=frame?.contentDocument;
  check('native task fields initialise inside the ticket',!!doc?.getElementById('detailTitle'));
+ await wait(()=>doc?.querySelector('.task-embed-open')&&document.querySelector('.tw-task-controls')?.hidden);
+ const external=doc.querySelector('.task-embed-open');
+ check('compact task actions share the native header',external?.closest('.detail-panel-actions')&&new URL(external.href).searchParams.get('task')==='$task'&&external.target==='_blank'&&external.getBoundingClientRect().height<=32&&document.querySelector('.tw-task-controls').hidden);
  if(doc?.getElementById('detailTitle')){
      const title=doc.getElementById('detailTitle');title.value='ZZ Workspace saved in ticket';title.dispatchEvent(new Event('change',{bubbles:true}));
      await new Promise(r=>setTimeout(r,500));
@@ -56,9 +59,12 @@ try {
      const comment=doc.getElementById('newCommentInput');
      check('native comment editor is available',!!comment);
      if(comment){comment.value='ZZ unsent comment';comment.dispatchEvent(new Event('input',{bubbles:true}));frame.contentWindow.showConfirm=async()=>false;
-       check('native unsent task comment prevents unconfirmed navigation',!await TicketWorkspace.canLeave());comment.value='';comment.dispatchEvent(new Event('input',{bubbles:true}));}
+       check('native unsent task comment prevents unconfirmed navigation',!await TicketWorkspace.canLeave());
+       await frame.contentWindow.closeDetailPanel();
+       check('native Close also preserves an unconfirmed task draft',document.querySelector('.tw-task-frame')===frame&&comment.value==='ZZ unsent comment');
+       comment.value='';comment.dispatchEvent(new Event('input',{bubbles:true}));}
  }
- document.querySelector('.tw-task-controls button')?.click();await wait(()=>!document.querySelector('.tw-task-frame'));
+ doc.querySelector('[onclick="closeDetailPanel()"]').click();await wait(()=>!document.querySelector('.tw-task-frame'));
  openNoteModal();document.getElementById('noteText').value='ZZ internal workspace evidence';await saveNote();
  await wait(()=>document.getElementById('notesContainer')?.textContent.includes('ZZ internal workspace evidence'));
  check('native internal note saves in the same ticket',document.getElementById('notesContainer').textContent.includes('ZZ internal workspace evidence'));

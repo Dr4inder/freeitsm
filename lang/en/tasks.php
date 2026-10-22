@@ -10,6 +10,7 @@
  */
 return [
     'embed' => [
+        'open_separately' => 'Open separately',
         'leave_title' => 'Unsaved task changes',
         'discard' => 'Discard unsaved changes and leave this task?',
         'discard_button' => 'Discard',

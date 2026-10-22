@@ -292,10 +292,17 @@ window.TicketWorkspace = (() => {
         } else if (message.event === 'changed') {
             if (typeof loadTicketTasks === 'function') loadTicketTasks(ticketId);
         } else if (message.event === 'error') {
+            const controls = root.querySelector('.tw-task-controls');
+            if (controls) controls.hidden = false;
             setSectionState(ticketId, 'work', 'error', null, 'task-editor');
         } else if (message.event === 'closed') {
             disposeTask(); root.querySelector('#twTaskArea')?.replaceChildren(); flushRender();
-        } else if (message.event === 'ready') setSectionState(ticketId, 'work', 'ready', null, 'task-editor');
+        } else if (message.event === 'ready') {
+            // Keep the outer actions as a fallback if the native editor cannot load.
+            const controls = root.querySelector('.tw-task-controls');
+            if (controls) controls.hidden = message.hasActions === true;
+            setSectionState(ticketId, 'work', 'ready', null, 'task-editor');
+        }
     });
 
     function flushRender() {

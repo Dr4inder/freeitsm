@@ -126,7 +126,7 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../assets/js/record-preview.js?v=1"></script>
     <script src="../assets/js/tinymce/tinymce.min.js"></script>
     <link rel="stylesheet" href="../assets/css/mobile.css?v=195">
-    <?php if ($taskEmbedded): ?><link rel="stylesheet" href="../assets/css/task-embed.css?v=1"><?php endif; ?>
+    <?php if ($taskEmbedded): ?><link rel="stylesheet" href="../assets/css/task-embed.css?v=2"><?php endif; ?>
 </head>
 <body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>" class="<?php echo ($tasksReadOnly ? 'module-read-only ' : '').($taskEmbedded ? 'task-embed' : ''); ?>">
     <?php if (!$taskEmbedded): ?>
@@ -392,7 +392,7 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../assets/js/tasks-ctx-menu.js?v=4"></script>
     <!-- The one cleaner for HTML from elsewhere: Knowledge procedure bodies and task instructions in the Work view (GH #190). -->
     <script src="../assets/js/safe-html.js?v=1"></script>
-    <?php if ($taskEmbedded): ?><script src="../assets/js/task-embed-bridge.js?v=1"></script><?php endif; ?>
+    <?php if ($taskEmbedded): ?><script src="../assets/js/task-embed-bridge.js?v=2"></script><?php endif; ?>
     <script src="../assets/js/tasks.js?v=67"></script>
     <?php if (!$taskEmbedded): ?><script src="../assets/js/mobile.js?v=82"></script><?php endif; ?>
 </body>
