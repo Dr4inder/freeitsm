@@ -39,7 +39,6 @@ return [
         'classification' => 'Request and classification',
         'responsibility' => 'Responsibility',
         'other' => 'Other properties',
-        'show_history' => 'History',
         'unavailable' => 'This section could not be loaded. Please try again.',
         'sla_unavailable' => 'SLA unavailable',
         'loading' => 'Loading…',

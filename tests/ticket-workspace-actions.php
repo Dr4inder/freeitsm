@@ -42,6 +42,27 @@ const response=data=>({ok:true,json:async()=>data});
     deliver(response({success:true,notes:[{id:6,note_text:'ZZ earlier generation',created_datetime:'2026-01-01 09:00:00',analyst_name:'ZZ Analyst'}]}));
     await pendingSame;
     check('same-ticket rerender also invalidates old responses',!document.getElementById('notesContainer').textContent.includes('ZZ earlier generation'));
+    let auditDeliver,auditCalls=0;
+    window.fetch=()=>{auditCalls++;return new Promise(resolve=>{auditDeliver=resolve})};
+    const historyTab=document.getElementById('tw-tab-history');
+    historyTab.click();
+    check('History tab loads the native audit without another button',auditCalls===1&&!document.querySelector('#tw-panel-history button'));
+    if(auditDeliver){
+        historyTab.click();
+        check('repeated History clicks share the pending request',auditCalls===1);
+        auditDeliver(response({success:true,audit:[{field_name:'ZZ audit field',old_value:'Open',new_value:'Closed',created_datetime:'2026-01-01 09:00:00',analyst_name:'ZZ Analyst'}]}));
+        for(let i=0;i<100&&document.getElementById('twAuditBody').getAttribute('aria-busy')==='true';i++)await new Promise(resolve=>setTimeout(resolve,20));
+        check('automatically loaded audit entries render inline',document.getElementById('twAuditBody').textContent.includes('ZZ audit field')&&!document.querySelector('#tw-panel-history .tw-state'));
+        TicketWorkspace.activate('conversation');historyTab.click();
+        auditDeliver(response({success:false,error:'ZZ audit unavailable'}));
+        for(let i=0;i<100&&document.getElementById('twAuditBody').getAttribute('aria-busy')==='true';i++)await new Promise(resolve=>setTimeout(resolve,20));
+        check('audit failures remain visible',!!document.querySelector('#tw-panel-history [role=alert]'));
+        historyTab.click();
+        auditDeliver(response({success:true,audit:[]}));
+        for(let i=0;i<100&&document.getElementById('twAuditBody').getAttribute('aria-busy')==='true';i++)await new Promise(resolve=>setTimeout(resolve,20));
+        check('History tab retries failures and renders an empty history',auditCalls===3&&document.getElementById('twAuditBody').textContent.includes('No audit history')&&!document.querySelector('#tw-panel-history .tw-state'));
+    }
+    TicketWorkspace.activate('conversation');
     window.fetch=async()=>response({success:false,error:'ZZ failed lookup'});
     await realTasks(102);
     check('task lookup failure is visible, not an empty task list',!!document.querySelector('#tw-panel-work [role=alert]'));

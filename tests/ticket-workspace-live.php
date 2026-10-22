@@ -68,8 +68,9 @@ try {
    await wait(()=>document.getElementById('timeEntriesContainer').textContent.includes('ZZ workspace time'));
    check('native time entry saves from its workspace tab',document.getElementById('timeEntriesContainer').textContent.includes('ZZ workspace time'));
  }else check('native time entry form is available',false);
- TicketWorkspace.activate('history');await showAuditHistory(true);
- check('native audit content renders inline',!!document.getElementById('twAuditBody')?.textContent.trim());
+ document.getElementById('tw-tab-history').click();
+ await wait(()=>document.getElementById('twAuditBody')?.getAttribute('aria-busy')==='false');
+ check('native audit content renders on opening History',!!document.getElementById('twAuditBody')?.textContent.trim()&&!document.querySelector('#tw-panel-history button'));
  const rows=[...document.querySelectorAll('#dtBody .dt-row')];
  check('native queue paints only its first 50 tickets',rows.length===50);
  multiSelectPaneMode='keep';

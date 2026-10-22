@@ -42,6 +42,14 @@ window.TicketWorkspace = (() => {
             if (selected && focus) tab.focus();
         });
         root.querySelectorAll('.tw-panel').forEach(panel => { panel.hidden = panel.dataset.section !== section; });
+        if (section === 'history') {
+            const body = root.querySelector('#twAuditBody');
+            if (body && body.getAttribute('aria-busy') !== 'true') {
+                body.setAttribute('aria-busy', 'true');
+                setSectionState(ticketId, 'history', 'loading');
+                showAuditHistory(true).finally(() => body.setAttribute('aria-busy', 'false'));
+            }
+        }
         root.dispatchEvent(new CustomEvent('ticket-workspace-section', {detail: {ticketId, section}}));
     }
 
@@ -142,12 +150,9 @@ window.TicketWorkspace = (() => {
             if (node.parentElement !== host) return;
             panels.conversation.append(node);
         });
-        const historyButton = element('button', 'btn btn-secondary', text('show_history'));
-        historyButton.type = 'button';
-        historyButton.addEventListener('click', () => showAuditHistory(true));
         const auditBody = element('div', 'tw-history-content');
         auditBody.id = 'twAuditBody';
-        panels.history.append(historyButton, auditBody);
+        panels.history.append(auditBody);
         content.append(tabs, ...Object.values(panels));
         grid.append(side, content);
         host.append(header, grid);
