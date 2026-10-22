@@ -454,6 +454,8 @@ try {
 
                     <p><?php echo t('tickets.help.comments.audit_heading'); ?></p>
                     <p><?php echo t('tickets.help.comments.audit_body'); ?></p>
+                    <p><?php echo t('tickets.help.comments.export_heading'); ?></p>
+                    <p><?php echo t('tickets.help.comments.export_body'); ?></p>
 
                     <p class="help-note"><?php echo t('tickets.help.comments.tip'); ?></p>
                 </div>

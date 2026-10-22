@@ -1001,6 +1001,7 @@ $translationNamespaces = ['common', 'tickets'];
     </div>
     <script>
         window.API_BASE = '../api/tickets/';
+        window.CASE_REPORT_URL = <?php echo json_encode(BASE_URL . 'tickets/case-report.php'); ?>;
         window.MYACCOUNT_API = '../api/myaccount/';   // signatures (#80)
         window.PREFS_URL = '../system/preferences/';
         window.CURRENT_ANALYST_ID = <?php echo (int)($_SESSION['analyst_id'] ?? 0); ?>;
@@ -1039,7 +1040,7 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../checklists/search_scoring.js?v=1"></script>
     <script src="../checklists/ticket_view.js?v=10"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
-    <script src="../assets/js/inbox.js?v=154"></script>
+    <script src="../assets/js/inbox.js?v=155"></script>
     <script src="../assets/js/mobile.js?v=82"></script>
     <script>
     // Auto-check mailboxes every 60 seconds - and refresh the inbox whenever

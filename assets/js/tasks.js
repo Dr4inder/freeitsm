@@ -4430,6 +4430,14 @@ async function removeLink(field) {
     openDetailPanel(selectedTaskId);
 }
 
+// ── Case report (GH #204) ──────────────────────────────────────────
+
+/** Opens the case report for the open task - it and its subtasks as one printable record - in a new tab. */
+function openTaskCaseReport() {
+    if (!selectedTaskId) return;
+    window.open((window.CASE_REPORT_URL || 'case-report.php') + '?id=' + encodeURIComponent(selectedTaskId), '_blank', 'noopener');
+}
+
 // ── Delete ─────────────────────────────────────────────────────────
 
 /** Asks for confirmation, deletes the open task and closes the panel. */
