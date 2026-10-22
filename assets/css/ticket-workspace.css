@@ -1,5 +1,5 @@
 /* Optional workspace; the inbox remains unchanged until the analyst opts in. */
-.ticket-workspace { --tw-gap: 16px; overflow-y: auto; display: block; min-width: 0; padding: 0; font-size: 14px; }
+.ticket-workspace { --tw-gap: 16px; overflow-y: auto; display: block; min-width: 0; padding: 0; font-size: 14px; container: ticket-workspace / inline-size; }
 .ticket-workspace .tw-header { padding: 16px 20px 0; border-bottom: 1px solid var(--border); background: var(--surface); }
 .ticket-workspace .email-header { padding: 0 0 12px; border: 0; position: static; }
 .ticket-workspace .email-subject-text { white-space: normal; overflow-wrap: anywhere; font-size: 20px; line-height: 1.35; }
@@ -13,7 +13,9 @@
 .ticket-workspace .ticket-properties-header { padding: 0 0 12px; cursor: default; display: block; }
 .ticket-workspace .ticket-properties-title { display: none; }
 .ticket-workspace .ticket-properties-summary { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
-.ticket-workspace .ticket-properties-panel { display: block !important; position: static; box-shadow: none; border: 0; padding: 0; max-height: none; overflow: visible; }
+.ticket-workspace .tw-header .ticket-properties-summary { padding:0 0 8px; }
+.ticket-workspace .tw-sla-summary { border:0; padding:0; background:transparent; color:var(--text-muted); font:inherit; cursor:pointer; }
+.ticket-workspace .ticket-properties-panel { display: block !important; position: static; box-shadow: none; border: 0; padding: 0; max-height: none; overflow: visible; opacity:1; }
 .ticket-workspace .ticket-toolbar { display: block; padding: 0; background: transparent; }
 .ticket-workspace .tw-field-group { min-width: 0; padding: 0; margin: 0 0 16px; border: 0; }
 .ticket-workspace .tw-field-group legend { padding: 8px 0; font-size: 14px; font-weight: 600; }
@@ -32,7 +34,20 @@
 .ticket-workspace .tw-panel .links-strip { margin: 0; }
 .ticket-workspace .tw-state { padding: 12px; margin-bottom: 12px; border: 1px solid var(--border); color: var(--text-muted); }
 .ticket-workspace .tw-state[data-state="error"] { border-inline-start: 3px solid var(--danger, var(--accent)); }
+.ticket-workspace .tw-task-controls { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 0; }
+.ticket-workspace .tw-task-frame { display: block; width: 100%; height: 650px; min-height: 300px; border: 1px solid var(--border); background: var(--surface); }
 .ticket-workspace-mode .email-list-container { flex-basis: 240px; min-width: 180px; }
+.ticket-workspace-mode .folder-container { width:210px; flex:0 0 210px; }
+body.ticket-popout .reading-pane.ticket-workspace { padding-right:0; }
+body.ticket-popout .ticket-workspace .ticket-properties-container { position:static; width:auto; height:auto; overflow:visible; border:0; }
+.ticket-workspace .email-meta-date { white-space:normal; }
+@container ticket-workspace (max-width:700px) {
+    .ticket-workspace .tw-grid { grid-template-columns:minmax(0,1fr); }
+    .ticket-workspace .tw-properties { border-right:0; border-bottom:1px solid var(--border); }
+    .ticket-workspace .ticket-properties-title { display:flex; }
+    .ticket-workspace .ticket-properties-header { cursor:pointer; }
+    .ticket-workspace .ticket-properties-container:not(.expanded) .ticket-properties-panel { display:none !important; }
+}
 @media (max-width: 768px) {
     .ticket-workspace .tw-grid { grid-template-columns: minmax(0, 1fr); }
     .ticket-workspace .tw-properties { border-right: 0; border-bottom: 1px solid var(--border); }
@@ -43,3 +58,32 @@
     .ticket-workspace .action-toolbar .link-add-wrap { margin-left: 0; }
     .ticket-workspace .email-subject-text { font-size: 18px; }
 }
+
+#ticketTableContainer { min-height:0; flex:1; display:flex; flex-direction:column; overflow:hidden; }
+#ticketTableContainer[hidden], #emailList[hidden] { display:none !important; }
+#ticketTableContainer .dt-toolbar { flex-wrap:wrap; }
+#ticketTableContainer .dt-search { min-width:160px; }
+#ticketTableContainer .tw-content-search { padding:8px; font-size:12px; }
+#ticketTableContainer .ticket-queue-row { display:table-row; padding:0; }
+#ticketTableContainer .ticket-queue-row.selected { background:var(--surface-selected, #e3eff9); }
+#ticketTableContainer .ticket-queue-row.kb-focus { outline:2px solid var(--accent); outline-offset:-2px; }
+#ticketTableContainer .dt-wrap { display:flex; flex-direction:column; }
+#ticketTableContainer .dt-table { flex:none; }
+#ticketTableContainer .dt-pagination { position:sticky; bottom:0; background:var(--surface); }
+.ticket-table-mode .email-list-container { flex:0 1 360px; width:360px; min-width:260px; max-width:42vw; }
+@media(max-width:768px){.ticket-table-mode .email-list-container{width:100%;max-width:100%;min-width:0;}}
+
+/* Closed native drawers must not widen the optional workspace. */
+.ticket-workspace-mode .ai-chat-panel:not(.active) { display:none; }
+
+@media(min-width:769px){
+ .ticket-workspace-mode > .header { flex-wrap:wrap; gap:8px; }
+ .ticket-workspace-mode > .header .header-nav { flex-wrap:wrap; min-width:0; margin-left:12px; }
+}
+@container ticket-workspace (max-width:700px) {
+ .ticket-workspace .tw-main { grid-row:1; }
+ .ticket-workspace .tw-properties { grid-row:2; }
+}
+.tw-choice { display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.tw-choice .action-row-search { width:auto; min-width:130px; max-width:210px; }
+@media(max-width:768px){.tw-choice{flex:1 1 180px}.tw-choice .action-row-search{width:100%;max-width:none;}}

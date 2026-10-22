@@ -2,8 +2,9 @@
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 
 // Feature-specific browser harness. cdpEvaluate is copied from task-form-embed.php.
-function cdpEvaluate(string $wsUrl, string $expression, int $timeout): string
+function cdpEvaluate(string $wsUrl, string $expression, int $timeout, ?array $command = null, array $before = []): string
 {
+    if ($command && ($command['params'] ?? null) === []) $command['params'] = new stdClass();
     $u = parse_url($wsUrl);
     $sock = @stream_socket_client('tcp://' . $u['host'] . ':' . $u['port'], $errno, $error, 5);
     if (!$sock) throw new RuntimeException('Cannot reach the browser: ' . $error);
@@ -44,22 +45,48 @@ function cdpEvaluate(string $wsUrl, string $expression, int $timeout): string
         return $message;
     };
 
-    $send(json_encode(['id' => 1, 'method' => 'Runtime.evaluate',
-        'params' => ['expression' => $expression, 'awaitPromise' => true, 'returnByValue' => true]]));
+    // Device emulation is scoped to a DevTools connection. Send setup and the
+    // assertion/capture through this same socket, then detach without side effects.
+    foreach ($before as $index=>$setup) {
+        $id=100+$index;
+        $send(json_encode(['id'=>$id]+$setup));
+        $loaded=false;
+        do {
+            $setupResult=json_decode($receive(),true);
+            if (($setupResult['method']??null)==='Page.loadEventFired') $loaded=true;
+        } while (($setupResult['id']??null)!==$id);
+        if(isset($setupResult['error']))throw new RuntimeException('Browser setup failed.');
+        // With Page.enable on this connection, wait for a new document before
+        // evaluating assertions. A reload acknowledgment is not DOM readiness.
+        if ($setup['method']==='Page.reload') {
+            while (!$loaded) {
+                $event=json_decode($receive(),true);
+                $loaded=($event['method']??null)==='Page.loadEventFired';
+            }
+        }
+    }
+    $send(json_encode(['id' => 1] + ($command ?? ['method' => 'Runtime.evaluate',
+        'params' => ['expression' => $expression, 'awaitPromise' => true, 'returnByValue' => true]])));
     $deadline = time() + $timeout;
     while (time() < $deadline) {
         $msg = json_decode($receive(), true);
         if (($msg['id'] ?? null) !== 1) continue;           // an event, not our answer
         fclose($sock);
+        if (isset($msg['error'])) throw new RuntimeException('Browser command failed: '.($msg['error']['message'] ?? 'unknown error'));
+        if ($command) return json_encode($msg['result'] ?? []);
+        if (isset($msg['result']['exceptionDetails'])) {
+            $exception = $msg['result']['exceptionDetails'];
+            throw new RuntimeException('Browser exception: ' . ($exception['exception']['description'] ?? $exception['text']));
+        }
         $value = $msg['result']['result']['value'] ?? null;
-        if (!is_string($value)) throw new RuntimeException('Browser harness failed: ' . json_encode($msg));
+        if (!is_string($value)) throw new RuntimeException('Browser expression did not return a string.');
         return $value;
     }
     fclose($sock);
     throw new RuntimeException('Browser test timed out.');
 }
 
-function ticketWorkspaceBrowser(array $pages): int
+function ticketWorkspaceBrowser(array $pages, array $options = []): int
 {
 $browser = getenv('CHROME_BIN') ?: null;
 foreach ([
@@ -107,9 +134,10 @@ try {
     if (!$debugSocket) throw new RuntimeException('Cannot allocate the browser debugging port.');
     $debugPort = (int)substr(strrchr(stream_socket_get_name($debugSocket, false), ':'), 1);
     fclose($debugSocket);
-    $browserProcess = proc_open([$browser, '--headless', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
+    $startUrl = $options['url'] ?? 'http://127.0.0.1:' . $port . '/index.html';
+    $browserProcess = proc_open([$browser, '--headless', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--window-size=1440,1000',
         '--disable-background-networking', '--remote-debugging-port=' . $debugPort,
-        '--user-data-dir=' . $tmp . '/profile', 'http://127.0.0.1:' . $port . '/index.html'],
+        '--user-data-dir=' . $tmp . '/profile', $startUrl],
         [0 => ['pipe', 'r'], 1 => ['file', $tmp . '/browser.log', 'a'], 2 => ['file', $tmp . '/browser.log', 'a']], $browserPipes);
     if (!is_resource($browserProcess)) throw new RuntimeException('Cannot start headless Chromium.');
     fclose($browserPipes[0]);
@@ -121,12 +149,12 @@ try {
     for ($i = 0; $i < 50 && !$page; $i++) {
         $list = @file_get_contents('http://127.0.0.1:' . $debugPort . '/json/list');
         foreach ((array)json_decode((string)$list, true) as $p) {
-            if (($p['type'] ?? '') === 'page' && substr($p['url'] ?? '', -11) === '/index.html') { $page = $p; break; }
+            if (($p['type'] ?? '') === 'page' && ($p['url'] ?? '') === $startUrl) { $page = $p; break; }
         }
         if (!$page) usleep(100000);
     }
     if (!$page) throw new RuntimeException('Headless browser page unavailable.');
-    $value = cdpEvaluate($page['webSocketDebuggerUrl'],
+    $value = isset($options['verify']) ? json_encode($options['verify']($page['webSocketDebuggerUrl'])) : cdpEvaluate($page['webSocketDebuggerUrl'],
         "new Promise(resolve => { const poll = setInterval(() => { const r = document.getElementById('result'); if (r && r.textContent.startsWith('[')) { clearInterval(poll); resolve(r.textContent); } }, 100); })",
         25);
     file_put_contents($tmp . '/result.json', $value);

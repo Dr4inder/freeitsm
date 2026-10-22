@@ -58,9 +58,20 @@ try {
         check('unmapped content remains reachable',unknown.isConnected&&getComputedStyle(unknown).display!=='none');
         TicketWorkspace.activate('time');
         check('time and SLA share their own panel',document.getElementById('slaContainer').closest('[role=tabpanel]')===document.getElementById('timeEntriesContainer').closest('[role=tabpanel]'));
+        check('classification and confidentiality summary remain in the header',!!document.getElementById('summaryConfidential')?.closest('.tw-header')&&!!document.getElementById('summaryStatus')?.closest('.tw-header'));
         const tabs=[...pane.querySelectorAll('[role=tab]')];
         tabs[0].focus();tabs[0].dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));
         check('tabs support arrow-key navigation',document.activeElement===tabs[1]);
+        for (const [name,extra] of [['closed',{status:'Closed',status_is_closed:1}],['trash',{deleted_datetime:'2026-01-02 10:00:00'}],['snoozed',{snoozed_until:'2099-01-01 10:00:00',snooze_reason:'ZZ Waiting'}]]) {
+            window.TICKET_AI={summary_enabled:true,read_enabled:true};
+            window.TICKETS_DETAIL_LAYOUT='inbox';displayEmail({...ticket,...extra},[]);
+            const controls=[...pane.querySelectorAll('[onclick],[onchange]')].map(n=>n.getAttribute('onclick')||n.getAttribute('onchange'));
+            window.TICKETS_DETAIL_LAYOUT='workspace';displayEmail({...ticket,...extra},[]);
+            const moved=[...pane.querySelectorAll('[onclick],[onchange]')].map(n=>n.getAttribute('onclick')||n.getAttribute('onchange'));
+            check(name+' keeps all conditional native actions',controls.every(a=>moved.includes(a)),controls.length);
+            if(name==='trash')check('trashed workspace retains the native disabled-action wrapper',getComputedStyle(pane.querySelector('.tw-grid')).pointerEvents==='none');
+        }
+
     }
 } catch(error) { check('renderer completes without errors',false,String(error)); }
 document.getElementById('result').textContent=JSON.stringify(checks);

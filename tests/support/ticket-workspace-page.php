@@ -1,7 +1,7 @@
 <?php
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 
-function ticketWorkspacePage(): string
+function ticketWorkspacePage(string $beforeScripts = ''): string
 {
 $root = dirname(__DIR__, 2);
 $html = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
@@ -16,6 +16,7 @@ window.translations={}; window.TICKET_AI={};
 const originalAdd=document.addEventListener.bind(document);
 document.addEventListener=(name,fn,...args)=>{if(name!=="DOMContentLoaded")originalAdd(name,fn,...args)};
 </script>';
+$html .= '<script>'.$beforeScripts.'</script>';
 foreach (['i18n', 'safe-html', 'tz', 'record-preview', 'ticket-workspace', 'inbox'] as $js) {
     $path = "$root/assets/js/$js.js";
     if (is_file($path)) $html .= '<script>' . str_replace('</script', '<\/script', file_get_contents($path)) . '</script>';

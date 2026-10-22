@@ -1,0 +1,12 @@
+/* The native detail editor in normal document flow; outer ticket owns scrolling. */
+body.task-embed { display: block; height: auto; min-height: 0; overflow: auto; margin: 0; background: var(--surface); }
+.task-embed .detail-overlay { display: none; }
+.task-embed .detail-panel, .task-embed .detail-panel.as-modal { position: relative; inset: auto; transform: none; width: 100%; max-width: none; height: auto; max-height: none; display: block; border: 0; border-radius: 0; box-shadow: none; }
+.task-embed .detail-panel-header { position: static; }
+.task-embed .detail-panel-body { overflow: visible; max-height: none; height: auto; }
+.task-embed #detailViewToggle { display: none; }
+.task-embed .detail-panel.as-modal .tdm-layout { min-height: 0; }
+.task-embed .task-embed-error { padding: 16px; border: 1px solid var(--border); color: var(--text); }
+@media (max-width: 768px) {
+    .task-embed .detail-panel, .task-embed .detail-panel.as-modal { position: relative !important; inset: auto !important; width: 100% !important; height: auto !important; max-height: none !important; transform: none !important; }
+}

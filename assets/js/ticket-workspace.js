@@ -4,13 +4,32 @@ window.TicketWorkspace = (() => {
     const sections = ['conversation', 'work', 'links', 'time', 'history'];
     let root = null, ticketId = 0, active = 'conversation';
     const boundRoots = new WeakSet();
-    let changingMode = false;
+    let changingMode = false, deferredRender = null;
+    let taskFrame = null, taskContext = null, leaveRequest = null, frameGeneration = 0;
     const text = key => t('tickets.workspace.' + key);
     const element = (tag, className, label) => {
         const node = document.createElement(tag);
         if (className) node.className = className;
         if (label !== undefined) node.textContent = label;
         return node;
+    };
+
+    // Keep native writers and the installed CSRF fetch wrapper. While one is
+    // receiving its response, another ticket must not become its UI target.
+    const nativeFetch = window.fetch.bind(window);
+    window.fetch = async (input, init) => {
+        const url = new URL(input instanceof Request ? input.url : String(input), location.href);
+        const method = (init?.method || (typeof input !== 'string' ? input.method : '') || 'GET').toUpperCase();
+        const track = root?.classList.contains('ticket-workspace') && url.origin === location.origin
+            && url.pathname.includes('/api/') && !['GET','HEAD','OPTIONS'].includes(method);
+        if (!track) return nativeFetch(input, init);
+        ticketPendingWrites++;
+        const finish = () => setTimeout(() => { ticketPendingWrites--; flushRender(); }, 0);
+        try {
+            const response = await nativeFetch(input, init);
+            response.clone().text().then(finish, finish);
+            return response;
+        } catch (error) { finish(); throw error; }
     };
 
     function activate(section, focus = false) {
@@ -33,9 +52,10 @@ window.TicketWorkspace = (() => {
         const enabled = context.mode === 'workspace';
         pane.classList.toggle('ticket-workspace', enabled);
         document.body.classList.toggle('ticket-workspace-mode', enabled);
-        if (!enabled) return;
+        if (!enabled) { disposeTask(); return; }
         // Called before body hydration/editor setup. Never rebuild live editors on a tab switch.
         if (pane.querySelector('.tw-grid')) return;
+        disposeTask();
         const properties = pane.querySelector('#ticketPropertiesContainer');
         if (!properties) return;
         // TRAP: trashed tickets have a disabled wrapper. Keep the entire workspace
@@ -78,6 +98,13 @@ window.TicketWorkspace = (() => {
             [...pane.querySelectorAll(selector)].forEach(node => destination.append(node));
         };
         move('.email-header', header);
+        move('.ticket-properties-summary', header);
+        const slaSummary = element('button', 'tw-sla-summary');
+        slaSummary.type = 'button';
+        slaSummary.id = 'twSlaSummary';
+        slaSummary.hidden = true;
+        slaSummary.addEventListener('click', () => activate('time'));
+        header.querySelector('.ticket-properties-summary')?.append(slaSummary);
         move('.wrong-company-banner, .snooze-banner, .merge-banner, #presenceStrip', header);
         move('.action-toolbar', header);
         const toolbar = header.querySelector('.action-toolbar');
@@ -100,6 +127,12 @@ window.TicketWorkspace = (() => {
             });
         }
         move('#ticketChecklistContainer', panels.work);
+        const taskList = element('div', 'tw-task-list');
+        taskList.id = 'twTaskList';
+        panels.work.append(taskList);
+        const taskArea = element('div', 'tw-tasks');
+        taskArea.id = 'twTaskArea';
+        panels.work.append(taskArea);
         move('#slaContainer, #timeEntriesContainer', panels.time);
         move('.links-strip', panels.links);
         move('#threadContainer, #notesContainer, #attachmentInfoBar', panels.conversation);
@@ -131,6 +164,40 @@ window.TicketWorkspace = (() => {
         }
     }
 
+    /** Reuse the native SLA indicator and values, including their error state. */
+    function updateSla(id, sla) {
+        if (!root || Number(id) !== ticketId) return;
+        const summary = root.querySelector('#twSlaSummary');
+        if (!summary) return;
+        summary.hidden = sla !== null && !sla.enabled;
+        if (sla === null) summary.textContent = text('sla_unavailable');
+        else summary.innerHTML = renderInboxSlaIndicator(sla);
+        if (sla !== null && !summary.textContent.trim()) summary.hidden = true;
+    }
+
+    function revealMissing(id, missing) {
+        if (!root?.classList.contains('ticket-workspace') || Number(id) !== ticketId) return;
+        const fields = {
+            priority:'prioritySelect', ticket_type:'ticketTypeSelect', department:'departmentSelect',
+            category:'categorySelect', closure_category:'closureCategorySelect', resolution_code:'resolutionCodeSelect',
+            team:'teamSelect', owner:'ownerSelect', origin:'originSelect',
+            first_time_fix:'firstTimeFixSelect', it_training:'itTrainingSelect',
+        };
+        for (const {key} of missing) {
+            const target = key.startsWith('cf:')
+                ? [...root.querySelectorAll('[data-tf-key]')].find(node => node.dataset.tfKey === key.slice(3))
+                : key === 'work_start' ? root.querySelector('[onclick="openScheduleModal()"]')
+                : fields[key] ? root.querySelector('#' + fields[key]) : null;
+            if (!target) continue;
+            target.closest('.ticket-properties-container')?.classList.add('expanded');
+            const panel = target.closest('.tw-panel');
+            if (panel) activate(panel.dataset.section);
+            target.scrollIntoView({block:'nearest'});
+            target.focus({preventScroll:true});
+            return;
+        }
+    }
+
     function setSectionState(id, section, state, message, source = section) {
         if (!root || Number(id) !== ticketId) return;
         const panel = root.querySelector('#tw-panel-' + section);
@@ -144,7 +211,7 @@ window.TicketWorkspace = (() => {
     }
 
     async function canLeave() {
-        if (window.TICKETS_DETAIL_LAYOUT !== 'workspace') return true;
+        if (taskFrame && !await taskCanLeave()) return false;
         if (typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites > 0) return false;
         const dirty = typeof ticketHasUnsavedInput === 'function' && ticketHasUnsavedInput();
         const accepted = !dirty || (typeof showConfirm === 'function'
@@ -153,6 +220,84 @@ window.TicketWorkspace = (() => {
         if (!accepted) return false;
         if (dirty && typeof discardTicketDraft === 'function') discardTicketDraft();
         return true;
+    }
+
+    function disposeTask() {
+        frameGeneration++;
+        if (leaveRequest) { clearTimeout(leaveRequest.timer); leaveRequest.resolve(false); leaveRequest = null; }
+        taskFrame?.remove(); taskFrame = null; taskContext = null;
+    }
+
+    function taskCanLeave() {
+        if (!taskFrame || taskContext?.unavailable) return Promise.resolve(true);
+        if (leaveRequest) return leaveRequest.promise;
+        const requestId = crypto.randomUUID();
+        let resolve;
+        const promise = new Promise(done => { resolve = done; });
+        const timer = setTimeout(() => { if (leaveRequest?.requestId === requestId) { leaveRequest = null; resolve(false); } }, 45000);
+        leaveRequest = {requestId, resolve, promise, timer, generation:frameGeneration};
+        taskFrame.contentWindow.postMessage({type:'freeitsm:task-embed:leave',requestId}, location.origin);
+        return promise;
+    }
+
+    async function openTask(id, taskId) {
+        if (!root || Number(id) !== ticketId || !Number.isInteger(Number(taskId)) || Number(taskId) <= 0) return false;
+        if (taskContext?.taskId === Number(taskId)) { activate('work'); return true; }
+        if (!await taskCanLeave() || Number(id) !== ticketId) return false;
+        const area = root.querySelector('#twTaskArea');
+        if (!area) return false;
+        disposeTask();
+        taskContext = {ticketId, taskId:Number(taskId)};
+        taskFrame = element('iframe', 'tw-task-frame');
+        taskFrame.title = text('task');
+        taskFrame.src = '../tasks/embedded.php?task=' + taskContext.taskId + '&ticket_id=' + ticketId;
+        taskFrame.addEventListener('load', event => {
+            if (event.currentTarget !== taskFrame) return;
+            try {
+                if (!taskFrame.contentWindow.TaskEmbedBridge) {
+                    taskContext.unavailable = true;
+                    setSectionState(ticketId, 'work', 'error', null, 'task-editor');
+                }
+            } catch (_) { taskContext.unavailable = true; }
+        });
+        const controls = element('div', 'tw-task-controls');
+        const external = element('a', 'btn btn-secondary', text('open_task'));
+        external.href = '../tasks/index.php?task=' + taskContext.taskId; external.target='_blank'; external.rel='noopener';
+        const close = element('button', 'btn btn-secondary', text('close_task'));
+        close.type='button';
+        close.addEventListener('click', async () => { if (await taskCanLeave()) { disposeTask(); area.replaceChildren(); flushRender(); } });
+        controls.append(external,close);
+        area.replaceChildren(controls,taskFrame);
+        activate('work');
+        return true;
+    }
+
+    window.addEventListener('message', event => {
+        const message = event.data;
+        if (!taskFrame || !taskContext || event.origin !== location.origin || event.source !== taskFrame.contentWindow
+            || !message || message.ticketId !== taskContext.ticketId || message.taskId !== taskContext.taskId) return;
+        if (message.type === 'freeitsm:task-embed:leave-result') {
+            if (leaveRequest?.requestId !== message.requestId || leaveRequest.generation !== frameGeneration) return;
+            const request = leaveRequest; leaveRequest = null; clearTimeout(request.timer);
+            request.resolve(message.canLeave === true); return;
+        }
+        if (message.type !== 'freeitsm:task-embed') return;
+        if (message.event === 'resize' && Number.isFinite(message.height) && message.height > 0) {
+            taskFrame.style.height = Math.min(50000, Math.max(300, message.height)) + 'px';
+        } else if (message.event === 'changed') {
+            if (typeof loadTicketTasks === 'function') loadTicketTasks(ticketId);
+        } else if (message.event === 'error') {
+            setSectionState(ticketId, 'work', 'error', null, 'task-editor');
+        } else if (message.event === 'closed') {
+            disposeTask(); root.querySelector('#twTaskArea')?.replaceChildren(); flushRender();
+        } else if (message.event === 'ready') setSectionState(ticketId, 'work', 'ready', null, 'task-editor');
+    });
+
+    function flushRender() {
+        if (taskFrame || (typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites)
+            || (typeof ticketHasUnsavedInput === 'function' && ticketHasUnsavedInput())) return;
+        const render = deferredRender; deferredRender = null;
+        if (render && Number(render.email.ticket_id) === ticketId) displayEmail(render.email, render.recordings);
     }
 
     async function requestMode(mode) {
@@ -170,6 +315,7 @@ window.TicketWorkspace = (() => {
             });
             const result = await response.json();
             if (!response.ok || !result.success) throw new Error(text('save_failed'));
+            disposeTask(); deferredRender = null;
             window.TICKETS_DETAIL_LAYOUT = mode;
             const url = new URL(location.href);
             url.searchParams.delete('layout');
@@ -185,10 +331,29 @@ window.TicketWorkspace = (() => {
         }
     }
 
+    window.addEventListener('beforeunload', event => {
+        if (window.TICKETS_DETAIL_LAYOUT === 'workspace' && ((typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites)
+            || (typeof ticketHasUnsavedInput === 'function' && ticketHasUnsavedInput()))) {
+            event.preventDefault(); event.returnValue='';
+        }
+    });
+
     return {
-        prepare, activate, setSectionState, requestMode, canLeave,
+        prepare, activate, updateSla, revealMissing, setSectionState, requestMode, canLeave, openTask, flushRender,
+        holdRender(email, recordings) {
+            const busy = taskFrame || (typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites)
+                || (typeof ticketHasUnsavedInput === 'function' && ticketHasUnsavedInput());
+            if (window.TICKETS_DETAIL_LAYOUT !== 'workspace' || !root?.classList.contains('ticket-workspace') || !busy || Number(email.ticket_id) !== ticketId) return false;
+            deferredRender = {email, recordings}; return true;
+        },
+        tasksLoaded(id, tasks) {
+            if (taskFrame && Number(id) === ticketId && !tasks.some(task => Number(task.id) === taskContext.taskId)) {
+                taskFrame.contentWindow.postMessage({type:'freeitsm:task-embed:context-lost'}, location.origin);
+                setSectionState(id,'work','error',null,'task-editor');
+            }
+        },
         refresh(id, section) { if (Number(id) === ticketId) setSectionState(id, section, 'ready'); },
-        dispose() { root = null; ticketId = 0; active = 'conversation'; },
+        dispose() { disposeTask(); deferredRender = null; root = null; ticketId = 0; active = 'conversation'; },
         isActive() { return !!root?.classList.contains('ticket-workspace'); },
     };
 })();

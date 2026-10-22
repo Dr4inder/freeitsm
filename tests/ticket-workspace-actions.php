@@ -6,7 +6,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
  */
 require __DIR__ . '/support/ticket-workspace-browser.php';
 require __DIR__ . '/support/ticket-workspace-page.php';
-$html = ticketWorkspacePage() . <<<'HTML'
+$html = ticketWorkspacePage('window.fetch=()=>new Promise(resolve=>{window.__writeDeliver=resolve});') . <<<'HTML'
 <script>
 document.addEventListener=originalAdd;
 const checks=[];
@@ -22,6 +22,12 @@ const ticket={id:10,ticket_id:101,ticket_number:'ZZ-101',subject:'ZZ asynchronou
 const response=data=>({ok:true,json:async()=>data});
 (async()=>{
     displayEmail(ticket,[]);
+    const writing=fetch('/api/tickets/save.php',{method:'POST'});
+    check('pending native writes prevent workspace navigation',!await TicketWorkspace.canLeave());
+    __writeDeliver(new Response('{"success":true}',{headers:{'Content-Type':'application/json'}}));
+    await writing;
+    for(let i=0;i<100&&ticketPendingWrites;i++)await new Promise(resolve=>setTimeout(resolve,20));
+    check('finished native writes release navigation',await TicketWorkspace.canLeave(),ticketPendingWrites);
     document.querySelector('[onclick="toggleLinkAddMenu(event)"]').click();
     check('native Link to menu opens and keeps all nine destinations',document.getElementById('linkAddMenu').classList.contains('open')&&document.querySelectorAll('#linkAddMenu button').length===9);
     let deliver;
@@ -41,9 +47,34 @@ const response=data=>({ok:true,json:async()=>data});
     check('task lookup failure is visible, not an empty task list',!!document.querySelector('#tw-panel-work [role=alert]'));
     await realSla(102);
     check('SLA lookup failure is visible, not disabled SLA',!!document.querySelector('#tw-panel-time [role=alert]'));
+    check('SLA lookup failure is also visible in the header',!document.getElementById('twSlaSummary').hidden&&!!document.getElementById('twSlaSummary').textContent);
+    TicketWorkspace.updateSla(102,{enabled:true,response:{achieved_at:null,breached:false,percent:50,remaining_minutes:45}});
+    check('header SLA reuses the native remaining-time indicator',document.getElementById('twSlaSummary').textContent.includes('45m'));
+    const composer=document.createElement('textarea');composer.id='channelComposerText';document.getElementById('tw-panel-conversation').append(composer);
+    currentTicketChannel='webchat';TicketWorkspace.activate('work');openReplyModal();
+    check('channel reply reveals its native composer from another tab',!document.getElementById('tw-panel-conversation').hidden&&document.activeElement===composer);
+    currentTicketChannel=null;composer.remove();
     window.TicketFields={render:()=>'<input id="zzCustom">'};
     await realCustom(102);
     check('custom field lookup failure remains visible',!!document.querySelector('#ticketCustomFields [role=alert]'));
+    window.fetch=async()=>response({success:true,tickets:[{ticket_id:102,mode:'block',missing:[{key:'priority',label:'Priority'}]}]});
+    window.showConfirm=async()=>true;
+    check('native mandatory-field block reveals and focuses the existing field',!await confirmCloseWithMandatoryFields([102])&&document.activeElement?.id==='prioritySelect');
+    const custom=document.createElement('input');custom.dataset.tfKey='evidence';document.getElementById('ticketCustomFields').append(custom);
+    TicketWorkspace.revealMissing(102,[{key:'cf:evidence'}]);
+    check('mandatory custom fields are revealed without replacing their editor',document.activeElement===custom);
+    delete window.showConfirm;
+    selectedEmailId=10;selectedEmailIds=new Set([10]);selectionAnchorId=10;multiSelectPaneMode='keep';
+    document.getElementById('emailList').innerHTML=[10,11,12].map(id=>'<div class="email-item" data-email-id="'+id+'" data-ticket-id="'+(id+92)+'"></div>').join('');
+    ticketPendingWrites++;
+    await handleEmailRowClick({ctrlKey:true,shiftKey:false},11);
+    await handleEmailRowClick({ctrlKey:false,shiftKey:true},12);
+    check('keep-mode modifier selection remains usable during a pending write',selectedEmailIds.size===2&&selectedEmailIds.has(11)&&selectedEmailIds.has(12));
+    multiSelectPaneMode='summary';await onSelectionChanged();
+    check('keyboard summary cannot replace an editor with a pending save',selectedEmailIds.size===1&&selectedEmailIds.has(10)&&!!document.querySelector('.tw-grid'));
+    await clearSelectionToNone();
+    check('Escape keeps the current editor and selection during a pending save',selectedEmailId===10&&selectedEmailIds.has(10)&&!!document.querySelector('.tw-grid'));
+    ticketPendingWrites--;
     window.fetch=async()=>response({success:false});
     const failed=await TicketWorkspace.requestMode('inbox');
     check('failed preference save retains current view',failed===false&&window.TICKETS_DETAIL_LAYOUT==='workspace'&&document.getElementById('readingPane').classList.contains('ticket-workspace'));
