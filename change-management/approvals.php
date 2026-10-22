@@ -356,7 +356,7 @@ $translationNamespaces = ['common', 'change-management'];
             if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
     </script>
     <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=82"></script>

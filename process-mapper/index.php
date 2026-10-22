@@ -509,7 +509,7 @@ try {
     <script src="../assets/js/vendor/html2canvas.min.js"></script>
     <script src="../assets/js/vendor/jspdf.umd.min.js"></script>
     <script src="../assets/js/hover-preview.js?v=1"></script>
-    <script src="../assets/js/process-mapper.js?v=19"></script>
+    <script src="../assets/js/process-mapper.js?v=20"></script>
     <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

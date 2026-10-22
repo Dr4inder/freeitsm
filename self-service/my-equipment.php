@@ -94,7 +94,7 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 <?php
 $pageScripts = <<<'JS'
-const eqEsc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+const eqEsc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
 
 async function eqLoad() {
     try {

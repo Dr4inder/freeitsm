@@ -230,7 +230,7 @@ requireModuleAccess('system');
     const SSP_PATTERNS = <?php echo json_encode(SELF_SERVICE_PATTERNS); ?>;
     let sspPattern = '';
 
-    const sspEsc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+    const sspEsc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
 
     function sspRenderPatterns() {
         const box = document.getElementById('sspPatterns');

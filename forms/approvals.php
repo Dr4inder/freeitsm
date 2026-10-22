@@ -327,7 +327,7 @@ $translationNamespaces = ['common', 'forms'];
             return fmtDateTime(d);
         }
 
-        function esc(t) { const d = document.createElement('div'); d.textContent = (t == null ? '' : t); return d.innerHTML; }
+        function esc(t) { const d = document.createElement('div'); d.textContent = (t == null ? '' : t); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
         function escAttr(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
     </script>
     <!-- Mobile layer. Adds the views hamburger and the module drawer on a phone.

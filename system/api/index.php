@@ -322,7 +322,7 @@ $mcpUrl = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . BASE_URL . 
     }
 
     function esc(s) {
-        const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML;
+        const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     function renderKeys() {

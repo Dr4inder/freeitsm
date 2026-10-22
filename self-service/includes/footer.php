@@ -31,7 +31,7 @@ $pageData    = $pageData ?? [];
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces ?? ['common', 'self-service']), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <script src="../assets/js/i18n.js?v=3"></script>
     <!-- Cleans untrusted message bodies; shared with the analyst inbox. -->
-    <script src="../assets/js/safe-html.js?v=1"></script>
+    <script src="../assets/js/safe-html.js?v=2"></script>
     <!-- The app-wide toast. Self-contained (injects its own CSS) and falls back
          to sensible defaults for position/animation, which are analyst
          preferences the portal has no equivalent of. Using it here means portal
@@ -56,7 +56,7 @@ $pageData    = $pageData ?? [];
          replying to one). Loaded per-page rather than globally: it is dead
          weight on the dashboard, and it must be present BEFORE the page script
          runs, since that calls ScreenRecorder.init() at parse time. -->
-    <script src="../assets/js/screen-recorder.js?v=1"></script>
+    <script src="../assets/js/screen-recorder.js?v=2"></script>
     <?php endif; ?>
     <script>const API_BASE = '../api/self-service/';</script>
     <script>window.PAGE = <?php echo json_encode($pageData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>

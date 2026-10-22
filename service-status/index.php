@@ -1582,7 +1582,7 @@ $translationNamespaces = ['common', 'service-status'];
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text || '';
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
         // Close modal on outside click

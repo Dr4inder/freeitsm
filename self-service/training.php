@@ -134,7 +134,7 @@ const LMS_API = '../api/lms/';
    identities this session has already proven; it cannot name somebody else. */
 const LMS_AS = '?as=portal';
 
-const trEsc = (s) => { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
+const trEsc = (s) => { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
 
 function trBadge(row) {
     if (row.is_overdue) return ['bad', window.t('self-service.training.status.overdue')];

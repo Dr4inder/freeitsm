@@ -664,7 +664,7 @@ $translationNamespaces = ['common', 'reporting'];
             if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
         // Every datetime in FreeITSM is stored UTC and rendered in the analyst's

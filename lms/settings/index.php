@@ -289,7 +289,7 @@ $translationNamespaces = ['common', 'lms'];
         remEl('remPreview').innerHTML = parts.join('<br>');
     }
 
-    function escHtml(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+    function escHtml(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 
     async function lmsSaveReminders() {
         try {

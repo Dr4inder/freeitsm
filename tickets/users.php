@@ -865,7 +865,7 @@ $translationNamespaces = ['common', 'tickets'];
             if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
         // Format date for display. Locale sourced from <html lang> so the date

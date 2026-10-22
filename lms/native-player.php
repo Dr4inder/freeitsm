@@ -80,7 +80,7 @@ $translationNamespaces = ['common', 'lms'];
         window.API_BASE  = '../api/lms/';
         window.COURSE_ID = <?php echo (int)$courseId; ?>;
     </script>
-    <script src="../assets/js/lms-native-player.js?v=3"></script>
+    <script src="../assets/js/lms-native-player.js?v=4"></script>
     <script src="../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

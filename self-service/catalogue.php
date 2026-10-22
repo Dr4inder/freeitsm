@@ -740,7 +740,7 @@ document.addEventListener('DOMContentLoaded', function () {
         function esc(text) {
             const div = document.createElement('div');
             div.textContent = text == null ? '' : text;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 JS;
 

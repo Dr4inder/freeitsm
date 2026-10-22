@@ -623,7 +623,7 @@ function whAgo($s) {
     const wh = (k, p) => t('system.webhooks.' + k, p);
     let filter = '';
     let cache = [];
-    const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+    const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
     const host = u => { try { return new URL(u).host; } catch (e) { return u; } };
     // Server-stamped UTC delivery timestamps (kind-1): render in the analyst's zone.
     const fmt = s => {

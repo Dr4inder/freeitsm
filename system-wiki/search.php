@@ -255,7 +255,7 @@ $translationNamespaces = ['common', 'system-wiki'];
             if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
     </script>
     <script src="../assets/js/mobile.js?v=82"></script>

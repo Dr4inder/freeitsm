@@ -74,7 +74,7 @@ $path_prefix = '../';
         var API = <?php echo json_encode(BASE_URL . 'api/people/list.php'); ?>;
         var MULTI = <?php echo $multi ? 'true' : 'false'; ?>;
         var T = function (k, p) { return window.t('people.' + k, p); };
-        var esc = function (s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+        var esc = function (s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
         var search = document.getElementById('pplSearch');
         var status = document.getElementById('pplStatus');
         var company = document.getElementById('pplCompany');

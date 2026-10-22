@@ -1214,7 +1214,7 @@ try {
         if (!wf || !wf.available || hiddenBySetting) { card.style.display = 'none'; return; }
         card.style.display = '';
 
-        const esc = (s) => { const x = document.createElement('div'); x.textContent = s == null ? '' : String(s); return x.innerHTML; };
+        const esc = (s) => { const x = document.createElement('div'); x.textContent = s == null ? '' : String(s); return x.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
         const broken = wf.failed_24h + wf.aborted_24h;
 
         setDot('wtWfDot', broken > 0 ? 'red' : (wf.dead_webhooks > 0 ? 'amber' : 'green'));

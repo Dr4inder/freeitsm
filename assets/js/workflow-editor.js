@@ -111,7 +111,7 @@ const WFE = (() => {
         const escHtml = s => {
             const d = document.createElement('div');
             d.textContent = s == null ? '' : String(s);
-            return d.innerHTML;
+            return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         };
         host.innerHTML =
             '<strong>' + escHtml(window.t('workflow.templates.needs_config')) + '</strong><ul>' +
@@ -310,7 +310,7 @@ const WFE = (() => {
         const escHtml = s => {
             const d = document.createElement('div');
             d.textContent = s == null ? '' : String(s);
-            return d.innerHTML;
+            return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         };
         if (n.kind === 'trigger') {
             const label = window.WF_TRIGGERS[triggerEvent] || triggerEvent || 'Pick a trigger';
@@ -1095,7 +1095,7 @@ const WFE = (() => {
     }
 
     // Local HTML escaper (escHtml elsewhere is function-scoped, not shared).
-    function wfEsc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+    function wfEsc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 
     // =========================================================
     //  Merge codes ({{variables}})
@@ -1635,7 +1635,7 @@ const WFE = (() => {
         const escHtml = s => {
             const d = document.createElement('div');
             d.textContent = s == null ? '' : String(s);
-            return d.innerHTML;
+            return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         };
         /** Formats a run's UTC start time in the analyst's zone, or returns it unchanged if formatting fails. */
         const fmtDate = s => {
@@ -1794,7 +1794,7 @@ const WFE = (() => {
         const escHtml = s => {
             const el = document.createElement('div');
             el.textContent = s == null ? '' : String(s);
-            return el.innerHTML;
+            return el.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         };
         document.getElementById('wfAiResult').style.display = '';
         document.getElementById('wfAiGenerateBtn').style.display = 'none';

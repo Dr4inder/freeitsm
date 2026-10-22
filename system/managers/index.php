@@ -194,7 +194,7 @@ $m = fn(string $k) => t('system.managers.' . $k);
     (function () {
         const API = '../../api/system/managers.php';
         const $ = id => document.getElementById(id);
-        const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+        const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
         // Singular and plural are separate keys (lang/en/auth.php explains why).
         const countText = (key, n) => Number(n) === 1 ? t('system.managers.' + key + '_one') : t('system.managers.' + key, { count: n });
         const toast = (m, k) => { if (typeof showToast === 'function') showToast(m, k); };

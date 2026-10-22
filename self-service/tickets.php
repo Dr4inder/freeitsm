@@ -1170,7 +1170,7 @@ let ssTickets = [];
             if (isNaN(d)) return '';
             return fmtDateTime(d);
         }
-        function esc(t) { const d = document.createElement('div'); d.textContent = t == null ? '' : t; return d.innerHTML; }
+        function esc(t) { const d = document.createElement('div'); d.textContent = t == null ? '' : t; return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 JS;
 
 require_once __DIR__ . '/includes/header.php';

@@ -268,7 +268,7 @@ $ccT = fn(string $k) => t('system.cost_centres.' . $k);
         const API = '../../api/system/cost_centres.php';
         const $ = id => document.getElementById(id);
         const T = (k, p) => t('system.cost_centres.' + k, p);
-        const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+        const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
         const toast = (m, k) => { if (typeof showToast === 'function') showToast(m, k); };
 
         let companyId = 0;       // the company a NEW cost centre goes into

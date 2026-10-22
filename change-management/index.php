@@ -582,9 +582,9 @@ $translationNamespaces = ['common', 'change-management'];
         window.MODULE_LEVEL = <?php echo json_encode($cmLevel ?: 'full'); ?>;
         window.CHG_CAN_CHOOSE_APPROVERS = <?php require_once __DIR__ . '/../includes/rbac.php'; echo analystMayAct(connectToDatabase(), (int)$_SESSION['analyst_id'], Cap::CHANGES_CHOOSE_APPROVERS) ? 'true' : 'false'; ?>;</script>
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/safe-html.js?v=2"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/safe-html.js?v=3"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/change-revisions.js?v=3"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=31"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=32"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=82"></script>
 </body>
 </html>
