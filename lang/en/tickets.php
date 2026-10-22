@@ -17,6 +17,26 @@
  *  - Settings/dashboard/calendar/rota/users/help pages
  */
 return [
+    'workspace' => [
+        'properties' => 'Properties',
+        'sections' => 'Ticket sections',
+        'conversation' => 'Conversation',
+        'work' => 'Work',
+        'links' => 'Links',
+        'time' => 'Time and SLA',
+        'history' => 'History',
+        'classification' => 'Request and classification',
+        'responsibility' => 'Responsibility',
+        'other' => 'Other properties',
+        'show_history' => 'History',
+        'unavailable' => 'This section could not be loaded. Please try again.',
+        'loading' => 'Loading…',
+        'layout' => 'Ticket layout',
+        'inbox' => 'Inbox',
+        'workspace' => 'Workspace',
+        'discard' => 'Discard unsaved changes and leave this ticket?',
+        'save_failed' => 'The layout could not be saved. Please try again.',
+    ],
     // The AI reading aids (#104, ideas 7 and 12).
     'ai' => [
         'badge' => 'AI summary',

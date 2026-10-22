@@ -1,0 +1,45 @@
+/* Optional workspace; the inbox remains unchanged until the analyst opts in. */
+.ticket-workspace { --tw-gap: 16px; overflow-y: auto; display: block; min-width: 0; padding: 0; font-size: 14px; }
+.ticket-workspace .tw-header { padding: 16px 20px 0; border-bottom: 1px solid var(--border); background: var(--surface); }
+.ticket-workspace .email-header { padding: 0 0 12px; border: 0; position: static; }
+.ticket-workspace .email-subject-text { white-space: normal; overflow-wrap: anywhere; font-size: 20px; line-height: 1.35; }
+.ticket-workspace .email-meta { font-size: 12px; }
+.ticket-workspace .action-toolbar { padding: 8px 0; flex-wrap: wrap; border: 0; overflow: visible; }
+.ticket-workspace .action-toolbar .link-add-wrap { margin-left: auto; position: relative; }
+.ticket-workspace .action-toolbar .link-add-menu { z-index: 40; }
+.ticket-workspace .tw-grid { display: grid; grid-template-columns: minmax(240px, 280px) minmax(0, 1fr); align-items: start; }
+.ticket-workspace .tw-properties { padding: 16px; border-right: 1px solid var(--border); min-width: 0; }
+.ticket-workspace .ticket-properties-container { border: 0; margin: 0; background: transparent; }
+.ticket-workspace .ticket-properties-header { padding: 0 0 12px; cursor: default; display: block; }
+.ticket-workspace .ticket-properties-title { display: none; }
+.ticket-workspace .ticket-properties-summary { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+.ticket-workspace .ticket-properties-panel { display: block !important; position: static; box-shadow: none; border: 0; padding: 0; max-height: none; overflow: visible; }
+.ticket-workspace .ticket-toolbar { display: block; padding: 0; background: transparent; }
+.ticket-workspace .tw-field-group { min-width: 0; padding: 0; margin: 0 0 16px; border: 0; }
+.ticket-workspace .tw-field-group legend { padding: 8px 0; font-size: 14px; font-weight: 600; }
+.ticket-workspace .toolbar-field { width: 100%; min-width: 0; margin: 0 0 8px; }
+.ticket-workspace .toolbar-label { font-size: 12px; color: var(--text-muted); }
+.ticket-workspace .toolbar-select { width: 100%; min-height: 32px; font-size: 14px; background: var(--surface); color: var(--text); border-color: var(--border); }
+.ticket-workspace .tw-main { min-width: 0; }
+.ticket-workspace .tw-tabs { display: flex; gap: 0; flex-wrap: wrap; border-bottom: 1px solid var(--border); padding: 0 16px; background: var(--surface); }
+.ticket-workspace .tw-tab { min-height: 40px; padding: 8px 12px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--text-muted); cursor: pointer; font: inherit; }
+.ticket-workspace .tw-tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.ticket-workspace .tw-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.ticket-workspace .tw-panel { min-width: 0; padding: 16px; overflow-wrap: anywhere; }
+.ticket-workspace .tw-panel[hidden] { display: none !important; }
+.ticket-workspace .tw-panel .email-body { padding: 0; overflow: visible; flex: none; }
+.ticket-workspace .tw-panel .email-body:empty, .ticket-workspace .pane-strips:empty { display: none; }
+.ticket-workspace .tw-panel .links-strip { margin: 0; }
+.ticket-workspace .tw-state { padding: 12px; margin-bottom: 12px; border: 1px solid var(--border); color: var(--text-muted); }
+.ticket-workspace .tw-state[data-state="error"] { border-inline-start: 3px solid var(--danger, var(--accent)); }
+.ticket-workspace-mode .email-list-container { flex-basis: 240px; min-width: 180px; }
+@media (max-width: 768px) {
+    .ticket-workspace .tw-grid { grid-template-columns: minmax(0, 1fr); }
+    .ticket-workspace .tw-properties { border-right: 0; border-bottom: 1px solid var(--border); }
+    .ticket-workspace .tw-header { padding: 12px 16px 0; }
+    .ticket-workspace .tw-tab { padding: 8px; }
+    .ticket-workspace .action-toolbar { flex-wrap: wrap !important; overflow: visible !important; }
+    .ticket-workspace .action-toolbar .action-btn { display: inline-flex; }
+    .ticket-workspace .action-toolbar .link-add-wrap { margin-left: 0; }
+    .ticket-workspace .email-subject-text { font-size: 18px; }
+}

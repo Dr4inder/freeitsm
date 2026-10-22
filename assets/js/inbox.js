@@ -3252,6 +3252,10 @@ ${classificationFields}
         </div>
     ` + (isTrashed ? '</div>' : '');
 
+    // Arrange the native controls before initializing shadow bodies or editors.
+    if (window.TicketWorkspace) TicketWorkspace.prepare(readingPane, {
+        ticketId: email.ticket_id, mode: window.TICKETS_DETAIL_LAYOUT || 'inbox'
+    });
     // Isolate the just-rendered email body in a shadow root (see emailBodyHost).
     hydrateEmailBodies(readingPane);
     watchPaneCompact(readingPane);
@@ -3764,6 +3768,7 @@ function syncLinksStripEmpty() {
  * full-width basis on this child.
  */
 function openStripPicker(placeholder) {
+    if (window.TicketWorkspace?.isActive()) TicketWorkspace.activate('links');
     const host = document.getElementById('stripPickerHost');
     if (!host) return null;
     host.hidden = false;
@@ -8366,6 +8371,7 @@ async function saveTicketCustomField(el) {
  * Desktop only: the phone has its own collapsed header.
  */
 function watchPaneCompact(pane) {
+    if (pane?.classList.contains('ticket-workspace')) return;
     const body = pane && pane.querySelector('.email-body');
     pane && pane.classList.remove('pane-compact');
     if (!body || !window.matchMedia('(min-width: 769px)').matches) return;
