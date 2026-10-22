@@ -13,10 +13,13 @@ require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
 require_once '../includes/ticket_snooze.php';
 require_once '../includes/inbox_display.php';   // what each row shows, per analyst
+require_once '../includes/ticket_workspace.php';
 I18n::initFromSession();
 Tz::init();
 
 requireModuleAccess('tickets');
+$ticketLayout = ticketWorkspaceLayout(connectToDatabase(), (int)$_SESSION['analyst_id'],
+    isset($_GET['layout']) && is_string($_GET['layout']) ? $_GET['layout'] : null);
 
 $current_page = 'inbox';
 // Module id for per-module theme/palette resolution (account-menu picker).
@@ -50,6 +53,7 @@ $translationNamespaces = ['common', 'tickets'];
     try { $snoozeWakeHour = snoozeWakeHour(connectToDatabase()); } catch (Exception $e) {}
     ?>
     <script>window.SNOOZE_WAKE_HOUR = <?php echo (int)$snoozeWakeHour; ?>;</script>
+    <script>window.TICKETS_DETAIL_LAYOUT = <?php echo json_encode($ticketLayout); ?>;</script>
     <script src="../assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="../assets/css/record-preview.css?v=1">
     <script src="../assets/js/record-preview.js?v=1"></script>
@@ -58,7 +62,8 @@ $translationNamespaces = ['common', 'tickets'];
 <body class="inbox-page">
     <?php include 'includes/header.php'; ?>
     <?php require_once __DIR__ . '/../includes/action_row.php';
-          renderActionRow(t('tickets.nav.inbox'), [actionRowNew('openNewTicketModal()', t('tickets.list.new_ticket_btn'))]); ?>
+          renderActionRow(t('tickets.nav.inbox'), [actionRowNew('openNewTicketModal()', t('tickets.list.new_ticket_btn'))],
+              ['extra' => ticketWorkspaceSelector($ticketLayout)]); ?>
 
     <div class="main-container">
         <!-- Folder Navigation -->

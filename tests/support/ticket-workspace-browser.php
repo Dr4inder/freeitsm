@@ -81,7 +81,11 @@ $server = null;
 $browserProcess = null;
 $exit = 1;
 try {
-    foreach ($pages as $name => $html) file_put_contents($tmp . '/' . $name, $html);
+    foreach ($pages as $name => $html) {
+        $directory = dirname($tmp . '/' . $name);
+        if (!is_dir($directory)) mkdir($directory, 0700, true);
+        file_put_contents($tmp . '/' . $name, $html);
+    }
     // Let the OS pick a free loopback port; no existing web server is involved.
     $socket = stream_socket_server('tcp://127.0.0.1:0', $errno, $error);
     if (!$socket) throw new RuntimeException('Cannot allocate a loopback port.');

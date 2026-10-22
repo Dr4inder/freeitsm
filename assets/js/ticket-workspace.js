@@ -4,6 +4,7 @@ window.TicketWorkspace = (() => {
     const sections = ['conversation', 'work', 'links', 'time', 'history'];
     let root = null, ticketId = 0, active = 'conversation';
     const boundRoots = new WeakSet();
+    let changingMode = false;
     const text = key => t('tickets.workspace.' + key);
     const element = (tag, className, label) => {
         const node = document.createElement(tag);
@@ -110,8 +111,10 @@ window.TicketWorkspace = (() => {
         });
         const historyButton = element('button', 'btn btn-secondary', text('show_history'));
         historyButton.type = 'button';
-        historyButton.addEventListener('click', () => showAuditHistory());
-        panels.history.append(historyButton);
+        historyButton.addEventListener('click', () => showAuditHistory(true));
+        const auditBody = element('div', 'tw-history-content');
+        auditBody.id = 'twAuditBody';
+        panels.history.append(historyButton, auditBody);
         content.append(tabs, ...Object.values(panels));
         grid.append(side, content);
         host.append(header, grid);
@@ -128,20 +131,62 @@ window.TicketWorkspace = (() => {
         }
     }
 
-    function setSectionState(id, section, state, message) {
+    function setSectionState(id, section, state, message, source = section) {
         if (!root || Number(id) !== ticketId) return;
         const panel = root.querySelector('#tw-panel-' + section);
         if (!panel) return;
-        let notice = panel.querySelector(':scope > .tw-state');
+        let notice = [...panel.querySelectorAll(':scope > .tw-state')].find(node => node.dataset.source === source);
         if (state === 'ready') { notice?.remove(); return; }
-        if (!notice) { notice = element('div', 'tw-state'); panel.prepend(notice); }
+        if (!notice) { notice = element('div', 'tw-state'); notice.dataset.source = source; panel.prepend(notice); }
         notice.setAttribute('role', state === 'error' ? 'alert' : 'status');
         notice.textContent = message || text(state === 'error' ? 'unavailable' : 'loading');
         notice.dataset.state = state;
     }
 
+    async function canLeave() {
+        if (window.TICKETS_DETAIL_LAYOUT !== 'workspace') return true;
+        if (typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites > 0) return false;
+        const dirty = typeof ticketHasUnsavedInput === 'function' && ticketHasUnsavedInput();
+        const accepted = !dirty || (typeof showConfirm === 'function'
+            ? await showConfirm({title: text('layout'), message: text('discard'), okLabel: text('discard_button'), okClass: 'danger'})
+            : window.confirm(text('discard')));
+        if (!accepted) return false;
+        if (dirty && typeof discardTicketDraft === 'function') discardTicketDraft();
+        return true;
+    }
+
+    async function requestMode(mode) {
+        const select = document.getElementById('ticketLayoutSelect');
+        const previous = window.TICKETS_DETAIL_LAYOUT || 'inbox';
+        if (changingMode || !['inbox', 'workspace'].includes(mode)) return false;
+        changingMode = true;
+        if (select) select.disabled = true;
+        try {
+            if (mode === previous) return true;
+            if (!await canLeave()) return false;
+            const response = await fetch(sharedApiBase() + 'system/set_user_preference.php', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({key:'tickets_detail_layout', value:mode})
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) throw new Error(text('save_failed'));
+            window.TICKETS_DETAIL_LAYOUT = mode;
+            const url = new URL(location.href);
+            url.searchParams.delete('layout');
+            history.replaceState(history.state, '', url);
+            if (typeof currentEmail !== 'undefined' && currentEmail) displayEmail(currentEmail, currentRecordings);
+            return true;
+        } catch (error) {
+            if (typeof showToast === 'function') showToast(text('save_failed'), 'error');
+            return false;
+        } finally {
+            changingMode = false;
+            if (select) { select.value = window.TICKETS_DETAIL_LAYOUT || previous; select.disabled = false; }
+        }
+    }
+
     return {
-        prepare, activate, setSectionState,
+        prepare, activate, setSectionState, requestMode, canLeave,
         refresh(id, section) { if (Number(id) === ticketId) setSectionState(id, section, 'ready'); },
         dispose() { root = null; ticketId = 0; active = 'conversation'; },
         isActive() { return !!root?.classList.contains('ticket-workspace'); },

@@ -409,6 +409,29 @@ function assignableAnalysts(tickets, keepId) {
         || companies.every(c => a.accessible_tenant_ids.includes(c)));
 }
 let currentEmail = null;
+let ticketRenderGeneration = 0;
+let ticketSelectionGeneration = 0;
+let ticketPendingWrites = 0;
+
+/** A delayed response belongs to one rendering, not merely a reusable ticket ID. */
+function ticketReadGuard(ticketId) {
+    const generation = ticketRenderGeneration;
+    return () => generation === ticketRenderGeneration && currentEmail && Number(currentEmail.ticket_id) === Number(ticketId);
+}
+
+function ticketHasUnsavedInput() {
+    if (document.querySelector('#emailModal.active')) return true;
+    if (document.querySelector('#noteModal.active')) return true;
+    return !!document.getElementById('channelComposerText')?.value.trim()
+        || (typeof channelPendingFiles !== 'undefined' && channelPendingFiles.length > 0);
+}
+
+function discardTicketDraft() {
+    if (document.querySelector('#emailModal.active')) closeEmailModal();
+    if (document.querySelector('#noteModal.active')) closeNoteModal();
+    const channel = document.getElementById('channelComposerText');
+    if (channel) channel.value = '';
+}
 let currentRecordings = [];
 let folderCounts = {};
 // Messaging channels (WhatsApp etc.): set when a ticket's thread loads, so the
@@ -2809,6 +2832,7 @@ function bulkProgressHtml() {
 
 // Select and display email by email ID
 async function selectEmail(emailId) {
+    if (window.TicketWorkspace?.isActive() && selectedEmailId !== emailId && !await TicketWorkspace.canLeave()) return;
     // 🔑 A NEGATIVE ID IS A TICKET WITH NO EMAIL. get_emails.php sends
     // COALESCE(le.id, -t.id), so the sign says which kind of thing the row is.
     // Selection, drag and the highlight all work off this id unchanged; only
@@ -2821,6 +2845,7 @@ async function selectEmail(emailId) {
         return loadTicketById(-emailId);
     }
     selectedEmailId = emailId;
+    const selectionGeneration = ++ticketSelectionGeneration;
     // Opening a single ticket collapses the selection to it, so the highlight,
     // the reading pane and what an action would hit can never disagree. Callers
     // that want a multi-selection never route through here.
@@ -2844,6 +2869,7 @@ async function selectEmail(emailId) {
         readingPane.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
     } else {
         spinnerTimer = setTimeout(() => {
+            if (selectionGeneration !== ticketSelectionGeneration) return;
             readingPane.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
         }, 250);
     }
@@ -2852,6 +2878,7 @@ async function selectEmail(emailId) {
         const response = await fetch(`${API_BASE}get_email_detail.php?id=${emailId}`);
         const data = await response.json();
         if (spinnerTimer) clearTimeout(spinnerTimer);
+        if (selectionGeneration !== ticketSelectionGeneration) return;
 
         if (data.success) {
             displayEmail(data.email, data.recordings || []);
@@ -2861,6 +2888,7 @@ async function selectEmail(emailId) {
         }
     } catch (error) {
         if (spinnerTimer) clearTimeout(spinnerTimer);
+        if (selectionGeneration !== ticketSelectionGeneration) return;
         console.error('Error:', error);
         readingPane.innerHTML = '<div class="reading-pane-empty">Failed to load email</div>';
         syncPopoutToTicketState(false);
@@ -2869,13 +2897,15 @@ async function selectEmail(emailId) {
 
 // Load and display ticket by ticket ID (from URL parameter)
 async function loadTicketById(ticketId) {
+    if (window.TicketWorkspace?.isActive() && Number(currentEmail?.ticket_id) !== Number(ticketId) && !await TicketWorkspace.canLeave()) return;
+    const selectionGeneration = ++ticketSelectionGeneration;
     const readingPane = document.getElementById('readingPane');
     readingPane.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
     try {
         const response = await fetch(`${API_BASE}get_email_detail.php?ticket_id=${ticketId}`);
         const data = await response.json();
-
+        if (selectionGeneration !== ticketSelectionGeneration) return;
         if (data.success) {
             // For a ticket with no email the row id is the negative ticket id,
             // so keep using that or the highlight would clear itself.
@@ -2887,6 +2917,7 @@ async function loadTicketById(ticketId) {
             syncPopoutToTicketState(false);
         }
     } catch (error) {
+        if (selectionGeneration !== ticketSelectionGeneration) return;
         console.error('Error:', error);
         readingPane.innerHTML = '<div class="reading-pane-empty">Failed to load ticket</div>';
         syncPopoutToTicketState(false);
@@ -2895,6 +2926,7 @@ async function loadTicketById(ticketId) {
 
 // Display email in reading pane
 function displayEmail(email, recordings) {
+    ticketRenderGeneration++;
     currentEmail = email;
     currentRecordings = recordings || [];
 
@@ -3836,6 +3868,7 @@ let tasksForTicket = [];
  * behind for the close warning in assignStatus() to count.
  */
 async function loadTicketTasks(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripTaskPills');
     if (!host) return;
     // Clear FIRST. Otherwise a failed fetch leaves the previous ticket's tasks in
@@ -3845,10 +3878,15 @@ async function loadTicketTasks(ticketId) {
     try {
         const res = await fetch('../api/tickets/get_ticket_tasks.php?ticket_id=' + ticketId);
         const data = await res.json();
-        if (!data.success) return;
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Task lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'work', 'ready', null, 'tasks');
         tasksForTicket = data.tasks || [];
         renderTicketTasks(ticketId);
-    } catch (e) { /* silent — the strip simply shows no task pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        window.TicketWorkspace?.setSectionState(ticketId, 'work', 'error', null, 'tasks');
+    }
 }
 
 /**
@@ -4389,12 +4427,16 @@ function formatRecordingDuration(seconds) {
 // Load and display all correspondence for a ticket. isAuto=true marks a 15s
 // background refresh (channel tickets) so we don't disturb the analyst's draft.
 async function loadCorrespondenceThread(ticketId, isAuto = false) {
+    const isCurrent = ticketReadGuard(ticketId);
     const container = document.getElementById('threadContainer');
     if (!container) { if (isAuto) stopChannelAutoRefresh(); return; }
 
     try {
         const response = await fetch(`${API_BASE}get_ticket_thread.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'conversation', 'ready', null, 'thread');
 
         // Remember the channel so Reply composes over WhatsApp etc. rather than email.
         currentTicketChannel = data.channel || 'email';
@@ -4446,6 +4488,11 @@ async function loadCorrespondenceThread(ticketId, isAuto = false) {
             tgGroupOlder(container);
         }
     } catch (error) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'conversation', 'error', null, 'thread');
+            return;
+        }
         console.error('Error loading thread:', error);
     }
 
@@ -4651,6 +4698,8 @@ async function sendChannelTemplate(ticketId) {
 
 // Send the analyst's reply out over the ticket's channel.
 async function sendChannelMessage(ticketId) {
+    ticketPendingWrites++;
+    try {
     const ta = document.getElementById('channelComposerText');
     const btn = document.getElementById('channelSendBtn');
     if (!ta) return;
@@ -4679,6 +4728,7 @@ async function sendChannelMessage(ticketId) {
     } finally {
         if (btn) { btn.disabled = false; btn.innerHTML = original; }
     }
+    } finally { ticketPendingWrites--; }
 }
 
 // Send a file (image, document, …) picked via the composer's Attach button.
@@ -5631,15 +5681,18 @@ function auditAuthor(entry) {
 }
 
 // Show audit history modal
-async function showAuditHistory() {
+async function showAuditHistory(inline = false) {
     if (!currentEmail || !currentEmail.ticket_id) {
         showToast('No ticket selected', 'error');
         return;
     }
 
+    const ticketId = currentEmail.ticket_id;
+    const isCurrent = ticketReadGuard(ticketId);
     try {
-        const response = await fetch(`${API_BASE}get_ticket_audit.php?ticket_id=${currentEmail.ticket_id}`);
+        const response = await fetch(`${API_BASE}get_ticket_audit.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
 
         if (data.success) {
             const auditHtml = data.audit.length === 0
@@ -5667,6 +5720,12 @@ async function showAuditHistory() {
                     </tbody>
                 </table>`;
 
+            if (inline) {
+                const body = document.getElementById('twAuditBody');
+                if (body) body.innerHTML = auditHtml;
+                window.TicketWorkspace?.setSectionState(ticketId, 'history', 'ready');
+                return;
+            }
             // Create modal
             const modal = document.createElement('div');
             modal.className = 'modal-overlay';
@@ -5685,9 +5744,12 @@ async function showAuditHistory() {
 
             document.body.appendChild(modal);
         } else {
+            if (inline) window.TicketWorkspace?.setSectionState(ticketId, 'history', 'error');
             showToast('Error loading audit history: ' + data.error, 'error');
         }
     } catch (error) {
+        if (!isCurrent()) return;
+        if (inline) window.TicketWorkspace?.setSectionState(ticketId, 'history', 'error');
         console.error('Error:', error);
         showToast('Failed to load audit history', 'error');
     }
@@ -5890,15 +5952,24 @@ let cmdbAcHighlightedIdx = -1;
 
 /** Fetches the CMDB objects linked to a ticket and draws them as pills in the Links strip. */
 async function loadCmdbObjects(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripCmdbPills');
     if (!host) return;
     try {
         const res = await fetch('../api/tickets/get_ticket_cmdb_objects.php?ticket_id=' + ticketId);
         const data = await res.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'cmdb');
         if (!data.success) return;
         cmdbObjectsForTicket = data.links || [];
         renderCmdbObjects(ticketId);
-    } catch (e) { /* silent — the strip simply shows no CI pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'cmdb');
+            return;
+        } /* silent — the strip simply shows no CI pills */ }
 }
 
 /** Draws cmdbObjectsForTicket as CMDB pills, with class and parent in the tooltip and an unlink cross. */
@@ -6008,14 +6079,23 @@ let domainAcTimer = null;
 
 /** Fetches the domains linked to a ticket and draws them as pills, when the analyst may see Domains. */
 async function loadTicketDomains(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripDomainPills');
     if (!host || !window.TICKETS_SHOW_DOMAINS) return;
     domainsForTicket = [];
     try {
         const res = await fetch('../api/domains/links.php?for=ticket&id=' + ticketId);
         const data = await res.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'domains');
         if (data.success) domainsForTicket = data.domains || [];
-    } catch (e) { /* silent - the strip simply shows no domain pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'domains');
+            return;
+        } /* silent - the strip simply shows no domain pills */ }
     renderTicketDomains(ticketId);
 }
 
@@ -6126,14 +6206,23 @@ let projectAcTimer = null;
 
 /** Fetches the projects a ticket is part of and draws them as coloured pills, when the analyst may see Projects. */
 async function loadTicketProjects(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripProjectPills');
     if (!host || !window.TICKETS_SHOW_PROJECTS) return;
     projectsForTicket = [];
     try {
         const res = await fetch('../api/projects/links.php?for=ticket&id=' + ticketId);
         const data = await res.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'projects');
         if (data.success) projectsForTicket = data.projects || [];
-    } catch (e) { /* silent - the strip simply shows no project pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'projects');
+            return;
+        } /* silent - the strip simply shows no project pills */ }
     host.innerHTML = projectsForTicket.map(p => `<a class="pm-ticket-badge" href="../${escapeHtml(p.url)}" title="${escapeHtml(p.code + ' - ' + (p.status || ''))}">
             <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${escapeHtml(p.colour)};margin-right:5px"></span>${escapeHtml(p.name)}
             <span class="pm-ticket-unlink" title="${escapeHtml(t('tickets.projects.unlink_title'))}" onclick="event.preventDefault();event.stopPropagation();removeTicketProject(event, ${p.id}, ${ticketId});">&#10005;</span>
@@ -6249,15 +6338,24 @@ let assetAcHighlightedIdx = -1;
 
 /** Fetches the equipment linked to a ticket and draws it as pills in the Links strip. */
 async function loadTicketAssets(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripAssetPills');
     if (!host) return;
     try {
         const res = await fetch('../api/tickets/get_ticket_assets.php?ticket_id=' + ticketId);
         const data = await res.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'assets');
         if (!data.success) return;
         assetsForTicket = data.links || [];
         renderTicketAssets(ticketId);
-    } catch (e) { /* silent — the strip simply shows no equipment pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'assets');
+            return;
+        } /* silent — the strip simply shows no equipment pills */ }
 }
 
 /** The one-line name for an asset: hostname if it has one, else the tag. */
@@ -6424,30 +6522,45 @@ async function removeTicketAsset(ev, linkId, ticketId) {
 
 // Load notes for a ticket
 async function loadNotes(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     try {
         const response = await fetch(`${API_BASE}get_notes.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
 
+        if (!data.success) throw new Error('Note lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'conversation', 'ready', null, 'notes');
         if (data.success) {
             currentNotes = data.notes;
             renderNotes();
         }
     } catch (error) {
+        if (!isCurrent()) return;
         console.error('Error loading notes:', error);
+        window.TicketWorkspace?.setSectionState(ticketId, 'conversation', 'error', null, 'notes');
     }
 }
 
 // Load attachments for a ticket
 async function loadTicketAttachments(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     try {
         const response = await fetch(`${API_BASE}get_ticket_attachments.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'conversation', 'ready', null, 'attachments');
 
         if (data.success) {
             ticketAttachments = data.attachments;
             renderAttachmentInfoBar();
         }
     } catch (error) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'conversation', 'error', null, 'attachments');
+            return;
+        }
         console.error('Error loading attachments:', error);
     }
 }
@@ -6894,6 +7007,8 @@ function closeNoteModal() {
 
 // Save note
 async function saveNote() {
+    ticketPendingWrites++;
+    try {
     const noteText = document.getElementById('noteText').value.trim();
 
     if (!noteText) {
@@ -6970,6 +7085,7 @@ async function saveNote() {
         console.error('Error:', error);
         showToast('Failed to save note', 'error');
     }
+    } finally { ticketPendingWrites--; }
 }
 
 // Open reply modal
@@ -8210,6 +8326,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Send email via Microsoft Graph API
 async function sendEmail() {
+    ticketPendingWrites++;
+    try {
     // Get values from form
     const to = document.getElementById('emailTo').value.trim();
     const cc = document.getElementById('emailCc').value.trim();
@@ -8280,6 +8398,7 @@ async function sendEmail() {
         sendBtn.disabled = false;
         sendBtn.textContent = originalText;
     }
+    } finally { ticketPendingWrites--; }
 }
 
 // Prepare attachments by converting to base64
@@ -8330,17 +8449,21 @@ function logout() {
  * history row is written by the server, not here.
  */
 async function loadTicketCustomFields(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const box = document.getElementById('ticketCustomFields');
     if (!box || !window.TicketFields) return;
     try {
         const r = await fetch(API_BASE + 'get_ticket_custom_fields.php?ticket_id=' + encodeURIComponent(ticketId));
         const d = await r.json();
+        if (!isCurrent()) return;
         if (!d.success) throw new Error(d.error);
         // Drawn only if the ticket is still the one on screen.
         if (!currentEmail || String(currentEmail.ticket_id) !== String(ticketId)) return;
         box.innerHTML = TicketFields.render(d.fields || [], { variant: 'toolbar', onchange: 'saveTicketCustomField(this)' });
     } catch (e) {
-        box.innerHTML = '';
+        if (!isCurrent()) return;
+        box.innerHTML = window.TicketWorkspace?.isActive()
+            ? '<div role="alert">' + escapeHtml(t('tickets.workspace.unavailable')) + '</div>' : '';
     }
 }
 
@@ -9729,9 +9852,13 @@ let currentTimeEntries = [];
  * When time tracking is switched off for the ticket's company the server says so and the section is left empty - nothing is deleted.
  */
 async function loadTimeEntries(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     try {
         const response = await fetch(`${API_BASE}get_time_entries.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'time', 'ready', null, 'entries');
 
         // Time tracking switched off for this ticket's company (discussion #72).
         // The SERVER decides, per ticket, because the answer is per company and a
@@ -9748,6 +9875,11 @@ async function loadTimeEntries(ticketId) {
         currentTimeEntries = data.success ? data.entries : [];
         renderTimeEntries(data.success ? data.total_minutes : 0);
     } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'time', 'error', null, 'entries');
+            return;
+        }
         console.error('Time entries load failed:', e);
         currentTimeEntries = [];
         renderTimeEntries(0);
@@ -11695,16 +11827,22 @@ async function saveContextTimeEntry() {
  * doesn't bother the analyst with "SLA disabled for this ticket" noise.
  */
 async function loadSlaState(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const container = document.getElementById('slaContainer');
     if (!container) return;
     container.innerHTML = '';
     try {
         const res = await fetch(API_BASE + 'get_ticket_sla.php?ticket_id=' + ticketId);
         const data = await res.json();
-        if (!data.success || !data.sla || !data.sla.enabled) return; // silent hide
+        if (!isCurrent()) return;
+        if (!data.success || !data.sla) throw new Error('SLA lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'time', 'ready', null, 'sla');
+        if (!data.sla.enabled) return;
         renderSlaPanel(data.sla);
     } catch (e) {
+        if (!isCurrent()) return;
         console.error('SLA load failed:', e);
+        window.TicketWorkspace?.setSectionState(ticketId, 'time', 'error', null, 'sla');
     }
 }
 
@@ -12239,12 +12377,14 @@ function buildReadForMeButton() {
  * Asks for an automatic refresh when the server says one is due.
  */
 async function loadAiSummary(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     if (!aiSummaryOn() || !ticketId) return;
     _aiSummaryTicketId = ticketId;
     _aiSummaryState = null;
     try {
         const r = await fetch(`../api/tickets/ai_summary.php?ticket_id=${encodeURIComponent(ticketId)}`);
         const d = await r.json();
+        if (!isCurrent()) return;
         // The ticket may have changed underneath a slow request. Landing an old
         // ticket's summary on a new ticket would be a quiet, confident lie.
         // Confidential and not sent to AI (#62): say so where the summary would
@@ -12263,6 +12403,7 @@ async function loadAiSummary(ticketId) {
            asks, and asking twice cannot bill twice. */
         if (d.auto_due && d.configured) refreshAiSummary(true);
     } catch (e) {
+        if (!isCurrent()) return;
         // A summary that cannot load leaves the ticket exactly as it was.
     }
 }

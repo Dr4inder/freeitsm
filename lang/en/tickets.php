@@ -35,6 +35,7 @@ return [
         'inbox' => 'Inbox',
         'workspace' => 'Workspace',
         'discard' => 'Discard unsaved changes and leave this ticket?',
+        'discard_button' => 'Discard',
         'save_failed' => 'The layout could not be saved. Please try again.',
     ],
     // The AI reading aids (#104, ideas 7 and 12).
