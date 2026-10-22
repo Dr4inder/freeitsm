@@ -22,6 +22,7 @@ session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/tenancy.php';
+require_once '../../includes/services/asset_type_layout.php';
 
 header('Content-Type: application/json');
 
@@ -60,7 +61,12 @@ try {
         // No CMDB icon table on this install — types simply have no icons.
     }
 
+    // Which built-in sections and tabs each type shows (GH #200). Every consumer gets it: the
+    // asset page draws from it, and the settings modal edits it.
+    $layouts = AssetTypeLayout::forTypes($conn, array_column($rows, 'id'));
+
     foreach ($rows as &$r) {
+        $r['layout']    = $layouts[(int)$r['id']] ?? AssetTypeLayout::defaults();
         $r['is_active'] = (bool)$r['is_active'];
         $r['scope']     = ($r['tenant_id'] === null) ? 'global' : 'company';
         $r['icon_id']   = isset($r['icon_id']) && $r['icon_id'] !== null ? (int)$r['icon_id'] : null;

@@ -31,6 +31,8 @@ if (!empty($_GET['tab']) && settingsTabVisible($visibleTabs, (string) $_GET['tab
 }
 
 
+require_once __DIR__ . '/../../includes/services/asset_type_layout.php';
+
 /**
  * The shared icon library, for the asset-type icon picker (#1146).
  *
@@ -375,6 +377,20 @@ $translationNamespaces = ['common', 'asset-management'];
             text-transform: uppercase; color: var(--text-muted, #666);
         }
 
+        /* ── Asset type layout (GH #200) ─────────────────────────────── */
+        .atl-box { border: 1px solid var(--border, #e5e7eb); border-radius: 8px; padding: 12px 14px; }
+        .atl-intro { font-size: 13px; color: var(--text-muted, #666); margin: 0 0 10px; line-height: 1.5; }
+        .atl-sub { font-size: 13px; font-weight: 600; margin: 14px 0 6px; }
+        .atl-note { font-size: 12px; color: var(--text-muted, #666); margin: 0 0 8px; }
+        /* Scoped to the row: `.modal .form-group label` makes every label a block. */
+        #itemLayoutRow .atl-opt { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; margin: 0; cursor: pointer; font-weight: normal; }
+        #itemLayoutRow .atl-opt input { margin-top: 3px; flex-shrink: 0; }
+        #itemLayoutRow .atl-tab-opt { display: flex; margin: 0; }
+        .atl-opt-name { display: block; font-size: 14px; }
+        .atl-opt-desc { display: block; font-size: 12px; color: var(--text-muted, #666); }
+        .atl-tab-opt { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: normal; margin: 0; }
+        #itemLayoutTabs .rl-list { max-width: none; }
+
         /* ── Asset type icon picker ────────────────────────────────── */
         .ic-picked { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
         .ic-preview { display: inline-flex; width: 24px; height: 24px; color: var(--accent, #0078d4); }
@@ -592,6 +608,19 @@ $translationNamespaces = ['common', 'asset-management'];
                     <tr><td colspan="5" style="text-align: center; padding: 20px; color: #999;"><?php echo htmlspecialchars(t('asset-management.common.loading')); ?></td></tr>
                 </tbody>
             </table>
+            <?php /* GH #200: how an asset says it holds details its type's layout hides.
+                     A setting because teams differ: one that chose its layouts deliberately
+                     finds the line noise, one that inherited them wants to be told. */ ?>
+            <h3 style="margin: 28px 0 6px; font-size: 15px;"><?php echo htmlspecialchars(t('asset-management.layout.notice_heading')); ?></h3>
+            <p class="settings-description"><?php echo htmlspecialchars(t('asset-management.layout.notice_intro')); ?></p>
+            <div class="form-group">
+                <label class="form-label" for="assetLayoutNotice"><?php echo htmlspecialchars(t('asset-management.layout.notice_label')); ?></label>
+                <select class="form-input" id="assetLayoutNotice" style="max-width: 340px;" onchange="saveLayoutNotice(this.value)">
+                    <option value="notice"><?php echo htmlspecialchars(t('asset-management.layout.notice_notice')); ?></option>
+                    <option value="link"><?php echo htmlspecialchars(t('asset-management.layout.notice_link')); ?></option>
+                </select>
+                <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.layout.notice_hint')); ?></div>
+            </div>
         </div>
 
         <?php endif; ?>
@@ -1731,6 +1760,40 @@ $translationNamespaces = ['common', 'asset-management'];
                     <div class="ic-grid" id="itemIconGrid"></div>
                     <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.settings.type_icon_hint')); ?></div>
                 </div>
+                <?php /* Layout (GH #200). Asset TYPES only, like the icon picker. Which
+                         built-in Key info sections and tabs the type shows - presentation
+                         only, see includes/services/asset_type_layout.php. Saved with the
+                         type by Save, like every other field in this dialog. */ ?>
+                <div class="form-group" id="itemLayoutRow" style="display:none;">
+                    <label><?php echo htmlspecialchars(t('asset-management.layout.heading')); ?></label>
+                    <div class="atl-box">
+                        <p class="atl-intro"><?php echo htmlspecialchars(t('asset-management.layout.intro')); ?></p>
+                        <label for="itemLayoutPreset" class="atl-sub" style="display:block;margin-top:0;"><?php echo htmlspecialchars(t('asset-management.layout.start_from')); ?></label>
+                        <select id="itemLayoutPreset" onchange="atlApplyPreset(this.value); this.value = '';">
+                            <option value=""><?php echo htmlspecialchars(t('asset-management.layout.start_from_choose')); ?></option>
+                            <?php foreach (array_keys(AssetTypeLayout::PRESETS) as $p): ?>
+                            <option value="<?php echo $p; ?>"><?php echo htmlspecialchars(t('asset-management.layout.preset_' . $p)); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.layout.start_from_hint')); ?></div>
+
+                        <div class="atl-sub"><?php echo htmlspecialchars(t('asset-management.layout.sections_heading')); ?></div>
+                        <p class="atl-note"><?php echo htmlspecialchars(t('asset-management.layout.identity_note')); ?></p>
+                        <?php foreach (AssetTypeLayout::SECTIONS as $sec): ?>
+                        <label class="atl-opt">
+                            <input type="checkbox" data-atl-section="<?php echo $sec; ?>" checked>
+                            <span>
+                                <span class="atl-opt-name"><?php echo htmlspecialchars(t('asset-management.layout.section_' . $sec)); ?></span>
+                                <span class="atl-opt-desc"><?php echo htmlspecialchars(t('asset-management.layout.section_' . $sec . '_desc')); ?></span>
+                            </span>
+                        </label>
+                        <?php endforeach; ?>
+
+                        <div class="atl-sub"><?php echo htmlspecialchars(t('asset-management.layout.tabs_heading')); ?></div>
+                        <p class="atl-note"><?php echo htmlspecialchars(t('asset-management.layout.tabs_note')); ?></p>
+                        <div id="itemLayoutTabs"></div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="toggle-label">
                         <span class="toggle-switch">
@@ -2590,6 +2653,7 @@ $translationNamespaces = ['common', 'asset-management'];
             document.getElementById('itemOrder').value = '0';
             document.getElementById('itemActive').checked = true;
             icSetup(type, null);
+            atlSetup(type, null);
             leaseKindSetup(type, null);
             document.getElementById('editModal').classList.add('active');
         }
@@ -2607,6 +2671,7 @@ $translationNamespaces = ['common', 'asset-management'];
             document.getElementById('itemOrder').value = item.display_order || 0;
             document.getElementById('itemActive').checked = item.is_active;
             icSetup(type, item.icon_id || null);
+            atlSetup(type, item.layout || null);
             leaseKindSetup(type, item);
             document.getElementById('editModal').classList.add('active');
         }
@@ -2653,6 +2718,7 @@ $translationNamespaces = ['common', 'asset-management'];
                 // row is hidden and this stays empty.
                 icon_id: document.getElementById('itemIconId').value || null
             };
+            if (type === 'asset-type') payload.layout = atlCollect();
             if (type === 'lease-outcome') {
                 payload.kind = document.getElementById('itemKind').value;
                 payload.is_default = document.getElementById('itemDefault').checked ? 1 : 0;
@@ -3592,6 +3658,93 @@ $translationNamespaces = ['common', 'asset-management'];
                 document.getElementById('itemDefault').checked = !!(item && item.is_default);
             }
         }
+
+        // ════════════════════════════════════════════════════════════════
+        //  Asset type layout (GH #200)
+        //
+        //  Which built-in Key info sections and tabs a type shows. Presentation
+        //  only - see includes/services/asset_type_layout.php. The presets only
+        //  fill in the ticks; the order of the tabs is the ReorderList's.
+        // ════════════════════════════════════════════════════════════════
+
+        let atlTabs = null;   // the ReorderList of tabs, while the dialog is open
+
+        /** Show the editor for asset types, filled from the type's layout; hide it otherwise. */
+        function atlSetup(type, layout) {
+            const row = document.getElementById('itemLayoutRow');
+            if (!row) return;
+            const isType = (type === 'asset-type');
+            row.style.display = isType ? '' : 'none';
+            if (!isType) return;
+            const L = layout || window.ASSET_LAYOUT.defaults;
+            document.querySelectorAll('[data-atl-section]').forEach(cb => {
+                cb.checked = L.sections[cb.dataset.atlSection] !== false;
+            });
+            const shown = {};
+            L.tabs.forEach(t => { shown[t.key] = t.shown; });
+            atlTabs = ReorderList.mount(document.getElementById('itemLayoutTabs'), {
+                label: window.t('asset-management.layout.tabs_label'),
+                items: L.tabs.map(t => {
+                    const name = window.t('asset-management.layout.tab_' + t.key);
+                    return {
+                        key: t.key,
+                        label: name,
+                        html: `<label class="atl-tab-opt"><input type="checkbox" data-atl-tab="${escapeHtml(t.key)}" ${shown[t.key] !== false ? 'checked' : ''}> <span>${escapeHtml(name)}</span></label>`,
+                    };
+                }),
+            });
+        }
+
+        /** A preset ticks boxes - it never moves tabs, and nothing about it is remembered. */
+        function atlApplyPreset(key) {
+            const p = (window.ASSET_LAYOUT.presets || {})[key];
+            if (!p) return;
+            document.querySelectorAll('[data-atl-section]').forEach(cb => {
+                cb.checked = !p.hide_sections.includes(cb.dataset.atlSection);
+            });
+            document.querySelectorAll('[data-atl-tab]').forEach(cb => {
+                cb.checked = !p.hide_tabs.includes(cb.dataset.atlTab);
+            });
+        }
+
+        /** The layout as the dialog shows it, for save_asset_type.php. */
+        function atlCollect() {
+            const sections = {};
+            document.querySelectorAll('[data-atl-section]').forEach(cb => { sections[cb.dataset.atlSection] = cb.checked; });
+            const order = atlTabs ? atlTabs.getOrder() : window.ASSET_LAYOUT.defaults.tabs.map(t => t.key);
+            const tabs = order.map(key => {
+                const cb = document.querySelector('[data-atl-tab="' + key + '"]');
+                return { key: key, shown: cb ? cb.checked : true };
+            });
+            return { sections: sections, tabs: tabs };
+        }
+
+        /** The hidden-details setting: read with the page, saved on change. */
+        async function loadLayoutNotice() {
+            const sel = document.getElementById('assetLayoutNotice');
+            if (!sel) return;
+            try {
+                const res = await fetch(API_SETTINGS + 'get_system_settings.php');
+                const data = await res.json();
+                if (data.success) sel.value = data.settings.asset_layout_hidden_notice === 'link' ? 'link' : 'notice';
+            } catch (e) { /* the default stays selected */ }
+        }
+
+        async function saveLayoutNotice(value) {
+            try {
+                const res = await fetch(API_SETTINGS + 'save_system_settings.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ settings: { asset_layout_hidden_notice: value === 'link' ? 'link' : 'notice' } })
+                });
+                const data = await res.json();
+                if (data.success) showToast(window.t('asset-management.layout.notice_saved'), 'success');
+                else showToast(window.t('asset-management.toast.error', { error: data.error }), 'error');
+            } catch (e) {
+                showToast(window.t('asset-management.settings.save_settings_failed'), 'error');
+            }
+        }
+        loadLayoutNotice();
 
         function icSetup(type, selectedId) {
             const row = document.getElementById('itemIconRow');
@@ -4834,6 +4987,8 @@ $translationNamespaces = ['common', 'asset-management'];
     <script src="../../assets/js/proxmox-settings.js?v=2"></script>
     <script src="../../assets/js/vcloud-settings.js?v=2"></script>
     <script src="../../assets/js/network-mapper-icons.js?v=3"></script>
+    <script src="../../assets/js/reorder-list.js?v=1"></script>
+    <script>window.ASSET_LAYOUT = <?php echo json_encode(['defaults' => AssetTypeLayout::defaults(), 'presets' => AssetTypeLayout::PRESETS], JSON_HEX_TAG | JSON_HEX_AMP); ?>;</script>
     <script src="../../assets/js/mobile.js?v=82"></script>
 </body>
 </html>

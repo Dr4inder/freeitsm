@@ -17,6 +17,7 @@ requireModuleAccess('assets');
 // Company field (2.6.0). Single-company installs get multi=false and see
 // neither. Defensive: this page must render even if tenancy cannot be read.
 require_once '../includes/tenancy.php';
+require_once '../includes/services/asset_type_layout.php';
 $assetTenancy = ['multi' => false, 'active' => 0, 'all' => false, 'default' => 0];
 try {
     $tconn = connectToDatabase();
@@ -1471,6 +1472,22 @@ $translationNamespaces = ['common', 'asset-management'];
         }
         :root[data-theme="dark"] .expiry-flag-past { background: #4a1c1a; color: #ffb4ab; }
         :root[data-theme="dark"] .expiry-flag-soon { background: #4a3410; color: #ffd18c; }
+
+        /* Asset type layouts (GH #200). A class, not the hidden attribute: .detail-tab and
+           .info-item set their own display, which would beat [hidden]. */
+        .atl-hidden { display: none !important; }
+        .atl-revealed { outline: 1px dashed var(--text-muted, #999); outline-offset: -1px; }
+        .detail-tab.atl-revealed { opacity: .75; }
+        .atl-notice {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+            margin: 0 0 12px; padding: 8px 12px; border-radius: 6px; font-size: 13px;
+            background: var(--info-bg, #eef4fb); color: var(--info-text, #31506b); border: 1px solid var(--info-border, #cfe0f1);
+        }
+        .atl-link {
+            border: none; background: none; padding: 0; cursor: pointer; font: inherit;
+            color: var(--accent, #0078d4); text-decoration: underline;
+        }
+        .detail-tab.atl-show { color: var(--text-muted, #666); font-weight: normal; text-decoration: underline; }
     </style>
     <?php /* Mobile-friendly opt-in (#936). Deliberately AFTER this page's own
              <style> block so its @media rules win on ties — the ordering rule
@@ -1890,7 +1907,12 @@ $translationNamespaces = ['common', 'asset-management'];
             try {
                 const response = await fetch(API_BASE + 'get_asset_types.php');
                 const data = await response.json();
-                if (data.success) assetTypes = data.asset_types.filter(t => t.is_active);
+                if (data.success) {
+                    assetTypes = data.asset_types.filter(t => t.is_active);
+                    assetTypeLayouts = {};
+                    data.asset_types.forEach(t => { if (t.layout) assetTypeLayouts[t.id] = t.layout; });
+                    if (selectedAsset) applyAssetLayout();
+                }
             } catch (e) { console.error('Error loading asset types:', e); }
         }
 
@@ -1962,6 +1984,8 @@ $translationNamespaces = ['common', 'asset-management'];
                         selectedAsset[field] = value || null;
                     }
                     refreshExpiryFlag(field, value);
+                    // A new type brings its own layout (GH #200). Values are untouched.
+                    if (field === 'asset_type_id' || atlFinancialFields.includes(field)) applyAssetLayout();
                 } else {
                     showToast(window.t('asset-management.toast.update_error', { error: data.error }), 'error');
                 }
@@ -2262,6 +2286,7 @@ $translationNamespaces = ['common', 'asset-management'];
                 </div>
                 <div class="asset-detail-body" id="detailBody">
                     <div class="detail-tab-panel detail-tab-panel--scroll active" id="keyinfoPanel" data-dtab-panel="keyinfo">
+                    <div class="atl-notice atl-hidden" id="layoutNotice" role="status"></div>
                     <div class="asset-info-grid">
                         <?php /* The number printed on the label. Saved on change through its
                                  own endpoint, because it is unique per company and the generic
@@ -2301,13 +2326,13 @@ $translationNamespaces = ['common', 'asset-management'];
                                  typo made while adding one by hand had no way
                                  to be corrected. saveCoreField() warns rather
                                  than blocks; see it for the reasoning. */ ?>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="make_model">
                             <span class="info-label">${window.t('asset-management.field.manufacturer')}</span>
                             <input type="text" class="info-value-input" maxlength="50"
                                    value="${escapeHtml(selectedAsset.manufacturer || '')}" placeholder="-"
                                    onchange="saveCoreField('manufacturer', this)">
                         </div>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="make_model">
                             <span class="info-label">${window.t('asset-management.field.model')}</span>
                             <input type="text" class="info-value-input" maxlength="50"
                                    value="${escapeHtml(selectedAsset.model || '')}" placeholder="-"
@@ -2329,31 +2354,31 @@ $translationNamespaces = ['common', 'asset-management'];
                                    value="${escapeHtml(selectedAsset.hostname || '')}"
                                    onchange="saveCoreField('hostname', this)">
                         </div>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="hardware">
                             <span class="info-label">${window.t('asset-management.field.cpu')}</span>
                             <span class="info-value">${escapeHtml(selectedAsset.cpu_name) || '-'}</span>
                         </div>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="hardware">
                             <span class="info-label">${window.t('asset-management.field.cpu_speed')}</span>
                             <span class="info-value">${escapeHtml(selectedAsset.speed) || '-'}</span>
                         </div>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="hardware">
                             <span class="info-label">${window.t('asset-management.field.memory')}</span>
                             <span class="info-value">${escapeHtml(selectedAsset.memory) || '-'}</span>
                         </div>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="os">
                             <span class="info-label">${window.t('asset-management.field.operating_system')}</span>
                             <span class="info-value">${escapeHtml(selectedAsset.operating_system) || '-'}</span>
                         </div>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="os">
                             <span class="info-label">${window.t('asset-management.field.feature_release')}</span>
                             <span class="info-value">${escapeHtml(selectedAsset.feature_release) || '-'}</span>
                         </div>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="os">
                             <span class="info-label">${window.t('asset-management.field.build_number')}</span>
                             <span class="info-value">${escapeHtml(selectedAsset.build_number) || '-'}</span>
                         </div>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="os">
                             <span class="info-label">${window.t('asset-management.field.bios_version')}</span>
                             <span class="info-value">${escapeHtml(selectedAsset.bios_version) || '-'}</span>
                         </div>
@@ -2365,11 +2390,11 @@ $translationNamespaces = ['common', 'asset-management'];
                                  still true?". Watchtower has counted machines
                                  that stopped reporting for a long time; until
                                  now the asset itself would not say when. */ ?>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="reporting">
                             <span class="info-label">${window.t('asset-management.field.first_seen')}</span>
                             <span class="info-value">${seenHtml(selectedAsset.first_seen, false)}</span>
                         </div>
-                        <div class="info-item">
+                        <div class="info-item" data-layout-section="reporting">
                             <span class="info-label">${window.t('asset-management.field.last_seen')}</span>
                             <span class="info-value">${seenHtml(selectedAsset.last_seen, true)}</span>
                         </div>
@@ -2386,7 +2411,7 @@ $translationNamespaces = ['common', 'asset-management'];
                         </div>
                         <div id="assetCustomFields"></div>
                     </div>
-                    <div class="disks-section">
+                    <div class="disks-section" data-layout-section="storage">
                         <div class="section-header">
                             <span class="section-title">${window.t('asset-management.detail.storage')}</span>
                         </div>
@@ -2495,6 +2520,11 @@ $translationNamespaces = ['common', 'asset-management'];
                     </div>
                 </div>
             `;
+
+            // The type's layout (GH #200): which sections and tabs show, and what they hide.
+            atlStartAsset();
+            applyAssetLayout();
+            document.getElementById('assetDocuments').addEventListener('fd:count', e => atlSaw('documents', e.detail.total));
 
             // Load assigned users, disks, devices, installed software, and (if matched) Intune data
             loadAssignedUsers(assetId);
@@ -3698,6 +3728,7 @@ $translationNamespaces = ['common', 'asset-management'];
                 }
 
                 renderPhysicalDisks(data.success ? (data.physical_disks || []) : []);
+                if (data.success) atlSaw('storage', (data.disks || []).length + (data.physical_disks || []).length);
             } catch (error) {
                 console.error('Error loading disks:', error);
                 renderPhysicalDisks([]);
@@ -3992,6 +4023,153 @@ $translationNamespaces = ['common', 'asset-management'];
         function switchDetailTab(tab) {
             document.querySelectorAll('.detail-tab').forEach(t => t.classList.toggle('active', t.dataset.dtab === tab));
             document.querySelectorAll('.detail-tab-panel').forEach(p => p.classList.toggle('active', p.dataset.dtabPanel === tab));
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        //  Asset type layouts (GH #200)
+        //
+        //  The type decides which built-in Key info sections and tabs show
+        //  (includes/services/asset_type_layout.php). PRESENTATION ONLY: the
+        //  page still loads everything, so counts keep arriving for hidden tabs
+        //  and the asset can say when it holds details its type hides. That is
+        //  the difference between "hidden by this profile" and "not there".
+        // ════════════════════════════════════════════════════════════════
+
+        let assetTypeLayouts = {};    // type id -> layout, from get_asset_types.php
+        let atlReveal = false;        // "Show them" pressed for the open asset
+        let atlCounts = {};           // what the async loads found: storage, devices, software, tickets, contracts, documents
+        let atlBadgeWatch = null;
+
+        const atlSectionFields = {
+            make_model: ['manufacturer', 'model'],
+            hardware:   ['cpu_name', 'speed', 'memory'],
+            os:         ['operating_system', 'feature_release', 'build_number', 'bios_version'],
+            reporting:  ['first_seen', 'last_seen'],
+        };
+        const atlFinancialFields = ['purchase_date', 'purchase_cost', 'supplier_id', 'order_number', 'warranty_expiry',
+                                    'lease_start', 'lease_expiry', 'cost_centre_id'];
+        const atlBadges = { devices: 'devicesCountBadge', software: 'softwareCountBadge', tickets: 'ticketsCountBadge', contracts: 'contractsCountBadge' };
+
+        /** A fresh asset: nothing revealed, nothing counted, and the badges watched for their numbers. */
+        function atlStartAsset() {
+            atlReveal = false;
+            atlCounts = {};
+            if (atlBadgeWatch) atlBadgeWatch.disconnect();
+            const strip = document.getElementById('detailTabs');
+            if (!strip || !window.MutationObserver) return;
+            // The badges are filled by four loaders in several formats; reading them here
+            // keeps this feature out of each loader. The leading number is the count.
+            atlBadgeWatch = new MutationObserver(() => {
+                let changed = false;
+                Object.entries(atlBadges).forEach(([tab, id]) => {
+                    const el = document.getElementById(id);
+                    const n = el ? parseInt(el.textContent, 10) : NaN;
+                    if (!isNaN(n) && atlCounts[tab] !== n) { atlCounts[tab] = n; changed = true; }
+                });
+                if (changed) atlRenderNotice();
+            });
+            atlBadgeWatch.observe(strip, { subtree: true, childList: true, characterData: true });
+        }
+
+        /** An async load reporting how many rows it found. */
+        function atlSaw(key, n) {
+            atlCounts[key] = Number(n) || 0;
+            atlRenderNotice();
+        }
+
+        /** The open asset's layout: its type's, or everything shown. */
+        function atlLayout() {
+            const L = selectedAsset && assetTypeLayouts[selectedAsset.asset_type_id];
+            return L || <?php echo json_encode(AssetTypeLayout::defaults()); ?>;
+        }
+
+        /** Does the open asset hold anything in this hidden section or tab? A count, true, or false. */
+        function atlHasData(key) {
+            const a = selectedAsset || {};
+            if (atlSectionFields[key]) return atlSectionFields[key].some(f => a[f] !== null && a[f] !== undefined && String(a[f]).trim() !== '');
+            if (key === 'financial') return atlFinancialFields.some(f => a[f] !== null && a[f] !== undefined && String(a[f]).trim() !== '');
+            return atlCounts[key] > 0 ? atlCounts[key] : false;
+        }
+
+        /** Shows, hides and orders the sections and tabs for the open asset's type. */
+        function applyAssetLayout() {
+            const L = atlLayout();
+            document.querySelectorAll('#keyinfoPanel [data-layout-section]').forEach(el => {
+                const hidden = L.sections[el.dataset.layoutSection] === false;
+                el.classList.toggle('atl-hidden', hidden && !atlReveal);
+                el.classList.toggle('atl-revealed', hidden && atlReveal);
+                if (hidden && atlReveal) el.title = window.t('asset-management.layout.hidden_marker'); else el.removeAttribute('title');
+            });
+            const strip = document.getElementById('detailTabs');
+            if (strip) {
+                // Key info first, then the type's order; anything else (the Intune tab) keeps its place after.
+                const keyinfo = strip.querySelector('[data-dtab="keyinfo"]');
+                let anchor = keyinfo;
+                L.tabs.forEach(t => {
+                    const btn = strip.querySelector('[data-dtab="' + t.key + '"]');
+                    if (!btn) return;
+                    anchor.after(btn);
+                    anchor = btn;
+                    const hidden = !t.shown;
+                    btn.classList.toggle('atl-hidden', hidden && !atlReveal);
+                    btn.classList.toggle('atl-revealed', hidden && atlReveal);
+                    if (hidden && atlReveal) btn.title = window.t('asset-management.layout.hidden_marker'); else btn.removeAttribute('title');
+                });
+                // Never leave the reader on a tab that has just been hidden.
+                const active = strip.querySelector('.detail-tab.active');
+                if (active && active.classList.contains('atl-hidden')) switchDetailTab('keyinfo');
+            }
+            atlRenderNotice();
+        }
+
+        /**
+         * The way back to hidden details. With asset_layout_hidden_notice = 'notice' (the default),
+         * a line on Key info names what is hidden AND holds data; otherwise - or when nothing hidden
+         * holds data - a quiet "Show hidden" at the end of the tab strip. Once shown, a line says so.
+         */
+        function atlRenderNotice() {
+            const box = document.getElementById('layoutNotice');
+            const strip = document.getElementById('detailTabs');
+            if (!box || !strip) return;
+            const L = atlLayout();
+            const T = (k, p) => window.t('asset-management.layout.' + k, p);
+            const hiddenKeys = Object.keys(L.sections).filter(k => L.sections[k] === false)
+                .concat(L.tabs.filter(t => !t.shown).map(t => t.key));
+
+            let link = strip.querySelector('.atl-show');
+            if (link) link.remove();
+            box.classList.add('atl-hidden');
+            box.innerHTML = '';
+            if (!hiddenKeys.length) return;
+
+            if (atlReveal) {
+                box.innerHTML = `<span>${escapeHtml(T('revealed_line'))}</span> <button type="button" class="atl-link" onclick="atlSetReveal(false)">${escapeHtml(T('hide_them'))}</button>`;
+                box.classList.remove('atl-hidden');
+                return;
+            }
+            const withData = [];
+            hiddenKeys.forEach(k => {
+                const d = atlHasData(k);
+                if (d === false) return;
+                const name = T(L.sections[k] === false ? 'section_' + k : 'tab_' + k);
+                withData.push(typeof d === 'number' ? T('item_count', { name: name, n: d }) : name);
+            });
+            if (window.ASSET_LAYOUT_NOTICE !== 'link' && withData.length) {
+                box.innerHTML = `<span>${escapeHtml(T('hidden_line', { items: withData.join(', ') }))}</span> <button type="button" class="atl-link" onclick="atlSetReveal(true)">${escapeHtml(T('show_them'))}</button>`;
+                box.classList.remove('atl-hidden');
+                return;
+            }
+            link = document.createElement('button');
+            link.type = 'button';
+            link.className = 'detail-tab atl-show';
+            link.textContent = T('show_hidden');
+            link.onclick = () => atlSetReveal(true);
+            strip.appendChild(link);
+        }
+
+        function atlSetReveal(on) {
+            atlReveal = !!on;
+            applyAssetLayout();
         }
 
         // Load Intune device data for this asset, if any. Renders a third tab when matched.
@@ -4618,6 +4796,7 @@ $translationNamespaces = ['common', 'asset-management'];
              behaviour inside is gated on matchMedia(768px), so on desktop it is
              inert. (#936) */ ?>
     <script src="../assets/js/network-mapper-icons.js?v=3"></script>
+    <script>window.ASSET_LAYOUT_NOTICE = <?php echo json_encode(AssetTypeLayout::noticeMode(connectToDatabase())); ?>;</script>
     <script>window.ASSET_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.APP_BASE = window.APP_BASE || <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="../assets/js/project-links.js?v=1"></script>
     <script src="../assets/js/mobile.js?v=82"></script>

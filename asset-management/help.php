@@ -210,6 +210,10 @@ $translationNamespaces = ['common', 'asset-management'];
                         <div><strong>Software tab</strong> &mdash; All installed applications and system components with publisher and version. Toggle between Applications, Components, and All.</div>
                     </div>
                     <p class="help-note">Type and Status are editable inline &mdash; click the dropdown in the info grid to change them. Changes are recorded in the history.</p>
+                    <?php /* GH #200: per-type layouts. */ ?>
+                    <h4 id="asset-layouts"><?php echo htmlspecialchars(t('asset-management.help.layout_heading')); ?></h4>
+                    <p><?php echo t('asset-management.help.layout_body'); ?></p>
+                    <p class="help-note"><?php echo t('asset-management.help.layout_hidden'); ?></p>
                 </div>
 
                 <!-- Section 3: Table View -->

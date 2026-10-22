@@ -3248,6 +3248,20 @@ CREATE TABLE IF NOT EXISTS `asset_type_field_sets` (
     CONSTRAINT `fk_atfs_set` FOREIGN KEY (`set_id`) REFERENCES `asset_field_sets` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Which built-in Key info sections and tabs an asset TYPE shows (GH #200). Presentation only:
+-- never what is stored or required. No row = shown, in the default place.
+CREATE TABLE IF NOT EXISTS `asset_type_layout` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `asset_type_id`     INT NOT NULL,
+    `item_kind`         VARCHAR(10) NOT NULL,
+    `item_key`          VARCHAR(32) NOT NULL,
+    `is_shown`          TINYINT(1) NOT NULL DEFAULT 1,
+    `sort_order`        INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_asset_type_layout_item` (`asset_type_id`, `item_kind`, `item_key`),
+    CONSTRAINT `fk_atl_type` FOREIGN KEY (`asset_type_id`) REFERENCES `asset_types` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- A set attached to ONE asset — the pilot case. Ten televisions, three of them
 -- trialled as smart TVs: tick "Smart TV" on those three and only those three
 -- show IP address, MAC address and Netflix enabled. The other seven do not

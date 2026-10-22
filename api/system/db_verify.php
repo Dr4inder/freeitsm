@@ -1133,6 +1133,7 @@ try {
         ['asset_field_set_fields', 'fk_afsf_field',                'asset_fields',      'field_id',              'id', 'CASCADE'],
         ['asset_type_field_sets',  'fk_atfs_type',                 'asset_types',       'asset_type_id',         'id', 'CASCADE'],
         ['asset_type_field_sets',  'fk_atfs_set',                  'asset_field_sets',  'set_id',                'id', 'CASCADE'],
+        ['asset_type_layout',      'fk_atl_type',                  'asset_types',       'asset_type_id',         'id', 'CASCADE'],
         ['asset_field_set_assets', 'fk_afsa_asset',                'assets',            'asset_id',              'id', 'CASCADE'],
         ['asset_field_set_assets', 'fk_afsa_set',                  'asset_field_sets',  'set_id',                'id', 'CASCADE'],
         ['asset_field_set_assets', 'fk_afsa_analyst',              'analysts',          'created_by_analyst_id', 'id', 'SET NULL'],

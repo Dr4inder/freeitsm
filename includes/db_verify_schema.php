@@ -2112,6 +2112,16 @@ return [
         'sort_order'        => 'INT NOT NULL DEFAULT 0',
     ],
 
+    // GH #200: built-in sections and tabs per asset type. No row = shown.
+    'asset_type_layout' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'asset_type_id'     => 'INT NOT NULL',
+        'item_kind'         => 'VARCHAR(10) NOT NULL',
+        'item_key'          => 'VARCHAR(32) NOT NULL',
+        'is_shown'          => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'sort_order'        => 'INT NOT NULL DEFAULT 0',
+    ],
+
     'asset_field_set_assets' => [
         'id'                    => 'INT NOT NULL AUTO_INCREMENT',
         'asset_id'              => 'INT NOT NULL',

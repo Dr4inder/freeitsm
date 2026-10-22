@@ -46,6 +46,8 @@ return [
             'cap'       => Cap::ASSETS_TYPES,
             'label_key' => 'asset-management.settings.tab_asset_types',
             'grant'     => 'Manage asset types',
+            // GH #200: how an asset says it has details its type's layout hides.
+            'setting_keys' => ['asset_layout_hidden_notice'],
         ],
         [
             // Recording things that are not computers (printers, headsets, TVs).
