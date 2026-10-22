@@ -14,6 +14,8 @@ require_once '../includes/functions.php';
 require_once '../includes/i18n.php';
 require_once '../includes/timezone.php';
 require_once '../includes/rbac.php';
+require_once '../includes/branding.php';
+require_once '../includes/system_name.php';
 require_once '../includes/case_report.php';
 require_once '../includes/case_report_page.php';
 I18n::initFromSession();

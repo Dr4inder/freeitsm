@@ -59,7 +59,12 @@ final class CaseReport
         $chosen = isset($q['s']) && is_array($q['s'])
             ? array_values(array_intersect(self::SECTIONS, array_map('strval', $q['s'])))
             : (isset($q['set']) ? [] : self::SECTIONS);
-        return ['sections' => $chosen, 'internal' => !empty($q['internal']) && in_array('notes', $chosen, true)];
+        // Layout (borrowed from Report Packs): a first visit gets a cover, contents and page
+        // numbers; once the reader has made choices, an unticked box means off.
+        $layout = fn(string $k, bool $default) => isset($q['set']) ? !empty($q[$k]) : $default;
+        return ['sections' => $chosen, 'internal' => !empty($q['internal']) && in_array('notes', $chosen, true),
+                'cover' => $layout('cover', true), 'contents' => $layout('contents', true),
+                'breaks' => $layout('breaks', false), 'pagenums' => $layout('pagenums', true)];
     }
 
     /**

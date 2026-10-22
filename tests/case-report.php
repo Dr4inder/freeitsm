@@ -89,7 +89,9 @@ try {
     ok('the message body is there', str_contains($html, 'ZZ message body visible'));
     ok('no script survives anywhere', !str_contains($html, '<script>alert'));
     // A live tag only: the escaped subject legitimately shows the text "onerror=" inside &lt;...&gt;.
-    $liveTag = '/<img\b|<[^>]*\bon[a-z]+\s*=/i';
+    // The PAYLOAD as a live tag. Not "any <img>" or "any on...=": the page's own logo is an
+    // image and its choices panel submits on change - those are the page, not the record.
+    $liveTag = '/<img\b[^>]*\bsrc=["\']?x\b|<[^>]*\bonerror\s*=/i';
     ok('control: the live-tag pattern catches a live tag', preg_match($liveTag, '<p><img src=x onerror="a()"></p>') === 1
        && preg_match($liveTag, '&lt;img src=x onerror=&quot;a&quot;&gt;') === 0);
     ok('no live image tag or event handler survives', !preg_match($liveTag, $html));

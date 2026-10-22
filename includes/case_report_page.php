@@ -34,6 +34,11 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
     $base = $host . (defined('BASE_URL') ? BASE_URL : '/');
 
     $title = $r ? t('case-report.page_title', ['ref' => $r['ref']]) : t('case-report.not_found_title');
+    $sys = function_exists('systemName') ? systemName() : 'FreeITSM';
+    $logo = function_exists('brandingLogoUrl') ? brandingLogoUrl() : '';
+    $accent = ($r && $r['kind'] === 'task') ? '#7c3aed' : '#0078d4';
+    /** A string made safe inside a CSS content: "..." value. */
+    $cssStr = fn(string $s) => '"' . str_replace(['\\', '"', "\n", "\r"], ['\\\\', '\\"', ' ', ' '], $s) . '"';
     ?><!doctype html>
 <html lang="<?php echo $e(I18n::getLocale()); ?>">
 <head>
@@ -43,23 +48,55 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
 <link rel="icon" type="image/svg+xml" href="<?php echo $e(defined('BASE_URL') ? BASE_URL : '/'); ?>favicon.svg">
 <style>
     /* Paper, whatever the analyst's theme: this page is for printing. */
-    :root { color-scheme: light; }
+    :root { color-scheme: light; --accent: <?php echo $accent; ?>; }
+    * { box-sizing: border-box; }
     body { font-family: 'Segoe UI', 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Tamil', 'Noto Sans Bengali', Tahoma, sans-serif;
-           color: #111; background: #fff; margin: 24px auto; max-width: 960px; padding: 0 16px; font-size: 13px; line-height: 1.5; }
+           color: #111; background: #e9ecf1; margin: 0; font-size: 13px; line-height: 1.5; }
+
+    /* ── On screen: banner, choices panel, paper ─────────────────────── */
+    .cr-banner { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 14px; padding: 10px 20px;
+                 background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); color: #fff;
+                 box-shadow: 0 2px 6px rgba(0,0,0,.18); }
+    .cr-banner img { height: 30px; max-width: 140px; object-fit: contain; background: #fff; border-radius: 4px; padding: 3px 6px; }
+    .cr-banner .cr-brand { font-size: 12px; opacity: .85; }
+    .cr-banner .cr-what { font-size: 16px; font-weight: 600; line-height: 1.2; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cr-banner .cr-grow { flex: 1; min-width: 0; }
+    .cr-btn { font: inherit; font-weight: 600; padding: 7px 16px; border-radius: 4px; border: 1px solid #fff; background: #fff; color: var(--accent);
+              text-decoration: none; cursor: pointer; white-space: nowrap; }
+    .cr-shell { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 20px; padding: 20px; align-items: start; }
+    .cr-panel { position: sticky; top: 70px; background: #fff; border: 1px solid #d5dbe5; border-radius: 8px; padding: 14px 16px; font-size: 13px; }
+    .cr-panel h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #5b6472; margin: 14px 0 6px; }
+    .cr-panel h3:first-child { margin-top: 0; }
+    .cr-panel label { display: flex; gap: 8px; align-items: flex-start; padding: 3px 0; cursor: pointer; }
+    .cr-panel label input { margin-top: 3px; accent-color: var(--accent); }
+    .cr-panel .sub { display: block; margin: 2px 0 4px 24px; }
+    .cr-panel .cr-print { width: 100%; margin-top: 14px; background: var(--accent); color: #fff; border-color: var(--accent); text-align: center; display: block; }
+    .cr-panel .cr-done { margin-top: 10px; color: #1b5e20; font-size: 12px; }
+    .cr-paper { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.15); border-radius: 2px; padding: 36px 44px; max-width: 900px; width: 100%; }
+    @media (max-width: 860px) {
+        .cr-shell { grid-template-columns: 1fr; padding: 12px; }
+        .cr-panel { position: static; }
+        .cr-paper { padding: 20px 16px; }
+        .cr-banner { padding: 8px 12px; }
+        .cr-banner img, .cr-banner .cr-brand { display: none; }
+    }
+
+    /* ── The document ───────────────────────────────────────────────── */
     h1 { font-size: 20px; margin: 0 0 4px; }
-    h2 { font-size: 16px; margin: 28px 0 8px; border-bottom: 2px solid #333; padding-bottom: 4px; }
+    h2.sec { font-size: 17px; margin: 30px 0 10px; padding-bottom: 5px; border-bottom: 2px solid var(--accent); }
+    h2.sec .num { color: var(--accent); margin-right: 6px; }
     h3 { font-size: 14px; margin: 18px 0 6px; }
     h4 { font-size: 13px; margin: 12px 0 4px; }
     table { border-collapse: collapse; width: 100%; margin: 6px 0 12px; }
     th, td { border: 1px solid #ccc; padding: 5px 7px; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
-    th { background: #f3f3f3; }
-    table.kv th { width: 24%; }
+    th { background: #f3f4f6; }
+    table.kv th { width: 26%; }
     .meta, .sub { color: #555; }
     .sub { font-size: 12px; }
     .box { border: 1px solid #ccc; padding: 8px 10px; margin: 4px 0 12px; overflow-wrap: anywhere; }
     .box * { max-width: 100%; }
     .box table { width: auto; }
-    .msg-head { background: #f6f6f6; border-bottom: 1px solid #ddd; margin: -8px -10px 8px; padding: 6px 10px; }
+    .msg-head { background: #f6f7f9; border-bottom: 1px solid #ddd; margin: -8px -10px 8px; padding: 6px 10px; }
     .tag { display: inline-block; padding: 0 6px; border: 1px solid #999; border-radius: 8px; font-size: 11px; margin-left: 4px; }
     .tag.internal { border-color: #b26a00; color: #8a5200; }
     .notice { border-left: 4px solid #888; background: #f7f7f7; padding: 6px 10px; margin: 6px 0; }
@@ -68,25 +105,75 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
     .task .task { margin-left: 12px; border-style: dashed; }
     .res-pass { color: #1b5e20; font-weight: 600; } .res-fail { color: #b71c1c; font-weight: 600; } .res-na { color: #555; }
     .exception { color: #b71c1c; }
-    .choices { background: #f3f6fb; border: 1px solid #d5deeb; border-radius: 6px; padding: 10px 12px; margin-bottom: 18px; }
-    .choices label { margin-right: 14px; white-space: nowrap; }
-    .choices .row { margin: 4px 0; }
-    .choices button, .choices .btn { font: inherit; padding: 5px 14px; margin-right: 6px; cursor: pointer; border: 1px solid #8a9bb5; border-radius: 4px; background: #fff; color: #111; text-decoration: none; display: inline-block; }
     .foot { margin-top: 28px; border-top: 1px solid #ccc; padding-top: 6px; font-size: 12px; color: #555; }
     a { color: #0b57d0; }
-    @page { margin: 14mm 12mm; }
+
+    /* The head of the report when there is no cover. */
+    .cr-head { border-left: 5px solid var(--accent); padding: 4px 0 4px 14px; margin-bottom: 14px; }
+    .cr-kicker { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 700; }
+
+    /* Cover */
+    .cr-cover { min-height: 230mm; display: flex; flex-direction: column; }
+    .cr-cover .cr-cover-band { background: var(--accent); color: #fff; margin: -36px -44px 0; padding: 34px 44px 30px; }
+    .cr-cover .cr-cover-band img { height: 46px; max-width: 200px; object-fit: contain; background: #fff; border-radius: 6px; padding: 5px 9px; margin-bottom: 26px; }
+    .cr-cover h1 { font-size: 30px; margin: 6px 0 4px; line-height: 1.2; }
+    .cr-cover .cr-ref { font-size: 15px; opacity: .9; }
+    .cr-cover .cr-facts { margin-top: 30px; }
+    .cr-cover .cr-facts th { width: 32%; background: #f6f7f9; }
+    .cr-cover .cr-stamp { margin-top: auto; padding-top: 24px; border-top: 1px solid #ddd; color: #444; font-size: 12px; }
+    .cr-cover .cr-conf { display: inline-block; margin-top: 14px; padding: 3px 10px; border: 2px solid #b71c1c; color: #b71c1c; font-weight: 700; letter-spacing: .05em; }
+
+    /* Contents */
+    .cr-toc h2 { font-size: 20px; margin: 0 0 14px; border: 0; }
+    .cr-toc ol { list-style: none; padding: 0; margin: 0; }
+    .cr-toc li { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px dotted #c8ccd3; }
+    .cr-toc li .num { color: var(--accent); font-weight: 700; min-width: 22px; }
+    .cr-toc li a { color: #111; text-decoration: none; flex: 1; }
+    .cr-toc li.sub { padding: 3px 0 3px 30px; border-bottom: 0; font-size: 12px; }
+    .cr-toc li .count { color: #666; font-size: 12px; }
+
+    @page { margin: 16mm 13mm 16mm; }
+<?php if ($r && !empty($r['options']['pagenums'])):
+    $pageTpl = t('case-report.page_counter', ['page' => "\x01", 'pages' => "\x02"]);
+    $counter = implode(' ', array_filter(array_map(function ($part) use ($cssStr) {
+        if ($part === "\x01") return 'counter(page)';
+        if ($part === "\x02") return 'counter(pages)';
+        return $part === '' ? '' : $cssStr($part);
+    }, preg_split("/(\x01|\x02)/", $pageTpl, -1, PREG_SPLIT_DELIM_CAPTURE)), fn($x) => $x !== ''));
+    $running = t('case-report.running_head', ['ref' => $r['ref']]);
+    $conf = $r['kind'] === 'ticket' && ($r['ticket']['sensitivity_now'] ?? 'normal') === 'confidential' ? t('case-report.confidential_upper') : ''; ?>
+    /* Running header and footer (Chrome 131+, Edge; other browsers print without them). */
+    @page {
+        @top-left { content: <?php echo $cssStr($running); ?>; font-size: 8.5pt; color: #666; font-family: 'Segoe UI', 'Noto Sans', Tahoma, sans-serif; }
+        @top-right { content: <?php echo $cssStr($conf); ?>; font-size: 8.5pt; color: #b71c1c; font-weight: 700; font-family: 'Segoe UI', 'Noto Sans', Tahoma, sans-serif; }
+        @bottom-left { content: <?php echo $cssStr(t('case-report.running_foot', ['when' => TaskEvidence::when($r['produced_utc'])])); ?>; font-size: 8pt; color: #888; font-family: 'Segoe UI', 'Noto Sans', Tahoma, sans-serif; }
+        @bottom-right { content: <?php echo $counter; ?>; font-size: 8.5pt; color: #666; font-family: 'Segoe UI', 'Noto Sans', Tahoma, sans-serif; }
+    }
+<?php if (!empty($r['options']['cover'])): ?>
+    @page :first { @top-left { content: none; } @top-right { content: none; } @bottom-left { content: none; } @bottom-right { content: none; } }
+<?php endif; endif; ?>
     @media print {
+        body { background: #fff; }
         .noprint { display: none !important; }
-        body { margin: 0; max-width: none; padding: 0; }
+        .cr-shell { display: block; padding: 0; }
+        .cr-paper { box-shadow: none; padding: 0; max-width: none; border-radius: 0; }
+        /* Fits inside both Letter (Chrome's default, ~247mm) and A4 (~265mm) within the margins. */
+        .cr-cover { min-height: 0; height: 238mm; break-after: page; }
+        .cr-cover .cr-cover-band { margin: 0 0 0; border-radius: 4px; }
+        .cr-toc { break-after: page; }
+        body.breaks h2.sec { break-before: page; margin-top: 0; }
+        body.breaks .cr-toc + h2.sec, body.breaks .cr-cover + h2.sec { break-before: auto; }
         h2, h3, h4 { break-after: avoid; }
         .msg-head, tr { break-inside: avoid; }
         a { color: #111; }
     }
+    @media print { * { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
 </style>
 </head>
-<body>
+<body class="<?php echo ($r && !empty($r['options']['breaks'])) ? 'breaks' : ''; ?>">
 <?php if (!$r): ?>
-    <p><?php echo $e(t('case-report.not_found')); ?></p>
+    <div class="cr-banner"><?php if ($logo): ?><img src="<?php echo $e($logo); ?>" alt=""><?php endif; ?><div class="cr-grow"><div class="cr-what"><?php echo $e(t('case-report.not_found_title')); ?></div></div></div>
+    <div class="cr-shell" style="display:block"><div class="cr-paper"><p><?php echo $e(t('case-report.not_found')); ?></p></div></div>
 </body></html>
 <?php return; endif;
 
@@ -99,37 +186,122 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
     $left = array_values(array_diff($sectionsHere, $opt['sections']));
     $secName = fn($s) => t('case-report.section_' . $s);
     $idValue = $isTicket ? (int)$r['ticket']['id'] : (int)$r['tasks'][0]['id'];
-    $printQs = http_build_query(['id' => $idValue, 'set' => 1, 's' => $opt['sections'], 'internal' => $opt['internal'] ? 1 : null, 'print' => 1]);
+    $layoutQs = ['cover' => $opt['cover'] ? 1 : null, 'contents' => $opt['contents'] ? 1 : null,
+                 'breaks' => $opt['breaks'] ? 1 : null, 'pagenums' => $opt['pagenums'] ? 1 : null];
+    $printQs = http_build_query(['id' => $idValue, 'set' => 1, 's' => $opt['sections'], 'internal' => $opt['internal'] ? 1 : null, 'print' => 1] + $layoutQs);
+
+    // The sections that will print, in order, numbered - the contents and the headings share it.
+    $printed = ['overview'];
+    foreach ($sectionsHere as $s) if ($on($s)) $printed[] = $s;
+    if (!$isTicket && !in_array('tasks', $printed, true)) array_splice($printed, 1, 0, ['tasks']);
+    $num = array_flip($printed);
+    $secCount = [
+        'conversation' => count($r['conversation']), 'notes' => count($r['notes']), 'checklists' => count($r['checklists']),
+        'tasks' => caseReportCountTasks($r['tasks']),
+    ];
+    /** A numbered, linkable section heading. */
+    $head = function (string $s, ?int $count = null) use ($e, $num, $secName) {
+        echo '<h2 class="sec" id="sec-' . $e($s) . '"><span class="num">' . ($num[$s] + 1) . '.</span>' . $e($secName($s))
+           . ($count !== null ? ' <span class="sub">(' . $count . ')</span>' : '') . '</h2>';
+    };
+    $t = $isTicket ? $r['ticket'] : null;
+    $status = $isTicket ? ($t['status_name'] ?? '-') : ($r['tasks'][0]['task']['status_name'] ?? '-');
+    $confidential = $isTicket && ($t['sensitivity_now'] ?? 'normal') === 'confidential';
+    $check = fn(string $name, bool $checked) => '<input type="checkbox" name="' . $e($name) . '" value="1"' . ($checked ? ' checked' : '') . ' onchange="this.form.submit()">';
     ?>
-<form class="choices noprint" method="get">
+<header class="cr-banner noprint">
+    <?php if ($logo): ?><img src="<?php echo $e($logo); ?>" alt=""><?php endif; ?>
+    <div class="cr-grow">
+        <div class="cr-brand"><?php echo $e($sys); ?> · <?php echo $T('report_name'); ?></div>
+        <div class="cr-what"><?php echo $e($r['ref']); ?> - <?php echo $e($r['title']); ?></div>
+    </div>
+    <a class="cr-btn" href="?<?php echo $e($printQs); ?>"><?php echo $T('print'); ?></a>
+</header>
+
+<div class="cr-shell">
+<form class="cr-panel noprint" method="get">
     <input type="hidden" name="id" value="<?php echo $idValue; ?>">
     <input type="hidden" name="set" value="1">
-    <div class="row"><strong><?php echo $T('choose_heading'); ?></strong> <span class="sub"><?php echo $T('choose_hint'); ?></span></div>
-    <div class="row">
-        <label><input type="checkbox" checked disabled> <?php echo $e($secName('overview')); ?></label>
-        <?php foreach ($sectionsHere as $s): ?>
-            <label><input type="checkbox" name="s[]" value="<?php echo $e($s); ?>"<?php echo $on($s) ? ' checked' : ''; ?>> <?php echo $e($secName($s)); ?></label>
-        <?php endforeach; ?>
-    </div>
+    <h3><?php echo $T('panel_sections'); ?></h3>
+    <label><input type="checkbox" checked disabled> <span><?php echo $e($secName('overview')); ?></span></label>
+    <?php foreach ($sectionsHere as $s): ?>
+        <label><input type="checkbox" name="s[]" value="<?php echo $e($s); ?>"<?php echo $on($s) ? ' checked' : ''; ?> onchange="this.form.submit()"> <span><?php echo $e($secName($s)); ?></span></label>
+    <?php endforeach; ?>
     <?php if ($isTicket): ?>
-    <div class="row"><label><input type="checkbox" name="internal" value="1"<?php echo $opt['internal'] ? ' checked' : ''; ?>> <?php echo $T('include_internal'); ?></label>
-        <span class="sub"><?php echo $T('include_internal_hint'); ?></span></div>
+    <h3><?php echo $T('panel_notes'); ?></h3>
+    <label><?php echo $check('internal', $opt['internal']); ?> <span><?php echo $T('include_internal'); ?></span></label>
+    <span class="sub"><?php echo $T('include_internal_hint'); ?></span>
     <?php endif; ?>
-    <div class="row">
-        <button type="submit"><?php echo $T('update'); ?></button>
-        <a class="btn" href="?<?php echo $e($printQs); ?>"><?php echo $T('print'); ?></a>
-        <span class="sub"><?php echo $T('print_hint'); ?></span>
-    </div>
+    <h3><?php echo $T('panel_layout'); ?></h3>
+    <label><?php echo $check('cover', $opt['cover']); ?> <span><?php echo $T('layout_cover'); ?></span></label>
+    <label><?php echo $check('contents', $opt['contents']); ?> <span><?php echo $T('layout_contents'); ?></span></label>
+    <label><?php echo $check('breaks', $opt['breaks']); ?> <span><?php echo $T('layout_breaks'); ?></span></label>
+    <label><?php echo $check('pagenums', $opt['pagenums']); ?> <span><?php echo $T('layout_pagenums'); ?></span></label>
+    <noscript><button type="submit" class="cr-btn"><?php echo $T('update'); ?></button></noscript>
+    <a class="cr-btn cr-print" href="?<?php echo $e($printQs); ?>"><?php echo $T('print'); ?></a>
+    <span class="sub" style="margin-left:0;margin-top:8px"><?php echo $T('print_hint'); ?></span>
+    <?php if ($print && $recordError === null): ?><div class="cr-done">✓ <?php echo $T('export_recorded'); ?></div><?php endif; ?>
 </form>
 
-<h1><?php echo $e($r['ref']); ?>: <?php echo $e($r['title']); ?></h1>
-<div class="meta"><?php echo $T('produced', ['who' => $r['by'], 'when' => TaskEvidence::when($r['produced_utc']), 'tz' => $r['tz']]); ?></div>
-<div class="meta"><?php echo $T('scope', ['sections' => implode(', ', array_map($secName, array_merge(['overview'], $chosen)))]); ?>
-    <?php if ($left): ?> <?php echo $T('scope_left_out', ['sections' => implode(', ', array_map($secName, $left))]); ?><?php endif; ?></div>
-<?php if ($isTicket && $on('notes')): ?>
-<div class="meta"><?php echo $opt['internal'] ? $T('internal_included') : $T('internal_excluded', ['n' => $r['hidden']['internal_notes']]); ?></div>
+<main class="cr-paper">
+<?php if ($opt['cover']): ?>
+<section class="cr-cover">
+    <div class="cr-cover-band">
+        <?php if ($logo): ?><img src="<?php echo $e($logo); ?>" alt=""><br><?php endif; ?>
+        <div class="cr-kicker" style="color:#fff;opacity:.85"><?php echo $T('report_name'); ?></div>
+        <h1><?php echo $e($r['title']); ?></h1>
+        <div class="cr-ref"><?php echo $e($r['ref']); ?> · <?php echo $e($status); ?></div>
+    </div>
+    <?php if ($confidential): ?><div><span class="cr-conf"><?php echo $T('confidential_upper'); ?></span></div><?php endif; ?>
+    <table class="kv cr-facts">
+        <?php if ($isTicket): ?>
+        <tr><th><?php echo $T('f_requester'); ?></th><td><?php echo $e($t['requester_name'] ?? '-'); ?></td></tr>
+        <tr><th><?php echo $T('f_assignee_owner'); ?></th><td><?php echo $e($t['assignee_name'] ?: ($t['owner_name'] ?? '-')); ?></td></tr>
+        <tr><th><?php echo $T('f_created'); ?></th><td><?php echo $when($t['created_datetime']); ?></td></tr>
+        <tr><th><?php echo $T('f_closed'); ?></th><td><?php echo $t['closed_datetime'] ? $when($t['closed_datetime']) : $T('not_closed'); ?></td></tr>
+        <?php if ($on('tasks')): ?><tr><th><?php echo $T('f_tasks'); ?></th><td><?php echo $T('tasks_summary', ['n' => caseReportCountTasks($r['tasks']), 'open' => caseReportCountTasks($r['tasks'], true)]); ?></td></tr><?php endif; ?>
+        <?php else: $tk = $r['tasks'][0]['task']; ?>
+        <tr><th><?php echo $T('f_assigned'); ?></th><td><?php echo $e($tk['assignee_name'] ?? '-'); ?></td></tr>
+        <tr><th><?php echo $T('f_created'); ?></th><td><?php echo $when($tk['created_datetime'] ?? null); ?></td></tr>
+        <tr><th><?php echo $T('f_completed'); ?></th><td><?php echo !empty($tk['completed_datetime']) ? $when($tk['completed_datetime']) : $T('not_completed'); ?></td></tr>
+        <?php endif; ?>
+    </table>
+    <div class="cr-stamp">
+        <div><?php echo $T('produced', ['who' => $r['by'], 'when' => TaskEvidence::when($r['produced_utc']), 'tz' => $r['tz']]); ?></div>
+        <div><?php echo $T('scope', ['sections' => implode(', ', array_map($secName, $printed))]); ?>
+            <?php if ($left): ?> <?php echo $T('scope_left_out', ['sections' => implode(', ', array_map($secName, $left))]); ?><?php endif; ?></div>
+        <?php if ($isTicket && $on('notes')): ?><div><?php echo $opt['internal'] ? $T('internal_included') : $T('internal_excluded', ['n' => $r['hidden']['internal_notes']]); ?></div><?php endif; ?>
+        <div style="margin-top:6px"><?php echo $T('footer_short'); ?></div>
+    </div>
+</section>
+<?php else: ?>
+<div class="cr-head">
+    <div class="cr-kicker"><?php echo $T('report_name'); ?><?php if ($confidential): ?> · <?php echo $T('confidential_upper'); ?><?php endif; ?></div>
+    <h1><?php echo $e($r['ref']); ?>: <?php echo $e($r['title']); ?></h1>
+    <div class="meta"><?php echo $T('produced', ['who' => $r['by'], 'when' => TaskEvidence::when($r['produced_utc']), 'tz' => $r['tz']]); ?></div>
+    <div class="meta"><?php echo $T('scope', ['sections' => implode(', ', array_map($secName, $printed))]); ?>
+        <?php if ($left): ?> <?php echo $T('scope_left_out', ['sections' => implode(', ', array_map($secName, $left))]); ?><?php endif; ?></div>
+    <?php if ($isTicket && $on('notes')): ?><div class="meta"><?php echo $opt['internal'] ? $T('internal_included') : $T('internal_excluded', ['n' => $r['hidden']['internal_notes']]); ?></div><?php endif; ?>
+</div>
 <?php endif; ?>
-<?php if ($print && $recordError === null): ?><div class="meta noprint"><?php echo $T('export_recorded'); ?></div><?php endif; ?>
+
+<?php if ($opt['contents']): ?>
+<nav class="cr-toc">
+    <h2><?php echo $T('contents'); ?></h2>
+    <ol>
+        <?php foreach ($printed as $i => $s): ?>
+        <li><span class="num"><?php echo $i + 1; ?>.</span><a href="#sec-<?php echo $e($s); ?>"><?php echo $e($secName($s)); ?></a>
+            <?php if (isset($secCount[$s])): ?><span class="count"><?php echo $T('toc_count', ['n' => $secCount[$s]]); ?></span><?php endif; ?></li>
+        <?php if ($s === 'tasks'): foreach ($r['tasks'] as $b): ?>
+        <li class="sub"><a href="#task-<?php echo (int)$b['task']['id']; ?>">#<?php echo (int)$b['task']['id']; ?> <?php echo $e($b['task']['title'] ?? ''); ?></a></li>
+        <?php endforeach; endif; ?>
+        <?php endforeach; ?>
+    </ol>
+</nav>
+<?php endif; ?>
+
+<?php /* ── 1. Overview ─────────────────────────────────────────── */ ?>
+<?php $head('overview'); ?>
 <?php if ($recordError !== null): ?><div class="notice warn"><?php echo $T('export_not_recorded'); ?></div><?php endif; ?>
 <?php if ($isTicket && !empty($r['ticket']['deleted_datetime'])): ?><div class="notice warn"><?php echo $T('in_trash', ['when' => TaskEvidence::when($r['ticket']['deleted_datetime'])]); ?></div><?php endif; ?>
 <?php foreach ($r['unavailable'] as $sec => $_): ?>
@@ -144,10 +316,7 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
     foreach ($hiddenLines as $h): ?>
 <div class="notice"><?php echo $e($h); ?></div>
 <?php endforeach; ?>
-
-<?php /* ── 1. Overview ─────────────────────────────────────────── */ ?>
-<h2><?php echo $e($secName('overview')); ?></h2>
-<?php if ($isTicket): $t = $r['ticket']; ?>
+<?php if ($isTicket): ?>
 <table class="kv">
     <tr><th><?php echo $T('f_reference'); ?></th><td><?php echo $e($t['ticket_number']); ?> · <a href="<?php echo $e($base . 'tickets/?ticket_id=' . (int)$t['id']); ?>"><?php echo $T('open_record'); ?></a></td></tr>
     <tr><th><?php echo $T('f_subject'); ?></th><td><?php echo $e($t['subject']); ?></td></tr>
@@ -184,7 +353,7 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
 
 <?php /* ── 2. Conversation ─────────────────────────────────────── */ ?>
 <?php if ($isTicket && $on('conversation')): ?>
-<h2><?php echo $e($secName('conversation')); ?> <span class="sub">(<?php echo count($r['conversation']); ?>)</span></h2>
+<?php $head('conversation', $secCount['conversation']); ?>
 <p class="sub"><?php echo $T('conversation_note'); ?></p>
 <?php if (!$r['conversation'] && empty($r['unavailable']['conversation'])): ?><p><?php echo $T('none'); ?></p><?php endif; ?>
 <?php foreach ($r['conversation'] as $m): ?>
@@ -204,7 +373,7 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
 
 <?php /* ── 3. Notes ───────────────────────────────────────────── */ ?>
 <?php if ($isTicket && $on('notes')): ?>
-<h2><?php echo $e($secName('notes')); ?> <span class="sub">(<?php echo count($r['notes']); ?>)</span></h2>
+<?php $head('notes', $secCount['notes']); ?>
 <?php if (!$r['notes'] && empty($r['unavailable']['notes'])): ?><p><?php echo $T('none'); ?></p><?php endif; ?>
 <?php foreach ($r['notes'] as $n): ?>
 <div class="box">
@@ -218,7 +387,7 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
 
 <?php /* ── 4. Ticket checklists ─────────────────────────────────── */ ?>
 <?php if ($isTicket && $on('checklists')): ?>
-<h2><?php echo $e($secName('checklists')); ?> <span class="sub">(<?php echo count($r['checklists']); ?>)</span></h2>
+<?php $head('checklists', $secCount['checklists']); ?>
 <?php if ($r['checklists']): ?><p class="sub"><?php echo $T('ticket_checklists_note'); ?></p><?php endif; ?>
 <?php if (!$r['checklists'] && empty($r['unavailable']['checklists'])): ?><p><?php echo $T('none'); ?></p><?php endif; ?>
 <?php foreach ($r['checklists'] as $c): ?>
@@ -237,14 +406,14 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
 
 <?php /* ── 5. Work performed ──────────────────────────────────── */ ?>
 <?php if ($on('tasks') || !$isTicket): ?>
-<h2><?php echo $e($secName('tasks')); ?> <span class="sub">(<?php echo caseReportCountTasks($r['tasks']); ?>)</span></h2>
+<?php $head('tasks', $secCount['tasks']); ?>
 <?php if (!$r['tasks'] && empty($r['unavailable']['tasks'])): ?><p><?php echo $T('no_tasks'); ?></p><?php endif; ?>
 <?php foreach ($r['tasks'] as $b) caseReportTask($b, $r, $base); ?>
 <?php endif; ?>
 
 <?php /* ── 6. History ─────────────────────────────────────────── */ ?>
 <?php if ($on('history')): ?>
-<h2><?php echo $e($secName('history')); ?></h2>
+<?php $head('history'); ?>
 <p class="sub"><?php echo $T('history_note'); ?></p>
 <?php if ($isTicket): ?>
 <h3><?php echo $T('ticket_history', ['ref' => $r['ref']]); ?> <span class="sub">(<?php echo count($r['history']); ?>)</span></h3>
@@ -265,7 +434,7 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
 
 <?php /* ── 7. Evidence index ──────────────────────────────────── */ ?>
 <?php if ($on('evidence')): ?>
-<h2><?php echo $e($secName('evidence')); ?></h2>
+<?php $head('evidence'); ?>
 <p class="sub"><?php echo $T('evidence_note'); ?></p>
 <?php if (!$r['evidence']['attachments'] && !$r['evidence']['documents'] && empty($r['unavailable']['evidence'])): ?><p><?php echo $T('none'); ?></p><?php endif; ?>
 <?php if ($r['evidence']['documents']): ?>
@@ -297,6 +466,8 @@ function caseReportPage(?array $r, bool $print, ?string $recordError): void
 <?php endif; ?>
 
 <div class="foot"><?php echo $T('footer', ['when' => TaskEvidence::when($r['produced_utc']), 'tz' => $r['tz']]); ?></div>
+</main>
+</div>
 <?php if ($print): ?>
 <script>window.addEventListener('load', () => setTimeout(() => window.print(), 300));</script>
 <?php endif; ?>
@@ -313,7 +484,7 @@ function caseReportTask(array $b, array $r, string $base): void
     $when = fn($utc) => $utc ? $e(TaskEvidence::when((string)$utc)) : '-';
     $t = $b['task'];
     ?>
-<div class="task">
+<div class="task" id="task-<?php echo (int)$t['id']; ?>">
     <h3>#<?php echo (int)$t['id']; ?> <?php echo $e($t['title']); ?>
         <span class="tag"><?php echo $e($t['status_name'] ?? '-'); ?></span></h3>
     <table class="kv">
