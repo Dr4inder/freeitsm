@@ -117,6 +117,10 @@ try {
                 <span class="help-nav-num"><?php echo $showTenancyHelp ? 15 : 14; ?></span>
                 Confidential tickets
             </a>
+            <a href="#case-reports" class="help-nav-link" data-section="case-reports">
+                <span class="help-nav-num"><?php echo $showTenancyHelp ? 16 : 15; ?></span>
+                <?php echo htmlspecialchars(t('tickets.help.case.nav')); ?>
+            </a>
         </div>
 
         <!-- Main content area -->
@@ -454,6 +458,8 @@ try {
 
                     <p><?php echo t('tickets.help.comments.audit_heading'); ?></p>
                     <p><?php echo t('tickets.help.comments.audit_body'); ?></p>
+                    <p><?php echo t('tickets.help.comments.export_heading'); ?></p>
+                    <p><?php echo t('tickets.help.comments.export_body'); ?></p>
 
                     <p class="help-note"><?php echo t('tickets.help.comments.tip'); ?></p>
                 </div>
@@ -1226,6 +1232,27 @@ try {
                         nothing at all (the default), only that one exists, or everything. Managers are explained under
                         <a href="#user-management">User management</a>.
                     </p>
+                </div>
+
+                <!-- Case reports (GH #204) -->
+                <div class="help-section" id="case-reports">
+                    <div class="help-section-header">
+                        <span class="help-section-num"><?php echo $showTenancyHelp ? 16 : 15; ?></span>
+                        <div>
+                            <h3><?php echo htmlspecialchars(t('tickets.help.case.heading')); ?></h3>
+                            <p><?php echo t('tickets.help.case.intro'); ?></p>
+                        </div>
+                    </div>
+                    <div class="help-steps">
+                        <?php foreach (['step1', 'step2', 'step3', 'step4'] as $i => $k): ?>
+                        <div class="help-step"><div class="help-step-num"><?php echo $i + 1; ?></div><div><?php echo t('tickets.help.case.' . $k); ?></div></div>
+                        <?php endforeach; ?>
+                    </div>
+                    <p><?php echo t('tickets.help.case.contents'); ?></p>
+                    <p><?php echo t('tickets.help.case.layout'); ?></p>
+                    <p><?php echo t('tickets.help.case.who'); ?></p>
+                    <p><?php echo t('tickets.help.case.recorded'); ?></p>
+                    <p class="help-note"><?php echo t('tickets.help.case.note'); ?></p>
                 </div>
             </div>
         </div>

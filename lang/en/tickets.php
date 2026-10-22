@@ -822,6 +822,8 @@ return [
         'schedule'             => 'Schedule',
         'ask_ai'               => 'Ask AI',
         'audit'                => 'Audit',
+        'export'               => 'Export',
+        'export_tip'           => 'Export this ticket and its tasks as a case report',
         'more'                 => 'More',
         'request_feedback'     => 'Feedback',
         'delete'               => 'Delete',
@@ -2939,6 +2941,21 @@ return [
     // tickets/help.php — Tickets module help guide. Prose values contain inline
     // HTML markup (strong/em/code/a/&mdash; etc.) and are echoed unescaped.
     'help' => [
+        // Case reports (GH #204)
+        'case' => [
+            'nav'      => 'Case reports',
+            'heading'  => 'Case reports',
+            'intro'    => 'When a reviewer or an auditor asks how a case was handled, <strong>Export</strong> puts the ticket, its conversation and the tasks that did the work into one printable document - so nobody has to copy it out by hand.',
+            'step1'    => '<strong>Open the ticket</strong> and choose <strong>Export</strong> in its toolbar (under <strong>More</strong> when the reading pane is narrow). The report opens in a new tab. For a task with no ticket, use the document button at the top of the task window instead.',
+            'step2'    => '<strong>Tick what to include</strong> in the panel on the left. The report redraws as you tick, and nothing is recorded while you choose.',
+            'step3'    => '<strong>Choose the layout</strong>: a cover page, a contents page, each section on a new page, and a header with page numbers.',
+            'step4'    => '<strong>Print</strong>, then choose <em>Save as PDF</em> in the print dialog. Untick the browser\'s own <em>Headers and footers</em> - the report prints its own.',
+            'contents' => '<strong>What goes in:</strong> an overview of the ticket (with its custom fields, linked assets, configuration items and related tickets); every message, oldest first; the notes; the ticket\'s checklists; each linked task with its subtasks, checklist results and exception notes, form answers, the procedures followed, follow-ups and comments; the history of the ticket and of each task; and an index of the documents and email attachments, with the fingerprint FreeITSM recorded for each document.',
+            'layout'   => '<strong>Layout:</strong> the contents page lists every section and task, and each entry is a link in the saved PDF. The header and page numbers (<em>Page 3 of 12</em>) need a current Chrome or Edge; other browsers print the report without them.',
+            'who'      => '<strong>Who sees what:</strong> the report shows only what you could see on screen. Tasks, assets, configuration items, related tickets, documents and form answers are each checked with their own rule, and anything you may not see is <em>counted</em> - never named - so the reader knows something was left out. <strong>Internal notes are left out unless you tick them in</strong>, because a report usually leaves the team.',
+            'recorded' => '<strong>What is recorded:</strong> printing writes a <em>Case report</em> line on the ticket\'s audit trail with who printed it and which sections it covered. Previewing and changing the choices record nothing.',
+            'note'     => 'A case report is a copy of the record, not a write-up: nothing is reworded or summarised, pictures inside emails are not reproduced, files are listed rather than included, and only history FreeITSM actually recorded appears. A section that cannot be read says so in red instead of looking empty.',
+        ],
         'page_title'   => 'Service Desk - Tickets Guide',
         'sidebar_title'=> 'Guide',
         'hero_title'   => 'Tickets module guide',
@@ -3084,6 +3101,8 @@ return [
             'files_heading' => '<strong>File attachments</strong>',
             'files_body'    => 'Attach screenshots, logs, documents, or any supporting file directly to a ticket. Files can be dragged into the attachment drop zone or selected using the file browser. Attachments are stored on the server and linked to the ticket\'s activity trail so nothing gets lost.',
             'audit_heading' => '<strong>Audit logging</strong>',
+            'export_heading' => '<strong>Case reports</strong>',
+            'export_body'    => 'For a review or an auditor, <strong>Export</strong> in the ticket\'s toolbar turns the ticket and its tasks into one printable report - see <a href="#case-reports">Case reports</a>.',
             'audit_body'    => 'The activity trail automatically records every action without analyst intervention. When a priority is changed from Medium to High, the old and new values are captured. When a ticket is reassigned, both the previous and new analyst are logged. This creates a complete, tamper-proof history that satisfies ITIL audit requirements and helps managers understand how tickets are being handled.',
             'tip'           => 'When replying by email, you can add Cc recipients and attach files in the same action. The entire email conversation is threaded into the ticket\'s activity trail, keeping all communication in one place.',
         ],

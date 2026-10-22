@@ -8,6 +8,9 @@ require __DIR__.'/support/ticket-workspace-browser.php';
 $fixture=null;$exit=1;
 try {
     $fixture=ticketWorkspaceFixture();extract($fixture);
+    // This test exercises time recording even when the install default is off.
+    // Only its disposable company is changed; the fixture removes this row too.
+    $insert('tenant_settings',['tenant_id'=>$tenant,'setting_key'=>'time_tracking_enabled','setting_value'=>'1']);
     $insert('emails',['exchange_message_id'=>'<zz-workspace-'.bin2hex(random_bytes(6)).'@example.invalid>',
         'ticket_id'=>$ticket,'from_address'=>'requester@example.invalid','from_name'=>'ZZ Requester',
         'to_recipients'=>'desk@example.invalid','subject'=>'ZZ Workspace ticket',
@@ -28,7 +31,7 @@ try {
  window.__workspaceErrors??=[];
  const checks=[],check=(label,pass,detail)=>checks.push({label,pass:!!pass,detail});
  window.__workspaceChecks=checks;
- const wait=async(fn)=>{for(let i=0;i<200;i++){if(fn())return true;await new Promise(r=>setTimeout(r,100));}return false;};
+ const wait=async(fn)=>{for(let i=0;i<200;i++){if(await fn())return true;await new Promise(r=>setTimeout(r,100));}return false;};
  await wait(()=>document.querySelector('.tw-grid'));
  await wait(()=>ticketPendingWrites===0);
  let initialTableQuery=null;
@@ -40,6 +43,9 @@ try {
  await wait(()=>document.querySelector('.tw-grid')&&document.querySelector('#dtBody .dt-row'));
  check('native ticket page loads both optional views',!!document.querySelector('.tw-grid')&&!!document.querySelector('#dtBody .dt-row'));
  check('native Link to action remains directly available',!!document.querySelector('.tw-header .link-add-wrap'));
+ let reportUrl='';const nativeOpen=window.open;window.open=url=>{reportUrl=url;};
+ document.querySelector('.tw-header [onclick="openCaseReport()"]').click();window.open=nativeOpen;
+ check('native ticket report remains available in the workspace',new URL(reportUrl,location.href).pathname==='/tickets/case-report.php'&&new URL(reportUrl,location.href).searchParams.get('id')==='$ticket');
  await TicketWorkspace.openTask($ticket,$task);
  await wait(()=>document.querySelector('.tw-task-frame')?.contentDocument?.getElementById('detailTitle'));
  const frame=document.querySelector('.tw-task-frame');const doc=frame?.contentDocument;
@@ -47,11 +53,16 @@ try {
  await wait(()=>doc?.querySelector('.task-embed-open')&&document.querySelector('.tw-task-controls')?.hidden);
  const external=doc.querySelector('.task-embed-open');
  check('compact task actions share the native header',external?.closest('.detail-panel-actions')&&new URL(external.href).searchParams.get('task')==='$task'&&external.target==='_blank'&&external.getBoundingClientRect().height<=32&&document.querySelector('.tw-task-controls').hidden);
+ const nativeTaskOpen=frame.contentWindow.open;frame.contentWindow.open=url=>{reportUrl=url;};
+ doc.querySelector('[onclick="openTaskCaseReport()"]').click();frame.contentWindow.open=nativeTaskOpen;
+ check('native task report remains available in the embedded editor',new URL(reportUrl,location.href).pathname==='/tasks/case-report.php'&&new URL(reportUrl,location.href).searchParams.get('id')==='$task');
  if(doc?.getElementById('detailTitle')){
      const title=doc.getElementById('detailTitle');title.value='ZZ Workspace saved in ticket';title.dispatchEvent(new Event('change',{bubbles:true}));
-     await new Promise(r=>setTimeout(r,500));
-     const data=await fetch('../api/tasks/get.php?id=$task').then(r=>r.json());
-     check('embedded editor saves through the native task API',data.task?.title==='ZZ Workspace saved in ticket');
+     const saved=await wait(async()=>{
+       const data=await fetch('../api/tasks/get.php?id=$task').then(r=>r.json());
+       return data.task?.title==='ZZ Workspace saved in ticket';
+     });
+     check('embedded editor saves through the native task API',saved);
      TicketWorkspace.activate('conversation');TicketWorkspace.activate('work');
      check('switching registers retains the native editor',document.querySelector('.tw-task-frame')===frame);
      await loadTicketById($ticket);
@@ -73,7 +84,10 @@ try {
    document.getElementById('timeEntryMinutes').value='7';document.getElementById('timeEntryNotes').value='ZZ workspace time';await saveTimeEntry();
    await wait(()=>document.getElementById('timeEntriesContainer').textContent.includes('ZZ workspace time'));
    check('native time entry saves from its workspace tab',document.getElementById('timeEntriesContainer').textContent.includes('ZZ workspace time'));
- }else check('native time entry form is available',false);
+ }else {
+   const lookup=await fetch('../api/tickets/get_time_entries.php?ticket_id=$ticket').then(r=>r.json());
+   check('native time entry form is available',false,{section:document.getElementById('timeEntriesContainer')?.textContent,success:lookup.success,disabled:lookup.disabled,render:ticketRenderGeneration});
+ }
  document.getElementById('tw-tab-history').click();
  await wait(()=>document.getElementById('twAuditBody')?.getAttribute('aria-busy')==='false');
  check('native audit content renders on opening History',!!document.getElementById('twAuditBody')?.textContent.trim()&&!document.querySelector('#tw-panel-history button'));

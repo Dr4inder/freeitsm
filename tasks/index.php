@@ -373,7 +373,7 @@ $translationNamespaces = ['common', 'tasks'];
 
     <?php endif; ?>
     <!-- Toast -->
-    <script>window.API_BASE = '../api/tasks/';
+    <script>window.CASE_REPORT_URL = <?php echo json_encode(BASE_URL . 'tasks/case-report.php'); ?>; window.API_BASE = '../api/tasks/';
     window.APP_BASE = '<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>';
     window.TASK_HOST = <?php echo json_encode($taskEmbedded ? 'ticket' : 'module'); ?>;
     <?php if ($taskEmbedded): ?>window.TASK_EMBED_CONTEXT = <?php echo json_encode($taskEmbedContext); ?>;<?php endif; ?>
@@ -393,7 +393,7 @@ $translationNamespaces = ['common', 'tasks'];
     <!-- The one cleaner for HTML from elsewhere: Knowledge procedure bodies and task instructions in the Work view (GH #190). -->
     <script src="../assets/js/safe-html.js?v=1"></script>
     <?php if ($taskEmbedded): ?><script src="../assets/js/task-embed-bridge.js?v=2"></script><?php endif; ?>
-    <script src="../assets/js/tasks.js?v=67"></script>
+    <script src="../assets/js/tasks.js?v=68"></script>
     <?php if (!$taskEmbedded): ?><script src="../assets/js/mobile.js?v=82"></script><?php endif; ?>
 </body>
 </html>

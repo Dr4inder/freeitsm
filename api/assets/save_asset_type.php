@@ -15,6 +15,7 @@ require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/rbac.php';
 require_once '../../includes/tenancy.php';
+require_once '../../includes/services/asset_type_layout.php';
 
 header('Content-Type: application/json');
 
@@ -99,9 +100,18 @@ try {
     } else {
         $stmt = $conn->prepare("INSERT INTO asset_types (name, description, display_order, is_active, icon_id, tenant_id) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([$name, $description, $display_order, $is_active, $icon_id, $scopeTenant]);
+        $id = (int)$conn->lastInsertId();
+        $created = true;
     }
 
-    wf_emit('asset_type', $id ? 'updated' : 'created', $id ? (int)$id : (int)$conn->lastInsertId(), $name);
+    // The type's layout (GH #200) - only when sent, so a caller that knows nothing of layouts
+    // (an older page, a script) cannot reset one by saving the name. Same ownership checks as
+    // the type itself, because it is part of the type.
+    if (array_key_exists('layout', $data)) {
+        AssetTypeLayout::save($conn, (int)$id, AssetTypeLayout::normalise($data['layout']));
+    }
+
+    wf_emit('asset_type', empty($created) ? 'updated' : 'created', (int)$id, $name);
     echo json_encode(['success' => true]);
 
 } catch (Exception $e) {

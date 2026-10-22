@@ -814,6 +814,56 @@ return [
     ],
 
     // Settings (seven tabs)
+    // Asset type layouts (GH #200): which built-in sections and tabs a type shows.
+    'layout' => [
+        'heading'            => 'Layout',
+        'intro'              => 'Which built-in details and tabs an asset of this type shows. Only the page changes: nothing is deleted, and the agent and imports keep recording every field.',
+        'start_from'         => 'Start from',
+        'start_from_choose'  => 'Choose a starting point...',
+        'start_from_hint'    => 'Fills in the ticks below. You can change any of them afterwards.',
+        'preset_everything'  => 'Everything (as today)',
+        'preset_peripheral'  => 'Peripheral - monitor, dock, headset',
+        'preset_network'     => 'Network equipment - switch, router, firewall',
+        'preset_mobile'      => 'Mobile device - phone, tablet',
+        'sections_heading'   => 'Sections on Key info',
+        'identity_note'      => 'Name, asset tag, serial number, type, status, location and company are always shown.',
+        'section_make_model' => 'Make and model',
+        'section_make_model_desc' => 'Manufacturer and model',
+        'section_hardware'   => 'Hardware',
+        'section_hardware_desc' => 'CPU, CPU speed and memory',
+        'section_os'         => 'Operating system',
+        'section_os_desc'    => 'Operating system, feature release, build number and BIOS version',
+        'section_reporting'  => 'Reporting',
+        'section_reporting_desc' => 'First seen and last seen',
+        'section_storage'    => 'Storage',
+        'section_storage_desc' => 'Logical and physical drives',
+        'tabs_heading'       => 'Tabs',
+        'tabs_note'          => 'Key info is always first. Untick a tab to hide it, and drag it or use the arrows to change the order.',
+        'tabs_label'         => 'Tab order',
+        'tab_financial'      => 'Financial',
+        'tab_devices'        => 'Devices',
+        'tab_software'       => 'Software',
+        'tab_tickets'        => 'Tickets',
+        'tab_contracts'      => 'Contracts',
+        'tab_projects'       => 'Projects',
+        'tab_documents'      => 'Documents',
+        'notice_heading'     => 'Details a type hides',
+        'notice_intro'       => 'A type\'s layout only hides things from view. When an asset holds details its type hides - say a computer given the wrong type, or Software hidden on computers that still report it - the asset can say so.',
+        'notice_label'       => 'When an asset has details its type hides',
+        'notice_notice'      => 'Say so on the asset',
+        'notice_link'        => 'Only offer a Show hidden link',
+        'notice_hint'        => 'Either way, Show hidden is always on the asset, so nothing is out of reach.',
+        'notice_saved'       => 'Saved',
+        // On the asset page
+        'hidden_line'        => 'Hidden by this type\'s layout: {items}.',
+        'show_them'          => 'Show them',
+        'revealed_line'      => 'Showing everything, including what this type\'s layout hides.',
+        'hide_them'          => 'Hide them again',
+        'show_hidden'        => 'Show hidden',
+        'hidden_marker'      => 'Hidden by this profile',
+        'item_count'         => '{name} ({n})',
+    ],
+
     'settings' => [
         'tab_vcloud' => 'VMware Cloud Director servers',
         'tab_proxmox' => 'Proxmox VE servers',
@@ -1415,6 +1465,11 @@ return [
     ],
 
     'help' => [
+        // Asset type layouts (GH #200)
+        'layout_heading' => 'A page that fits the kind of asset',
+        'layout_body'    => 'Each asset type decides which built-in details and tabs its assets show. A monitor does not need CPU, memory or a Devices tab, so its type can hide them, and the tabs can be put in the order that suits it. Set it in <strong>Settings &rarr; Asset types</strong>: edit a type and use <strong>Layout</strong>, or pick a starting point (Peripheral, Network equipment, Mobile device) and adjust the ticks. Name, asset tag, serial number, type, status, location and company are always shown, and Key info always comes first.',
+        'layout_hidden'  => '<strong>Hiding is only about the page.</strong> Nothing is deleted, the agent and imports keep recording every field, and the table view and the API still show everything. If an asset holds details its type hides - say a computer given the wrong type - Key info says so (<em>Hidden by this type\'s layout: Software (214)</em>) with <strong>Show them</strong>, which brings every hidden section and tab back for that asset, marked with a dashed outline. <strong>Settings &rarr; Asset types &rarr; Details a type hides</strong> can make that a quiet <em>Show hidden</em> link instead.',
+
         // PR #167. The setup guides, in full, are on the wiki; this is enough to connect.
         'proxmox' => [
             'nav'             => 'Proxmox VE servers',

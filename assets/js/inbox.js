@@ -3272,6 +3272,10 @@ ${classificationFields}
                 <span class="action-btn-icon">📋</span>
                 <span>${escapeHtml(t('tickets.actions.audit'))}</span>
             </button>
+            <button class="action-btn pane-secondary" onclick="openCaseReport()" title="${escapeHtml(tf('tickets.actions.export_tip', 'Export this ticket and its tasks as a case report'))}">
+                <span class="action-btn-icon">📄</span>
+                <span>${escapeHtml(tf('tickets.actions.export', 'Export'))}</span>
+            </button>
             ${buildWriteUpButton(email)}
             <button class="action-btn pane-secondary" onclick="requestCsatSurvey()" title="Send a satisfaction survey to the requester">
                 <span class="action-btn-icon">⭐</span>
@@ -11962,6 +11966,18 @@ function ticketIsClosed(email) {
 }
 
 /** The "Write up" toolbar button, only when the Knowledge write-up is turned on and the ticket is closed. */
+/**
+ * Opens the case report for the open ticket in a new tab (GH #204): the ticket, its
+ * conversation and its tasks as one printable record. The choices and the Print button
+ * are on that page.
+ */
+function openCaseReport() {
+    if (!currentEmail) return;
+    const id = currentEmail.ticket_id || currentEmail.id;
+    if (!id) return;
+    window.open((window.CASE_REPORT_URL || 'case-report.php') + '?id=' + encodeURIComponent(id), '_blank', 'noopener');
+}
+
 function buildWriteUpButton(email) {
     if (!window.KB_WRITEUP_ENABLED || !ticketIsClosed(email)) return '';
     return `

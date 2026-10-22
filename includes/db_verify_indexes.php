@@ -198,6 +198,7 @@ return [
     ['asset_field_set_fields', 'ix_afsf_field', 'key', '(`field_id`)'],
     ['asset_type_field_sets', 'uq_asset_type_field_set', 'unique', '(`asset_type_id`,`set_id`)'],
     ['asset_type_field_sets', 'ix_atfs_set', 'key', '(`set_id`)'],
+    ['asset_type_layout', 'uq_asset_type_layout_item', 'unique', '(`asset_type_id`,`item_kind`,`item_key`)'],
     ['asset_field_set_assets', 'uq_asset_field_set_asset', 'unique', '(`asset_id`,`set_id`)'],
     ['asset_field_set_assets', 'ix_afsa_set', 'key', '(`set_id`)'],
     ['asset_field_values', 'uq_asset_field_value', 'unique', '(`asset_id`,`field_id`,`seq`)'],

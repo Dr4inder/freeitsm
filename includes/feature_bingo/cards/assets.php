@@ -27,6 +27,18 @@ return [
         'check'    => ['rows', 'asset_status_types', 'is_demo = 0'],
     ],
     [
+        'id'       => 'assets.type_layouts',
+        'module'   => 'assets',
+        'tier'     => 'extra',
+        'category' => 'look',
+        'title'    => 'A page that fits each kind of asset',
+        'what'     => 'Asset types that hide the built-in details and tabs they never use - no CPU, memory or Devices tab on a monitor - and put their tabs in the order that suits them.',
+        'why'      => 'A monitor\'s page full of empty computer boxes cannot tell you whether something does not apply or was never collected. A focused page is quicker to read, and nothing is lost: hidden details are still recorded and one click shows them.',
+        'done'     => 'At least one asset type has its own layout.',
+        'link'     => 'asset-management/settings/?tab=asset-types',
+        'check'    => ['rows', 'asset_type_layout'],
+    ],
+    [
         'id'       => 'assets.type_icons',
         'module'   => 'assets',
         'tier'     => 'extra',
