@@ -63,11 +63,18 @@ try {
         }
     }
 
+    // GH #200 part D: the open review cases this asset is part of, for the line on Key info.
+    require_once '../../includes/services/asset_review.php';
+    // ...and which of its name, manufacturer and model are protected (also part D).
+    require_once '../../includes/services/asset_protection.php';
+
     echo json_encode([
         'success'    => true,
         'stale_days' => AssetInventoryService::staleDays($conn),
         'sources'    => $sources,
         'rows'       => (object)$rows,
+        'review'     => AssetReviewService::openFor($conn, $assetId),
+        'protected'  => (object)AssetProtectionService::forAsset($conn, $assetId),
     ]);
 } catch (Throwable $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);

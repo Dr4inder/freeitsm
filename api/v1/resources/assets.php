@@ -5,6 +5,10 @@
  * sending the same report again retries only those); 422 when every section failed.
  */
 function apiAssetInventorySubmit(PDO $conn,array $apiKey,array $params,array $body): void {
+    // GH #200 part D: a tool still reporting to an asset that was merged into another
+    // reaches the kept one (the response's asset_id says which).
+    require_once dirname(__DIR__,3) . '/includes/services/asset_merge.php';
+    $params[0] = AssetMergeService::current($conn, (int)$params[0]) ?? (int)$params[0];
     apiLoadAsset($conn,$apiKey,$params[0]);
     require_once dirname(__DIR__,3) . '/includes/services/asset_inventory.php';
     try { $result=AssetInventoryService::submit($conn,ActorContext::fromApiKey($apiKey),$params[0],$body); }

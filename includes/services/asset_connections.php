@@ -171,8 +171,10 @@ final class AssetConnectionsService
         foreach ($section['items'] as $item) {
             $otherId = null;
             if ($item['connected_asset_id'] !== null) {
+                // An id a tool resolved before the asset was merged into another still finds it.
+                require_once __DIR__ . '/asset_merge.php';
                 $st = $conn->prepare('SELECT id, hostname, tenant_id FROM assets WHERE id = ?');
-                $st->execute([$item['connected_asset_id']]);
+                $st->execute([AssetMergeService::current($conn, $item['connected_asset_id']) ?? $item['connected_asset_id']]);
                 $o = $st->fetch(PDO::FETCH_ASSOC);
                 if (!$o || (int)($o['tenant_id'] ?? getDefaultTenantId($conn)) !== $tenant) {
                     throw new ServiceError('validation', 'invalid_field', "connected_asset_id {$item['connected_asset_id']} is not an asset in this asset's company.");

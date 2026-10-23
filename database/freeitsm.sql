@@ -3319,6 +3319,61 @@ CREATE TABLE IF NOT EXISTS `asset_review_items` (
     CONSTRAINT `fk_asset_review_other` FOREIGN KEY (`other_asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Manufacturer and model names (GH #200 part D): "HP Inc." and "Hewlett-Packard" shown
+-- and filtered as "HP". Applied when values are SHOWN; assets keep what was reported.
+-- Install-wide - a vendor's name is not a company's choice. from_value matches without
+-- regard to case (the column's collation).
+CREATE TABLE IF NOT EXISTS `asset_name_mappings` (
+    `id`             INT NOT NULL AUTO_INCREMENT,
+    `field`          VARCHAR(16) NOT NULL,
+    `from_value`     VARCHAR(100) NOT NULL,
+    `to_value`       VARCHAR(100) NOT NULL,
+    `created_by_id`  INT NULL,
+    `created_at`     DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_asset_name_mapping` (`field`, `from_value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Protected values (GH #200 part D): a name, manufacturer or model a person set that
+-- no reporting tool may overwrite. What the tool reports instead is kept beside it
+-- (reported_*), so the page can show the disagreement; Release lets the tool win again.
+CREATE TABLE IF NOT EXISTS `asset_protected_fields` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `asset_id`         INT NOT NULL,
+    `field_name`       VARCHAR(32) NOT NULL,
+    `protected_by_id`  INT NULL,
+    `protected_at`     DATETIME NOT NULL,
+    `reported_value`   VARCHAR(255) NULL,
+    `reported_source`  VARCHAR(64) NULL,
+    `reported_at`      DATETIME NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_asset_protected_field` (`asset_id`, `field_name`),
+    CONSTRAINT `fk_asset_protected_asset` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Two assets merged into one by a person from the review list (GH #200 part D).
+-- The merged asset is gone, so this is what still finds the one that was kept:
+-- its QR label (merged_qr_token) and a REST tool still reporting to its id.
+-- No FK on merged_asset_id: that asset no longer exists.
+CREATE TABLE IF NOT EXISTS `asset_merges` (
+    `id`                 INT NOT NULL AUTO_INCREMENT,
+    `merged_asset_id`    INT NOT NULL,
+    `into_asset_id`      INT NOT NULL,
+    `tenant_id`          INT NULL,
+    `merged_hostname`    VARCHAR(50) NULL,
+    `merged_service_tag` VARCHAR(50) NULL,
+    `merged_asset_tag`   VARCHAR(64) NULL,
+    `merged_qr_token`    VARCHAR(64) NULL,
+    `merged_by_id`       INT NULL,
+    `merged_at`          DATETIME NOT NULL,
+    `summary`            TEXT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_asset_merges_merged` (`merged_asset_id`),
+    KEY `idx_asset_merges_into` (`into_asset_id`),
+    KEY `idx_asset_merges_qr` (`merged_qr_token`),
+    CONSTRAINT `fk_asset_merges_into` FOREIGN KEY (`into_asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- A set attached to ONE asset — the pilot case. Ten televisions, three of them
 -- trialled as smart TVs: tick "Smart TV" on those three and only those three
 -- show IP address, MAC address and Netflix enabled. The other seven do not

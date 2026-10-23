@@ -2145,6 +2145,43 @@ return [
         'resolved_at'      => 'DATETIME NULL',
     ],
 
+    // GH #200 part D: manufacturer and model names shown one way ("HP").
+    'asset_name_mappings' => [
+        'id'             => 'INT NOT NULL AUTO_INCREMENT',
+        'field'          => 'VARCHAR(16) NOT NULL',
+        'from_value'     => 'VARCHAR(100) NOT NULL',
+        'to_value'       => 'VARCHAR(100) NOT NULL',
+        'created_by_id'  => 'INT NULL',
+        'created_at'     => 'DATETIME NOT NULL',
+    ],
+
+    // GH #200 part D: values a person set that no reporting tool may overwrite.
+    'asset_protected_fields' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'asset_id'         => 'INT NOT NULL',
+        'field_name'       => 'VARCHAR(32) NOT NULL',
+        'protected_by_id'  => 'INT NULL',
+        'protected_at'     => 'DATETIME NOT NULL',
+        'reported_value'   => 'VARCHAR(255) NULL',
+        'reported_source'  => 'VARCHAR(64) NULL',
+        'reported_at'      => 'DATETIME NULL',
+    ],
+
+    // GH #200 part D: what a merged-away asset's label and REST id still find.
+    'asset_merges' => [
+        'id'                 => 'INT NOT NULL AUTO_INCREMENT',
+        'merged_asset_id'    => 'INT NOT NULL',
+        'into_asset_id'      => 'INT NOT NULL',
+        'tenant_id'          => 'INT NULL',
+        'merged_hostname'    => 'VARCHAR(50) NULL',
+        'merged_service_tag' => 'VARCHAR(50) NULL',
+        'merged_asset_tag'   => 'VARCHAR(64) NULL',
+        'merged_qr_token'    => 'VARCHAR(64) NULL',
+        'merged_by_id'       => 'INT NULL',
+        'merged_at'          => 'DATETIME NOT NULL',
+        'summary'            => 'TEXT NULL',
+    ],
+
     // GH #200: built-in sections and tabs per asset type. No row = shown.
     'asset_type_layout' => [
         'id'                => 'INT NOT NULL AUTO_INCREMENT',

@@ -18,6 +18,16 @@ requireModuleAccess('assets');
 // neither. Defensive: this page must render even if tenancy cannot be read.
 require_once '../includes/tenancy.php';
 require_once '../includes/services/asset_type_layout.php';
+
+// GH #200 part D: a link to an asset that has since been merged into another opens the kept one.
+if (!empty($_GET['asset_id']) && ctype_digit((string)$_GET['asset_id'])) {
+    require_once '../includes/services/asset_merge.php';
+    $assetNow = AssetMergeService::current(connectToDatabase(), (int)$_GET['asset_id']);
+    if ($assetNow !== null && $assetNow !== (int)$_GET['asset_id']) {
+        header('Location: ?asset_id=' . $assetNow);
+        exit;
+    }
+}
 $assetTenancy = ['multi' => false, 'active' => 0, 'all' => false, 'default' => 0];
 try {
     $tconn = connectToDatabase();
@@ -1519,6 +1529,15 @@ $translationNamespaces = ['common', 'asset-management'];
         .inv-state.quiet { color: var(--text-dim, #888); }
         .inv-error { display: block; color: #b91c1c; font-size: 11px; margin-top: 2px; }
 
+        /* A mapped manufacturer or model (GH #200 part D). */
+        .nm-shown { font-size: 11px; color: var(--text-dim, #888); margin-top: 3px; }
+        /* Protected values (GH #200 part D). */
+        .prot-btn { border: none; background: none; padding: 0 0 0 6px; cursor: pointer; color: var(--text-dim, #999); vertical-align: -1px; }
+        .prot-btn:hover { color: var(--text, #333); }
+        .prot-btn.on { color: var(--accent, #0078d4); }
+        .prot-conflict { font-size: 11px; color: #b45309; margin-top: 3px; display: flex; gap: 6px; flex-wrap: wrap; align-items: baseline; }
+        [data-theme-mode="dark"] .prot-conflict { color: #fcd34d; }
+
         /* Connected assets (GH #200 part C). */
         .conn-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; flex-wrap: wrap; }
         .conn-intro { font-size: 12px; color: var(--text-dim, #888); flex: 1 1 260px; }
@@ -2355,6 +2374,7 @@ $translationNamespaces = ['common', 'asset-management'];
                 <div class="asset-detail-body" id="detailBody">
                     <div class="detail-tab-panel detail-tab-panel--scroll active" id="keyinfoPanel" data-dtab-panel="keyinfo">
                     <div class="atl-notice atl-hidden" id="layoutNotice" role="status"></div>
+                    <div class="atl-notice atl-hidden" id="reviewNotice" role="status"></div>
                     <div class="asset-info-grid">
                         <?php /* The number printed on the label. Saved on change through its
                                  own endpoint, because it is unique per company and the generic
@@ -2394,13 +2414,13 @@ $translationNamespaces = ['common', 'asset-management'];
                                  typo made while adding one by hand had no way
                                  to be corrected. saveCoreField() warns rather
                                  than blocks; see it for the reasoning. */ ?>
-                        <div class="info-item" data-layout-section="make_model">
+                        <div class="info-item" data-layout-section="make_model" data-protect-field="manufacturer">
                             <span class="info-label">${window.t('asset-management.field.manufacturer')}</span>
                             <input type="text" class="info-value-input" maxlength="50"
                                    value="${escapeHtml(selectedAsset.manufacturer || '')}" placeholder="-"
                                    onchange="saveCoreField('manufacturer', this)">
                         </div>
-                        <div class="info-item" data-layout-section="make_model">
+                        <div class="info-item" data-layout-section="make_model" data-protect-field="model">
                             <span class="info-label">${window.t('asset-management.field.model')}</span>
                             <input type="text" class="info-value-input" maxlength="50"
                                    value="${escapeHtml(selectedAsset.model || '')}" placeholder="-"
@@ -2416,7 +2436,7 @@ $translationNamespaces = ['common', 'asset-management'];
                                  because the heading is a title, not a control —
                                  and this is the field most likely to carry a
                                  typo from the Add dialog. */ ?>
-                        <div class="info-item">
+                        <div class="info-item" data-protect-field="hostname">
                             <span class="info-label">${window.t('asset-management.new.name')}</span>
                             <input type="text" class="info-value-input" maxlength="50"
                                    value="${escapeHtml(selectedAsset.hostname || '')}"
@@ -3191,7 +3211,10 @@ $translationNamespaces = ['common', 'asset-management'];
                     if (h) h.textContent = value;
                     await loadAssets(document.getElementById('assetSearch').value || '');
                 }
-                showToast(window.t('asset-management.detail.saved'), 'success');
+                // GH #200 part D: a correction on an asset a tool reports is protected from it.
+                const wasProtected = !!((invStatus && invStatus.protected) || {})[field];
+                showToast(window.t(data.protected && !wasProtected ? 'asset-management.protect.saved_protected' : 'asset-management.detail.saved'), 'success');
+                if (['hostname', 'manufacturer', 'model'].includes(field)) loadInventoryStatus(selectedAsset.id);
             } catch (e) {
                 showToast(e.message || window.t('asset-management.detail.save_failed'), 'error');
                 // Put the stored value back, so the screen never shows something
@@ -4285,6 +4308,110 @@ $translationNamespaces = ['common', 'asset-management'];
             }
             renderInventoryPanel();
             renderInventoryLines();
+            renderReviewNotice();
+            renderProtection();
+            renderShownAs();
+        }
+
+        /**
+         * GH #200 part D: a manufacturer or model shown elsewhere under a mapped name says
+         * so under the field, which keeps the stored (editable) value.
+         */
+        function renderShownAs() {
+            ['manufacturer', 'model'].forEach(field => {
+                const item = document.querySelector(`#keyinfoPanel [data-protect-field="${field}"]`);
+                if (!item || !selectedAsset) return;
+                let hint = item.querySelector('.nm-shown');
+                if (hint) hint.remove();
+                const shown = selectedAsset[field + '_display'];
+                if (shown && shown !== selectedAsset[field]) {
+                    hint = document.createElement('div');
+                    hint.className = 'nm-shown';
+                    hint.textContent = window.t('asset-management.names.shown_as', { name: shown });
+                    item.appendChild(hint);
+                }
+            });
+        }
+
+        /**
+         * GH #200 part D: protected values. A padlock on Name, Manufacturer and Model; a
+         * protected one is never overwritten by the agent or Intune, and what they report
+         * instead is shown under it with Release. State comes with the inventory status.
+         */
+        const PROT_ICON_ON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+        const PROT_ICON_OFF = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.9-1"/></svg>';
+
+        function renderProtection() {
+            if (!invStatus) return;
+            const prot = invStatus.protected || {};
+            const P = (k, v) => window.t('asset-management.protect.' + k, v);
+            document.querySelectorAll('#keyinfoPanel [data-protect-field]').forEach(item => {
+                const field = item.dataset.protectField;
+                const on = !!prot[field];
+                const label = item.querySelector('.info-label');
+                let btn = item.querySelector('.prot-btn');
+                if (!btn) {
+                    btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'prot-btn';
+                    btn.onclick = () => setProtected(field, !btn.classList.contains('on'));
+                    label.appendChild(btn);
+                }
+                btn.classList.toggle('on', on);
+                btn.innerHTML = on ? PROT_ICON_ON : PROT_ICON_OFF;
+                btn.title = P(on ? 'on_title' : 'off_title');
+                btn.setAttribute('aria-label', btn.title);
+                let line = item.querySelector('.prot-conflict');
+                if (line) line.remove();
+                const p = prot[field];
+                if (on && p.reported_value) {
+                    line = document.createElement('div');
+                    line.className = 'prot-conflict';
+                    const src = (p.reported_source || '').replace(/^./, c => c.toUpperCase());
+                    line.innerHTML = `<span>${escapeHtml(P('conflict', { source: src, value: p.reported_value }))}</span>
+                        <button type="button" class="atl-link">${escapeHtml(P('release'))}</button>`;
+                    line.querySelector('button').onclick = () => setProtected(field, false);
+                    item.appendChild(line);
+                }
+            });
+        }
+
+        async function setProtected(field, protect) {
+            const assetId = selectedAssetId;
+            try {
+                const res = await fetch(API_BASE + 'protect_field.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ asset_id: Number(assetId), field: field, protect: protect })
+                });
+                const data = await res.json();
+                if (!data.success) { showToast(data.error || window.t('asset-management.detail.save_failed'), 'error'); return; }
+                showToast(window.t('asset-management.protect.' + (protect ? 'protected_toast' : 'released_toast')), 'success');
+                loadInventoryStatus(assetId);
+            } catch (e) {
+                showToast(window.t('asset-management.detail.save_failed'), 'error');
+            }
+        }
+
+        /**
+         * GH #200 part D: this asset is in the review list (shares a serial, wears a reused
+         * name, or a tool reported a device on it that matches nothing). Says so, with the
+         * way to decide - the Review tab is where merging and "different" happen.
+         */
+        function renderReviewNotice() {
+            const box = document.getElementById('reviewNotice');
+            if (!box || !invStatus) return;
+            const items = invStatus.review || [];
+            box.classList.toggle('atl-hidden', !items.length);
+            if (!items.length) { box.innerHTML = ''; return; }
+            const R = (k, p) => window.t('asset-management.review.' + k, p);
+            const what = items.map(it => {
+                const other = it.asset_id === Number(selectedAssetId) ? it.other : it.asset;
+                const d = it.detail || {};
+                if (it.kind === 'shared_serial') return R('label_shared_serial') + ': ' + ((other && other.hostname) || '') + ' (' + (d.serial || '') + ')';
+                if (it.kind === 'hostname_reused') return R('label_hostname_reused') + ': ' + ((other && other.hostname) || '');
+                return R('label_' + it.kind) + ': ' + (d.serial || '');
+            }).join('; ');
+            box.innerHTML = `<span>${escapeHtml(R('asset_line', { what: what }))}</span> <a class="atl-link" href="settings/?tab=review">${escapeHtml(R('asset_link'))}</a>`;
         }
 
         function invT(key, vars) { return window.t('asset-management.inventory.' + key, vars); }
@@ -5074,7 +5201,7 @@ $translationNamespaces = ['common', 'asset-management'];
             // — those don't match a key, so we show them as-is.
             const FIELD_KEYS = ['type','status','location','supplier','purchase_date',
                 'purchase_cost','order_number','warranty_expiry','lease_start','lease_expiry','cost_centre','assigned_user',
-                'hostname','asset_created','asset_discovered','hostname_reused','connection'];
+                'hostname','asset_created','asset_discovered','hostname_reused','connection','review','merged','protected','released'];
 
             history.forEach(entry => {
                 const noneEm = `<em style="color:#999;">${window.t('asset-management.common.none')}</em>`;

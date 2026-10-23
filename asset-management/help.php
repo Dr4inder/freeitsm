@@ -222,6 +222,14 @@ $translationNamespaces = ['common', 'asset-management'];
                     <h4 id="connected-assets"><?php echo htmlspecialchars(t('asset-management.help.connected_heading')); ?></h4>
                     <p><?php echo t('asset-management.help.connected_body'); ?></p>
                     <p class="help-note"><?php echo t('asset-management.help.connected_rules'); ?></p>
+                    <?php /* GH #200 part D: review, merge, protected values, names. */ ?>
+                    <h4 id="asset-review"><?php echo htmlspecialchars(t('asset-management.help.review_heading')); ?></h4>
+                    <p><?php echo t('asset-management.help.review_body'); ?></p>
+                    <p class="help-note"><?php echo t('asset-management.help.merge_body'); ?></p>
+                    <h4 id="protected-values"><?php echo htmlspecialchars(t('asset-management.help.protect_heading')); ?></h4>
+                    <p><?php echo t('asset-management.help.protect_body'); ?></p>
+                    <h4 id="name-mappings"><?php echo htmlspecialchars(t('asset-management.help.names_heading')); ?></h4>
+                    <p><?php echo t('asset-management.help.names_body'); ?></p>
                 </div>
 
                 <!-- Section 3: Table View -->

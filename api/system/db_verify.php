@@ -1139,6 +1139,8 @@ try {
         ['asset_connections',      'fk_asset_connections_other',   'assets',            'connected_asset_id',    'id', 'CASCADE'],
         ['asset_review_items',     'fk_asset_review_asset',        'assets',            'asset_id',              'id', 'CASCADE'],
         ['asset_review_items',     'fk_asset_review_other',        'assets',            'other_asset_id',        'id', 'CASCADE'],
+        ['asset_merges',           'fk_asset_merges_into',         'assets',            'into_asset_id',         'id', 'CASCADE'],
+        ['asset_protected_fields', 'fk_asset_protected_asset',     'assets',            'asset_id',              'id', 'CASCADE'],
         ['asset_field_set_assets', 'fk_afsa_asset',                'assets',            'asset_id',              'id', 'CASCADE'],
         ['asset_field_set_assets', 'fk_afsa_set',                  'asset_field_sets',  'set_id',                'id', 'CASCADE'],
         ['asset_field_set_assets', 'fk_afsa_analyst',              'analysts',          'created_by_analyst_id', 'id', 'SET NULL'],

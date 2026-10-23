@@ -1461,6 +1461,13 @@ class AssetsService
         $old = (string)($cur['hostname'] ?? '');
         if (strcasecmp($old, $newHostname) === 0) return ['updated' => false, 'conflict' => false];
 
+        // GH #200 part D: a name a person protected is never renamed by a source; what the
+        // source reports is kept beside it for the page to show.
+        require_once __DIR__ . '/asset_protection.php';
+        if (!AssetProtectionService::filterReported($conn, $assetId, ['hostname' => $newHostname], $source)) {
+            return ['updated' => false, 'conflict' => false];
+        }
+
         $clash = $conn->prepare("SELECT id FROM assets WHERE hostname = ? AND tenant_id <=> ? AND id <> ? LIMIT 1");
         $clash->execute([$newHostname, $cur['tenant_id'], $assetId]);
         if ($clash->fetchColumn()) return ['updated' => false, 'conflict' => true];

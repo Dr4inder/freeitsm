@@ -213,6 +213,16 @@ try {
         $terms = ['a.hostname LIKE ?', 'a.manufacturer LIKE ?', 'a.model LIKE ?', 'a.service_tag LIKE ?'];
         $args  = [$like, $like, $like, $like];
 
+        // GH #200 part D: searching "HP" also finds what is SHOWN as HP ("Hewlett-Packard").
+        require_once '../../includes/services/asset_name_map.php';
+        foreach (AssetNameMapService::FIELDS as $nameField) {
+            $froms = AssetNameMapService::fromValuesMatching($conn, $nameField, $search);
+            if ($froms) {
+                $terms[] = "TRIM(a.$nameField) IN (" . implode(',', array_fill(0, count($froms), '?')) . ')';
+                array_push($args, ...$froms);
+            }
+        }
+
         if ($tagsReady) {
             $terms[] = 'a.asset_tag LIKE ?';
             $args[]  = $like;
@@ -378,6 +388,15 @@ try {
             unset($a);
         }
     }
+
+    // GH #200 part D: the manufacturer and model each asset is SHOWN as (the name
+    // mappings). The stored values stay as they are, for editing.
+    require_once '../../includes/services/asset_name_map.php';
+    foreach ($assets as &$a) {
+        $a['manufacturer_display'] = AssetNameMapService::show($conn, 'manufacturer', $a['manufacturer'] ?? null);
+        $a['model_display'] = AssetNameMapService::show($conn, 'model', $a['model'] ?? null);
+    }
+    unset($a);
 
     echo json_encode([
         'success' => true,

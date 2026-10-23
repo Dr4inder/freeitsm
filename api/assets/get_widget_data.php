@@ -109,10 +109,14 @@ try {
             exit;
         }
 
-        $sql = "SELECT COALESCE(a.{$prop}, 'Unknown') AS label, COUNT(*) AS value
+        // GH #200 part D: a chart by manufacturer or model counts what each asset is SHOWN
+        // as, so "HP", "HP Inc." and "Hewlett-Packard" are one slice, not three.
+        require_once '../../includes/services/asset_name_map.php';
+        $expr = in_array($prop, AssetNameMapService::FIELDS, true) ? AssetNameMapService::sqlExpr($conn, $prop, "a.{$prop}") : "a.{$prop}";
+        $sql = "SELECT COALESCE({$expr}, 'Unknown') AS label, COUNT(*) AS value
                 FROM assets a
                 {$where}
-                GROUP BY a.{$prop}
+                GROUP BY label
                 ORDER BY value DESC";
     }
 

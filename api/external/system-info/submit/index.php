@@ -178,11 +178,17 @@ try {
     if ($reconcileRes['asset_id'] !== null) {
         $hostId = (int)$reconcileRes['asset_id'];
 
+        // GH #200 part D: a manufacturer or model a person protected is not overwritten;
+        // what the agent reports is kept beside it for the asset page to show.
+        require_once __DIR__ . '/../../../../includes/services/asset_protection.php';
+        $makeModel = ['manufacturer' => strOrNull($data, 'manufacturer', 50), 'model' => strOrNull($data, 'model', 50)];
+        $mayWrite = AssetProtectionService::filterReported($conn, $hostId, $makeModel, 'the agent');
+
         // Update all fields
         $stmt = $conn->prepare("
             UPDATE assets SET
-                manufacturer     = ?,
-                model            = ?,
+                manufacturer     = IF(?, manufacturer, ?),
+                model            = IF(?, model, ?),
                 memory           = ?,
                 service_tag      = ?,
                 operating_system = ?,
@@ -201,8 +207,8 @@ try {
             WHERE id = ?
         ");
         $stmt->execute([
-            strOrNull($data, 'manufacturer', 50),
-            strOrNull($data, 'model', 50),
+            (int)!array_key_exists('manufacturer', $mayWrite), $makeModel['manufacturer'],
+            (int)!array_key_exists('model', $mayWrite), $makeModel['model'],
             intOrNull($data, 'memory'),
             strOrNull($data, 'service_tag', 50),
             strOrNull($data, 'operating_system', 50),

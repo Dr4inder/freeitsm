@@ -542,6 +542,34 @@ $translationNamespaces = ['common', 'asset-management'];
             .ho-preview-wrap { position: static; }
         }
 <?php echo handoverDocumentCss(); ?>
+        /* Manufacturer and model names (GH #200 part D). */
+        .nm-add { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 10px 0 14px; }
+        .nm-add .form-input { max-width: 240px; }
+        .nm-add select.form-input { max-width: 160px; }
+        .nm-arrow { color: var(--text-dim, #888); }
+        .nm-table { width: 100%; max-width: 760px; }
+        /* Review (GH #200 part D). */
+        .rv-item { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) auto; gap: 8px 16px; align-items: center;
+                   padding: 12px 14px; border: 1px solid var(--border, #ddd); border-radius: 8px; margin-bottom: 10px; background: var(--surface, #fff); }
+        .rv-what { font-size: 13px; color: var(--text, #333); }
+        .rv-kind { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 10px; border: 1px solid var(--border, #ddd); color: var(--text-muted, #666); margin-right: 4px; }
+        .rv-meta { display: block; font-size: 12px; color: var(--text-dim, #888); margin-top: 2px; }
+        .rv-assets a { font-weight: 600; color: var(--accent, #0078d4); text-decoration: none; }
+        .rv-assets > div + div { margin-top: 6px; }
+        .rv-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+        .rv-status { font-size: 12px; color: var(--text-muted, #666); }
+        .rv-empty { padding: 24px; color: var(--text-dim, #888); }
+        .merge-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+        .merge-card { display: flex; flex-direction: column; gap: 3px; padding: 12px; border: 2px solid var(--border, #ddd); border-radius: 8px; cursor: pointer; font-size: 13px; }
+        .merge-card:has(input:checked) { border-color: var(--accent, #0078d4); }
+        .merge-card input { align-self: flex-start; margin: 0 0 4px; }
+        .merge-card em { font-style: normal; font-size: 12px; color: var(--accent, #0078d4); margin-top: 4px; visibility: hidden; }
+        .merge-card:has(input:checked) em { visibility: visible; }
+        @media (max-width: 768px) {
+            .rv-item { grid-template-columns: 1fr; }
+            .rv-actions { justify-content: flex-start; }
+            .merge-choice { grid-template-columns: 1fr; }
+        }
     </style>
     <?php /* Mobile-friendly opt-in (#937). AFTER this page's own <style> so its
              @media rules win on ties. Every rule inside is gated at 768px. */ ?>
@@ -1401,6 +1429,16 @@ $translationNamespaces = ['common', 'asset-management'];
                             <textarea class="form-input" id="reconIgnoredSerials" rows="6" placeholder="<?php echo htmlspecialchars(t('asset-management.settings.ignored_serials_placeholder')); ?>" style="font-family: monospace; font-size: 12px;"></textarea>
                             <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.settings.ignored_serials_hint')); ?></div>
                         </div>
+                        <?php /* GH #200 part D. A setting because teams differ: most want a correction to
+                                 stick, some want the tools to stay the authority. On by default. */ ?>
+                        <div class="form-group">
+                            <label class="form-label"><?php echo htmlspecialchars(t('asset-management.settings.protect_label')); ?></label>
+                            <label style="display:flex; gap:8px; align-items:flex-start; font-weight:normal;">
+                                <input type="checkbox" id="reconProtectOnEdit" checked style="margin-top:3px;">
+                                <span><?php echo htmlspecialchars(t('asset-management.settings.protect_check')); ?></span>
+                            </label>
+                            <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.settings.protect_hint')); ?></div>
+                        </div>
                         <?php /* GH #200 Part B. A setting because sources differ: a daily agent is stale
                                  after a week, a monthly export after a month. 7 = Last seen and Watchtower. */ ?>
                         <div class="form-group">
@@ -1412,9 +1450,41 @@ $translationNamespaces = ['common', 'asset-management'];
                             <button type="submit" class="btn btn-primary" id="reconSaveBtn"><?php echo htmlspecialchars(t('asset-management.common.save')); ?></button>
                         </div>
                     </form>
+
+                    <?php /* GH #200 part D: names shown one way. Its own list, saved as you add,
+                             because each row is a decision on its own, not part of the form above. */ ?>
+                    <h3 style="margin: 32px 0 6px; font-size: 15px;"><?php echo htmlspecialchars(t('asset-management.names.heading')); ?></h3>
+                    <p class="settings-description"><?php echo htmlspecialchars(t('asset-management.names.intro')); ?></p>
+                    <div class="nm-add">
+                        <select class="form-input" id="nmField" onchange="nmFillSuggestions()">
+                            <option value="manufacturer"><?php echo htmlspecialchars(t('asset-management.field.manufacturer')); ?></option>
+                            <option value="model"><?php echo htmlspecialchars(t('asset-management.field.model')); ?></option>
+                        </select>
+                        <input type="text" class="form-input" id="nmFrom" list="nmNames" maxlength="100" placeholder="<?php echo htmlspecialchars(t('asset-management.names.from_ph')); ?>">
+                        <span class="nm-arrow">&rarr;</span>
+                        <input type="text" class="form-input" id="nmTo" list="nmNames" maxlength="100" placeholder="<?php echo htmlspecialchars(t('asset-management.names.to_ph')); ?>">
+                        <button type="button" class="btn btn-primary" onclick="nmSave()"><?php echo htmlspecialchars(t('asset-management.common.add')); ?></button>
+                        <datalist id="nmNames"></datalist>
+                    </div>
+                    <div id="nmList"></div>
                 </div>
             </div>
         </div>
+        <?php endif; ?>
+        <?php if (settingsTabVisible($visibleTabs, 'review')): ?>
+        <?php /* GH #200 part D: the cases matching refuses to guess about. */ ?>
+        <div class="tab-content<?php echo $activeTabId === 'review' ? ' active' : ''; ?>" id="review-tab" data-capability="<?php echo Cap::ASSETS_RECONCILIATION; ?>">
+            <div class="section-header">
+                <h2><?php echo htmlspecialchars(t('asset-management.review.heading')); ?></h2>
+                <select class="form-input" id="reviewWhich" style="max-width: 200px;" onchange="loadReviewList()">
+                    <option value="open"><?php echo htmlspecialchars(t('asset-management.review.which_open')); ?></option>
+                    <option value="decided"><?php echo htmlspecialchars(t('asset-management.review.which_decided')); ?></option>
+                </select>
+            </div>
+            <p class="settings-description" style="margin-bottom: 16px;"><?php echo htmlspecialchars(t('asset-management.review.intro')); ?></p>
+            <div id="reviewList"><div style="padding: 20px; color: #999;"><?php echo htmlspecialchars(t('asset-management.common.loading')); ?></div></div>
+        </div>
+
         <?php endif; ?>
         <?php if (settingsTabVisible($visibleTabs, 'intune')): ?>
         <!-- InTune Tab -->
@@ -1717,6 +1787,23 @@ $translationNamespaces = ['common', 'asset-management'];
     </div>
 
     <!-- Edit/Add Modal -->
+<?php if (settingsTabVisible($visibleTabs, 'review')): ?>
+    <?php /* GH #200 part D: at body level like the other dialogs, so no panel can sit above it. */ ?>
+    <div class="modal" id="mergeModal">
+        <div class="modal-content" style="max-width: 760px;">
+            <div class="modal-header"><span><?php echo htmlspecialchars(t('asset-management.review.merge_title')); ?></span></div>
+            <div class="modal-body">
+                <p class="settings-description" style="margin-top: 0;"><?php echo htmlspecialchars(t('asset-management.review.merge_intro')); ?></p>
+                <div id="mergeChoice" class="merge-choice"></div>
+                <p class="form-hint"><?php echo htmlspecialchars(t('asset-management.review.merge_hint')); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeMergeModal()"><?php echo htmlspecialchars(t('asset-management.common.cancel')); ?></button>
+                <button class="btn btn-primary" id="mergeConfirmBtn" onclick="confirmMerge()"><?php echo htmlspecialchars(t('asset-management.review.merge')); ?></button>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
     <div class="modal" id="editModal">
         <div class="modal-content">
             <div class="modal-header" id="modalTitle"><?php echo htmlspecialchars(t('asset-management.settings.add_item')); ?></div>
@@ -2482,6 +2569,7 @@ $translationNamespaces = ['common', 'asset-management'];
             if (targetPanel) targetPanel.classList.add('active');
             if (tab === 'left-panel') loadSidebarMode();
             if (tab === 'asset-tags') updateLabelLivePreview();
+            if (tab === 'review') loadReviewList();
             try {
                 if (history.replaceState) {
                     history.replaceState(null, '', '?tab=' + encodeURIComponent(tab));
@@ -2877,6 +2965,9 @@ $translationNamespaces = ['common', 'asset-management'];
                     if (document.getElementById('reconIgnoredSerials')) {
                         document.getElementById('reconIgnoredSerials').value = data.settings.asset_reconciliation_ignored_serials || '';
                     }
+                    if (document.getElementById('reconProtectOnEdit')) {
+                        document.getElementById('reconProtectOnEdit').checked = data.settings.asset_protect_on_edit !== '0';
+                    }
                     if (document.getElementById('reconStaleDays')) {
                         const staleDays = parseInt(data.settings.asset_inventory_stale_days, 10);
                         document.getElementById('reconStaleDays').value = (staleDays >= 1 && staleDays <= 365 ? staleDays : 7);
@@ -3003,7 +3094,8 @@ $translationNamespaces = ['common', 'asset-management'];
                     body: JSON.stringify({
                         settings: {
                             asset_reconciliation_ignored_serials: document.getElementById('reconIgnoredSerials').value.trim(),
-                            asset_inventory_stale_days: String(Math.min(365, Math.max(1, parseInt(document.getElementById('reconStaleDays').value, 10) || 7)))
+                            asset_inventory_stale_days: String(Math.min(365, Math.max(1, parseInt(document.getElementById('reconStaleDays').value, 10) || 7))),
+                            asset_protect_on_edit: document.getElementById('reconProtectOnEdit').checked ? '1' : '0'
                         }
                     })
                 });
@@ -3757,6 +3849,212 @@ $translationNamespaces = ['common', 'asset-management'];
             }
         }
         loadLayoutNotice();
+
+        // ════════════════════════════════════════════════════════════════
+        //  Review (GH #200 part D) - the cases matching refuses to guess.
+        // ════════════════════════════════════════════════════════════════
+        let reviewItems = [];
+        let mergeItem = null;
+
+        function rvT(key, vars) { return window.t('asset-management.review.' + key, vars); }
+
+        async function loadReviewList() {
+            const box = document.getElementById('reviewList');
+            if (!box) return;
+            const which = document.getElementById('reviewWhich').value;
+            try {
+                const res = await fetch(API_BASE + 'review_list.php?which=' + encodeURIComponent(which));
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error || '');
+                reviewItems = data.items;
+                renderReviewList(which);
+            } catch (e) {
+                box.innerHTML = `<div style="padding: 20px; color: #999;">${escapeHtml(rvT('load_error'))}</div>`;
+            }
+        }
+
+        function rvAsset(a, id) {
+            if (!a) return escapeHtml('#' + id);
+            const bits = [a.asset_tag, a.service_tag, [a.manufacturer, a.model].filter(Boolean).join(' ')].filter(Boolean).join(' · ');
+            return `<a href="../?asset_id=${Number(id)}" target="_blank" rel="noopener">${escapeHtml(a.hostname || ('#' + id))}</a>`
+                + (bits ? `<span class="rv-meta">${escapeHtml(bits)}</span>` : '');
+        }
+
+        function rvSentence(it) {
+            const d = it.detail || {};
+            const a = (it.asset && it.asset.hostname) || ('#' + it.asset_id);
+            const o = (it.other && it.other.hostname) || ('#' + it.other_asset_id);
+            const src = (it.source || '').replace(/^rest:/, '');
+            switch (it.kind) {
+                case 'shared_serial': return rvT('kind_shared_serial', { serial: d.serial || '' });
+                case 'hostname_reused': return rvT('kind_hostname_reused', { a: a, o: o });
+                case 'unmatched_peripheral': return rvT('kind_unmatched', { source: src, what: [d.name, d.model].filter(Boolean).join(' ') || rvT('a_device'), serial: d.serial || '', host: a });
+                case 'ambiguous_match': return rvT('kind_ambiguous', { source: src, serial: d.serial || '', host: a });
+            }
+            return it.kind;
+        }
+
+        function renderReviewList(which) {
+            const box = document.getElementById('reviewList');
+            if (!reviewItems.length) {
+                box.innerHTML = `<div class="rv-empty">${escapeHtml(rvT(which === 'decided' ? 'none_decided' : 'none_open'))}</div>`;
+                return;
+            }
+            box.innerHTML = reviewItems.map(it => {
+                const pair = it.kind === 'shared_serial' || it.kind === 'hostname_reused';
+                const assetsHtml = `<div class="rv-assets"><div>${rvAsset(it.asset, it.asset_id)}</div>${pair ? `<div>${rvAsset(it.other, it.other_asset_id)}</div>` : ''}</div>`;
+                let actions = '';
+                if (which === 'decided') {
+                    const by = it.resolved_by ? rvT('decided_by', { name: it.resolved_by }) : '';
+                    actions = `<span class="rv-status">${escapeHtml(rvT('status_' + it.status))}${by ? ' · ' + escapeHtml(by) : ''}</span>`
+                        + (it.status !== 'merged' ? ` <button class="btn btn-outline btn-sm" onclick="decideReview(${it.id}, 'open')">${escapeHtml(rvT('reopen'))}</button>` : '');
+                } else if (pair) {
+                    actions = `<button class="btn btn-primary btn-sm" onclick="openMergeModal(${it.id})">${escapeHtml(rvT('merge'))}</button>
+                        <button class="btn btn-outline btn-sm" onclick="decideReview(${it.id}, 'different')">${escapeHtml(rvT('different'))}</button>
+                        <button class="btn btn-outline btn-sm" onclick="decideReview(${it.id}, 'ignored')">${escapeHtml(rvT('ignore'))}</button>`;
+                } else {
+                    actions = (it.kind === 'unmatched_peripheral' ? `<button class="btn btn-primary btn-sm" onclick="decideReview(${it.id}, 'create')">${escapeHtml(rvT('create'))}</button> ` : '')
+                        + `<button class="btn btn-outline btn-sm" onclick="decideReview(${it.id}, 'ignored')">${escapeHtml(rvT('ignore'))}</button>`;
+                }
+                const found = it.first_seen_at ? fmtDateTime(parseUTCDate(it.first_seen_at)) : '';
+                return `<div class="rv-item">
+                    <div class="rv-what"><span class="rv-kind">${escapeHtml(rvT('label_' + it.kind))}</span> ${escapeHtml(rvSentence(it))}
+                        <span class="rv-meta">${escapeHtml(rvT('found', { when: found }))}</span></div>
+                    ${assetsHtml}
+                    <div class="rv-actions">${actions}</div>
+                </div>`;
+            }).join('');
+        }
+
+        async function decideReview(id, decision) {
+            try {
+                const res = await fetch(API_BASE + 'review_decide.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id, decision: decision })
+                });
+                const data = await res.json();
+                if (!data.success) { showToast(data.error || rvT('load_error'), 'error'); return; }
+                showToast(rvT('done_' + decision), 'success');
+                loadReviewList();
+            } catch (e) {
+                showToast(rvT('load_error'), 'error');
+            }
+        }
+
+        function openMergeModal(id) {
+            mergeItem = reviewItems.find(i => i.id === id);
+            if (!mergeItem) return;
+            // Keep the one seen most recently; failing that, the older record.
+            const a = mergeItem.asset || {}, o = mergeItem.other || {};
+            const keepOther = (o.last_seen || '') > (a.last_seen || '');
+            const card = (asset, id, checked) => `<label class="merge-card">
+                <input type="radio" name="mergeKeep" value="${Number(id)}" ${checked ? 'checked' : ''}>
+                <strong>${escapeHtml(asset.hostname || ('#' + id))}</strong>
+                <span>${escapeHtml(rvT('field_serial'))}: ${escapeHtml(asset.service_tag || '-')}</span>
+                <span>${escapeHtml(rvT('field_tag'))}: ${escapeHtml(asset.asset_tag || '-')}</span>
+                <span>${escapeHtml([asset.manufacturer, asset.model].filter(Boolean).join(' ') || '-')}</span>
+                <span>${escapeHtml(rvT('field_last_seen'))}: ${escapeHtml(asset.last_seen ? fmtDateTime(parseUTCDate(asset.last_seen)) : rvT('never'))}</span>
+                <em>${escapeHtml(rvT('keep_this'))}</em>
+            </label>`;
+            document.getElementById('mergeChoice').innerHTML = card(a, mergeItem.asset_id, !keepOther) + card(o, mergeItem.other_asset_id, keepOther);
+            document.getElementById('mergeModal').classList.add('active');
+        }
+
+        function closeMergeModal() {
+            document.getElementById('mergeModal').classList.remove('active');
+            mergeItem = null;
+        }
+
+        async function confirmMerge() {
+            if (!mergeItem) return;
+            const keep = Number((document.querySelector('input[name="mergeKeep"]:checked') || {}).value || 0);
+            const gone = keep === mergeItem.asset_id ? mergeItem.other_asset_id : mergeItem.asset_id;
+            const keepName = (keep === mergeItem.asset_id ? mergeItem.asset : mergeItem.other) || {};
+            const goneName = (gone === mergeItem.asset_id ? mergeItem.asset : mergeItem.other) || {};
+            if (!confirm(rvT('merge_confirm', { gone: goneName.hostname || ('#' + gone), keep: keepName.hostname || ('#' + keep) }))) return;
+            const btn = document.getElementById('mergeConfirmBtn');
+            btn.disabled = true;
+            try {
+                const res = await fetch(API_BASE + 'review_merge.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: mergeItem.id, keep_asset_id: keep, merge_asset_id: gone })
+                });
+                const data = await res.json();
+                if (!data.success) { showToast(data.error || rvT('load_error'), 'error'); return; }
+                closeMergeModal();
+                showToast(rvT('done_merged', { keep: keepName.hostname || ('#' + keep) }), 'success');
+                loadReviewList();
+            } catch (e) {
+                showToast(rvT('load_error'), 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        if (document.getElementById('review-tab') && document.getElementById('review-tab').classList.contains('active')) loadReviewList();
+
+        // ── Manufacturer and model names (GH #200 part D) ────────────────
+        let nmData = { mappings: [], names: { manufacturer: [], model: [] } };
+
+        async function nmLoad() {
+            const box = document.getElementById('nmList');
+            if (!box) return;
+            try {
+                const res = await fetch(API_BASE + 'name_mappings.php');
+                const data = await res.json();
+                if (!data.success) { box.innerHTML = `<p class="form-hint">${escapeHtml(data.error || '')}</p>`; return; }
+                nmData = data;
+                nmFillSuggestions();
+                nmRender();
+            } catch (e) { /* the section simply stays empty */ }
+        }
+
+        function nmFillSuggestions() {
+            const field = document.getElementById('nmField').value;
+            document.getElementById('nmNames').innerHTML = (nmData.names[field] || [])
+                .map(n => `<option value="${escapeHtml(n.name)}">${escapeHtml(window.t('asset-management.names.in_use', { n: n.n }))}</option>`).join('');
+        }
+
+        function nmRender() {
+            const box = document.getElementById('nmList');
+            if (!nmData.mappings.length) { box.innerHTML = `<p class="form-hint">${escapeHtml(window.t('asset-management.names.none'))}</p>`; return; }
+            box.innerHTML = `<table class="nm-table"><thead><tr>
+                <th>${escapeHtml(window.t('asset-management.names.col_field'))}</th>
+                <th>${escapeHtml(window.t('asset-management.names.col_from'))}</th>
+                <th>${escapeHtml(window.t('asset-management.names.col_to'))}</th><th></th></tr></thead><tbody>`
+                + nmData.mappings.map(m => `<tr>
+                    <td>${escapeHtml(window.t('asset-management.field.' + m.field))}</td>
+                    <td>${escapeHtml(m.from_value)}</td>
+                    <td><strong>${escapeHtml(m.to_value)}</strong></td>
+                    <td style="text-align:right;"><button type="button" class="btn btn-outline btn-sm" onclick="nmDelete(${Number(m.id)})">${escapeHtml(window.t('asset-management.common.delete'))}</button></td>
+                </tr>`).join('') + '</tbody></table>';
+        }
+
+        async function nmPost(body) {
+            const res = await fetch(API_BASE + 'name_mappings.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            return res.json();
+        }
+
+        async function nmSave() {
+            const body = { action: 'save', field: document.getElementById('nmField').value,
+                           from: document.getElementById('nmFrom').value, to: document.getElementById('nmTo').value };
+            try {
+                const data = await nmPost(body);
+                if (!data.success) { showToast(data.error || window.t('asset-management.settings.error_saving'), 'error'); return; }
+                document.getElementById('nmFrom').value = '';
+                showToast(window.t('asset-management.settings.saved_success'), 'success');
+                nmLoad();
+            } catch (e) { showToast(window.t('asset-management.settings.error_saving'), 'error'); }
+        }
+
+        async function nmDelete(id) {
+            try {
+                const data = await nmPost({ action: 'delete', id: id });
+                if (!data.success) { showToast(data.error || window.t('asset-management.settings.error_saving'), 'error'); return; }
+                nmLoad();
+            } catch (e) { showToast(window.t('asset-management.settings.error_saving'), 'error'); }
+        }
+        nmLoad();
 
         function icSetup(type, selectedId) {
             const row = document.getElementById('itemIconRow');

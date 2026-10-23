@@ -166,6 +166,12 @@
         load: async () => {
             const d = await fetch('../api/assets/get_assets.php').then(r => r.json());
             if (!d.success) { console.error('get_assets:', d.error); return []; }
+            // GH #200 part D: the table shows and filters the mapped names ("HP"), never the
+            // spellings that came in ("HP Inc.", "Hewlett-Packard").
+            (d.assets || []).forEach(a => {
+                if (a.manufacturer_display !== undefined) a.manufacturer = a.manufacturer_display;
+                if (a.model_display !== undefined) a.model = a.model_display;
+            });
             return applyStaleFilter(d.assets || []);
         },
     });

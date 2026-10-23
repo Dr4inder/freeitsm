@@ -113,7 +113,13 @@ function assetIdForToken(PDO $conn, string $token): ?int {
     $stmt = $conn->prepare("SELECT id FROM assets WHERE qr_token = ? LIMIT 1");
     $stmt->execute([$token]);
     $id = $stmt->fetchColumn();
-    return $id === false ? null : (int)$id;
+    if ($id === false) {
+        // GH #200 part D: a label on a device whose record was merged into another
+        // still finds the one that was kept.
+        require_once __DIR__ . '/services/asset_merge.php';
+        return AssetMergeService::intoForQrToken($conn, $token);
+    }
+    return (int)$id;
 }
 
 /**

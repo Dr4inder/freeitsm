@@ -135,7 +135,16 @@ return [
             'label_key'    => 'asset-management.settings.tab_reconciliation',
             'grant'        => 'Configure asset discovery, identity reconciliation and ignored serials',
             // GH #200 Part B: when an inventory list counts as stale on the asset.
-            'setting_keys' => ['asset_reconciliation_ignored_serials', 'asset_inventory_stale_days'],
+            'setting_keys' => ['asset_reconciliation_ignored_serials', 'asset_inventory_stale_days', 'asset_protect_on_edit'],
+        ],
+        [
+            // GH #200 part D: the cases matching refuses to guess, for a person to decide -
+            // including MERGING two assets, which is why it shares the reconciliation
+            // capability rather than plain module access.
+            'id'           => 'review',
+            'cap'          => Cap::ASSETS_RECONCILIATION,
+            'label_key'    => 'asset-management.settings.tab_review',
+            'grant'        => 'Configure asset discovery, identity reconciliation and ignored serials',
         ],
         [
             'id'           => 'asset-labels',

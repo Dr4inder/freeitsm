@@ -68,8 +68,13 @@ try {
         throw new Exception('Asset not found');
     }
 
-    AssetsService::updateFields($conn, ActorContext::fromSession($conn), (int)$asset_id, [$field => $value]);
-    echo json_encode(['success' => true]);
+    $ctx = ActorContext::fromSession($conn);
+    AssetsService::updateFields($conn, $ctx, (int)$asset_id, [$field => $value]);
+    // GH #200 part D: a name, manufacturer or model a person corrects on an asset a tool
+    // reports is protected from being overwritten by that tool (unless switched off).
+    require_once '../../includes/services/asset_protection.php';
+    $protected = AssetProtectionService::afterPersonEdit($conn, $ctx, (int)$asset_id, (string)$field, $value === null ? null : (string)$value);
+    echo json_encode(['success' => true, 'protected' => $protected]);
 
 } catch (ServiceError $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
