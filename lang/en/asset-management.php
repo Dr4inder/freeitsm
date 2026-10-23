@@ -958,7 +958,7 @@ return [
         'history_row'        => '{from} to {to}',
         'ended_by_person'    => 'disconnected by {name}',
         'ended_by_source'    => 'reported gone',
-        'source_person'      => 'a person',
+        'source_person'      => 'Manual',
         'picker_title'       => 'Connect an asset',
         'picker_intro'       => 'Find the asset plugged into or attached to this one, by name, serial or asset tag. Both must be in the same company.',
         'search_ph'          => 'Name, serial or asset tag',
