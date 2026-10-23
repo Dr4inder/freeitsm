@@ -3030,14 +3030,21 @@ CREATE TABLE IF NOT EXISTS `asset_inventory_sources` (
     CONSTRAINT `fk_inventory_source_asset` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- GH #200 Part B: the last good data (observed_at, fingerprint - NULL until a section
+-- has once succeeded) and, beside it, the last attempt and what came of it, so a
+-- failed or skipped section never makes old data look new or throws it away.
+-- imported_by_id is NULL for the agent, which is no analyst.
 CREATE TABLE IF NOT EXISTS `asset_inventory_sections` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `inventory_source_id` INT NOT NULL,
     `section_name` VARCHAR(32) NOT NULL,
-    `observed_at` DATETIME NOT NULL,
-    `imported_at` DATETIME NOT NULL,
-    `imported_by_id` INT NOT NULL,
-    `fingerprint` CHAR(64) NOT NULL,
+    `observed_at` DATETIME NULL,
+    `imported_at` DATETIME NULL,
+    `imported_by_id` INT NULL,
+    `fingerprint` CHAR(64) NULL,
+    `last_outcome` VARCHAR(16) NULL,
+    `last_error` VARCHAR(500) NULL,
+    `last_attempt_at` DATETIME NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_inventory_source_section` (`inventory_source_id`, `section_name`),
     CONSTRAINT `fk_inventory_section_source` FOREIGN KEY (`inventory_source_id`) REFERENCES `asset_inventory_sources` (`id`) ON DELETE CASCADE

@@ -864,6 +864,47 @@ return [
         'item_count'         => '{name} ({n})',
     ],
 
+    // GH #200 Part B: how fresh each inventory list is, per source and section.
+    'inventory' => [
+        'panel_heading'      => 'Inventory sources',
+        'source_agent'       => 'Inventory agent',
+        'source_rest'        => '{name} (REST API)',
+        'device_ref'         => 'Device {ref}',
+        // {source} inside a sentence
+        'source_agent_inline' => 'the agent',
+        'col_list'           => 'List',
+        'col_status'         => 'Status',
+        'col_observed'       => 'Observed',
+        'col_items'          => 'Items',
+        'section_software'   => 'Software',
+        'section_disks'      => 'Volumes',
+        'section_physical_disks' => 'Physical drives',
+        'section_network_adapters' => 'Network adapters',
+        'section_devices'    => 'Devices',
+        'status_current'     => 'Current',
+        'status_stale'       => 'Stale',
+        'status_empty'       => 'Reported empty',
+        'status_skipped'     => 'Not in last report',
+        'status_failed'      => 'Failed',
+        'never'              => 'never',
+        // Above a list
+        'never_software'     => 'No software has been reported for this asset.',
+        'never_devices'      => 'No device information has been reported for this asset.',
+        'never_storage'      => 'No storage has been reported for this asset.',
+        'line_current'       => 'From {source}, observed {ago}.',
+        'line_empty'         => 'Reported empty by {source}, {ago}.',
+        'line_skipped'       => 'Not in {source}\'s last report ({ago}).',
+        'line_failed'        => 'The last import from {source} failed ({ago}): {error}',
+        'kept_from'          => 'The list kept was observed {ago}.',
+        'nothing_kept'       => 'Nothing has been collected from it yet.',
+        'stale_title'        => 'Older than {days} days (Assets → Settings → Discovery & reconciliation)',
+        'just_now'           => 'just now',
+        'ago_minutes'        => '{n} min ago',
+        'ago_hours'          => '{n} hr ago',
+        'ago_one_day'        => '1 day ago',
+        'ago_days'           => '{n} days ago',
+    ],
+
     'settings' => [
         'tab_vcloud' => 'VMware Cloud Director servers',
         'tab_proxmox' => 'Proxmox VE servers',
@@ -1279,6 +1320,8 @@ return [
         'asset_label_preview_heading'  => 'Physical label live preview',
         'asset_label_saved'            => 'Asset label settings saved.',
         'tab_reconciliation'         => 'Discovery & reconciliation',
+        'stale_days_label'           => 'Inventory counts as stale after (days)',
+        'stale_days_hint'            => 'An inventory list older than this is shown in amber on the asset - above its list and in the Inventory sources panel. Match it to how often your sources report: 7 days suits an agent that runs daily.',
         'reconciliation_heading'     => 'Asset discovery and reconciliation',
         'reconciliation_intro'       => 'Configure identity reconciliation rules and ignored serial numbers across all automated hardware discovery sources (PowerShell inventory agent, Intune, and future discovery connectors).',
         'batch_size_label'            => 'Software sync batch size',
@@ -1466,6 +1509,9 @@ return [
 
     'help' => [
         // Asset type layouts (GH #200)
+        'freshness_heading' => 'How fresh is each list?',
+        'freshness_body'    => 'Above <strong>Storage</strong>, <strong>Devices</strong> and <strong>Software</strong>, a line says which tool reported the list and when it looked: <em>From the agent, observed 3 hr ago.</em> It turns <strong>amber</strong> once it is older than <strong>Settings &rarr; Discovery &amp; reconciliation &rarr; Inventory counts as stale after</strong> (7 days unless you change it). A list the last report left out says so, and a collection that <strong>failed</strong> is shown in red with the error - the previous list is kept, with its own age. The <strong>Inventory sources</strong> panel at the bottom of Key info lists every tool that reports the asset and every list it keeps, and no type&rsquo;s layout hides it. When nothing has ever reported a list, it says so and the tab count shows a dash, so <strong>0</strong> only ever means a tool looked and found none.',
+        'freshness_agent'   => '<strong>Reported empty</strong> and <strong>failed</strong> come from the agent script that ships with 3.15.0. An older script cannot tell &ldquo;none&rdquo; from &ldquo;could not look&rdquo;, so its empty lists are treated as not reported and the previous list is kept, as before. Assets reported before you upgraded show no line until their next report.',
         'layout_heading' => 'A page that fits the kind of asset',
         'layout_body'    => 'Each asset type decides which built-in details and tabs its assets show. A monitor does not need CPU, memory or a Devices tab, so its type can hide them, and the tabs can be put in the order that suits it. Set it in <strong>Settings &rarr; Asset types</strong>: edit a type and use <strong>Layout</strong>, or pick a starting point (Peripheral, Network equipment, Mobile device) and adjust the ticks. Name, asset tag, serial number, type, status, location and company are always shown, and Key info always comes first.',
         'layout_hidden'  => '<strong>Hiding is only about the page.</strong> Nothing is deleted, the agent and imports keep recording every field, and the table view and the API still show everything. If an asset holds details its type hides - say a computer given the wrong type - Key info says so (<em>Hidden by this type\'s layout: Software (214)</em>) with <strong>Show them</strong>, which brings every hidden section and tab back for that asset, marked with a dashed outline. <strong>Settings &rarr; Asset types &rarr; Details a type hides</strong> can make that a quiet <em>Show hidden</em> link instead.',

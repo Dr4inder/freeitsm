@@ -1488,6 +1488,29 @@ $translationNamespaces = ['common', 'asset-management'];
             color: var(--accent, #0078d4); text-decoration: underline;
         }
         .detail-tab.atl-show { color: var(--text-muted, #666); font-weight: normal; text-decoration: underline; }
+
+        /* Inventory freshness (GH #200 Part B). Amber for stale, as Last seen; red only for a
+           failed import, which is the one state somebody may need to act on. */
+        .inv-lines { padding: 10px 20px 0; font-size: 12px; color: var(--text-dim, #888); }
+        .inv-lines:empty { display: none; }
+        .inv-line + .inv-line { margin-top: 2px; }
+        .inv-line.stale { color: #b45309; font-weight: 600; }
+        .inv-line.failed { color: #b91c1c; }
+        [data-theme-mode="dark"] .inv-line.stale, [data-theme-mode="dark"] .inv-state.stale { color: #fcd34d; }
+        [data-theme-mode="dark"] .inv-line.failed, [data-theme-mode="dark"] .inv-state.failed,
+        [data-theme-mode="dark"] .inv-error { color: #fca5a5; }
+        .inv-panel { margin-top: 20px; }
+        .inv-source { margin: 0 20px 16px; }
+        .inv-source-name { font-size: 13px; font-weight: 600; color: var(--text, #333); margin-bottom: 4px; }
+        .inv-source-ref { font-weight: normal; color: var(--text-dim, #888); margin-left: 6px; }
+        .inv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .inv-table th { text-align: left; font-weight: 600; color: var(--text-muted, #666); padding: 4px 8px 4px 0; border-bottom: 1px solid var(--border, #ddd); }
+        .inv-table td { padding: 5px 8px 5px 0; border-bottom: 1px solid var(--border-soft, #eee); vertical-align: top; color: var(--text, #333); }
+        .inv-table td.num { text-align: right; }
+        .inv-state.stale { color: #b45309; font-weight: 600; }
+        .inv-state.failed { color: #b91c1c; font-weight: 600; }
+        .inv-state.quiet { color: var(--text-dim, #888); }
+        .inv-error { display: block; color: #b91c1c; font-size: 11px; margin-top: 2px; }
     </style>
     <?php /* Mobile-friendly opt-in (#936). Deliberately AFTER this page's own
              <style> block so its @media rules win on ties — the ordering rule
@@ -2415,6 +2438,7 @@ $translationNamespaces = ['common', 'asset-management'];
                         <div class="section-header">
                             <span class="section-title">${window.t('asset-management.detail.storage')}</span>
                         </div>
+                        <div class="inv-lines" id="invLinesStorage"></div>
                         <div class="disks-grid" id="disksGrid">
                             <div class="loading"><div class="spinner"></div></div>
                         </div>
@@ -2439,6 +2463,11 @@ $translationNamespaces = ['common', 'asset-management'];
                             <div class="disks-grid" id="physicalDisksGrid"></div>
                         </div>
                     </div>
+                    <?php /* GH #200 Part B: every source that reports this asset, and how fresh each of
+                             its lists is. NOT a layout section - it is how a hidden list's freshness
+                             stays reachable, so no type's layout hides it. Empty (and so not shown)
+                             for an asset nothing reports, such as a monitor. */ ?>
+                    <div class="inv-panel" id="inventorySourcesPanel" style="display:none;"></div>
                     </div>
                     <?php /* Financial (3.5.0): purchase, supplier, cost centre, warranty and lease -
                              everything to do with money, moved out of a busy Key info. */ ?>
@@ -2487,6 +2516,7 @@ $translationNamespaces = ['common', 'asset-management'];
                     </div>
                     </div>
                     <div class="detail-tab-panel" id="devicesPanel" data-dtab-panel="devices">
+                        <div class="inv-lines" id="invLinesDevices"></div>
                         <div class="devices-search">
                             <input type="text" id="devicesSearch" placeholder="${window.t('asset-management.devices.filter_placeholder')}" oninput="filterDevices()" autocomplete="off">
                         </div>
@@ -2495,6 +2525,7 @@ $translationNamespaces = ['common', 'asset-management'];
                         </div>
                     </div>
                     <div class="detail-tab-panel" id="softwarePanel" data-dtab-panel="software">
+                        <div class="inv-lines" id="invLinesSoftware"></div>
                         <div class="sw-filter-tabs">
                             <button class="sw-filter-tab active" data-swfilter="apps" onclick="switchSwTab('apps')">${window.t('asset-management.software.applications')} <span class="sw-tab-count" id="swCountApps">0</span></button>
                             <button class="sw-filter-tab" data-swfilter="components" onclick="switchSwTab('components')">${window.t('asset-management.software.components')} <span class="sw-tab-count" id="swCountComponents">0</span></button>
@@ -2531,6 +2562,7 @@ $translationNamespaces = ['common', 'asset-management'];
             loadDisks(assetId);
             loadDevices(assetId);
             loadInstalledSoftware(assetId);
+            loadInventoryStatus(assetId);
             loadIntuneDevice(assetId);
             loadAssetTickets(assetId);
             loadAssetContracts(assetId);
@@ -3724,7 +3756,7 @@ $translationNamespaces = ['common', 'asset-management'];
                         });
                     });
                 } else if (data.success) {
-                    container.innerHTML = `<div class="empty-state" style="padding: 20px;">${window.t('asset-management.disk.no_data')}</div>`;
+                    container.innerHTML = invEmptyHtml('storage', window.t('asset-management.disk.no_data'));
                 }
 
                 renderPhysicalDisks(data.success ? (data.physical_disks || []) : []);
@@ -3953,8 +3985,8 @@ $translationNamespaces = ['common', 'asset-management'];
                     renderDevices(allDevices);
                 } else {
                     allDevices = [];
-                    badge.textContent = '0';
-                    document.getElementById('devicesList').innerHTML = `<div class="empty-state" style="padding: 20px;">${window.t('asset-management.devices.no_data')}</div>`;
+                    badge.textContent = invNeverCollected('devices') ? '–' : '0';
+                    document.getElementById('devicesList').innerHTML = invEmptyHtml('devices', window.t('asset-management.devices.no_data'));
                 }
             } catch (error) {
                 console.error('Error loading devices:', error);
@@ -4172,6 +4204,169 @@ $translationNamespaces = ['common', 'asset-management'];
             applyAssetLayout();
         }
 
+        // ════════════════════════════════════════════════════════════════
+        //  Inventory freshness (GH #200 Part B)
+        //
+        //  Per source and section, from api/assets/get_asset_inventory_status.php:
+        //  when the last good data was observed, and what the last attempt came
+        //  to. Worked out from what each source DID - never from the type's
+        //  layout, so a hidden tab is "hidden by this profile", not "not there".
+        //  "Never collected" needs BOTH no record and no rows: an asset the agent
+        //  reported before 3.15.0 has rows and no record, and says nothing.
+        // ════════════════════════════════════════════════════════════════
+
+        let invStatus = null;
+        const invSections = ['software', 'disks', 'physical_disks', 'network_adapters', 'devices'];
+        const invTabSections = { software: ['software'], devices: ['devices'], storage: ['disks', 'physical_disks'] };
+
+        async function loadInventoryStatus(assetId) {
+            invStatus = null;
+            try {
+                const response = await fetch(`${API_BASE}get_asset_inventory_status.php?asset_id=${assetId}`);
+                const data = await response.json();
+                if (!data.success || Number(selectedAssetId) !== Number(assetId)) return;
+                invStatus = data;
+            } catch (e) {
+                return;   // the lists still show; only their freshness is missing
+            }
+            renderInventoryPanel();
+            renderInventoryLines();
+        }
+
+        function invT(key, vars) { return window.t('asset-management.inventory.' + key, vars); }
+
+        /** The stored row tag for a source: the agent's own, or 'rest:<name>'. */
+        function invTag(source) { return source === 'agent' ? 'agent' : 'rest:' + source; }
+
+        function invSourceName(source, inline) {
+            if (source === 'agent') return invT(inline ? 'source_agent_inline' : 'source_agent');
+            return inline ? source : invT('source_rest', { name: source });
+        }
+
+        /** Elapsed, never calendar - see seenHtml(). */
+        function invAgo(iso) {
+            const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+            if (mins < 1) return invT('just_now');
+            if (mins < 60) return invT('ago_minutes', { n: mins });
+            const hours = Math.floor(mins / 60);
+            if (hours < 24) return invT('ago_hours', { n: hours });
+            const days = Math.floor(hours / 24);
+            return days === 1 ? invT('ago_one_day') : invT('ago_days', { n: days });
+        }
+
+        function invIsStale(iso) {
+            return !!iso && (Date.now() - new Date(iso).getTime()) >= (invStatus.stale_days || 7) * 86400000;
+        }
+
+        /** No source has ever recorded this section, and no rows hold it. False until the status has loaded. */
+        function invNeverCollected(section) {
+            if (!invStatus) return false;
+            if (invStatus.sources.some(s => s.sections[section])) return false;
+            return !Object.values(invStatus.rows || {}).some(r => (r[section] || 0) > 0);
+        }
+
+        /**
+         * The empty message under a list: "never reported" once we know nothing has ever
+         * collected it, the list's own message otherwise. One message, not two.
+         */
+        function invEmptyHtml(tab, fallback) {
+            const never = invTabSections[tab].every(invNeverCollected);
+            return `<div class="empty-state" style="padding: 20px;">${escapeHtml(never ? invT('never_' + tab) : fallback)}</div>`;
+        }
+
+        /** One line above a list: what one source's last attempt at one section came to. */
+        function invLine(source, rec, sectionLabel) {
+            const name = invSourceName(source, true);
+            const prefix = sectionLabel ? sectionLabel + ': ' : '';
+            const at = d => `<span title="${escapeHtml(fmtDateTime(new Date(d)))}">${escapeHtml(invAgo(d))}</span>`;
+            const kept = rec.observed_at ? ' ' + invT('kept_from', { ago: '\u0000' }).split('\u0000').map(escapeHtml).join(at(rec.observed_at)) : '';
+            const fill = (key, vars, agoIso) => escapeHtml(invT(key, Object.assign({}, vars, { ago: '\u0000' }))).split('\u0000').join(at(agoIso));
+            if (rec.last_outcome === 'failed') {
+                // The error is the source's own words and may not end a sentence.
+                const error = (rec.last_error || '').trim();
+                const stop = /[.!?]$/.test(error) ? '' : '.';
+                return `<div class="inv-line failed">${escapeHtml(prefix)}${fill('line_failed', { source: name, error: error }, rec.last_attempt_at)}${stop}${rec.observed_at ? kept : ' ' + escapeHtml(invT('nothing_kept'))}</div>`;
+            }
+            if (rec.last_outcome === 'skipped') {
+                return `<div class="inv-line">${escapeHtml(prefix)}${fill('line_skipped', { source: name }, rec.last_attempt_at)}${kept}</div>`;
+            }
+            const stale = invIsStale(rec.observed_at);
+            const title = stale ? ` title="${escapeHtml(invT('stale_title', { days: invStatus.stale_days }))}"` : '';
+            return `<div class="inv-line${stale ? ' stale' : ''}"${title}>${escapeHtml(prefix)}${fill(rec.last_outcome === 'empty' ? 'line_empty' : 'line_current', { source: name }, rec.observed_at)}</div>`;
+        }
+
+        /** The lines above Storage, Devices and Software, and the "never collected" dash on a tab's count. */
+        function renderInventoryLines() {
+            if (!invStatus) return;
+            const boxes = { software: 'invLinesSoftware', devices: 'invLinesDevices', storage: 'invLinesStorage' };
+            Object.entries(invTabSections).forEach(([tab, sections]) => {
+                const box = document.getElementById(boxes[tab]);
+                if (!box) return;
+                const lines = [];
+                invStatus.sources.forEach(src => sections.forEach(section => {
+                    const rec = src.sections[section];
+                    if (rec) lines.push(invLine(src.source, rec, sections.length > 1 ? invT('section_' + section) : ''));
+                }));
+                box.innerHTML = lines.join('');
+            });
+            // The status may arrive after a list drew its empty message - say "never reported" there.
+            const empties = { storage: ['disksGrid', 'asset-management.disk.no_data'], devices: ['devicesList', 'asset-management.devices.no_data'],
+                              software: ['installedSoftwareList', 'asset-management.software.no_data'] };
+            Object.entries(empties).forEach(([tab, [id, key]]) => {
+                const el = document.getElementById(id);
+                const only = el && el.children.length === 1 && el.firstElementChild.classList.contains('empty-state') ? el.firstElementChild : null;
+                if (only && only.textContent === window.t(key) && (tab !== 'software' || !allAssetSoftware.length)) el.innerHTML = invEmptyHtml(tab, window.t(key));
+            });
+            const devBadge = document.getElementById('devicesCountBadge');
+            if (devBadge && devBadge.textContent === '0' && invNeverCollected('devices')) devBadge.textContent = '–';
+            const swBadge = document.getElementById('softwareCountBadge');
+            if (swBadge && !allAssetSoftware.length && swBadge.textContent === '0' && invNeverCollected('software')) swBadge.textContent = '–';
+        }
+
+        /** Key info's Inventory sources panel: every source, and every list it keeps. */
+        function renderInventoryPanel() {
+            const panel = document.getElementById('inventorySourcesPanel');
+            if (!panel || !invStatus) return;
+            if (!invStatus.sources.length) { panel.style.display = 'none'; panel.innerHTML = ''; return; }
+            const blocks = invStatus.sources.map(src => {
+                const rows = (invStatus.rows || {})[invTag(src.source)] || {};
+                const sections = invSections.filter(s => src.sections[s] || rows[s]);
+                const body = sections.map(section => {
+                    const rec = src.sections[section];
+                    let state = '', cls = 'quiet', observed = invT('never');
+                    if (rec) {
+                        const stale = invIsStale(rec.observed_at);
+                        if (rec.last_outcome === 'failed') { state = invT('status_failed'); cls = 'failed'; }
+                        else if (rec.last_outcome === 'skipped') { state = invT('status_skipped'); }
+                        else if (rec.last_outcome === 'empty') { state = invT('status_empty'); cls = stale ? 'stale' : ''; }
+                        else { state = invT(stale ? 'status_stale' : 'status_current'); cls = stale ? 'stale' : ''; }
+                        if (rec.observed_at) observed = `<span title="${escapeHtml(fmtDateTime(new Date(rec.observed_at)))}">${escapeHtml(invAgo(rec.observed_at))}</span>`;
+                        else observed = escapeHtml(observed);
+                    } else {
+                        observed = escapeHtml(observed);
+                    }
+                    const error = rec && rec.last_outcome === 'failed' && rec.last_error
+                        ? `<span class="inv-error">${escapeHtml(rec.last_error)} (${escapeHtml(invAgo(rec.last_attempt_at))})</span>` : '';
+                    return `<tr>
+                        <td>${escapeHtml(invT('section_' + section))}</td>
+                        <td><span class="inv-state ${cls}">${escapeHtml(state || '-')}</span>${error}</td>
+                        <td>${observed}</td>
+                        <td class="num">${rows[section] || 0}</td>
+                    </tr>`;
+                }).join('');
+                const ref = src.source_device_ref ? `<span class="inv-source-ref">${escapeHtml(invT('device_ref', { ref: src.source_device_ref }))}</span>` : '';
+                return `<div class="inv-source">
+                    <div class="inv-source-name">${escapeHtml(invSourceName(src.source, false))}${ref}</div>
+                    <table class="inv-table">
+                        <thead><tr><th>${escapeHtml(invT('col_list'))}</th><th>${escapeHtml(invT('col_status'))}</th><th>${escapeHtml(invT('col_observed'))}</th><th class="num">${escapeHtml(invT('col_items'))}</th></tr></thead>
+                        <tbody>${body}</tbody>
+                    </table>
+                </div>`;
+            }).join('');
+            panel.innerHTML = `<div class="section-header"><span class="section-title">${escapeHtml(invT('panel_heading'))}</span></div>${blocks}`;
+            panel.style.display = '';
+        }
+
         // Load Intune device data for this asset, if any. Renders a third tab when matched.
         async function loadIntuneDevice(assetId) {
             try {
@@ -4299,10 +4494,12 @@ $translationNamespaces = ['common', 'asset-management'];
                 software = software.filter(s => parseInt(s.system_component));
             }
 
-            badge.textContent = softwareIdentityCount(software);
+            badge.textContent = !allAssetSoftware.length && invNeverCollected('software') ? '–' : softwareIdentityCount(software);
 
             if (software.length === 0) {
-                container.innerHTML = `<div class="empty-state" style="padding: 20px;">${window.t('asset-management.software.no_data')}</div>`;
+                container.innerHTML = allAssetSoftware.length
+                    ? `<div class="empty-state" style="padding: 20px;">${window.t('asset-management.software.no_data')}</div>`
+                    : invEmptyHtml('software', window.t('asset-management.software.no_data'));
                 return;
             }
 

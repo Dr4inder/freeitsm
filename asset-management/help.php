@@ -214,6 +214,10 @@ $translationNamespaces = ['common', 'asset-management'];
                     <h4 id="asset-layouts"><?php echo htmlspecialchars(t('asset-management.help.layout_heading')); ?></h4>
                     <p><?php echo t('asset-management.help.layout_body'); ?></p>
                     <p class="help-note"><?php echo t('asset-management.help.layout_hidden'); ?></p>
+                    <?php /* GH #200 Part B: inventory freshness. */ ?>
+                    <h4 id="inventory-freshness"><?php echo htmlspecialchars(t('asset-management.help.freshness_heading')); ?></h4>
+                    <p><?php echo t('asset-management.help.freshness_body'); ?></p>
+                    <p class="help-note"><?php echo t('asset-management.help.freshness_agent'); ?></p>
                 </div>
 
                 <!-- Section 3: Table View -->

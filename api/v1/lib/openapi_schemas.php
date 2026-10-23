@@ -126,14 +126,22 @@ return array (
       'type'=>'object',
       'properties'=>[
         'source'=>['type'=>'string'],
-        'source_device_ref'=>['type'=>'string'],
+        'source_device_ref'=>['type'=>'string', 'nullable'=>true, 'description'=>'Null for the inventory agent (source agent)'],
         'owner_analyst_id'=>['type'=>'integer', 'nullable'=>true],
         'sections'=>[
           'type'=>'object',
           'additionalProperties'=>[
             'type'=>'object',
-            'properties'=>['observed_at'=>['type'=>'string', 'format'=>'date-time'], 'imported_at'=>['type'=>'string', 'format'=>'date-time'], 'imported_by_id'=>['type'=>'integer']],
-            'required'=>['observed_at', 'imported_at', 'imported_by_id'],
+            // GH #200 Part B: the last good data, and beside it what the last attempt came to.
+            'properties'=>[
+              'observed_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true, 'description'=>'When the last good data was observed; null if the section has only ever failed'],
+              'imported_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+              'imported_by_id'=>['type'=>'integer', 'nullable'=>true, 'description'=>'Null for the inventory agent'],
+              'last_outcome'=>['type'=>'string', 'enum'=>['succeeded', 'empty', 'skipped', 'failed']],
+              'last_error'=>['type'=>'string', 'nullable'=>true],
+              'last_attempt_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+            ],
+            'required'=>['observed_at', 'imported_at', 'imported_by_id', 'last_outcome', 'last_error', 'last_attempt_at'],
             'additionalProperties'=>false
           ]
         ]

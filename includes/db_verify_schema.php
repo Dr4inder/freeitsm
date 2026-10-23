@@ -1962,8 +1962,10 @@ return [
     ],
     'asset_inventory_sections' => [
         'id'=>'INT NOT NULL AUTO_INCREMENT', 'inventory_source_id'=>'INT NOT NULL',
-        'section_name'=>'VARCHAR(32) NOT NULL', 'observed_at'=>'DATETIME NOT NULL', 'imported_at'=>'DATETIME NOT NULL',
-        'imported_by_id'=>'INT NOT NULL', 'fingerprint'=>'CHAR(64) NOT NULL',
+        'section_name'=>'VARCHAR(32) NOT NULL', 'observed_at'=>'DATETIME NULL', 'imported_at'=>'DATETIME NULL',
+        'imported_by_id'=>'INT NULL', 'fingerprint'=>'CHAR(64) NULL',
+        // GH #200 Part B: what the last attempt at this section came to.
+        'last_outcome'=>'VARCHAR(16) NULL', 'last_error'=>'VARCHAR(500) NULL', 'last_attempt_at'=>'DATETIME NULL',
     ],
 
     'asset_disks' => [

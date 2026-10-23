@@ -1401,6 +1401,13 @@ $translationNamespaces = ['common', 'asset-management'];
                             <textarea class="form-input" id="reconIgnoredSerials" rows="6" placeholder="<?php echo htmlspecialchars(t('asset-management.settings.ignored_serials_placeholder')); ?>" style="font-family: monospace; font-size: 12px;"></textarea>
                             <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.settings.ignored_serials_hint')); ?></div>
                         </div>
+                        <?php /* GH #200 Part B. A setting because sources differ: a daily agent is stale
+                                 after a week, a monthly export after a month. 7 = Last seen and Watchtower. */ ?>
+                        <div class="form-group">
+                            <label class="form-label" for="reconStaleDays"><?php echo htmlspecialchars(t('asset-management.settings.stale_days_label')); ?></label>
+                            <input type="number" class="form-input" id="reconStaleDays" min="1" max="365" step="1" value="7" style="max-width: 120px;">
+                            <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.settings.stale_days_hint')); ?></div>
+                        </div>
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary" id="reconSaveBtn"><?php echo htmlspecialchars(t('asset-management.common.save')); ?></button>
                         </div>
@@ -2870,6 +2877,10 @@ $translationNamespaces = ['common', 'asset-management'];
                     if (document.getElementById('reconIgnoredSerials')) {
                         document.getElementById('reconIgnoredSerials').value = data.settings.asset_reconciliation_ignored_serials || '';
                     }
+                    if (document.getElementById('reconStaleDays')) {
+                        const staleDays = parseInt(data.settings.asset_inventory_stale_days, 10);
+                        document.getElementById('reconStaleDays').value = (staleDays >= 1 && staleDays <= 365 ? staleDays : 7);
+                    }
 
                     // Warranty alert settings
                     document.getElementById('warrantySurface').value = data.settings.asset_warranty_surface || 'dashboard';
@@ -2991,7 +3002,8 @@ $translationNamespaces = ['common', 'asset-management'];
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         settings: {
-                            asset_reconciliation_ignored_serials: document.getElementById('reconIgnoredSerials').value.trim()
+                            asset_reconciliation_ignored_serials: document.getElementById('reconIgnoredSerials').value.trim(),
+                            asset_inventory_stale_days: String(Math.min(365, Math.max(1, parseInt(document.getElementById('reconStaleDays').value, 10) || 7)))
                         }
                     })
                 });

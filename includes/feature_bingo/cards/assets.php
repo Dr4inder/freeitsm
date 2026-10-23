@@ -530,6 +530,19 @@ return [
         'why'      => 'The agent cannot run everywhere. Whatever already scans those machines can fill the gap - without ever touching the agent\'s or Intune\'s rows, or making an old scan look like a fresh check-in.',
         'done'     => 'At least one asset has had inventory reported by an external source.',
         'link'     => 'system/api/',
-        'check'    => ['rows', 'asset_inventory_sources'],
+        // Not the agent's own link (GH #200 part B): only a REST tool counts here.
+        'check'    => ['rows', 'asset_inventory_sources', "source <> 'agent'"],
+    ],
+    [
+        'id'       => 'assets.inventory_freshness',
+        'module'   => 'assets',
+        'tier'     => 'extra',
+        'category' => 'integrations',
+        'title'    => 'Know how fresh each list is',
+        'what'     => 'Every asset says which tool reported its software, drives and devices, when it looked, and whether the last attempt worked - amber when it is stale, red when a collection failed - with an Inventory sources panel on Key info.',
+        'why'      => 'A software list can be a year old and still look current, and a Device Manager tab saying 0 used to mean "never sent" as often as "none". Now you can tell, and a failed collection keeps the last good list instead of wiping it.',
+        'done'     => 'The inventory agent (or a REST tool) has reported on this version, so its lists carry a status.',
+        'link'     => 'asset-management/help.php#inventory-freshness',
+        'check'    => ['rows', 'asset_inventory_sections', 'last_outcome IS NOT NULL'],
     ],
 ];
