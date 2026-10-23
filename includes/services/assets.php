@@ -719,6 +719,23 @@ class AssetsService
             }
         }
 
+        // An inventory tool's device already linked to ANOTHER asset in the new company
+        // (REST inventory, #194). Its links move with the asset (below), and a device can
+        // be linked to one asset per company - so this needs a person to unlink one.
+        $links = self::inventoryLinks($conn, $assetId);
+        if ($links) {
+            $clash = $conn->prepare("SELECT a.id, a.hostname FROM asset_inventory_sources s JOIN assets a ON a.id = s.asset_id
+                                      WHERE s.tenant_id = ? AND s.source = ? AND s.source_device_ref = ? AND s.asset_id <> ? LIMIT 1");
+            foreach ($links as $link) {
+                $clash->execute([$targetTenantId, $link['source'], $link['source_device_ref'], $assetId]);
+                if ($other = $clash->fetch(PDO::FETCH_ASSOC)) {
+                    throw new ServiceError('conflict', 'conflict',
+                        "{$target['name']} already has {$link['source']}'s device {$link['source_device_ref']} linked to {$other['hostname']} (asset {$other['id']}). "
+                        . "Unlink it from one of them first (REST API: DELETE /assets/{id}/inventory/{$link['source']}).");
+                }
+            }
+        }
+
         // --- what does not exist in the new company -------------------------
         $clear = [];   // column => audit key
         if (!empty($row['location_id'])) {
@@ -745,6 +762,22 @@ class AssetsService
             $args[] = $assetId;
             $conn->prepare("UPDATE assets SET " . implode(', ', $sets) . " WHERE id = ?")->execute($args);
 
+            // TRAP: the inventory links move WITH the asset, in this transaction. Their
+            // tenant_id is what keeps a tool's device to one asset per company; left on the
+            // old company, a later report there names this asset (now another company's)
+            // in its "already linked" refusal, and the new company could link the same
+            // device to a second asset. (Their rows - software, disks - have no company and
+            // simply stay on the asset.)
+            if ($links) {
+                try {
+                    $conn->prepare("UPDATE asset_inventory_sources SET tenant_id = ? WHERE asset_id = ?")->execute([$targetTenantId, $assetId]);
+                } catch (PDOException $e) {
+                    if (($e->errorInfo[1] ?? null) !== 1062) { throw $e; }
+                    throw new ServiceError('conflict', 'conflict',
+                        "{$target['name']} linked one of this asset's inventory devices to another asset a moment ago. Try again to see which.");
+                }
+            }
+
             self::auditWrite($conn, $assetId, $ctx->actorId, 'company', $oldName, $target['name']);
             foreach ($clear as $col => $key) {
                 self::auditWrite($conn, $assetId, $ctx->actorId, $key,
@@ -762,6 +795,23 @@ class AssetsService
     // ======================================================================
     //  Internals
     // ======================================================================
+
+    /**
+     * The inventory sources linked to this asset (the agent's and REST tools'). Empty
+     * before Database Verification has created the table.
+     *
+     * @return array<array{source:string, source_device_ref:string}>
+     */
+    private static function inventoryLinks(PDO $conn, int $assetId): array
+    {
+        try {
+            $st = $conn->prepare("SELECT source, source_device_ref FROM asset_inventory_sources WHERE asset_id = ?");
+            $st->execute([$assetId]);
+            return $st->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
 
     /** Load the base asset row for write guards + change detection; 404 if unknown. */
     private static function loadRow(PDO $conn, int $assetId): array
