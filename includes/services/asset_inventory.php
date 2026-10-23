@@ -52,6 +52,13 @@ final class AssetInventoryService
     /** The sections a REST tool may report, and the table each one lives in. */
     private const TABLES = ['software' => 'software_inventory_detail', 'disks' => 'asset_disks', 'network_adapters' => 'asset_network_adapters'];
 
+    /**
+     * A REST tool may also report what is physically connected to the device (GH #200
+     * part C). Not an inventory table: the rows live in asset_connections, written by
+     * AssetConnectionsService.
+     */
+    private const REST_EXTRA = ['connections'];
+
     /** The agent reports two more, kept in tables only the agent writes. */
     public const AGENT_SECTIONS = ['software', 'disks', 'physical_disks', 'network_adapters', 'devices'];
 
@@ -114,7 +121,12 @@ final class AssetInventoryService
                         $conn->exec('RELEASE SAVEPOINT inv_section');
                         continue;
                     }
-                    $counts = self::applySection($conn, $assetId, $stored, $name, $section, $observed, $discovered, 'api', true);
+                    if ($name === 'connections') {
+                        require_once __DIR__ . '/asset_connections.php';
+                        $counts = AssetConnectionsService::applyObserved($conn, $assetId, $asset['tenant_id'] === null ? null : (int)$asset['tenant_id'], $stored, $section, $observed);
+                    } else {
+                        $counts = self::applySection($conn, $assetId, $stored, $name, $section, $observed, $discovered, 'api', true);
+                    }
                     self::recordOutcome($conn, $bindingId, $name, self::appliedOutcome($section), $ctx->actorId, $observed, $fingerprint);
                     $conn->exec('RELEASE SAVEPOINT inv_section');
                     $result['sections'][$name] = ['result' => 'applied'] + $counts;
@@ -271,6 +283,14 @@ final class AssetInventoryService
                 $del->execute([$assetId, self::storedSource($source)]);
                 $removed[$name] = $del->rowCount();
             }
+            // Its connections from this asset go too (GH #200 part C); a person's never do.
+            try {
+                $del = $conn->prepare('DELETE FROM asset_connections WHERE asset_id = ? AND source = ?');
+                $del->execute([$assetId, self::storedSource($source)]);
+                $removed['connections'] = $del->rowCount();
+            } catch (PDOException $e) {
+                // asset_connections before Database Verification: there are none.
+            }
             $conn->prepare('DELETE FROM asset_inventory_sections WHERE inventory_source_id = ?')->execute([$binding['id']]);
             $conn->prepare('DELETE FROM asset_inventory_sources WHERE id = ?')->execute([$binding['id']]);
             $conn->prepare('INSERT INTO asset_history (asset_id, analyst_id, field_name, old_value, new_value, created_datetime)
@@ -381,7 +401,7 @@ final class AssetInventoryService
         $observed = $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
         $sections = $in['sections'] ?? null;
         if (!is_array($sections) || !$sections || array_is_list($sections)) { self::invalid('Supply at least one supported section.'); }
-        self::keys($sections, array_keys(self::TABLES));
+        self::keys($sections, array_merge(array_keys(self::TABLES), self::REST_EXTRA));
         return [$source, $deviceRef, $observed, $sections];
     }
 
@@ -398,7 +418,11 @@ final class AssetInventoryService
         foreach ($section['items'] as $item) {
             if (!is_array($item)) { self::invalid("$name items must be objects."); }
             $row = self::item($name, $item);
-            $key = $name === 'software' ? mb_strtolower($row['display_name']) . "\0" . mb_strtolower($row['publisher'] ?? '') : $row['external_id'];
+            $key = match ($name) {
+                'software'    => mb_strtolower($row['display_name']) . "\0" . mb_strtolower($row['publisher'] ?? ''),
+                'connections' => $row['connected_asset_id'] !== null ? 'id:' . $row['connected_asset_id'] : 'serial:' . mb_strtolower($row['serial']),
+                default       => $row['external_id'],
+            };
             if (isset($seen[$key])) { self::invalid("Duplicate item identity in $name."); }
             $seen[$key] = true; $items[] = $row;
         }
@@ -756,6 +780,19 @@ final class AssetInventoryService
 
     private static function item(string $name, array $in): array
     {
+        if ($name === 'connections') {
+            // The other asset: its FreeITSM id if the tool has already resolved it, or its serial.
+            self::keys($in, ['connected_asset_id', 'serial', 'name', 'model', 'connected']);
+            $id = $in['connected_asset_id'] ?? null;
+            if ($id !== null && (!is_int($id) || $id <= 0)) { self::invalid('connected_asset_id must be a positive integer.'); }
+            $serial = self::text($in, 'serial', 100);
+            $serial = $serial === null ? null : trim($serial);
+            if (($id === null) === ($serial === null || $serial === '')) { self::invalid('Each connection needs exactly one of connected_asset_id or serial.'); }
+            $connected = $in['connected'] ?? true;
+            if (!is_bool($connected)) { self::invalid('connected must be boolean.'); }
+            return ['connected_asset_id' => $id, 'serial' => $id === null ? $serial : null,
+                    'name' => self::text($in, 'name', 255), 'model' => self::text($in, 'model', 255), 'connected' => $connected];
+        }
         $strings = match ($name) {
             'software' => ['display_name' => 512, 'publisher' => 512, 'display_version' => 100, 'install_date' => 50, 'uninstall_string' => 8192, 'install_location' => 8192, 'estimated_size' => 100],
             'disks' => ['external_id' => 128, 'drive' => 10, 'label' => 100, 'file_system' => 20],

@@ -60,6 +60,51 @@ return array (
       'required'=>['external_id'],
       'additionalProperties'=>false
     ],
+    'InventoryConnectionItem'=>[
+      'type'=>'object',
+      'description'=>'Exactly one of connected_asset_id or serial.',
+      'properties'=>[
+        'connected_asset_id'=>['type'=>'integer', 'description'=>'The other asset\'s FreeITSM id, if your tool has already matched it. Must be in this asset\'s company.'],
+        'serial'=>['type'=>'string', 'maxLength'=>100, 'description'=>'The other device\'s serial (a monitor\'s EDID serial), matched like any inventory source - never guessed between two assets.'],
+        'name'=>['type'=>'string', 'maxLength'=>255],
+        'model'=>['type'=>'string', 'maxLength'=>255],
+        'connected'=>['type'=>'boolean', 'default'=>true, 'description'=>'false = your tool saw it is no longer connected; ends your row for it.'],
+      ],
+      'additionalProperties'=>false
+    ],
+    'AssetConnectionRow'=>[
+      'type'=>'object',
+      'properties'=>[
+        'id'=>['type'=>'integer'],
+        'source'=>['type'=>'string', 'description'=>'manual (confirmed by a person) or rest:<your source>'],
+        'manual'=>['type'=>'boolean'],
+        'reported_here'=>['type'=>'boolean', 'description'=>'true if recorded from this asset\'s side'],
+        'connected_at'=>['type'=>'string', 'format'=>'date-time'],
+        'first_observed_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+        'last_observed_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true, 'description'=>'When the source last saw it connected - not a current assignment'],
+        'disconnected_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+        'confirmed_by'=>['type'=>'string', 'nullable'=>true],
+        'disconnected_by'=>['type'=>'string', 'nullable'=>true],
+        'other'=>['$ref'=>'#/components/schemas/AssetConnectionOther'],
+      ],
+    ],
+    'AssetConnectionOther'=>[
+      'type'=>'object',
+      'properties'=>[
+        'id'=>['type'=>'integer'], 'hostname'=>['type'=>'string', 'nullable'=>true], 'asset_type_id'=>['type'=>'integer', 'nullable'=>true],
+        'service_tag'=>['type'=>'string', 'nullable'=>true], 'manufacturer'=>['type'=>'string', 'nullable'=>true], 'model'=>['type'=>'string', 'nullable'=>true],
+      ],
+    ],
+    'AssetConnections'=>[
+      'type'=>'object',
+      'properties'=>[
+        'current'=>['type'=>'array', 'description'=>'Connected now, one entry per other asset, each source\'s row beside the others', 'items'=>['type'=>'object', 'properties'=>[
+          'other'=>['$ref'=>'#/components/schemas/AssetConnectionOther'],
+          'rows'=>['type'=>'array', 'items'=>['$ref'=>'#/components/schemas/AssetConnectionRow']],
+        ]]],
+        'history'=>['type'=>'array', 'description'=>'Connections that have ended, newest first', 'items'=>['$ref'=>'#/components/schemas/AssetConnectionRow']],
+      ],
+    ],
     'AssetInventorySnapshot'=>[
       'type'=>'object',
       'properties'=>[
@@ -85,6 +130,14 @@ return array (
             'network_adapters'=>[
               'type'=>'object',
               'properties'=>['complete'=>['type'=>'boolean'], 'items'=>['type'=>'array', 'maxItems'=>10000, 'items'=>['$ref'=>'#/components/schemas/InventoryAdapterItem']]],
+              'required'=>['complete', 'items'],
+              'additionalProperties'=>false
+            ],
+            // GH #200 part C: what is physically connected to this device.
+            'connections'=>[
+              'type'=>'object',
+              'description'=>'Assets physically connected to this one (a monitor, a dock). Complete = these and no others: a connection of yours not listed ends. Partial never ends one. A serial no asset has (or several do) is kept for review, never created.',
+              'properties'=>['complete'=>['type'=>'boolean'], 'items'=>['type'=>'array', 'maxItems'=>10000, 'items'=>['$ref'=>'#/components/schemas/InventoryConnectionItem']]],
               'required'=>['complete', 'items'],
               'additionalProperties'=>false
             ]
@@ -13452,6 +13505,7 @@ return array (
     'GET /changes/{id}/attachments' => ['type'=>'array','items'=>['$ref'=>'#/components/schemas/ChangeEvidenceAttachment']],
     'POST /changes/{id}/attachments' => ['$ref'=>'#/components/schemas/ChangeEvidenceAttachment'],
     'GET /assets/{id}/inventory'=>['type'=>'array','items'=>['$ref'=>'#/components/schemas/AssetInventoryProvenance']],
+    'GET /assets/{id}/connections'=>['$ref'=>'#/components/schemas/AssetConnections'],
     'POST /assets/{id}/inventory'=>['$ref'=>'#/components/schemas/AssetInventoryResult'],
     'DELETE /assets/{id}/inventory/{source}'=>['type'=>'object', 'properties'=>[
       'asset_id'=>['type'=>'integer'], 'source'=>['type'=>'string'],

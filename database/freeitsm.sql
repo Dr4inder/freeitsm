@@ -3269,6 +3269,56 @@ CREATE TABLE IF NOT EXISTS `asset_type_layout` (
     CONSTRAINT `fk_atl_type` FOREIGN KEY (`asset_type_id`) REFERENCES `asset_types` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Connected assets (GH #200 part C): a monitor plugged into a computer, a phone in
+-- a dock. A PHYSICAL attachment - not custody (users_assets), not a CMDB dependency.
+-- One row per source: the same monitor confirmed by a person and observed by a tool
+-- is two rows, and each source only ever opens or closes its own. asset_id is the
+-- side that reported it (the asset a REST report was about, or the one a person was
+-- on); the page shows a connection from both ends. disconnected_at NULL = connected.
+CREATE TABLE IF NOT EXISTS `asset_connections` (
+    `id`                  INT NOT NULL AUTO_INCREMENT,
+    `asset_id`            INT NOT NULL,
+    `connected_asset_id`  INT NOT NULL,
+    `source`              VARCHAR(64) NOT NULL,
+    `connected_at`        DATETIME NOT NULL,
+    `first_observed_at`   DATETIME NULL,
+    `last_observed_at`    DATETIME NULL,
+    `disconnected_at`     DATETIME NULL,
+    `confirmed_by_id`     INT NULL,
+    `disconnected_by_id`  INT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_asset_connections_asset` (`asset_id`, `disconnected_at`),
+    KEY `idx_asset_connections_other` (`connected_asset_id`, `disconnected_at`),
+    CONSTRAINT `fk_asset_connections_asset` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_asset_connections_other` FOREIGN KEY (`connected_asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Reconciliation you can review (GH #200 part D): the cases matching already refuses
+-- to guess about - two assets sharing a serial, a reused hostname, an ambiguous match,
+-- a peripheral a tool reported that matches no asset - kept for a person to decide.
+-- match_key makes the same case one row however often it is seen again.
+-- status: open | merged | different | ignored | resolved (it sorted itself out).
+CREATE TABLE IF NOT EXISTS `asset_review_items` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `tenant_id`        INT NOT NULL,
+    `kind`             VARCHAR(32) NOT NULL,
+    `match_key`        VARCHAR(191) NOT NULL,
+    `asset_id`         INT NULL,
+    `other_asset_id`   INT NULL,
+    `source`           VARCHAR(64) NULL,
+    `detail`           VARCHAR(1000) NULL,
+    `first_seen_at`    DATETIME NOT NULL,
+    `last_seen_at`     DATETIME NOT NULL,
+    `status`           VARCHAR(16) NOT NULL DEFAULT 'open',
+    `resolved_by_id`   INT NULL,
+    `resolved_at`      DATETIME NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_asset_review_key` (`tenant_id`, `match_key`),
+    KEY `idx_asset_review_status` (`tenant_id`, `status`),
+    CONSTRAINT `fk_asset_review_asset` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_asset_review_other` FOREIGN KEY (`other_asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- A set attached to ONE asset — the pilot case. Ten televisions, three of them
 -- trialled as smart TVs: tick "Smart TV" on those three and only those three
 -- show IP address, MAC address and Netflix enabled. The other seven do not

@@ -289,6 +289,7 @@ return [
         'asset_created'    => 'Created',
         'asset_discovered' => 'Found by',
         'hostname_reused'  => 'Name still on asset',
+        'connection'       => 'Connection',
 
         // When the inventory agent last reported (discussion #97). "Seen" rather
         // than "discovered": it is the same question every time the agent runs,
@@ -377,6 +378,7 @@ return [
         'tab_financial'     => 'Financial',
         'tab_devices'       => 'Devices',
         'tab_software'      => 'Software',
+        'tab_connected'     => 'Connected',
         'tab_tickets'       => 'Tickets',
 
         // Contracts covering this asset (#106)
@@ -843,6 +845,7 @@ return [
         'tab_financial'      => 'Financial',
         'tab_devices'        => 'Devices',
         'tab_software'       => 'Software',
+        'tab_connected'      => 'Connected',
         'tab_tickets'        => 'Tickets',
         'tab_contracts'      => 'Contracts',
         'tab_projects'       => 'Projects',
@@ -862,6 +865,32 @@ return [
         'show_hidden'        => 'Show hidden',
         'hidden_marker'      => 'Hidden by this profile',
         'item_count'         => '{name} ({n})',
+    ],
+
+    // GH #200 part C: connected assets.
+    'connections' => [
+        'intro'              => 'What is physically attached to this asset - a monitor on a computer, a phone in a dock. Not who holds it, and not a service dependency.',
+        'none'               => 'Nothing is connected to this asset.',
+        'connect'            => 'Connect',
+        'disconnect'         => 'Disconnect',
+        'confirm'            => 'Confirm',
+        'confirm_title'      => 'Confirm this connection yourself, beside what the tool saw',
+        'confirmed_by'       => 'Confirmed by {name}, {date}',
+        'confirmed_anon'     => 'Confirmed by a person, {date}',
+        'observed_by'        => 'Last observed connected by {source} {ago}',
+        'history_heading'    => 'Earlier connections',
+        'history_row'        => '{from} to {to}',
+        'ended_by_person'    => 'disconnected by {name}',
+        'ended_by_source'    => 'reported gone',
+        'source_person'      => 'a person',
+        'picker_title'       => 'Connect an asset',
+        'picker_intro'       => 'Find the asset plugged into or attached to this one, by name, serial or asset tag. Both must be in the same company.',
+        'search_ph'          => 'Name, serial or asset tag',
+        'no_results'         => 'No assets found.',
+        'disconnect_confirm' => 'Disconnect {name}? The connection stays in both assets\' history.',
+        'connected_toast'    => 'Connected',
+        'disconnected_toast' => 'Disconnected',
+        'load_error'         => 'Could not load connections.',
     ],
 
     // GH #200 Part B: how fresh each inventory list is, per source and section.
@@ -1509,6 +1538,9 @@ return [
 
     'help' => [
         // Asset type layouts (GH #200)
+        'connected_heading' => 'What is plugged into what',
+        'connected_body'    => 'The <strong>Connected</strong> tab shows what is physically attached to an asset - a monitor on a computer, a phone in a dock - and it shows from <strong>both ends</strong>: the monitor lists the computer and the computer lists the monitor. Use <strong>Connect</strong> to record one yourself: search for the other asset by name, serial or asset tag. Both must be in the same company. A tool that reports through the REST API can record what it sees too, and its row says <em>Last observed connected by lansweeper 3 hr ago</em> - when it last saw it, not that it is connected now. <strong>Confirm</strong> adds your own confirmation beside a tool&rsquo;s. Every connection and disconnection is in both assets&rsquo; history, and ended ones stay under <strong>Earlier connections</strong>.',
+        'connected_rules'   => '<strong>Each source keeps its own row.</strong> What you confirmed and what a tool saw sit side by side, and neither overwrites the other: a tool never ends your connection, and <strong>Disconnect</strong> only ends one a person confirmed. Nothing is disconnected because a report forgot to mention it - only the tool that saw it can say it has gone. A connection is not custody (who holds it) and not a CMDB dependency. A monitor can be connected to one computer and signed out to a person, and neither changes the other. The tab can be hidden per asset type like any other.',
         'freshness_heading' => 'How fresh is each list?',
         'freshness_body'    => 'Above <strong>Storage</strong>, <strong>Devices</strong> and <strong>Software</strong>, a line says which tool reported the list and when it looked: <em>From the agent, observed 3 hr ago.</em> It turns <strong>amber</strong> once it is older than <strong>Settings &rarr; Discovery &amp; reconciliation &rarr; Inventory counts as stale after</strong> (7 days unless you change it). A list the last report left out says so, and a collection that <strong>failed</strong> is shown in red with the error - the previous list is kept, with its own age. The <strong>Inventory sources</strong> panel at the bottom of Key info lists every tool that reports the asset and every list it keeps, and no type&rsquo;s layout hides it. When nothing has ever reported a list, it says so and the tab count shows a dash, so <strong>0</strong> only ever means a tool looked and found none.',
         'freshness_agent'   => '<strong>Reported empty</strong> and <strong>failed</strong> come from the agent script that ships with 3.15.0. An older script cannot tell &ldquo;none&rdquo; from &ldquo;could not look&rdquo;, so its empty lists are treated as not reported and the previous list is kept, as before. Assets reported before you upgraded show no line until their next report.',

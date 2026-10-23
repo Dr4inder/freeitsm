@@ -2114,6 +2114,37 @@ return [
         'sort_order'        => 'INT NOT NULL DEFAULT 0',
     ],
 
+    // GH #200 part C: physical connections between assets, one row per source.
+    'asset_connections' => [
+        'id'                  => 'INT NOT NULL AUTO_INCREMENT',
+        'asset_id'            => 'INT NOT NULL',
+        'connected_asset_id'  => 'INT NOT NULL',
+        'source'              => 'VARCHAR(64) NOT NULL',
+        'connected_at'        => 'DATETIME NOT NULL',
+        'first_observed_at'   => 'DATETIME NULL',
+        'last_observed_at'    => 'DATETIME NULL',
+        'disconnected_at'     => 'DATETIME NULL',
+        'confirmed_by_id'     => 'INT NULL',
+        'disconnected_by_id'  => 'INT NULL',
+    ],
+
+    // GH #200 part D: matching cases kept for a person to decide.
+    'asset_review_items' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'tenant_id'        => 'INT NOT NULL',
+        'kind'             => 'VARCHAR(32) NOT NULL',
+        'match_key'        => 'VARCHAR(191) NOT NULL',
+        'asset_id'         => 'INT NULL',
+        'other_asset_id'   => 'INT NULL',
+        'source'           => 'VARCHAR(64) NULL',
+        'detail'           => 'VARCHAR(1000) NULL',
+        'first_seen_at'    => 'DATETIME NOT NULL',
+        'last_seen_at'     => 'DATETIME NOT NULL',
+        'status'           => "VARCHAR(16) NOT NULL DEFAULT 'open'",
+        'resolved_by_id'   => 'INT NULL',
+        'resolved_at'      => 'DATETIME NULL',
+    ],
+
     // GH #200: built-in sections and tabs per asset type. No row = shown.
     'asset_type_layout' => [
         'id'                => 'INT NOT NULL AUTO_INCREMENT',

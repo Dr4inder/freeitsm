@@ -218,6 +218,10 @@ $translationNamespaces = ['common', 'asset-management'];
                     <h4 id="inventory-freshness"><?php echo htmlspecialchars(t('asset-management.help.freshness_heading')); ?></h4>
                     <p><?php echo t('asset-management.help.freshness_body'); ?></p>
                     <p class="help-note"><?php echo t('asset-management.help.freshness_agent'); ?></p>
+                    <?php /* GH #200 part C: connected assets. */ ?>
+                    <h4 id="connected-assets"><?php echo htmlspecialchars(t('asset-management.help.connected_heading')); ?></h4>
+                    <p><?php echo t('asset-management.help.connected_body'); ?></p>
+                    <p class="help-note"><?php echo t('asset-management.help.connected_rules'); ?></p>
                 </div>
 
                 <!-- Section 3: Table View -->

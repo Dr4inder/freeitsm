@@ -22,6 +22,14 @@ function apiAssetInventoryUnlink(PDO $conn,array $apiKey,array $params,array $bo
     catch (ServiceError $e) { apiFailFromService($e); }
     apiRespond($result);
 }
+/** GET /assets/{id}/connections (GH #200 part C): what is physically connected, from either end. */
+function apiAssetConnectionsList(PDO $conn,array $apiKey,array $params,array $body): void {
+    apiLoadAsset($conn,$apiKey,$params[0]);
+    require_once dirname(__DIR__,3) . '/includes/services/asset_connections.php';
+    try { $result=AssetConnectionsService::listFor($conn,ActorContext::fromApiKey($apiKey),(int)$params[0]); }
+    catch (ServiceError $e) { apiFailFromService($e); }
+    apiRespond($result);
+}
 function apiAssetInventoryProvenance(PDO $conn,array $apiKey,array $params,array $body): void {
     apiLoadAsset($conn,$apiKey,$params[0]);
     require_once dirname(__DIR__,3) . '/includes/services/asset_inventory.php';

@@ -32,7 +32,7 @@ final class AssetTypeLayout
     public const SECTIONS = ['make_model', 'hardware', 'os', 'reporting', 'storage'];
 
     /** The tabs after Key info (which is always first and always shown), in their default order. */
-    public const TABS = ['financial', 'devices', 'software', 'tickets', 'contracts', 'projects', 'documents'];
+    public const TABS = ['financial', 'devices', 'software', 'connected', 'tickets', 'contracts', 'projects', 'documents'];
 
     /** How an asset says it has details its type hides. 'notice' = a line on Key info; 'link' = a quiet link only. */
     public const NOTICE_SETTING = 'asset_layout_hidden_notice';

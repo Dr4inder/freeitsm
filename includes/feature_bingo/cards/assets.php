@@ -534,6 +534,18 @@ return [
         'check'    => ['rows', 'asset_inventory_sources', "source <> 'agent'"],
     ],
     [
+        'id'       => 'assets.connected',
+        'module'   => 'assets',
+        'tier'     => 'extra',
+        'category' => 'organisation',
+        'title'    => 'Know what is plugged into what',
+        'what'     => 'The Connected tab records that a monitor is on a particular computer, or a phone in a dock - shown from both ends, confirmed by a person or observed by a tool, with every connection kept in history.',
+        'why'      => 'When a desk is moved or a computer replaced, the monitor and dock go with it. Knowing what is attached to what saves a walk round the office, and it never gets confused with who holds the kit.',
+        'done'     => 'At least one connection has been recorded.',
+        'link'     => 'asset-management/help.php#connected-assets',
+        'check'    => ['rows', 'asset_connections'],
+    ],
+    [
         'id'       => 'assets.inventory_freshness',
         'module'   => 'assets',
         'tier'     => 'extra',

@@ -1500,11 +1500,28 @@
                     }
                 },
                 {
+                    "m": "GET",
+                    "p": "\/assets\/{id}\/connections",
+                    "perm": "assets.read",
+                    "s": "Connected assets",
+                    "d": "What is physically connected to this asset - a monitor on a computer, a phone in a dock - from either end. current lists each connected asset once, with every source's row beside the others: manual (confirmed by a person) and rest:<source> (observed by a tool through POST \/assets\/{id}\/inventory, section connections). A tool's row says when it was last observed connected, not that it is connected now. history lists connections that have ended. Not custody (who holds it) and not a CMDB dependency.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Asset id",
+                            "req": true
+                        }
+                    ],
+                    "section": "Asset assignments, history & inventory",
+                    "slug": "get-assets-id-connections"
+                },
+                {
                     "m": "POST",
                     "p": "\/assets\/{id}\/inventory",
                     "perm": "asset_inventory.create",
                     "s": "Report inventory from your own tool",
-                    "d": "Reports what an external tool (an RMM, Lansweeper, a CMDB export) saw on this asset: software, volumes (disks) and network adapters. The rows go into the same inventory every screen and report reads, tagged with your source, and no other source's rows are touched. The asset's own fields and last_seen (\"the agent reported\") never change. A source name belongs to one analyst per company - the first to write it - so a rotated key for the same analyst keeps it; built-in names (agent, intune, ...) are refused. (source, source_device_ref) links to one asset; naming it on another is a 409 naming the asset. Each section is judged on its own: complete = exactly this list for this source (an empty list removes all of them), partial = added and updated only, omitted = untouched; older than the newest applied = stale, same time and content = replayed, same time and different content = failed (observation_conflict). A section that fails is rolled back alone, named, and recorded as failed beside its last good data (GET .../inventory); the others apply (207). Send the same report again to retry the failed sections - the applied ones answer replayed. Each applied section reports added, updated and removed counts.",
+                    "d": "Reports what an external tool (an RMM, Lansweeper, a CMDB export) saw on this asset: software, volumes (disks) and network adapters. The rows go into the same inventory every screen and report reads, tagged with your source, and no other source's rows are touched. The asset's own fields and last_seen (\"the agent reported\") never change. A source name belongs to one analyst per company - the first to write it - so a rotated key for the same analyst keeps it; built-in names (agent, intune, ...) are refused. (source, source_device_ref) links to one asset; naming it on another is a 409 naming the asset. Each section is judged on its own: complete = exactly this list for this source (an empty list removes all of them), partial = added and updated only, omitted = untouched; older than the newest applied = stale, same time and content = replayed, same time and different content = failed (observation_conflict). A section that fails is rolled back alone, named, and recorded as failed beside its last good data (GET .../inventory); the others apply (207). Send the same report again to retry the failed sections - the applied ones answer replayed. Each applied section reports added, updated and removed counts. A connections section (the assets physically connected to this one) also lists, as unmatched, any serial no asset has or several share - kept for review in Assets, never created.",
                     "params": [
                         {
                             "name": "id",
@@ -1516,7 +1533,7 @@
                             "name": "schema_version \/ source \/ source_device_ref \/ observed_at \/ sections",
                             "in": "body",
                             "req": true,
-                            "desc": "schema_version 1; source: your tool's name (lowercase, max 48); source_device_ref: your tool's id for the device; observed_at: when it scanned (RFC3339 with timezone); sections: software, disks and\/or network_adapters, each {complete, items}"
+                            "desc": "schema_version 1; source: your tool's name (lowercase, max 48); source_device_ref: your tool's id for the device; observed_at: when it scanned (RFC3339 with timezone); sections: software, disks, network_adapters and\/or connections, each {complete, items}. A connections item names the other asset by connected_asset_id or serial, with optional name, model and connected (false = gone)"
                         }
                     ],
                     "body": {

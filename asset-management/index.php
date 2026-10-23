@@ -1250,15 +1250,22 @@ $translationNamespaces = ['common', 'asset-management'];
         }
 
         /* Detail Tabs */
+        /* Never squeezed: a tab keeps its label on one line and the strip scrolls
+           sideways when there are more than fit - as it already did on a phone
+           (mobile.css). Connected (GH #200 part C) made nine, plus Intune. */
         .detail-tabs {
             display: flex;
             gap: 0;
             border-bottom: 1px solid var(--border, #e0e0e0);
             background-color: var(--surface-3, #f8f9fa);
+            overflow-x: auto;
+            scrollbar-width: thin;
         }
 
         .detail-tab {
-            padding: 10px 20px;
+            white-space: nowrap;
+            flex: 0 0 auto;
+            padding: 10px 16px;
             font-size: 13px;
             font-weight: 500;
             color: var(--text-muted, #666);
@@ -1511,6 +1518,24 @@ $translationNamespaces = ['common', 'asset-management'];
         .inv-state.failed { color: #b91c1c; font-weight: 600; }
         .inv-state.quiet { color: var(--text-dim, #888); }
         .inv-error { display: block; color: #b91c1c; font-size: 11px; margin-top: 2px; }
+
+        /* Connected assets (GH #200 part C). */
+        .conn-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; flex-wrap: wrap; }
+        .conn-intro { font-size: 12px; color: var(--text-dim, #888); flex: 1 1 260px; }
+        .conn-list { padding: 0 20px; }
+        .conn-item { border: 1px solid var(--border, #ddd); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; background: var(--surface, #fff); }
+        .conn-item-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+        .conn-name { font-weight: 600; }
+        .conn-name a { color: var(--accent, #0078d4); text-decoration: none; }
+        .conn-name svg, .conn-history svg, .contract-pick-name svg { vertical-align: -2px; margin-right: 5px; }
+        .conn-desc { font-size: 12px; color: var(--text-dim, #888); flex: 1; }
+        .conn-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted, #666); padding: 3px 0; flex-wrap: wrap; }
+        .conn-row .btn { margin-left: auto; }
+        .conn-chip { font-size: 11px; padding: 1px 7px; border-radius: 10px; border: 1px solid var(--border, #ddd); color: var(--text-muted, #666); white-space: nowrap; }
+        .conn-chip.manual { border-color: var(--accent, #0078d4); color: var(--accent, #0078d4); }
+        .conn-history-head { margin-top: 10px; }
+        .conn-history { margin: 0 20px 16px; width: calc(100% - 40px); }
+        .conn-history a { color: var(--accent, #0078d4); text-decoration: none; }
     </style>
     <?php /* Mobile-friendly opt-in (#936). Deliberately AFTER this page's own
              <style> block so its @media rules win on ties — the ordering rule
@@ -1746,6 +1771,25 @@ $translationNamespaces = ['common', 'asset-management'];
 
     <!-- Asset History Modal -->
     <!-- Add this equipment to a contract (discussion #106) -->
+    <?php /* GH #200 part C: pick the asset to connect. Same look as the contract picker. */ ?>
+    <div class="modal" id="connectPickerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span><?php echo htmlspecialchars(t('asset-management.connections.picker_title')); ?></span>
+            </div>
+            <div class="modal-body">
+                <p class="form-hint" style="margin-top:0;"><?php echo htmlspecialchars(t('asset-management.connections.picker_intro')); ?></p>
+                <input type="text" id="connectPickerSearch" class="ctr-pick-search" autocomplete="off"
+                       oninput="connectPickerInput()"
+                       placeholder="<?php echo htmlspecialchars(t('asset-management.connections.search_ph')); ?>">
+                <div id="connectPickerResults" class="contract-pick-results"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeConnectPicker()"><?php echo htmlspecialchars(t('asset-management.common.close')); ?></button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="contractPickerModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -2301,6 +2345,7 @@ $translationNamespaces = ['common', 'asset-management'];
                         <button class="detail-tab" onclick="switchDetailTab('financial')" data-dtab="financial">${window.t('asset-management.detail.tab_financial')}</button>
                         <button class="detail-tab" onclick="switchDetailTab('devices')" data-dtab="devices">${window.t('asset-management.detail.tab_devices')} <span class="tab-count" id="devicesCountBadge">...</span></button>
                         <button class="detail-tab" onclick="switchDetailTab('software')" data-dtab="software">${window.t('asset-management.detail.tab_software')} <span class="tab-count" id="softwareCountBadge">...</span></button>
+                        <button class="detail-tab" onclick="switchDetailTab('connected')" data-dtab="connected">${window.t('asset-management.detail.tab_connected')} <span class="tab-count" id="connectedCountBadge">...</span></button>
                         <button class="detail-tab" onclick="switchDetailTab('tickets')" data-dtab="tickets">${window.t('asset-management.detail.tab_tickets')} <span class="tab-count" id="ticketsCountBadge">...</span></button>
                         <button class="detail-tab" onclick="switchDetailTab('contracts')" data-dtab="contracts">${window.t('asset-management.detail.tab_contracts')} <span class="tab-count" id="contractsCountBadge">...</span></button>
                         ${window.ASSET_SHOW_PROJECTS ? `<button class="detail-tab" onclick="switchDetailTab('projects')" data-dtab="projects">${window.tf ? window.tf('projects.links_other.title', 'Projects') : 'Projects'}</button>` : ''}
@@ -2535,6 +2580,14 @@ $translationNamespaces = ['common', 'asset-management'];
                             <div class="loading"><div class="spinner"></div></div>
                         </div>
                     </div>
+                    <?php /* GH #200 part C: physical connections, from both ends. */ ?>
+                    <div class="detail-tab-panel detail-tab-panel--scroll" id="connectedPanel" data-dtab-panel="connected">
+                        <div class="conn-head">
+                            <span class="conn-intro">${escapeHtml(window.t('asset-management.connections.intro'))}</span>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="openConnectPicker()">${escapeHtml(window.t('asset-management.connections.connect'))}</button>
+                        </div>
+                        <div id="connectionsList"><div class="loading"><div class="spinner"></div></div></div>
+                    </div>
                     <div class="detail-tab-panel detail-tab-panel--scroll" id="ticketsPanel" data-dtab-panel="tickets">
                         <div class="asset-tickets-list" id="assetTicketsList">
                             <div class="loading"><div class="spinner"></div></div>
@@ -2563,6 +2616,7 @@ $translationNamespaces = ['common', 'asset-management'];
             loadDevices(assetId);
             loadInstalledSoftware(assetId);
             loadInventoryStatus(assetId);
+            loadConnections(assetId);
             loadIntuneDevice(assetId);
             loadAssetTickets(assetId);
             loadAssetContracts(assetId);
@@ -4080,7 +4134,7 @@ $translationNamespaces = ['common', 'asset-management'];
         };
         const atlFinancialFields = ['purchase_date', 'purchase_cost', 'supplier_id', 'order_number', 'warranty_expiry',
                                     'lease_start', 'lease_expiry', 'cost_centre_id'];
-        const atlBadges = { devices: 'devicesCountBadge', software: 'softwareCountBadge', tickets: 'ticketsCountBadge', contracts: 'contractsCountBadge' };
+        const atlBadges = { devices: 'devicesCountBadge', software: 'softwareCountBadge', connected: 'connectedCountBadge', tickets: 'ticketsCountBadge', contracts: 'contractsCountBadge' };
 
         /** A fresh asset: nothing revealed, nothing counted, and the badges watched for their numbers. */
         function atlStartAsset() {
@@ -4365,6 +4419,171 @@ $translationNamespaces = ['common', 'asset-management'];
             }).join('');
             panel.innerHTML = `<div class="section-header"><span class="section-title">${escapeHtml(invT('panel_heading'))}</span></div>${blocks}`;
             panel.style.display = '';
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        //  Connected assets (GH #200 part C)
+        //
+        //  One row per source (AssetConnectionsService). Shown grouped by the
+        //  other asset, each source's row beside the others, so a tool that
+        //  disagrees with a person is visible rather than overwriting them.
+        //  A tool's row is worded "last observed connected", never as a
+        //  current assignment. Only a person's row has Disconnect.
+        // ════════════════════════════════════════════════════════════════
+
+        let connPickerTimer = null;
+
+        function connT(key, vars) { return window.t('asset-management.connections.' + key, vars); }
+
+        function connSourceName(source) {
+            if (source === 'manual') return connT('source_person');
+            return source.indexOf('rest:') === 0 ? source.slice(5) : source;
+        }
+
+        async function loadConnections(assetId) {
+            const box = document.getElementById('connectionsList');
+            const badge = document.getElementById('connectedCountBadge');
+            try {
+                const response = await fetch(`${API_BASE}get_asset_connections.php?asset_id=${assetId}`);
+                const data = await response.json();
+                if (Number(selectedAssetId) !== Number(assetId) || !box) return;
+                if (!data.success) throw new Error(data.error || '');
+                if (badge) badge.textContent = data.current.length;
+                renderConnections(data);
+            } catch (e) {
+                if (badge) badge.textContent = '0';
+                if (box) box.innerHTML = `<div class="empty-state" style="padding: 20px;">${escapeHtml(connT('load_error'))}</div>`;
+            }
+        }
+
+        function renderConnections(data) {
+            const box = document.getElementById('connectionsList');
+            const assetLink = o => `<a href="?asset_id=${o.id}" onclick="event.preventDefault(); openConnectedAsset(${o.id})">${assetTypeIcon(o.asset_type_id, 14)}${escapeHtml(o.hostname || ('#' + o.id))}</a>`;
+            const when = iso => iso ? `<span title="${escapeHtml(fmtDateTime(new Date(iso)))}">${escapeHtml(fmtDate(new Date(iso)))}</span>` : '-';
+            let html = '';
+            if (!data.current.length) {
+                html += `<div class="empty-state" style="padding: 20px;">${escapeHtml(connT('none'))}</div>`;
+            } else {
+                html += '<div class="conn-list">' + data.current.map(group => {
+                    const hasManual = group.rows.some(r => r.manual);
+                    const lines = group.rows.map(r => {
+                        if (r.manual) {
+                            const text = r.confirmed_by ? connT('confirmed_by', { name: r.confirmed_by, date: '\u0000' }) : connT('confirmed_anon', { date: '\u0000' });
+                            return `<div class="conn-row"><span class="conn-chip manual">${escapeHtml(connSourceName('manual'))}</span>
+                                <span>${escapeHtml(text).split('\u0000').join(when(r.connected_at))}</span>
+                                <button type="button" class="btn btn-outline btn-sm" onclick="disconnectAsset(${r.id}, '${escapeHtml(group.other.hostname || '')}')">${escapeHtml(connT('disconnect'))}</button></div>`;
+                        }
+                        const ago = r.last_observed_at ? invAgoOrDate(r.last_observed_at) : '';
+                        return `<div class="conn-row"><span class="conn-chip">${escapeHtml(connSourceName(r.source))}</span>
+                            <span title="${escapeHtml(r.last_observed_at ? fmtDateTime(new Date(r.last_observed_at)) : '')}">${escapeHtml(connT('observed_by', { source: connSourceName(r.source), ago: ago }))}</span></div>`;
+                    }).join('');
+                    const confirm = hasManual ? '' : `<button type="button" class="btn btn-outline btn-sm" title="${escapeHtml(connT('confirm_title'))}" onclick="connectAsset(${group.other.id})">${escapeHtml(connT('confirm'))}</button>`;
+                    const desc = [group.other.manufacturer, group.other.model].filter(Boolean).join(' ');
+                    return `<div class="conn-item">
+                        <div class="conn-item-head"><span class="conn-name">${assetLink(group.other)}</span>
+                            <span class="conn-desc">${escapeHtml(desc)}</span>${confirm}</div>
+                        ${lines}
+                    </div>`;
+                }).join('') + '</div>';
+            }
+            if (data.history.length) {
+                html += `<div class="section-header conn-history-head"><span class="section-title">${escapeHtml(connT('history_heading'))}</span></div>
+                    <table class="inv-table conn-history"><tbody>` + data.history.map(r => {
+                        const ended = r.manual
+                            ? (r.disconnected_by ? connT('ended_by_person', { name: r.disconnected_by }) : '')
+                            : connT('ended_by_source');
+                        const from = r.manual ? r.connected_at : (r.first_observed_at || r.connected_at);
+                        return `<tr><td>${assetLink(r.other)}</td>
+                            <td>${escapeHtml(connT('history_row', { from: '\u0000', to: '\u0001' })).split('\u0000').join(when(from)).split('\u0001').join(when(r.disconnected_at))}</td>
+                            <td><span class="conn-chip${r.manual ? ' manual' : ''}">${escapeHtml(connSourceName(r.source))}</span> ${escapeHtml(ended)}</td></tr>`;
+                    }).join('') + '</tbody></table>';
+            }
+            box.innerHTML = html;
+        }
+
+        /** "3 hr ago" while recent, the date once it is old - an old observation should read as old. */
+        function invAgoOrDate(iso) {
+            const days = (Date.now() - new Date(iso).getTime()) / 86400000;
+            return days < 7 ? invAgo(iso) : fmtDate(new Date(iso));
+        }
+
+        function openConnectedAsset(id) {
+            if (assets.some(a => Number(a.id) === Number(id))) { selectAsset(id); return; }
+            window.location.href = '?asset_id=' + Number(id);
+        }
+
+        function openConnectPicker() {
+            if (!selectedAssetId) return;
+            document.getElementById('connectPickerModal').classList.add('active');
+            const box = document.getElementById('connectPickerSearch');
+            box.value = '';
+            document.getElementById('connectPickerResults').innerHTML = '';
+            box.focus();
+        }
+
+        function closeConnectPicker() {
+            document.getElementById('connectPickerModal').classList.remove('active');
+        }
+
+        function connectPickerInput() {
+            clearTimeout(connPickerTimer);
+            connPickerTimer = setTimeout(searchConnectable, 250);
+        }
+
+        async function searchConnectable() {
+            const results = document.getElementById('connectPickerResults');
+            const q = document.getElementById('connectPickerSearch').value.trim();
+            if (q.length < 2) { results.innerHTML = ''; return; }
+            try {
+                const resp = await fetch(`${API_BASE}get_assets.php?search=${encodeURIComponent(q)}`);
+                const data = await resp.json();
+                const found = (data.assets || []).filter(a => Number(a.id) !== Number(selectedAssetId)).slice(0, 25);
+                if (!found.length) {
+                    results.innerHTML = `<div class="asset-tickets-empty">${escapeHtml(connT('no_results'))}</div>`;
+                    return;
+                }
+                results.innerHTML = found.map(a => `
+                    <button type="button" class="contract-pick" onclick="connectAsset(${Number(a.id)})">
+                        <span class="contract-pick-name">${assetTypeIcon(a.asset_type_id, 14)}${escapeHtml(a.hostname || '')}</span>
+                        <span class="contract-pick-meta">${escapeHtml([a.asset_tag, a.service_tag, [a.manufacturer, a.model].filter(Boolean).join(' ')].filter(Boolean).join(' · '))}</span>
+                    </button>`).join('');
+            } catch (e) {
+                results.innerHTML = `<div class="asset-tickets-empty">${escapeHtml(connT('load_error'))}</div>`;
+            }
+        }
+
+        async function connectAsset(otherId) {
+            const assetId = selectedAssetId;
+            try {
+                const resp = await fetch(API_BASE + 'connect_asset.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ asset_id: Number(assetId), other_asset_id: Number(otherId) })
+                });
+                const data = await resp.json();
+                if (!data.success) { showToast(data.error || connT('load_error'), 'error'); return; }
+                closeConnectPicker();
+                showToast(connT('connected_toast'), 'success');
+                loadConnections(assetId);
+            } catch (e) {
+                showToast(connT('load_error'), 'error');
+            }
+        }
+
+        async function disconnectAsset(connectionId, name) {
+            if (!confirm(connT('disconnect_confirm', { name: name }))) return;
+            const assetId = selectedAssetId;
+            try {
+                const resp = await fetch(API_BASE + 'disconnect_asset.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ connection_id: Number(connectionId) })
+                });
+                const data = await resp.json();
+                if (!data.success) { showToast(data.error || connT('load_error'), 'error'); return; }
+                showToast(connT('disconnected_toast'), 'success');
+                loadConnections(assetId);
+            } catch (e) {
+                showToast(connT('load_error'), 'error');
+            }
         }
 
         // Load Intune device data for this asset, if any. Renders a third tab when matched.
@@ -4855,7 +5074,7 @@ $translationNamespaces = ['common', 'asset-management'];
             // — those don't match a key, so we show them as-is.
             const FIELD_KEYS = ['type','status','location','supplier','purchase_date',
                 'purchase_cost','order_number','warranty_expiry','lease_start','lease_expiry','cost_centre','assigned_user',
-                'hostname','asset_created','asset_discovered','hostname_reused'];
+                'hostname','asset_created','asset_discovered','hostname_reused','connection'];
 
             history.forEach(entry => {
                 const noneEm = `<em style="color:#999;">${window.t('asset-management.common.none')}</em>`;
