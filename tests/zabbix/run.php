@@ -118,7 +118,8 @@ try {
                ['name' => 'event_id', 'value' => '{EVENT.ID}'], ['name' => 'event_value', 'value' => '{EVENT.VALUE}'],
                ['name' => 'severity', 'value' => '{EVENT.NSEVERITY}'], ['name' => 'host', 'value' => '{HOST.NAME}'],
                ['name' => 'trigger', 'value' => '{EVENT.NAME}'], ['name' => 'message', 'value' => '{ALERT.MESSAGE}'],
-               ['name' => 'url', 'value' => '{$ZABBIX.URL}/tr_events.php?triggerid={TRIGGER.ID}&eventid={EVENT.ID}']];
+               ['name' => 'url', 'value' => '{$ZABBIX.URL}/tr_events.php?triggerid={TRIGGER.ID}&eventid={EVENT.ID}'],
+               ['name' => 'http_proxy', 'value' => '']];   // empty, as the page hands it out
     $tpl = fn(int $recovery, string $subject, string $message) => ['eventsource' => 0, 'recovery' => $recovery, 'subject' => $subject, 'message' => $message];
     $made['mediatype'] = zbx('mediatype.create', [
         'name' => "FreeITSM $tag", 'type' => 4, 'status' => 0, 'script' => $script, 'parameters' => $params, 'timeout' => '30s',

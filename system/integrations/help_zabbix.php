@@ -66,8 +66,9 @@
     <ol>
         <li>In Zabbix, go to <strong>Alerts &rsaquo; Media types</strong> and click <strong>Create media type</strong>.</li>
         <li>Name it <strong>FreeITSM</strong> and choose the type <strong>Webhook</strong>.</li>
-        <li>Under <strong>Parameters</strong>, add one line for each line in <em>Media type parameters</em> on the FreeITSM page: the name on the left of the <code>=</code>, the value on the right. Leave the values in braces exactly as they are - they are Zabbix macros, filled in for each alert.</li>
+        <li>Under <strong>Parameters</strong>, first <strong>delete the five Zabbix fills in</strong> (URL, HTTPProxy, To, Subject, Message) - they belong to its example script. Names are case-sensitive, so its <em>Message</em> is not our <em>message</em>. Then add one line for each line in <em>Media type parameters</em> on the FreeITSM page: the name on the left of the <code>=</code>, the value on the right. Leave the values in braces exactly as they are - they are Zabbix macros, filled in for each alert.</li>
         <li>Paste the <em>Media type script</em> into <strong>Script</strong>.</li>
+        <li>Leave <code>http_proxy</code> empty unless your Zabbix server reaches FreeITSM through a proxy - then put the proxy's address there.</li>
         <li>Make sure <strong>Enabled</strong> is ticked, and save.</li>
     </ol>
 </div>

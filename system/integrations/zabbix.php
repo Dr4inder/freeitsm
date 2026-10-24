@@ -34,6 +34,7 @@ if (!isset($_SESSION['analyst_id'])) {
 $zbxScript = <<<'JS'
 var p = JSON.parse(value);
 var req = new HttpRequest();
+if (p.http_proxy) { req.setProxy(p.http_proxy); }
 req.addHeader('Content-Type: application/json');
 var resp = req.post(p.endpoint, JSON.stringify({
     token: p.token, problem_id: p.event_id, event_value: p.event_value,
@@ -236,7 +237,8 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
                 ['endpoint', data.endpoint], ['token', data.token || ''], ['event_id', '{EVENT.ID}'],
                 ['event_value', '{EVENT.VALUE}'], ['severity', '{EVENT.NSEVERITY}'], ['host', '{HOST.NAME}'],
                 ['trigger', '{EVENT.NAME}'], ['message', '{ALERT.MESSAGE}'],
-                ['url', '{$ZABBIX.URL}/tr_events.php?triggerid={TRIGGER.ID}&eventid={EVENT.ID}']
+                ['url', '{$ZABBIX.URL}/tr_events.php?triggerid={TRIGGER.ID}&eventid={EVENT.ID}'],
+                ['http_proxy', '']
             ].map(function (p) { return p[0] + ' = ' + p[1]; }).join('\n');
         }
 

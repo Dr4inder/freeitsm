@@ -305,7 +305,7 @@ return [
         'zabbix_token_rotate'   => 'New token',
         'zabbix_rotate_confirm' => 'Make a new token? The old one stops working at once, so Zabbix will fail until you paste the new one into its media type.',
         'zabbix_params'         => 'Media type parameters',
-        'zabbix_params_hint'    => 'Each line is a parameter in the media type: the name on the left, the value on the right. The values in braces are Zabbix macros - leave them as they are. The url line gives each ticket a link back to the problem in Zabbix; it needs the macro {$ZABBIX.URL} set to your Zabbix web address (Zabbix: Administration → Macros). Without it the tickets simply have no link.',
+        'zabbix_params_hint'    => 'Delete the parameters Zabbix fills in for a new webhook (URL, HTTPProxy, To, Subject, Message) - they belong to its example script, not this one. Then add each line here as a parameter: the name on the left, the value on the right. http_proxy stays empty unless your Zabbix server can only reach FreeITSM through a proxy. The values in braces are Zabbix macros - leave them as they are. The url line gives each ticket a link back to the problem in Zabbix; it needs the macro {$ZABBIX.URL} set to your Zabbix web address (Zabbix: Administration → Macros). Without it the tickets simply have no link.',
         'zabbix_script'         => 'Media type script',
         'zabbix_copy'           => 'Copy',
         'zabbix_copied'         => 'Copied.',
