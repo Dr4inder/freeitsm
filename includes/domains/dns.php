@@ -43,7 +43,8 @@ function domainDns(string $name, string $type, string $resolver = 'system'): arr
     if (isset($cache[$key])) return $cache[$key];
 
     $type = strtoupper($type);
-    if ($resolver === 'auto' || $resolver === '') {
+    $auto = ($resolver === 'auto' || $resolver === '');
+    if ($auto) {
         $resolver = (PHP_OS_FAMILY === 'Windows') ? 'google' : 'system';
     }
     $useDoh = $resolver !== 'system'
@@ -54,10 +55,18 @@ function domainDns(string $name, string $type, string $resolver = 'system'): arr
         ? domainDnsDoh($name, $type, $resolver === 'cloudflare' ? 'cloudflare' : 'google')
         : domainDnsSystem($name, $type);
 
-    // The system resolver can fail for reasons that have nothing to do with the
-    // domain (a server with no outbound DNS). DoH is the second opinion.
-    if (!$useDoh && !$res['ok']) {
-        $res = domainDnsDoh($name, $type, 'google');
+    // Second opinions when the first could not answer - a failure that has
+    // nothing to do with the domain. The system resolver falls back to Google,
+    // as it always has. Automatic on Windows (DoH first) also tries Cloudflare,
+    // then the server's own resolver: a network that blocks one DNS-over-HTTPS
+    // service - school and corporate filters often do - must not leave every
+    // check answered by a failure. An explicitly chosen DoH service is respected.
+    if (!$res['ok']) {
+        $tries = !$useDoh ? ['google'] : ($auto ? ['cloudflare', 'system'] : []);
+        foreach ($tries as $alt) {
+            $next = $alt === 'system' ? domainDnsSystem($name, $type) : domainDnsDoh($name, $type, $alt);
+            if ($next['ok']) { $res = $next; break; }
+        }
     }
     return $cache[$key] = $res;
 }

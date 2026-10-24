@@ -56,6 +56,24 @@ function domainRunChecks(array $d, array $settings): array
     $isLive    = in_array($purpose, ['primary', 'secondary', 'email_only', 'campaign'], true);
     $isNonMail = domainPurposeIsNonMail($purpose);
 
+    // TRAP: a lookup that FAILED is not a record that is MISSING. Every DNS
+    //   question goes through $ask, which remembers the ones that could not be
+    //   answered; $txt returns null for those, and each check below says nothing
+    //   rather than "No SPF record". Before this, a server that could not reach
+    //   its resolver reported every domain as having no SPF and no DMARC
+    //   (reported by a user, October 2026: both records were there).
+    $failed = [];
+    $ask = function (string $q, string $type) use ($resolver, &$failed): array {
+        $r = domainDns($q, $type, $resolver);
+        if (!$r['ok']) $failed["$type $q"] = (string)$r['error'];
+        return $r;
+    };
+    $txt = function (string $q, string $prefix) use ($ask): ?array {
+        $r = $ask($q, 'TXT');
+        if (!$r['ok']) return null;
+        return array_values(array_filter($r['records'], fn($t) => stripos(ltrim($t), $prefix) === 0));
+    };
+
     // ------------------------------------------------------------------ registration
     $statuses = array_filter(array_map('trim', explode(',', (string)($d['registry_statuses'] ?? ''))));
     if (in_array('redemption period', $statuses, true) || in_array('pending delete', $statuses, true)) {
@@ -86,7 +104,7 @@ function domainRunChecks(array $d, array $settings): array
     elseif ($renew === 'unknown')   $add('renew_unknown', 'registration', 'warn', 3);
 
     // ------------------------------------------------------------------ DNS
-    $nsQ = domainDns($name, 'NS', $resolver);
+    $nsQ = $ask($name, 'NS');
     $dnsNs = $nsQ['records'];
     if ($nsQ['nxdomain']) {
         $add('dns_nxdomain', 'dns', 'fail', 25);
@@ -112,7 +130,7 @@ function domainRunChecks(array $d, array $settings): array
     elseif ($dnssec === false && $isLive)         $add('dnssec_off', 'dns', 'warn', 4);
     elseif ($dnssec === false)                    $add('dnssec_off', 'dns', 'info');
 
-    $caa = domainDns($name, 'CAA', $resolver);
+    $caa = $ask($name, 'CAA');
     if ($caa['ok'] && $caa['records']) {
         $issuers = [];
         foreach ($caa['records'] as $c) if (in_array($c[1], ['issue', 'issuewild'], true)) $issuers[] = $c[2];
@@ -122,32 +140,42 @@ function domainRunChecks(array $d, array $settings): array
     }
 
     // ------------------------------------------------------------------ email
-    $mxQ = domainDns($name, 'MX', $resolver);
+    $mxQ = $ask($name, 'MX');
     $mx = $mxQ['records'];
     $nullMx = count($mx) === 1 && $mx[0][1] === '';
     $mxHosts = $nullMx ? [] : array_map(fn($m) => $m[1], $mx);
-    $spfs  = domainTxtStartingWith($name, 'v=spf1', $resolver);
-    $dmarcs = domainTxtStartingWith('_dmarc.' . $name, 'v=DMARC1', $resolver);
-    $dmarc = $dmarcs ? domainParseTags($dmarcs[0]) : [];
+    // null = could not be looked up (see $ask); [] = looked up, and none there.
+    $spfs   = $txt($name, 'v=spf1');
+    $dmarcs = $txt('_dmarc.' . $name, 'v=DMARC1');
+    $dmarc  = $dmarcs ? domainParseTags($dmarcs[0]) : [];
 
     if ($isNonMail) {
         // Lock-down: this name should never send or receive mail.
-        if ($mxHosts) $add('lockdown_mx', 'email', 'warn', 6, ['mx' => implode(', ', $mxHosts)]);
-        else          $add('lockdown_mx_ok', 'email', 'pass', 0, ['null' => $nullMx ? 1 : 0]);
+        if ($mxQ['ok']) {
+            if ($mxHosts) $add('lockdown_mx', 'email', 'warn', 6, ['mx' => implode(', ', $mxHosts)]);
+            else          $add('lockdown_mx_ok', 'email', 'pass', 0, ['null' => $nullMx ? 1 : 0]);
+        }
 
-        $spfLocked = count($spfs) === 1 && preg_match('/^v=spf1\s+-all\s*$/i', trim($spfs[0]));
-        if ($spfLocked) $add('lockdown_spf_ok', 'email', 'pass');
-        else            $add('lockdown_spf', 'email', 'fail', 10, ['current' => $spfs ? implode(' | ', $spfs) : '']);
+        if ($spfs !== null) {
+            $spfLocked = count($spfs) === 1 && preg_match('/^v=spf1\s+-all\s*$/i', trim($spfs[0]));
+            if ($spfLocked) $add('lockdown_spf_ok', 'email', 'pass');
+            else            $add('lockdown_spf', 'email', 'fail', 10, ['current' => $spfs ? implode(' | ', $spfs) : '']);
+        }
 
-        if (strtolower($dmarc['p'] ?? '') === 'reject') $add('lockdown_dmarc_ok', 'email', 'pass');
-        else                                            $add('lockdown_dmarc', 'email', 'fail', 10, ['current' => $dmarc['p'] ?? '', 'domain' => $name]);
+        if ($dmarcs !== null) {
+            if (strtolower($dmarc['p'] ?? '') === 'reject') $add('lockdown_dmarc_ok', 'email', 'pass');
+            else                                            $add('lockdown_dmarc', 'email', 'fail', 10, ['current' => $dmarc['p'] ?? '', 'domain' => $name]);
+        }
     } else {
-        if ($nullMx)       $add('mx_null', 'email', 'info');
+        if (!$mxQ['ok'])   { /* could not look it up - said once, below */ }
+        elseif ($nullMx)   $add('mx_null', 'email', 'info');
         elseif ($mxHosts)  $add('mx_present', 'email', 'pass', 0, ['mx' => implode(', ', array_slice($mxHosts, 0, 4))]);
         else               $add('mx_none', 'email', 'info');
 
         // SPF
-        if (!$spfs) {
+        if ($spfs === null) {
+            // could not look it up - said once, below
+        } elseif (!$spfs) {
             $add('spf_missing', 'email', 'fail', 10);
         } elseif (count($spfs) > 1) {
             $add('spf_multiple', 'email', 'fail', 10, ['count' => count($spfs)]);
@@ -169,7 +197,9 @@ function domainRunChecks(array $d, array $settings): array
         }
 
         // DMARC
-        if (!$dmarcs) {
+        if ($dmarcs === null) {
+            // could not look it up - said once, below
+        } elseif (!$dmarcs) {
             $add('dmarc_missing', 'email', 'fail', 12, ['domain' => $name]);
         } elseif (count($dmarcs) > 1) {
             $add('dmarc_multiple', 'email', 'fail', 10);
@@ -187,29 +217,33 @@ function domainRunChecks(array $d, array $settings): array
         $configured = array_values(array_filter(array_map('trim', preg_split('/[\s,;]+/', (string)($d['dkim_selectors'] ?? '')))));
         if ($configured) {
             foreach ($configured as $sel) {
-                $k = domainTxtStartingWith(strtolower($sel) . '._domainkey.' . $name, 'v=DKIM1', $resolver)
-                  ?: domainTxtStartingWith(strtolower($sel) . '._domainkey.' . $name, 'k=', $resolver)
-                  ?: domainTxtStartingWith(strtolower($sel) . '._domainkey.' . $name, 'p=', $resolver);
-                if ($k) $add('dkim_found', 'email', 'pass', 0, ['selector' => $sel]);
-                else    $add('dkim_selector_missing', 'email', 'warn', 5, ['selector' => $sel]);
+                $key = $txt(strtolower($sel) . '._domainkey.' . $name, '');
+                if ($key === null) continue;   // could not look it up - said once, below
+                $key = array_filter($key, fn($t) => preg_match('/^\s*(v=DKIM1|k=|p=)/i', $t));
+                if ($key) $add('dkim_found', 'email', 'pass', 0, ['selector' => $sel]);
+                else      $add('dkim_selector_missing', 'email', 'warn', 5, ['selector' => $sel]);
             }
         } elseif ($mxHosts || $spfs) {
             $found = null;
+            $unsure = false;
             // Microsoft 365, Google Workspace, generic, Mailchimp, and two common
             // defaults. A CNAME-published key is followed by the TXT query itself.
             foreach (['selector1', 'google', 'default', 'k1', 's1', 'dkim'] as $sel) {
-                $txt = domainDns($sel . '._domainkey.' . $name, 'TXT', $resolver);
-                if ($txt['ok'] && $txt['records']) { $found = $sel; break; }
+                $selTxt = $ask($sel . '._domainkey.' . $name, 'TXT');
+                if (!$selTxt['ok']) $unsure = true;
+                if ($selTxt['ok'] && $selTxt['records']) { $found = $sel; break; }
             }
-            if ($found) $add('dkim_found', 'email', 'pass', 0, ['selector' => $found]);
-            else        $add('dkim_unknown', 'email', 'info');
+            if ($found)       $add('dkim_found', 'email', 'pass', 0, ['selector' => $found]);
+            elseif (!$unsure) $add('dkim_unknown', 'email', 'info');
         }
 
         if ($mxHosts) {
-            if (domainTxtStartingWith('_mta-sts.' . $name, 'v=STSv1', $resolver)) $add('mta_sts_on', 'email', 'pass');
-            else $add('mta_sts_off', 'email', 'info');
-            if (domainTxtStartingWith('_smtp._tls.' . $name, 'v=TLSRPTv1', $resolver)) $add('tls_rpt_on', 'email', 'pass');
-            else $add('tls_rpt_off', 'email', 'info');
+            $sts = $txt('_mta-sts.' . $name, 'v=STSv1');
+            if ($sts) $add('mta_sts_on', 'email', 'pass');
+            elseif ($sts !== null) $add('mta_sts_off', 'email', 'info');
+            $rpt = $txt('_smtp._tls.' . $name, 'v=TLSRPTv1');
+            if ($rpt) $add('tls_rpt_on', 'email', 'pass');
+            elseif ($rpt !== null) $add('tls_rpt_off', 'email', 'info');
         }
     }
 
@@ -218,10 +252,11 @@ function domainRunChecks(array $d, array $settings): array
     $soonest = null; $soonestIssuer = null; $certs = [];
     foreach ($hosts as $i => $h) {
         $isExtra = $i >= 2;
-        $a  = domainDns($h, 'A', $resolver);
-        $aa = domainDns($h, 'AAAA', $resolver);
+        $a  = $ask($h, 'A');
+        $aa = $ask($h, 'AAAA');
         if (!($a['records'] || $aa['records'])) {
-            if ($isExtra) $add('web_no_host', 'web', 'warn', 3, ['host' => $h]);
+            // "No address" only when both were looked up and both said so.
+            if ($isExtra && $a['ok'] && $aa['ok']) $add('web_no_host', 'web', 'warn', 3, ['host' => $h]);
             continue;
         }
         $c = domainTlsCertificate($h);
@@ -249,8 +284,22 @@ function domainRunChecks(array $d, array $settings): array
         }
     }
 
+    // ------------------------------------------------------------------ lookups that failed
+    // Said once, with what failed and why, instead of a wrong answer per check.
+    // The grade is withheld: a score from the checks that happened to work
+    // would look like a clean bill of health it is not.
+    $dnsFailed = (bool)$failed;
+    if ($dnsFailed) {
+        $add('dns_lookup_failed', 'dns', 'warn', 0, [
+            'count'    => count($failed),
+            'names'    => implode(', ', array_slice(array_keys($failed), 0, 4)) . (count($failed) > 4 ? ', …' : ''),
+            'error'    => (string)reset($failed),
+            'resolver' => $resolver,
+        ]);
+    }
+
     // ------------------------------------------------------------------ grade
-    [$score, $grade] = domainGrade($f);
+    [$score, $grade] = $dnsFailed ? [null, null] : domainGrade($f);
 
     return [
         'findings'        => $f,
@@ -336,6 +385,8 @@ function domainSpfLookupCount(string $spf, string $resolver, int $depth, array &
             $target = rtrim($m[2], '.');
             if (strpos($target, '%') !== false || isset($seen[$target])) continue;   // macros: cannot follow
             $seen[$target] = true;
+            $subQ = domainDns($target, 'TXT', $resolver);
+            if (!$subQ['ok']) continue;   // could not look it up: not the same as broken
             $sub = domainTxtStartingWith($target, 'v=spf1', $resolver);
             if (!$sub) { $broken[] = $target; continue; }
             $count += domainSpfLookupCount($sub[0], $resolver, $depth + 1, $broken, $seen);
