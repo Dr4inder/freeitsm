@@ -676,12 +676,18 @@ $translationNamespaces = ['common', 'tickets'];
         // choice for the same reason.
         function renderUserPersonInfo(user) {
             const rows = [];
-            const add = (labelKey, value) => {
+            // dialHref: the Call link get_users.php built for a phone field ('' = none).
+            const add = (labelKey, value, dialHref) => {
                 if (value === null || value === undefined || value === '') return;
+                const call = dialHref
+                    ? ` <a class="phone-dial" style="margin-left:6px;font-size:12px;font-weight:600;white-space:nowrap" href="${escapeHtml(dialHref)}"`
+                      + (/^https:/i.test(dialHref) ? ' target="_blank" rel="noopener"' : '')
+                      + ` title="${escapeHtml(t('common.phone_dial.call_title', { number: String(value) }))}">${escapeHtml(t('common.phone_dial.call'))}</a>`
+                    : '';
                 rows.push(`
                     <div class="info-item">
                         <span class="info-label">${escapeHtml(t(labelKey))}</span>
-                        <span class="info-value">${escapeHtml(String(value))}</span>
+                        <span class="info-value">${escapeHtml(String(value))}${call}</span>
                     </div>`);
             };
 
@@ -697,8 +703,8 @@ $translationNamespaces = ['common', 'tickets'];
             add('tickets.users.info.job_title',   user.job_title);
             add('tickets.users.info.department',  user.department);
             add('tickets.users.info.office',      user.office);
-            add('tickets.users.info.phone',       user.phone);
-            add('tickets.users.info.mobile',      user.mobile);
+            add('tickets.users.info.phone',       user.phone, user.phone_dial);
+            add('tickets.users.info.mobile',      user.mobile, user.mobile_dial);
             add('tickets.users.info.employee_id', user.employee_id);
 
             // Resolved from the list this page already holds, which is tenant

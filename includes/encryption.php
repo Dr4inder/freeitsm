@@ -59,6 +59,7 @@ define('ENCRYPTED_SETTING_KEYS', [
     'warroom_ai_api_key',
     'projects_ai_api_key',
     'zabbix_token',   // the secret Zabbix sends; shown to administrators to paste into Zabbix, so not masked
+    'threecx_token',  // the secret 3CX sends; carried in the template an administrator downloads, so not masked
 ]);
 
 /**

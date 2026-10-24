@@ -63,6 +63,8 @@ $isDevOps = ($providerKey === 'azuredevops');
 $isSlack = ($providerKey === 'slack');
 // Zabbix calls in rather than being called; its sections are in help_zabbix.php.
 $isZabbix = ($providerKey === 'zabbix');
+// So does 3CX; its sections are in help_threecx.php.
+$isThreecx = ($providerKey === 'threecx');
 
 /**
  * What each tracker calls its credential, because getting this wrong is not a
@@ -76,7 +78,15 @@ $isZabbix = ($providerKey === 'zabbix');
 $tokenNoun = $isDevOps ? 'personal access token' : 'API token';
 
 /** The left-nav sections, in order. Single source for nav + scroll-spy. */
-$sections = $isZabbix ? [
+$sections = $isThreecx ? [
+    ['id' => 'overview', 'title' => 'What this does'],
+    ['id' => 'token',    'title' => 'Make the token'],
+    ['id' => 'upload',   'title' => 'Upload the template to 3CX'],
+    ['id' => 'notes',    'title' => 'Choose where calls go'],
+    ['id' => 'dial',     'title' => 'Click-to-call'],
+    ['id' => 'try',      'title' => 'Try it'],
+    ['id' => 'trouble',  'title' => 'If something is wrong'],
+] : ($isZabbix ? [
     ['id' => 'overview',  'title' => 'What this does'],
     ['id' => 'token',     'title' => 'Make the token'],
     ['id' => 'mediatype', 'title' => 'Create the media type in Zabbix'],
@@ -102,7 +112,7 @@ $sections = $isZabbix ? [
     ['id' => 'mapping',  'title' => 'Mapping'],
     ['id' => 'raise',    'title' => 'Raise an issue'],
     ['id' => 'trouble',  'title' => 'If something is wrong'],
-]);
+]));
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars(I18n::getLocale()); ?>" data-theme="<?php echo htmlspecialchars(Theme::active()); ?>" data-theme-mode="<?php echo htmlspecialchars(Theme::mode()); ?>">
@@ -161,7 +171,7 @@ $sections = $isZabbix ? [
 
             <div class="help-content">
 
-                <?php if ($isZabbix): include __DIR__ . '/help_zabbix.php'; elseif ($isSlack): include __DIR__ . '/help_slack.php'; else: ?>
+                <?php if ($isThreecx): include __DIR__ . '/help_threecx.php'; elseif ($isZabbix): include __DIR__ . '/help_zabbix.php'; elseif ($isSlack): include __DIR__ . '/help_slack.php'; else: ?>
 
                 <!-- 1 ───────────────────────────────────────────── -->
                 <div class="help-section" id="overview">
@@ -480,6 +490,6 @@ $sections = $isZabbix ? [
             });
         });
     </script>
-    <script src="../../assets/js/mobile.js?v=82"></script>
+    <script src="<?php echo $assetBase; ?>assets/js/mobile.js?v=82"></script>
 </body>
 </html>

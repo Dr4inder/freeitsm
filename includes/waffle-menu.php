@@ -1385,8 +1385,10 @@ function renderWarRoomAlerts($path_prefix) {
     <script>
     (function () {
         'use strict';
-        var base  = <?php echo json_encode(($path_prefix ?: './') . 'api/war-room/'); ?>;
-        var room  = <?php echo json_encode(($path_prefix ?: './') . 'war-room/'); ?>;
+        // From BASE_URL, for the same reason as the bell above: on a pretty URL
+        // served deeper than its file, $path_prefix pointed one folder too high.
+        var base  = <?php echo json_encode((defined('BASE_URL') ? BASE_URL : ($path_prefix ?: './')) . 'api/war-room/'); ?>;
+        var room  = <?php echo json_encode((defined('BASE_URL') ? BASE_URL : ($path_prefix ?: './')) . 'war-room/'); ?>;
         // The war room polls for itself; asking again from the header would double
         // the traffic on the one page that least needs it.
         var onWarRoom = /\/war-room\//.test(window.location.pathname);

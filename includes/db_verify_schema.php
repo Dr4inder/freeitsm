@@ -1179,6 +1179,25 @@ return [
         'received_datetime' => 'DATETIME NOT NULL',
     ],
 
+    // 3CX integration: every call reported and what was done with it - see
+    // freeitsm.sql and includes/integrations/threecx.php.
+    'threecx_calls' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'call_key'          => 'VARCHAR(80) NOT NULL',
+        'call_type'         => 'VARCHAR(20) NOT NULL',
+        'number'            => 'VARCHAR(50) NOT NULL',
+        'agent'             => 'VARCHAR(50) NULL',
+        'agent_email'       => 'VARCHAR(255) NULL',
+        'analyst_id'        => 'INT NULL',
+        'user_id'           => 'INT NULL',
+        'ticket_id'         => 'INT NULL',
+        'duration_seconds'  => 'INT NULL',
+        'started_datetime'  => 'DATETIME NULL',
+        'action'            => 'VARCHAR(30) NOT NULL',
+        'detail'            => 'VARCHAR(255) NULL',
+        'received_datetime' => 'DATETIME NOT NULL',
+    ],
+
     // Pre-ticket chat transcript (AI 'deflect' mode) — see freeitsm.sql. sender is
     // 'visitor'|'ai'|'agent'|'system'. Source for the ticket opening message + .txt log.
     'webchat_messages' => [

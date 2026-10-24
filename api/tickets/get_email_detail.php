@@ -7,6 +7,7 @@ session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/tenancy.php';
+require_once '../../includes/phone_dial.php';   // the requester's Call links
 
 header('Content-Type: application/json');
 
@@ -88,6 +89,8 @@ try {
                 t.tenant_id,
                 t.user_id,
                 u.email AS requester_email,
+                u.phone AS requester_phone,
+                u.mobile AS requester_mobile,
                 t.created_datetime as ticket_created,
                 t.updated_datetime as ticket_updated,
                 t.deleted_datetime
@@ -151,6 +154,15 @@ try {
     }
 
     // Convert bit fields to boolean
+    // The requester's numbers, each with its Call link - only when click-to-call
+    // is on, so the reading pane is unchanged on an install without it.
+    $dial = phoneDialTemplate($conn);
+    $email['requester_dial'] = [];
+    foreach (['requester_phone', 'requester_mobile'] as $col) {
+        $href = phoneDialHref($dial, $email[$col] ?? null);
+        if ($href !== '') $email['requester_dial'][] = ['number' => (string)$email[$col], 'href' => $href];
+    }
+    unset($email['requester_phone'], $email['requester_mobile']);
     $email['is_read'] = (bool)$email['is_read'];
     $email['has_attachments'] = (bool)$email['has_attachments'];
     $email['first_time_fix'] = $email['first_time_fix'] === null ? null : (bool)$email['first_time_fix'];

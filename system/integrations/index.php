@@ -80,6 +80,14 @@ foreach ($providers as $pk => $pmeta) {
     try { $counts[$pk] = zabbixConfigured($conn) ? 1 : 0; }
     catch (Exception $e) { $counts[$pk] = 0; }
 }
+
+// Telephony (3CX) too: one token, made or not.
+require_once dirname(__DIR__, 2) . '/includes/integrations/threecx.php';
+foreach ($providers as $pk => $pmeta) {
+    if (($pmeta['kind'] ?? 'tracker') !== 'telephony') continue;
+    try { $counts[$pk] = threecxConfigured($conn) ? 1 : 0; }
+    catch (Exception $e) { $counts[$pk] = 0; }
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars(I18n::getLocale()); ?>" data-theme="<?php echo htmlspecialchars(Theme::active()); ?>" data-theme-mode="<?php echo htmlspecialchars(Theme::mode()); ?>">
@@ -159,8 +167,8 @@ foreach ($providers as $pk => $pmeta) {
                     <span class="provider-count <?php echo $n === 0 ? 'is-none' : ''; ?>">
                         <?php
                         // "3 connections" is the tracker/messaging shape. An
-                        // extractor (or a monitoring feed) is one endpoint, so it reads as a state.
-                        if (in_array($meta['kind'] ?? 'tracker', ['extractor', 'monitoring'], true)) {
+                        // extractor (or a monitoring feed, or a phone system) is one endpoint, so it reads as a state.
+                        if (in_array($meta['kind'] ?? 'tracker', ['extractor', 'monitoring', 'telephony'], true)) {
                             echo htmlspecialchars($n > 0
                                 ? t('system.integrations.configured')
                                 : t('system.integrations.not_configured'));

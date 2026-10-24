@@ -2356,6 +2356,31 @@ CREATE TABLE IF NOT EXISTS `zabbix_events` (
     KEY `ix_zabbix_events_received` (`received_datetime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Every call 3CX reported to api/external/3cx/crm.php, and what was done with it
+-- (includes/integrations/threecx.php). 3CX gives a template no call id, so call_key
+-- is a hash of number, start, agent, length and type - the same report twice is
+-- recorded once. analyst_id is who the note was written as; user_id the caller.
+-- action: noted | created | logged | error.
+CREATE TABLE IF NOT EXISTS `threecx_calls` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `call_key`          VARCHAR(80) NOT NULL,
+    `call_type`         VARCHAR(20) NOT NULL,                        -- Inbound | Outbound | Missed | Notanswered
+    `number`            VARCHAR(50) NOT NULL,
+    `agent`             VARCHAR(50) NULL,                            -- the 3CX extension
+    `agent_email`       VARCHAR(255) NULL,
+    `analyst_id`        INT NULL,
+    `user_id`           INT NULL,
+    `ticket_id`         INT NULL,
+    `duration_seconds`  INT NULL,
+    `started_datetime`  DATETIME NULL,                               -- UTC, from 3CX
+    `action`            VARCHAR(30) NOT NULL,
+    `detail`            VARCHAR(255) NULL,
+    `received_datetime` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_threecx_calls_key` (`call_key`),
+    KEY `ix_threecx_calls_received` (`received_datetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- One website chat conversation. Created when a visitor opens the widget and (if the
 -- widget asks for it) gives their name + email. `token` is the browser's capability
 -- for THIS conversation — it is stored in the visitor's browser and presented on every

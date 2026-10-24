@@ -276,6 +276,32 @@ return [
         'check'    => ['rows', 'zabbix_events', "action = 'created'"],
     ],
 
+    // ── Integrations: telephony ──────────────────────────────────────────────
+    [
+        'id'       => 'system.threecx_calls',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'integrations',
+        'title'    => 'Phone calls land on the ticket',
+        'what'     => '3CX asks FreeITSM who is calling and opens their ticket; when the call ends it is noted there, written by the analyst who took it.',
+        'why'      => 'Nobody types up a call afterwards, or forgets to - every conversation with a requester is on their ticket, with how long it took and the recording.',
+        'done'     => '3CX has noted a call on a ticket (or opened one).',
+        'link'     => 'system/integrations/threecx.php',
+        'check'    => ['rows', 'threecx_calls', "action IN ('noted', 'created')"],
+    ],
+    [
+        'id'       => 'system.click_to_call',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'integrations',
+        'title'    => 'Click to call',
+        'what'     => 'Phone numbers on tickets and people have a Call button that dials through the analyst\'s own phone - the 3CX web client, its desktop app or any softphone.',
+        'why'      => 'No more reading a number off the screen and typing it into a handset, digit by digit.',
+        'done'     => 'A dial address is set on System -> Integrations -> 3CX.',
+        'link'     => 'system/integrations/threecx.php',
+        'check'    => ['sql', "SELECT COUNT(*) FROM system_settings WHERE setting_key = 'phone_dial_url' AND setting_value LIKE '%{number}%'"],
+    ],
+
     // ── Integrations: issue trackers────────────────────────────────────────
     [
         'id'       => 'system.jira_connection',

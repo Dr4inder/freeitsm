@@ -3170,7 +3170,7 @@ ${classificationFields}
             <div class="email-meta">
                 <div class="email-meta-row">
                     <div class="email-meta-label">${escapeHtml(t('tickets.reading_pane.meta_from'))}</div>
-                    <div class="email-meta-value">${senderLabel(email.from_name, email.from_address, true)}</div>
+                    <div class="email-meta-value">${senderLabel(email.from_name, email.from_address, true)}${requesterDialHtml(email)}</div>
                 </div>
                 <div class="email-meta-row">
                     <div class="email-meta-label">${escapeHtml(t('tickets.reading_pane.meta_to'))}</div>
@@ -5709,6 +5709,20 @@ function refreshCurrentView() {
 }
 
 // Utility: Escape HTML
+/**
+ * The requester's numbers with their Call buttons, for the From line - or ''.
+ * get_email_detail.php only sends requester_dial when click-to-call is on
+ * (System → Integrations → 3CX), and builds each link there, so the rules for
+ * reading a phone field live in one place (includes/phone_dial.php).
+ */
+function requesterDialHtml(email) {
+    return (email.requester_dial || []).map(d =>
+        ` · ${escapeHtml(d.number)} <a class="phone-dial" style="margin-left:4px;font-size:12px;font-weight:600;white-space:nowrap" href="${escapeHtml(d.href)}"`
+        + (/^https:/i.test(d.href) ? ' target="_blank" rel="noopener"' : '')
+        + ` title="${escapeHtml(t('common.phone_dial.call_title', { number: d.number }))}">${escapeHtml(t('common.phone_dial.call'))}</a>`
+    ).join('');
+}
+
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;

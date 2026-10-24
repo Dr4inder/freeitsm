@@ -10,6 +10,11 @@ return [
     // Every currency dropdown and every amount (includes/money.php +
     // assets/js/money.js, GH #189). Published to the browser by
     // Money::scriptTag(), so a page needs no namespace for them.
+    // Click-to-call (System → Integrations → 3CX): the button beside a phone number.
+    'phone_dial' => [
+        'call'       => 'Call',
+        'call_title' => 'Call {number}',
+    ],
     'currency' => [
         'favourites' => 'Favourites',
         'all'        => 'All currencies',

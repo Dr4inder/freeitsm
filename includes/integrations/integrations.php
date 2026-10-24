@@ -163,6 +163,17 @@ function integrationsAvailableProviders(): array
             'page'        => 'zabbix.php',   // its own page; see provider.php
             'credential_fields' => [],
         ],
+        // 3CX — the phone system (contributed by Carl Steynvaard of Open
+        // Resilience, Oct 2026). A "telephony" kind: like Zabbix it calls in,
+        // with one token, so it reads as a state rather than a count.
+        'threecx' => [
+            'key'         => 'threecx',
+            'kind'        => 'telephony',
+            'name'        => '3CX',
+            'blurb'       => 'system.integrations.threecx_blurb',
+            'page'        => 'threecx.php',   // its own page; see provider.php
+            'credential_fields' => [],
+        ],
         'slack' => [
             'key'         => 'slack',
             'kind'        => 'messaging',
