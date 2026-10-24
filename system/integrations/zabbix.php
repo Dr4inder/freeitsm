@@ -116,6 +116,7 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
             <a class="back-link" href="./">&larr; <?php echo htmlspecialchars(t('system.integrations.title')); ?></a>
             <h2>Zabbix <span class="zbx-state off" id="zbxState"><?php echo $t('not_configured'); ?></span></h2>
             <p><?php echo $t('zabbix_intro'); ?></p>
+            <p><strong><?php echo $t('zabbix_direction'); ?></strong></p>
             <a class="help-link" href="./zabbix/help">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -175,6 +176,17 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
         </div>
 
         <div class="zbx-panel">
+            <h3><?php echo $t('zabbix_test'); ?></h3>
+            <p><?php echo $t('zabbix_test_body'); ?></p>
+            <p class="zbx-hint" style="margin-top:-6px"><?php echo $t('zabbix_test_limit'); ?></p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn btn-primary" id="testBtn"><?php echo $t('zabbix_test_send'); ?></button>
+                <button class="btn btn-secondary" id="recoverBtn" style="display:none"><?php echo $t('zabbix_test_recover'); ?></button>
+            </div>
+            <div class="zbx-result" id="testResult"></div>
+        </div>
+
+        <div class="zbx-panel">
             <h3><?php echo $t('zabbix_events'); ?></h3>
             <table class="zbx-events">
                 <thead><tr><th><?php echo $t('zabbix_col_when'); ?></th><th><?php echo $t('zabbix_col_host'); ?></th><th><?php echo $t('zabbix_col_problem'); ?></th>
@@ -194,6 +206,9 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
             'rotate' => t('system.integrations.zabbix_token_rotate'), 'rotate_confirm' => t('system.integrations.zabbix_rotate_confirm'),
             'copied' => t('system.integrations.zabbix_copied'), 'saved' => t('system.integrations.zabbix_saved'),
             'events_none' => t('system.integrations.zabbix_events_none'), 'recovery' => t('system.integrations.zabbix_recovery'),
+            'test_raised' => t('system.integrations.zabbix_test_raised'), 'test_resolved' => t('system.integrations.zabbix_test_resolved'),
+            'test_failed' => t('system.integrations.zabbix_test_failed'), 'test_trigger' => t('system.integrations.zabbix_test_trigger'),
+            'test_message' => t('system.integrations.zabbix_test_message'),
             'act' => [
                 'created' => t('system.integrations.zabbix_act_created'), 'updated' => t('system.integrations.zabbix_act_updated'),
                 'resolved' => t('system.integrations.zabbix_act_resolved'), 'recovery_unmatched' => t('system.integrations.zabbix_act_recovery_unmatched'),
@@ -320,6 +335,43 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
                 });
                 if (d.success) { say('saveResult', true, T.saved); load(); }
                 else say('saveResult', false, d.error || 'Could not save.');
+            } finally { btn.disabled = false; }
+        });
+
+        /** Says what the test did, with a link to the ticket it touched. */
+        function testSaid(ok, template, d) {
+            var el = $('testResult');
+            el.className = 'zbx-result on ' + (ok ? 'ok' : 'bad');
+            el.textContent = '';
+            if (!ok) { el.textContent = T.test_failed.replace('{error}', d.error || d.action || '?'); return; }
+            var parts = template.split('{ticket}');
+            var a = document.createElement('a');
+            a.href = '../../tickets/?ticket_id=' + encodeURIComponent(d.ticket_id);
+            a.textContent = d.ticket_number || ('#' + d.ticket_id);
+            el.appendChild(document.createTextNode(parts[0] || ''));
+            el.appendChild(a);
+            el.appendChild(document.createTextNode(parts[1] || ''));
+        }
+        var testProblem = null;
+        $('testBtn').addEventListener('click', async function () {
+            var btn = this; btn.disabled = true;
+            try {
+                var d = await post({ action: 'test', step: 'problem', trigger: T.test_trigger, message: T.test_message });
+                var ok = !!d.success && d.action === 'created';
+                testSaid(ok, T.test_raised, d);
+                testProblem = ok ? d.problem_id : null;
+                $('recoverBtn').style.display = ok ? '' : 'none';
+                load();
+            } finally { btn.disabled = false; }
+        });
+        $('recoverBtn').addEventListener('click', async function () {
+            var btn = this; btn.disabled = true;
+            try {
+                var d = await post({ action: 'test', step: 'recovery', problem_id: testProblem, trigger: T.test_trigger, message: T.test_message });
+                testSaid(!!d.success && d.action === 'resolved', T.test_resolved, d);
+                btn.style.display = 'none';
+                testProblem = null;
+                load();
             } finally { btn.disabled = false; }
         });
 

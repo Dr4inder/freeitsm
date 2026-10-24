@@ -32,6 +32,10 @@
         <li><strong>A recovery resolves it.</strong> When the problem clears, a "recovered" message is added and the ticket is moved to Resolved (or whatever you choose).</li>
     </ul>
     <p>Every alert received is listed at the bottom of the Zabbix page, with what was done with it.</p>
+    <p>
+        <strong>Zabbix calls FreeITSM - never the other way round.</strong> FreeITSM does not need your Zabbix
+        server's address or a Zabbix password. The address on the Zabbix page is FreeITSM's own, for you to give to Zabbix.
+    </p>
 </div>
 
 <!-- 2 ───────────────────────────────────────────── -->
@@ -103,11 +107,11 @@
         <span class="help-section-num">6</span>
         <h3>Try it</h3>
     </div>
-    <p>
-        In Zabbix, open the media type and use <strong>Test</strong>, or wait for a real problem. Within a few
-        seconds it appears under <strong>Recent alerts</strong> on the FreeITSM page, with a link to the
-        incident it raised.
-    </p>
+    <p>Two halves, tested from either end:</p>
+    <ul>
+        <li><strong>FreeITSM's half - Send a test alert</strong> on the Zabbix page. A test problem goes through exactly what a real alert does, raising an incident titled <code>[Zabbix] freeitsm-test: Test alert from FreeITSM</code> with your settings. Then <strong>Send the recovery</strong> and watch it resolve. The test incident stays so you can see what a real one looks like; close it like any other ticket.</li>
+        <li><strong>The network half - Test</strong> on the media type in Zabbix. Only this proves your Zabbix server can reach FreeITSM. Within a few seconds it appears under <strong>Recent alerts</strong>.</li>
+    </ul>
 </div>
 
 <!-- 7 ───────────────────────────────────────────── -->

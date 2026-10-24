@@ -35,6 +35,39 @@ try {
         echo json_encode(['success' => true, 'token' => zabbixRotateToken($conn)]);
         exit;
     }
+    if ($action === 'test') {
+        // "Try it": a test problem (then its recovery) through the SAME handler a
+        // real alert takes - so it proves the settings and the incident they make,
+        // not a pretend path. The network half (can Zabbix reach us?) is only
+        // provable from Zabbix, and the page says so.
+        csrfRequireWriteMethod();
+        if (!zabbixReady($conn)) throw new InvalidArgumentException('Run Database Verification first.');
+        $step = (string)($in['step'] ?? 'problem');
+        if ($step === 'recovery') {
+            // Only a test problem this page made can be recovered from here.
+            $pid = (string)($in['problem_id'] ?? '');
+            if (!preg_match('/^freeitsm-test-[0-9a-f]{8}$/', $pid)) throw new InvalidArgumentException('That is not a test problem.');
+        } else {
+            $pid = 'freeitsm-test-' . bin2hex(random_bytes(4));
+        }
+        $r = zabbixHandleEvent($conn, [
+            'problem_id'  => $pid,
+            'event_value' => $step === 'recovery' ? '0' : '1',
+            'severity'    => 4,
+            'host'        => 'freeitsm-test',
+            'trigger'     => mb_substr(trim((string)($in['trigger'] ?? '')) ?: 'Test alert from FreeITSM', 0, 200),
+            'message'     => mb_substr(trim((string)($in['message'] ?? '')), 0, 500),
+        ]);
+        $number = null;
+        if ($r['ticket_id']) {
+            $n = $conn->prepare("SELECT ticket_number FROM tickets WHERE id = ?");
+            $n->execute([$r['ticket_id']]);
+            $number = $n->fetchColumn() ?: null;
+        }
+        echo json_encode(['success' => $r['ok'], 'action' => $r['action'], 'ticket_id' => $r['ticket_id'],
+                          'ticket_number' => $number, 'problem_id' => $pid] + (isset($r['error']) ? ['error' => $r['error']] : []));
+        exit;
+    }
     if ($action !== 'get') {
         echo json_encode(['success' => false, 'error' => 'Unknown action']);
         exit;

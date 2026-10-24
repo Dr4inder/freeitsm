@@ -184,6 +184,20 @@ try {
        && zabbixSettings($conn)['resolve_status_id'] === null, json_encode($d3));
     [$c, $d4] = $api($sA, 'POST', ['action' => 'save', 'requester_email' => 'not an address']);
     ok('...and a bad value is refused with a sentence', empty($d4['success']) && strpos((string)($d4['error'] ?? ''), 'email') !== false, json_encode($d4));
+    echo "\nTry it (the page's test button)\n";
+    [$c, $t1] = $api($sA, 'POST', ['action' => 'test', 'step' => 'problem', 'trigger' => 'Test alert from FreeITSM', 'message' => 'ZZ test']);
+    if (!empty($t1['ticket_id'])) $tickets[] = (int)$t1['ticket_id'];
+    ok('a test alert raises an incident through the real handler', !empty($t1['success']) && ($t1['action'] ?? '') === 'created' && !empty($t1['ticket_id'])
+       && preg_match('/^freeitsm-test-[0-9a-f]{8}$/', (string)($t1['problem_id'] ?? '')), json_encode($t1));
+    $ts = $conn->prepare("SELECT subject FROM tickets WHERE id = ?"); $ts->execute([(int)($t1['ticket_id'] ?? 0)]);
+    ok('...titled so nobody mistakes it for a real one', (string)$ts->fetchColumn() === '[Zabbix] freeitsm-test: Test alert from FreeITSM');
+    [$c, $t2] = $api($sA, 'POST', ['action' => 'test', 'step' => 'recovery', 'problem_id' => $t1['problem_id'] ?? '']);
+    ok('...and its recovery resolves it', !empty($t2['success']) && ($t2['action'] ?? '') === 'resolved' && (int)($t2['ticket_id'] ?? 0) === (int)($t1['ticket_id'] ?? -1), json_encode($t2));
+    [$c, $t3] = $api($sA, 'POST', ['action' => 'test', 'step' => 'recovery', 'problem_id' => $p1]);
+    ok('the button cannot recover a REAL problem - only a test one it made', empty($t3['success']) && strpos((string)($t3['error'] ?? ''), 'not a test') !== false, json_encode($t3));
+    [$c] = $api($sA, 'GET', null, '?action=test');
+    ok('a test sent as a GET is refused (405)', $c === 405, "HTTP $c");
+    $conn->exec("DELETE FROM zabbix_events WHERE problem_id = " . $conn->quote((string)($t1['problem_id'] ?? '-')));
     @unlink("$dir/sess_$sA"); @unlink("$dir/sess_$sP");
 } finally {
     foreach ($tickets as $id) {
