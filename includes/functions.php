@@ -365,6 +365,29 @@ function requesterIsActive(PDO $conn, int $userId): bool {
 }
 
 /**
+ * The modules the signed-in analyst may use NOW - from the database (cached for
+ * the request by getAnalystAllowedModules()), never the copy taken at sign-in.
+ * Null = every module; [] = none, which is also the answer when nobody is signed
+ * in or the lookup fails (fail closed).
+ *
+ * 🔴 $_SESSION['allowed_modules'] is written once, at sign-in. The document
+ * endpoints and global search gated on it, so an analyst whose access to, say,
+ * Contracts was removed kept downloading, attaching and finding its documents,
+ * and seeing its records in search, until they signed out. The module pages
+ * themselves re-read the grants. Reported privately, October 2026.
+ * TRAP: never gate anything on $_SESSION['allowed_modules']; call this.
+ */
+function analystAllowedModulesNow(): ?array {
+    $id = (int) ($_SESSION['analyst_id'] ?? 0);
+    if ($id <= 0) return [];
+    try {
+        return getAnalystAllowedModules(connectToDatabase(), $id);
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+/**
  * Is the signed-in analyst an administrator? Asks the database every request
  * (analystIsAdmin() caches within one), so demoting or deactivating somebody takes
  * effect on their very next click.
@@ -530,7 +553,7 @@ function sessionIsFormApproverOnly(): bool
     if ($memo !== null) return $memo;
     $memo = false;
     $aid = (int)($_SESSION['analyst_id'] ?? 0);
-    $allowed = $_SESSION['allowed_modules'] ?? null;
+    $allowed = analystAllowedModulesNow();
     if ($aid <= 0 || $allowed === null || in_array('forms', $allowed, true)) return $memo;   // null = every module
     try {
         $st = connectToDatabase()->prepare(

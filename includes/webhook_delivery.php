@@ -461,3 +461,45 @@ function webhookReplayBlockedReason(PDO $conn, int $id): ?string {
     }
     return null;
 }
+
+/**
+ * Encrypt the url and secret of every send_webhook step in an action list - the
+ * one place this is done, for every route that saves actions.
+ *
+ * 🔴 Only the browser's workflow save did it. POST and PATCH /workflows stored
+ * them as given, and so did every form action list (form designer and REST), so a
+ * Slack or Teams URL - a bearer token in all but name - and a signing secret sat
+ * readable in the database and every backup. Reported privately, October 2026.
+ * Idempotent: an "ENC:" value is not encrypted again, so a GET-then-PATCH round
+ * trip of ciphertext is safe.
+ *
+ * @param array $actions  a list of {type, args}
+ */
+function webhookEncryptActions(array $actions): array {
+    foreach ($actions as $i => $a) {
+        if (!is_array($a) || ($a['type'] ?? '') !== 'send_webhook') continue;
+        foreach (['url', 'secret'] as $k) {
+            if (isset($a['args'][$k]) && $a['args'][$k] !== '') {
+                $actions[$i]['args'][$k] = webhookEncrypt((string)$a['args'][$k]);
+            }
+        }
+    }
+    return $actions;
+}
+
+/**
+ * The reverse, for an editor showing an action list to the person who owns it.
+ *
+ * @param array $actions  a list of {type, args}
+ */
+function webhookDecryptActions(array $actions): array {
+    foreach ($actions as $i => $a) {
+        if (!is_array($a) || ($a['type'] ?? '') !== 'send_webhook') continue;
+        foreach (['url', 'secret'] as $k) {
+            if (isset($a['args'][$k]) && $a['args'][$k] !== '') {
+                $actions[$i]['args'][$k] = webhookDecrypt((string)$a['args'][$k]);
+            }
+        }
+    }
+    return $actions;
+}

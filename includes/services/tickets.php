@@ -680,6 +680,9 @@ class TicketsService
         $updates[] = 'updated_datetime = UTC_TIMESTAMP()';
         $args[]    = $ticketId;
         $conn->prepare('UPDATE tickets SET ' . implode(', ', $updates) . ' WHERE id = ?')->execute($args);
+        if (in_array('tenant_id = ?', $updates, true)) {
+            ticketsFollowCompanyMove($conn, [$ticketId], (int)$in['company_id']);   // its tasks and search entries
+        }
 
         if ($customValues !== null) {
             TicketFieldsService::write($conn, $ctx, $ticketId, $customDefs, $customValues);

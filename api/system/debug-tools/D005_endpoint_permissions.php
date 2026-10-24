@@ -42,6 +42,23 @@ require_once __DIR__ . '/../../../config.php';
 require_once __DIR__ . '/../../../includes/functions.php';
 require_once __DIR__ . '/../../../includes/capabilities.php';
 
+// Debug tools are administrators-only (issue #34). Fail closed.
+// 🔴 This one had no gate at all - the only debug tool without one - so anybody,
+// signed in or not, could fetch its list of every endpoint ranked by how weakly it
+// is guarded. Reported privately, October 2026. tests/security-report-2026-10.php
+// fails for any debug tool without this block.
+try {
+    $__dbgAdmin = !empty($_SESSION['analyst_id']) && analystIsAdmin(connectToDatabase(), (int)$_SESSION['analyst_id']);
+} catch (Throwable $e) {
+    $__dbgAdmin = false;
+}
+if (!$__dbgAdmin) {
+    http_response_code(403);
+    if (!headers_sent()) header('Content-Type: text/plain; charset=utf-8');
+    echo "Administrator access required.\n";
+    exit;
+}
+
 $sections = [];
 /**
  * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a

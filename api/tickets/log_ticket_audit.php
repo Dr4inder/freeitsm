@@ -45,6 +45,36 @@ try {
         exit;
     }
 
+    // 🔴 History is not free text. This accepted any field_name and any values, and
+    // SLA timing is built from the Status rows (includes/sla.php) - so an analyst
+    // could pause a ticket's SLA clock with a made-up "Status -> On Hold" row while
+    // the ticket stayed Open, and write any other line into the history a case
+    // report prints. Reported privately, October 2026. Only the fields the inbox
+    // logs (after its own successful save) are accepted...
+    $allowedFields = ['Department', 'Status', 'Owner', 'Team', 'Ticket Type', 'Priority', 'Sensitivity',
+                      'Origin', 'First Time Fix', 'IT Training', 'Category', 'Category at Close', 'Resolution Code'];
+    if (!in_array($fieldName, $allowedFields, true)) {
+        echo json_encode(['success' => false, 'error' => 'That field is not recorded here']);
+        exit;
+    }
+    // ...and a Status row must say what the ticket's status really now is, and
+    // be a change from the last one recorded - so it can only ever record a real
+    // transition, never invent one.
+    if ($fieldName === 'Status') {
+        $cur = $conn->prepare("SELECT s.name FROM tickets t JOIN ticket_statuses s ON s.id = t.status_id WHERE t.id = ?");
+        $cur->execute([(int)$ticketId]);
+        $last = $conn->prepare("SELECT new_value FROM ticket_audit WHERE ticket_id = ? AND field_name = 'Status' ORDER BY id DESC LIMIT 1");
+        $last->execute([(int)$ticketId]);
+        // Case-insensitive, as the status lookup in assign_ticket.php is.
+        $now = strtolower(trim((string)$cur->fetchColumn()));
+        $prev = $last->fetchColumn();
+        if ($now === '' || $now !== strtolower(trim((string)$newValue))
+            || ($prev !== false && strtolower(trim((string)$prev)) === $now)) {
+            echo json_encode(['success' => false, 'error' => 'That status change does not match the ticket']);
+            exit;
+        }
+    }
+
     $sql = "INSERT INTO ticket_audit (ticket_id, analyst_id, field_name, old_value, new_value, created_datetime)
             VALUES (?, ?, ?, ?, ?, UTC_TIMESTAMP())";
 

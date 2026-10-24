@@ -304,6 +304,24 @@ function wtMorningCheckScope(PDO $conn, int $analystId, string $scope): array
  * @param string $scope  WT_SCOPE_MINE, WT_SCOPE_TEAM or WT_SCOPE_ALL ('all' gives no clause)
  * @param string $column  the owner column with its alias, e.g. 't.assigned_analyst_id' - always a literal, never input
  */
+/**
+ * The company half of a Watchtower count: the companies the analyst is looking at
+ * (the header switcher, All companies included), exactly as every list does.
+ *
+ * 🔴 The ticket, change, task and asset cards counted across EVERY company - the
+ * code said so ("a pre-existing multi-tenancy gap") - so an analyst limited to one
+ * company saw the others' volumes. Reported privately, October 2026. No analyst
+ * (0) means no narrowing, which only an internal caller can be.
+ *
+ * @param string $alias  the table's alias in the query; '' for none
+ */
+function wtCompanyClause(PDO $conn, int $analystId, string $alias): array
+{
+    if ($analystId <= 0) return ['', []];
+    require_once __DIR__ . '/tenancy.php';
+    return ticketTenantFilter($conn, $analystId, $alias);
+}
+
 function wtScopeClause(PDO $conn, int $analystId, string $scope, string $column): array
 {
     if ($scope === WT_SCOPE_MINE) {

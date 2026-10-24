@@ -315,6 +315,28 @@ function apiTicketsCreate(PDO $conn, array $apiKey, array $params, array $body):
         $tenantId = apiKeyDefaultTenantId($conn, $apiKey);
     }
 
+    // 🔴 The requester gets the same company check as the ticket. The service
+    // takes user_id on trust ("the caller must have authorised this id"), and
+    // this adapter never did - so a key limited to company A could name any
+    // requester by id, and the 201 handed back their name and email; looping
+    // over ids listed every company's contacts. And an address nobody has yet
+    // created the requester in the company its domain maps to, unchecked - the
+    // hole POST /users had. Reported privately, October 2026.
+    if (isset($body['user_id']) && (int)$body['user_id'] > 0) {
+        if (!apiKeyCanAccessTenantRow($conn, $apiKey, 'users', (int)$body['user_id'])) {
+            apiError(422, 'invalid_field', 'That requester no longer exists.');   // same words as a missing id
+        }
+    } else {
+        $known = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $known->execute([$requesterEmail]);
+        if ($known->fetchColumn() === false) {
+            $newTenant = resolveTenantForNewUser($conn, $requesterEmail);
+            if ($newTenant !== null && !apiKeyCanAccessTenant($conn, $apiKey, (int)$newTenant)) {
+                apiError(403, 'forbidden', "This address belongs to a company this API key cannot reach, so the requester cannot be created.");
+            }
+        }
+    }
+
     // Custom fields (#179). Always passed, so the fields required when a ticket
     // is logged are enforced for the API exactly as for the New ticket form - an
     // integration that leaves one out gets a 422 naming it, not a ticket missing it.

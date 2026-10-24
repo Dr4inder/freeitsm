@@ -2274,7 +2274,7 @@ function renderArticleDetail() {
             </div>
         </div>
         <div class="article-content-body">
-            ${currentArticle.body}
+            ${kbSafeBody(currentArticle.body)}
         </div>
         <div id="kbDocuments" style="margin-top:24px;"></div>
         <div id="kbDomains" style="margin-top:16px;"></div>
@@ -2692,7 +2692,7 @@ async function viewArchivedArticle(id) {
             document.getElementById('archivedArticleMeta').innerHTML =
                 escapeHtml(window.t('knowledge.recycle.meta', { author: article.author_name, created: formatDate(article.created_datetime), modified: formatDate(article.modified_datetime) })) +
                 (article.tags && article.tags.length ? '<div style="margin-top: 8px;">' + article.tags.map(t => `<span class="article-tag">${escapeHtml(t.name)}</span>`).join(' ') + '</div>' : '');
-            document.getElementById('archivedArticleBody').innerHTML = article.body;
+            document.getElementById('archivedArticleBody').innerHTML = kbSafeBody(article.body);
             document.getElementById('archivedArticleModal').classList.add('active');
 
             if (typeof Prism !== 'undefined') {
@@ -2920,6 +2920,24 @@ function jsAttr(value) {
 }
 
 /**
+ * An article body, made safe to put into the page.
+ *
+ * 🔴 Bodies are stored exactly as sent, and TinyMCE's cleaning only happens in
+ * the editor - so a body posted straight to knowledge_save.php, or through the
+ * REST API, reached innerHTML untouched, and an <img onerror> in it ran in the
+ * session of every analyst who opened the article, administrators included.
+ * Reported privately, October 2026. safeHtmlFragment() is the same cleaner the
+ * inbox and the portal Help Centre use; allowEmbeds keeps a Media-button video
+ * as a sandboxed https iframe. Fails CLOSED: without the cleaner, the body is
+ * shown as text, never raw.
+ */
+function kbSafeBody(html) {
+    return typeof safeHtmlFragment === 'function'
+        ? safeHtmlFragment(html || '', { allowEmbeds: true })
+        : escapeHtml(html || '');
+}
+
+/**
  * Escapes text for use as HTML content; does not escape quotes, so it is not safe on its own inside an
  * attribute (use jsAttr there).
  */
@@ -3033,7 +3051,7 @@ async function buildArticlePdf() {
     // --- Body ---
     // Parse HTML to structured text blocks
     const temp = document.createElement('div');
-    temp.innerHTML = currentArticle.body || '';
+    temp.innerHTML = kbSafeBody(currentArticle.body);   // a detached element still fires onerror
 
     const pageH = doc.internal.pageSize.getHeight();
     const bottomLimit = pageH - margin;

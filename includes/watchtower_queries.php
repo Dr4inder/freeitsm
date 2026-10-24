@@ -165,6 +165,8 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     // rather than showing 0. The card would then look shorter on "Mine" for a
     // reason nobody could see.
     [$tkScopeSql, $tkScopeArgs] = wtScopeClause($conn, $analystId, $scope, 't.assigned_analyst_id');
+    [$__c, $__a] = wtCompanyClause($conn, (int)$analystId, 't');   // and the company (wtCompanyClause)
+    $tkScopeSql .= $__c; $tkScopeArgs = array_merge($tkScopeArgs, $__a);
     $tkStatusStmt = $conn->prepare(
         "SELECT ts.id, ts.name AS status, ts.colour, COUNT(t.id) AS cnt
          FROM ticket_statuses ts
@@ -225,12 +227,15 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     // here reads as "the queue is clear", which is the opposite of what an
     // unclaimed pile means. It stays a team-wide figure whatever the toggle
     // says, and the card labels it as such.
-    $tkUnassigned = (int)$conn->query(
+    [$__c, $__a] = wtCompanyClause($conn, (int)$analystId, 't');
+    $__q = $conn->prepare(
         "SELECT COUNT(*)
          FROM tickets t
          JOIN ticket_statuses ts ON ts.id = t.status_id
-         WHERE t.assigned_analyst_id IS NULL AND ts.is_closed = 0"
-    )->fetchColumn();
+         WHERE t.assigned_analyst_id IS NULL AND ts.is_closed = 0" . $__c
+    );
+    $__q->execute($__a);
+    $tkUnassigned = (int)$__q->fetchColumn();
 
     // Paused too long: tickets currently in a status flagged pauses_sla
     // (e.g. On Hold, Awaiting Response) where the last status change was
@@ -280,6 +285,8 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     // Join the lookup and compare by name to preserve the original semantics.
 
     [$chScopeSql, $chScopeArgs] = wtScopeClause($conn, $analystId, $scope, 'c.assigned_to_id');
+    [$__c, $__a] = wtCompanyClause($conn, (int)$analystId, 'c');   // and the company (wtCompanyClause)
+    $chScopeSql .= $__c; $chScopeArgs = array_merge($chScopeArgs, $__a);
 
     // ⚠️ naive_now(), NOT UTC_TIMESTAMP(). A change window is a NAIVE WALL CLOCK
     // (see includes/timezone.php) — comparing it against a UTC instant would judge
@@ -671,12 +678,10 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
 
     // -- Knowledge --
 
-    // Company scope. NOTE: Knowledge is currently the ONLY card here that scopes
-    // by company — the rest of this dashboard (tickets included) is install-wide,
-    // which is a pre-existing multi-tenancy gap in Watchtower rather than
-    // something this introduced. Scoped here anyway: an article carries an owning
-    // company now, so surfacing another company's titles on the dashboard would be
-    // a hole in Knowledge, whatever the neighbouring cards do.
+    // Company scope. Every card follows the company switcher now - the ticket,
+    // change, task and asset counts through wtCompanyClause() (they were
+    // install-wide until October 2026). Knowledge goes further: an article carries
+    // an owning company and an access list, so it uses the full visibility rule.
     // The whole visibility rule, not just the company half, so the dashboard
     // inherits the access list when it lands without anyone returning here.
     //
@@ -718,12 +723,17 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
 
     // -- Assets --
 
-    $asTotal = (int)$conn->query("SELECT COUNT(*) FROM assets")->fetchColumn();
+    [$asCo, $asCoArgs] = wtCompanyClause($conn, (int)$analystId, '');   // the company, on every asset count
+    $__q = $conn->prepare("SELECT COUNT(*) FROM assets WHERE 1 = 1" . $asCo);
+    $__q->execute($asCoArgs);
+    $asTotal = (int)$__q->fetchColumn();
 
-    $asNotSeen = (int)$conn->query(
+    $__q = $conn->prepare(
         "SELECT COUNT(*) FROM assets
-         WHERE last_seen IS NOT NULL AND last_seen < DATE_SUB(UTC_TIMESTAMP(), INTERVAL 7 DAY)"
-    )->fetchColumn();
+         WHERE last_seen IS NOT NULL AND last_seen < DATE_SUB(UTC_TIMESTAMP(), INTERVAL 7 DAY)" . $asCo
+    );
+    $__q->execute($asCoArgs);
+    $asNotSeen = (int)$__q->fetchColumn();
 
     // Warranty expiries — only surfaced here when the asset_warranty_surface
     // setting includes the dashboard. Counts assets already expired or expiring
@@ -740,8 +750,8 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     $asWarranty = 0;
     if ($wtShowWarranty) {
         try {
-            $w = $conn->prepare("SELECT COUNT(*) FROM assets WHERE warranty_expiry IS NOT NULL AND warranty_expiry <= DATE_ADD({$todaySql}, INTERVAL ? DAY)");
-            $w->execute([$wtDays]);
+            $w = $conn->prepare("SELECT COUNT(*) FROM assets WHERE warranty_expiry IS NOT NULL AND warranty_expiry <= DATE_ADD({$todaySql}, INTERVAL ? DAY)" . $asCo);
+            $w->execute(array_merge([$wtDays], $asCoArgs));
             $asWarranty = (int)$w->fetchColumn();
         } catch (Exception $e) { $wtShowWarranty = false; }
     }
@@ -769,8 +779,9 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
             // Machines already handed back keep their lease_expiry as a record - not due back.
             require_once __DIR__ . '/leases.php';
             $goneBack = leaseReady($conn) ? ' AND NOT ' . leaseGoneBackSql('a') : '';
-            $l = $conn->prepare("SELECT COUNT(*) FROM assets a WHERE a.lease_expiry IS NOT NULL AND a.lease_expiry <= DATE_ADD({$todaySql}, INTERVAL ? DAY){$goneBack}");
-            $l->execute([$ltDays]);
+            [$aCo, $aCoArgs] = wtCompanyClause($conn, (int)$analystId, 'a');
+            $l = $conn->prepare("SELECT COUNT(*) FROM assets a WHERE a.lease_expiry IS NOT NULL AND a.lease_expiry <= DATE_ADD({$todaySql}, INTERVAL ? DAY){$goneBack}" . $aCo);
+            $l->execute(array_merge([$ltDays], $aCoArgs));
             $asLease = (int)$l->fetchColumn();
         } catch (Exception $e) { $wtShowLease = false; }
     }
@@ -789,6 +800,8 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     // -- Tasks --
 
     [$tsScopeSql, $tsScopeArgs] = wtScopeClause($conn, $analystId, $scope, 't.assigned_analyst_id');
+    [$__c, $__a] = wtCompanyClause($conn, (int)$analystId, 't');   // and the company (wtCompanyClause)
+    $tsScopeSql .= $__c; $tsScopeArgs = array_merge($tsScopeArgs, $__a);
 
     $taskOverdueStmt = $conn->prepare(
         "SELECT COUNT(*) FROM tasks t

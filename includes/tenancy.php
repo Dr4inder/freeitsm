@@ -765,6 +765,9 @@ function ticketTenantFilter(PDO $conn, int $analystId, string $alias = 't', bool
     }
 
     $active  = getActiveTenantId($conn, $analystId);
+    if (!analystCanAccessTenant($conn, $analystId, $active)) {
+        return [' AND 1 = 0', []];   // no company at all - see activeTenantFilter()
+    }
     $default = getDefaultTenantId($conn);
     if ($active === $default) {
         return [" AND ($col = ? OR $col IS NULL)", [$active]];
@@ -788,6 +791,16 @@ function activeTenantFilter(PDO $conn, int $analystId, string $alias = 't', stri
         return ['', []];
     }
     $active  = getActiveTenantId($conn, $analystId);
+    // 🔴 An analyst with NO company access is shown nothing, not the Default
+    // company. getActiveTenantId() ends with "first accessible, else Default", so
+    // an analyst who may reach no company at all - a new SSO user under "no
+    // company until granted", or one whose last company was unticked - fell back
+    // to Default and saw its tickets, tasks and changes in every list and search.
+    // The All companies view already failed closed (allAccessibleTenantsFilter).
+    // Reported privately, October 2026.
+    if (!analystCanAccessTenant($conn, $analystId, $active)) {
+        return [' AND 1 = 0', []];
+    }
     $default = getDefaultTenantId($conn);
     $qualified = $alias === '' ? $col : "$alias.$col";
     if ($active === $default) {
@@ -992,7 +1005,9 @@ function knowledgeTenantFilterForCompany(PDO $conn, ?int $tenantId, string $alia
  */
 function knowledgeTenantFilter(PDO $conn, int $analystId, string $alias = 'a'): array {
     if (!isMultiTenant($conn)) return ['', []];
-    return knowledgeTenantFilterForCompany($conn, getActiveTenantId($conn, $analystId), $alias);
+    $active = getActiveTenantId($conn, $analystId);
+    // No company at all: shared articles only (see activeTenantFilter()).
+    return knowledgeTenantFilterForCompany($conn, analystCanAccessTenant($conn, $analystId, $active) ? $active : null, $alias);
 }
 
 /**
@@ -1419,5 +1434,51 @@ function getTenantConfigRows(PDO $conn, string $table, string $entityType, int $
         } catch (Exception $e2) {
             return [];
         }
+    }
+}
+
+/**
+ * What has to follow a ticket when it changes company: the tasks raised from it
+ * (and their subtasks), and its search entries.
+ *
+ * 🔴 Moving a ticket, or routing it out of triage, wrote tickets.tenant_id and
+ * nothing else. Its tasks stayed in the old company - visible there, disagreeing
+ * with their ticket, until somebody moved each one by hand - and its search
+ * entries kept the old company until
+ * a later reply happened to re-index it. Reported privately, October 2026.
+ * includes/search/search.php also judges ticket rows by the live company, so
+ * search is right even for a path that forgets to call this.
+ *
+ * @param int[] $ticketIds  tickets whose company has just changed
+ * @param ?int $tenantId  their new company (null = triage)
+ */
+function ticketsFollowCompanyMove(PDO $conn, array $ticketIds, ?int $tenantId): void {
+    $ticketIds = array_values(array_unique(array_filter(array_map('intval', $ticketIds))));
+    if (!$ticketIds) return;
+    $ph = implode(',', array_fill(0, count($ticketIds), '?'));
+    try {
+        $ids = $conn->prepare("SELECT id FROM tasks WHERE ticket_id IN ($ph)");
+        $ids->execute($ticketIds);
+        $taskIds = array_map('intval', $ids->fetchAll(PDO::FETCH_COLUMN));
+        // Subtasks inherit their parent's company, at any depth.
+        for ($depth = 0, $level = $taskIds; $level && $depth < 10; $depth++) {
+            $lp = implode(',', array_fill(0, count($level), '?'));
+            $sub = $conn->prepare("SELECT id FROM tasks WHERE parent_task_id IN ($lp)");
+            $sub->execute($level);
+            $level = array_values(array_diff(array_map('intval', $sub->fetchAll(PDO::FETCH_COLUMN)), $taskIds));
+            $taskIds = array_merge($taskIds, $level);
+        }
+        if ($taskIds) {
+            $tp = implode(',', array_fill(0, count($taskIds), '?'));
+            $conn->prepare("UPDATE tasks SET tenant_id = ? WHERE id IN ($tp)")->execute(array_merge([$tenantId], $taskIds));
+        }
+    } catch (Exception $e) {
+        error_log('ticketsFollowCompanyMove (tasks): ' . $e->getMessage());
+    }
+    try {
+        require_once __DIR__ . '/search/indexer.php';
+        foreach ($ticketIds as $tid) searchIndexTicket($conn, $tid);
+    } catch (Throwable $e) {
+        error_log('ticketsFollowCompanyMove (search): ' . $e->getMessage());
     }
 }

@@ -1031,7 +1031,7 @@ $translationNamespaces = ['common', 'tickets'];
         window.INBOX_ROW_DISPLAY = <?php echo json_encode(inboxDisplayForAnalyst(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0))); ?>;
     </script>
     <!-- Must load BEFORE inbox.js: it cleans every untrusted message body. -->
-    <script src="../assets/js/safe-html.js?v=2"></script>
+    <script src="../assets/js/safe-html.js?v=4"></script>
     <!-- Must also load BEFORE inbox.js: parseUTCDate / tzOpts / ymdInZone and the
          fmt* date formatters. inbox.js used to carry its own copies of the first
          three because this page was the one that never loaded tz.js. -->

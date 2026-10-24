@@ -254,7 +254,8 @@ function apiWorkflowsCreate(PDO $conn, array $apiKey, array $params, array $body
     }
     $trigger    = apiValidateWorkflowTrigger(trim((string)($body['trigger_event'] ?? '')));
     $conditions = apiValidateWorkflowConditions($body['conditions'] ?? []);
-    $actions    = apiValidateWorkflowActions($body['actions'] ?? []);
+    require_once __DIR__ . '/../../../includes/webhook_delivery.php';
+    $actions    = webhookEncryptActions(apiValidateWorkflowActions($body['actions'] ?? []));   // at rest, as the browser save does
 
     $conn->prepare(
         "INSERT INTO workflows
@@ -290,7 +291,7 @@ function apiWorkflowsUpdate(PDO $conn, array $apiKey, array $params, array $body
         ? json_encode(apiValidateWorkflowConditions($body['conditions']))
         : $current['conditions'];
     $actionsJson = array_key_exists('actions', $body)
-        ? json_encode(apiValidateWorkflowActions($body['actions']))
+        ? json_encode((function ($a) { require_once __DIR__ . '/../../../includes/webhook_delivery.php'; return webhookEncryptActions($a); })(apiValidateWorkflowActions($body['actions'])))
         : $current['actions'];
     $description = array_key_exists('description', $body)
         ? (($v = trim((string)$body['description'])) !== '' ? $v : null)

@@ -1221,7 +1221,8 @@ class FormsService
                 }
                 $list[] = ['type' => $type, 'args' => is_array($action['args'] ?? null) ? $action['args'] : []];
             }
-            $out[$key] = $list;
+            require_once __DIR__ . '/../webhook_delivery.php';
+            $out[$key] = webhookEncryptActions($list);   // webhook url + secret at rest, as workflows do
         }
         return json_encode($out);
     }

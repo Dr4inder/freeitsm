@@ -85,15 +85,7 @@ try {
     // Encryption at rest still does its job: it defends against a stolen database
     // or backup, not against an admin reading a workflow they own and could edit
     // anyway. If masking is ever wanted, give actions a STABLE ID first.
-    foreach ($actions as $i => $a) {
-        if (($a['type'] ?? '') !== 'send_webhook') continue;
-        foreach (['url', 'secret'] as $k) {
-            if (isset($a['args'][$k]) && $a['args'][$k] !== '') {
-                // encryptValue() won't double-encrypt an already-"ENC:" value.
-                $actions[$i]['args'][$k] = webhookEncrypt((string)$a['args'][$k]);
-            }
-        }
-    }
+    $actions = webhookEncryptActions($actions);   // includes/webhook_delivery.php - every save route uses it
 
     $condJson = json_encode($conditions);
     $actJson  = json_encode($actions);

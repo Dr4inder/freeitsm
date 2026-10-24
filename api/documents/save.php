@@ -33,7 +33,7 @@ if (!isset($_SESSION['analyst_id'])) {
 }
 
 $analystId = (int) $_SESSION['analyst_id'];
-$allowed   = $_SESSION['allowed_modules'] ?? null;
+$allowed   = analystAllowedModulesNow();   // the grants now, not at sign-in
 
 // A file upload arrives as multipart; a link may arrive as either.
 $body = [];

@@ -911,3 +911,23 @@ function knowledgeAclTablesExist(PDO $conn): bool
         return $cache = true;
     }
 }
+
+/**
+ * May this viewer reach this folder? Delegates; never re-implements the rule.
+ *
+ * @param KnowledgeViewer $viewer  who is looking, as built by KnowledgeViewer::forAnalyst() or ::forApiKey()
+ * @param int $folderId  the knowledge_folders id to check
+ */
+function knowledgeFolderIsReadable(PDO $conn, KnowledgeViewer $viewer, int $folderId): bool
+{
+    if ($viewer->isUnrestricted()) return true;
+    if (!knowledgeAclHasAnyRows($conn)) return true;
+    if (knowledgeViewerHasAdminFloor($conn, $viewer)) return true;
+    return knowledgeFolderReadable(
+        $folderId,
+        knowledgeFolderIndex($conn),
+        knowledgeAclIndex($conn),
+        knowledgeViewerPrincipals($conn, $viewer),
+        knowledgeFolderPermissionModel($conn)
+    );
+}

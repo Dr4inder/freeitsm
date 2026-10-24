@@ -32,6 +32,11 @@ $username = trim($data['username'] ?? '');
 $fullName = trim($data['full_name'] ?? '');
 $email = trim($data['email'] ?? '') ?: null;
 $password = $data['password'] ?? null;
+require_once __DIR__ . '/../../includes/password_policy.php';   // the one rule for a new password
+if ($password !== null && $password !== '' && ($why = passwordPolicyError((string)$password))) {
+    echo json_encode(['success' => false, 'error' => $why]);
+    exit;
+}
 $isActive = $data['is_active'] ?? true;
 // Which sign-in method: NULL/empty = local password, otherwise an auth_providers.id (SSO).
 $authProviderId = !empty($data['auth_provider_id']) ? (int)$data['auth_provider_id'] : null;

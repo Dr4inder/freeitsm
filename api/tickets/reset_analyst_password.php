@@ -30,8 +30,9 @@ $id = (int)$data['id'];
 $password = $data['password'];
 
 // Validation
-if (strlen($password) < 6) {
-    echo json_encode(['success' => false, 'error' => 'Password must be at least 6 characters']);
+require_once __DIR__ . '/../../includes/password_policy.php';   // the one rule for a new password
+if ($why = passwordPolicyError((string)$password)) {
+    echo json_encode(['success' => false, 'error' => $why]);
     exit;
 }
 

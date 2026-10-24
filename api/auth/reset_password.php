@@ -37,8 +37,9 @@ csrfRequireWriteMethod();
         exit;
     }
 
-    if (strlen($newPassword) < 6) {
-        echo json_encode(['success' => false, 'error' => 'Password must be at least 6 characters.']);
+    require_once __DIR__ . '/../../includes/password_policy.php';   // the one rule for a new password
+    if ($why = passwordPolicyError($newPassword)) {
+        echo json_encode(['success' => false, 'error' => $why]);
         exit;
     }
 
@@ -62,7 +63,7 @@ csrfRequireWriteMethod();
         exit;
     }
 
-    $expires = new DateTime($resetToken['expires_datetime']);
+    $expires = new DateTime($resetToken['expires_datetime'], new DateTimeZone('UTC'));   // stored in UTC: read in local time, every summer link expired at once
     $now = new DateTime('now', new DateTimeZone('UTC'));
     if ($now > $expires) {
         echo json_encode(['success' => false, 'error' => 'This reset link has expired. Please request a new one.']);

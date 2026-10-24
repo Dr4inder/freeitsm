@@ -379,7 +379,30 @@ function catalogueRaiseTicketFromSubmissionId(PDO $conn, int $submissionId, arra
     $sub = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$sub) throw new Exception('That submission no longer exists');
 
+    // 🔴 Never past an approval. A workflow rule "on catalogue_request.submitted,
+    // create a ticket" reached this while the request was still pending - raising
+    // the ticket the approver had not yet agreed to - and a rule on .rejected raised
+    // one for a request that was refused. The help said that could not happen.
+    // Reported privately, October 2026. And a ticket already raised (by the
+    // approval itself, or a rule on .approved) is returned, not raised twice.
+    $status = (string)($sub['approval_status'] ?? 'not_required');
+    if ($status === 'pending' || $status === 'rejected') {
+        throw new Exception($status === 'pending'
+            ? 'That request is still awaiting approval, so no ticket was raised'
+            : 'That request was rejected, so no ticket was raised');
+    }
+    if (!empty($sub['ticket_id'])) {
+        $tn = $conn->prepare("SELECT ticket_number FROM tickets WHERE id = ?");
+        $tn->execute([(int)$sub['ticket_id']]);
+        $num = $tn->fetchColumn();
+        if ($num !== false) return ['ticket_id' => (int)$sub['ticket_id'], 'ticket_number' => (string)$num];
+    }
+
     [$ticketId, $ticketNumber] = catalogueCreateTicketFromSubmission($conn, $sub, $overrides);
+    if (!empty($sub['id'])) {
+        $conn->prepare("UPDATE form_submissions SET ticket_id = ? WHERE id = ? AND ticket_id IS NULL")
+             ->execute([$ticketId, (int)$sub['id']]);
+    }
     return ['ticket_id' => $ticketId, 'ticket_number' => $ticketNumber];
 }
 

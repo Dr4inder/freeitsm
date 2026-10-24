@@ -136,6 +136,17 @@ try {
              WHERE t.tenant_id IS NULL
                AND LOWER(SUBSTRING_INDEX(e.from_address, '@', -1)) = ?"
         );
+        // The same tickets, named first, so their tasks and search entries can follow.
+        $pick = $conn->prepare("SELECT t.id FROM tickets t
+             JOIN emails e ON e.id = (
+                 SELECT e2.id FROM emails e2
+                 WHERE e2.ticket_id = t.id AND e2.direction = 'Inbound'
+                 ORDER BY e2.is_initial DESC, e2.received_datetime ASC, e2.id ASC
+                 LIMIT 1
+             )
+             WHERE t.tenant_id IS NULL AND LOWER(SUBSTRING_INDEX(e.from_address, '@', -1)) = ?");
+        $pick->execute([$domain]);
+        $moved = array_map('intval', $pick->fetchAll(PDO::FETCH_COLUMN));
         $sweep->execute([$tenantId, $domain]);
         $assigned = $sweep->rowCount();
         // Safety net: make sure the ticket the analyst clicked is filed even if its
@@ -157,6 +168,16 @@ try {
              WHERE t.tenant_id IS NULL
                AND LOWER(TRIM(e.from_address)) = ?"
         );
+        $pick = $conn->prepare("SELECT t.id FROM tickets t
+             JOIN emails e ON e.id = (
+                 SELECT e2.id FROM emails e2
+                 WHERE e2.ticket_id = t.id AND e2.direction = 'Inbound'
+                 ORDER BY e2.is_initial DESC, e2.received_datetime ASC, e2.id ASC
+                 LIMIT 1
+             )
+             WHERE t.tenant_id IS NULL AND LOWER(TRIM(e.from_address)) = ?");
+        $pick->execute([$senderAddr]);
+        $moved = array_map('intval', $pick->fetchAll(PDO::FETCH_COLUMN));
         $sweep->execute([$tenantId, $senderAddr]);
         $assigned = $sweep->rowCount();
         // Safety net: file the clicked ticket even if its From header didn't match.
@@ -168,6 +189,9 @@ try {
         $one->execute([$tenantId, $ticketId]);
         $assigned = $one->rowCount();
     }
+
+    // Their tasks and search entries follow (tenancy.php explains why).
+    ticketsFollowCompanyMove($conn, array_merge($moved ?? [], [$ticketId]), (int)$tenantId);
 
     echo json_encode([
         'success'         => true,

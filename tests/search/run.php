@@ -167,7 +167,16 @@ $T = '_test_search';   // reserved: nothing else writes it
 // ⚠️ Real ticket ids, because the foreign key correctly refuses invented ones.
 // That refusal is the cascade guard working, so the test borrows rather than
 // fabricates — and only ever writes corpus rows, never touching the tickets.
-$ids = $conn->query("SELECT id FROM tickets ORDER BY id DESC LIMIT 2")->fetchAll(PDO::FETCH_COLUMN);
+// ⚠️ Ticket B must REALLY be in company 4: since the October 2026 security fix,
+// search judges a ticket's rows by the ticket's live company, not only the copy
+// in the corpus (a moved ticket used to stay findable from its old company). A
+// borrowed ticket from another company would - correctly - be hidden from 4.
+$b4 = $conn->query("SELECT id FROM tickets WHERE tenant_id = 4 ORDER BY id DESC LIMIT 1")->fetchColumn();
+$ids = $b4 === false ? [] : [
+    (int)$conn->query("SELECT id FROM tickets WHERE id <> " . (int)$b4 . " AND (tenant_id IS NULL OR tenant_id <> 4) ORDER BY id DESC LIMIT 1")->fetchColumn(),
+    (int)$b4,
+];
+$ids = array_values(array_filter($ids));
 if (count($ids) < 2) {
     echo "  SKIP  needs at least two tickets in the database to exercise grouping.\n";
     echo "\n" . str_repeat('=', 60) . "\n";

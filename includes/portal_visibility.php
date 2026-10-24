@@ -131,8 +131,38 @@ function portalEmailInvolvesRequester(array $email, ?string $requesterEmail): bo
     // Nothing recorded to compare against → visible rather than wrongly hidden.
     if ($to === '' && $cc === '' && $from === '') return true;
 
-    $haystack = strtolower($from . ' ' . $to . ' ' . $cc);
-    return strpos($haystack, $needle) !== false;
+    // 🔴 The requester's address must BE one of the addresses, not appear inside
+    // one. A substring test made bob@acme.com part of every message to or from
+    // jimbob@acme.com or bob@acme.com.au - so with the privacy setting on, a
+    // requester saw exactly the third-party mail and attachments it exists to
+    // withhold. Reported privately, October 2026.
+    return in_array($needle, array_merge(portalAddressSet($from), portalAddressSet($to), portalAddressSet($cc)), true);
+}
+
+/**
+ * Every email address in a stored from / to / cc value, lower-cased.
+ *
+ * Copes with every shape the columns hold: one bare address; a list joined with
+ * "; " or "," (inbound mail, and replies as an analyst typed them); "Name <a@b>";
+ * and the JSON a few older rows carry ([{"emailAddress":{"address":...}}]).
+ *
+ * @param string $raw  the column's value
+ * @return string[]
+ */
+function portalAddressSet(string $raw): array {
+    $raw = trim($raw);
+    if ($raw === '') return [];
+    $found = [];
+    if ($raw[0] === '[' || $raw[0] === '{') {
+        $json = json_decode($raw, true);
+        if (is_array($json)) {
+            array_walk_recursive($json, function ($v, $k) use (&$found) {
+                if (is_string($v) && in_array($k, ['address', 'email'], true)) $found[] = $v;
+            });
+        }
+    }
+    if (!$found && preg_match_all("/[A-Z0-9._%+'-]+@[A-Z0-9.-]+/i", $raw, $m)) $found = $m[0];
+    return array_values(array_unique(array_map(fn($a) => strtolower(trim($a, " .<>	")), $found)));
 }
 
 /**

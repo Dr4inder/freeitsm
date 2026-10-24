@@ -2734,19 +2734,42 @@ class WorkflowEngine
             // Resolve / upsert the user row by email so the ticket has a
             // requester. If from_email is blank we leave user_id null —
             // the rest of the app handles unattributed tickets fine.
+            require_once dirname(__DIR__, 2) . '/includes/tenancy.php';
             $userId = null;
+            $userTenant = null;
             if ($fromEmail !== '') {
-                $uLookup = $conn->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
+                $uLookup = $conn->prepare('SELECT id, tenant_id FROM users WHERE email = ? LIMIT 1');
                 $uLookup->execute([$fromEmail]);
-                $userId = $uLookup->fetchColumn();
-                if (!$userId) {
-                    $conn->prepare('INSERT INTO users (email, display_name, created_at) VALUES (?, ?, UTC_TIMESTAMP())')
-                         ->execute([$fromEmail, $fromName !== '' ? $fromName : $fromEmail]);
+                $found = $uLookup->fetch(PDO::FETCH_ASSOC);
+                if (!$found) {
+                    // A new requester gets the company their domain maps to, as on
+                    // every other path that creates one (null = triage).
+                    $userTenant = resolveTenantForNewUser($conn, $fromEmail);
+                    $conn->prepare('INSERT INTO users (email, display_name, tenant_id, created_at) VALUES (?, ?, ?, UTC_TIMESTAMP())')
+                         ->execute([$fromEmail, $fromName !== '' ? $fromName : $fromEmail, $userTenant]);
                     $userId = (int)$conn->lastInsertId();
                 } else {
-                    $userId = (int)$userId;
+                    $userId = (int)$found['id'];
+                    $userTenant = $found['tenant_id'] !== null ? (int)$found['tenant_id'] : null;
                 }
             }
+
+            // 🔴 The ticket's company. This INSERT used to store none, so every
+            // workflow-raised ticket landed in triage on a multi-company install,
+            // whatever ticket or person the rule fired for. Reported privately,
+            // October 2026. The same order as the form-submission branch above:
+            // the ticket that fired the rule, then the requester, then triage
+            // (multi-company) or the Default company (single-company).
+            $ticketTenant = null;
+            $firedFor = (int)(self::dotGet($payload, 'ticket.id') ?? 0);
+            if ($firedFor > 0) {
+                $tt = $conn->prepare('SELECT tenant_id FROM tickets WHERE id = ?');
+                $tt->execute([$firedFor]);
+                $v = $tt->fetchColumn();
+                $ticketTenant = ($v !== false && $v !== null) ? (int)$v : null;
+            }
+            if ($ticketTenant === null) $ticketTenant = $userTenant;
+            if ($ticketTenant === null && !isMultiTenant($conn)) $ticketTenant = getDefaultTenantId($conn);
 
             // Default status = the CONFIGURED default, not the literal name 'Open',
             // which an admin may rename or translate (#79).
@@ -2755,19 +2778,18 @@ class WorkflowEngine
 
             // TRAP: the install's numbering, never a number made here - see
             //   messagingGenerateTicketNumber() for what went wrong when it was.
-            //   No company is stored on this ticket, which means the default one.
             require_once dirname(__DIR__, 2) . '/includes/ticket_numbering.php';
-            $ticketNumber = TicketNumbering::next($conn, $typeId ? (int)$typeId : null, null);
+            $ticketNumber = TicketNumbering::next($conn, $typeId ? (int)$typeId : null, $ticketTenant);
 
             $conn->prepare(
                 "INSERT INTO tickets (ticket_number, subject, status_id, priority_id,
                                      department_id, ticket_type_id, assigned_team_id,
                                      assigned_analyst_id,
-                                     user_id, created_datetime, updated_datetime)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
+                                     user_id, tenant_id, created_datetime, updated_datetime)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
             )->execute([
                 $ticketNumber, $subject, $statusId, $priorityId,
-                $departmentId, $typeId, $assignedTeamId, $assignedAnalystId, $userId,
+                $departmentId, $typeId, $assignedTeamId, $assignedAnalystId, $userId, $ticketTenant,
             ]);
             $newTicketId = (int)$conn->lastInsertId();
             // Confidential defaults (discussion #62) - the rule may have put it in a

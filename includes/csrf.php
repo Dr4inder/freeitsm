@@ -66,6 +66,17 @@ const CSRF_EXEMPT_PATHS = [
     'cron/',                           // scheduled jobs over HTTP: ?token=
 ];
 
+/**
+ * Where a password or a one-time code is submitted. These get the origin check
+ * even with no session cookie - see csrfEnforce().
+ */
+const CSRF_LOGIN_PATHS = [
+    'auth/login.php',
+    'api/self-service/login.php',
+    'api/myaccount/verify_login_otp.php',
+    'api/self-service/verify_login_otp.php',
+];
+
 /** The request's path relative to the app root, e.g. "api/tickets/save.php". */
 function csrfRequestPath(): string
 {
@@ -247,7 +258,20 @@ function csrfEnforce(): void
 {
     if (PHP_SAPI === 'cli' || !csrfIsStateChanging()) return;
     if (csrfIsExempt(csrfRequestPath())) return;
-    if (!csrfHasSessionCookie()) return;                 // no cookie, nothing to forge
+
+    // 🔴 "No cookie, nothing to forge" is not true of signing IN. A form on another
+    // site could post an attacker's own username and password to the login page;
+    // the response sets a fresh session cookie, and the visitor is now working
+    // inside the attacker's account - typing notes, uploading files, entering
+    // credentials into forms the attacker reads later. And a SameSite=Lax cookie is
+    // never sent on a cross-site POST, so even a signed-in visitor arrives
+    // "cookieless". So the sign-in endpoints get the origin check regardless. A
+    // real first visit says Sec-Fetch-Site: same-origin and passes; a request with
+    // no browser headers at all is not a browser, and passes as before.
+    // Reported privately, October 2026.
+    if (in_array(csrfRequestPath(), CSRF_LOGIN_PATHS, true) && csrfSameOrigin() === false) csrfRefuse('origin');
+
+    if (!csrfHasSessionCookie()) return;                 // no cookie: nothing else to forge
 
     if (csrfSameOrigin() === false) csrfRefuse('origin');
 
