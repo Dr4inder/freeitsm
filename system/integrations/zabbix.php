@@ -30,22 +30,9 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 
-/** The webhook media type script, as Zabbix runs it. Shown on the page to paste in. */
-$zbxScript = <<<'JS'
-var p = JSON.parse(value);
-var req = new HttpRequest();
-if (p.http_proxy) { req.setProxy(p.http_proxy); }
-req.addHeader('Content-Type: application/json');
-var resp = req.post(p.endpoint, JSON.stringify({
-    token: p.token, problem_id: p.event_id, event_value: p.event_value,
-    severity: p.severity, host: p.host, trigger: p.trigger,
-    message: p.message, url: p.url
-}));
-if (req.getStatus() !== 200) {
-    throw 'FreeITSM answered ' + req.getStatus() + ': ' + resp;
-}
-return 'OK';
-JS;
+require_once '../../includes/integrations/zabbix.php';
+/** The webhook media type's script - one copy, shared with the import file and the tests. */
+$zbxScript = zabbixMediaTypeScript();
 $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
 ?>
 <!DOCTYPE html>
@@ -131,14 +118,20 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
         <div class="zbx-panel">
             <h3><?php echo $t('zabbix_connect'); ?></h3>
             <p><?php echo $t('zabbix_connect_body'); ?></p>
-            <div class="zbx-row"><span class="lbl"><?php echo $t('zabbix_endpoint'); ?></span><code id="endpoint"></code>
-                <button class="btn btn-secondary btn-small" data-copy="endpoint"><?php echo $t('zabbix_copy'); ?></button></div>
-            <div class="zbx-hint" style="margin:-4px 0 12px 98px"><?php echo $t('zabbix_reach_hint'); ?></div>
+            <div class="zbx-field" style="max-width:900px"><label for="endpoint"><?php echo $t('zabbix_endpoint'); ?></label>
+                <input type="text" id="endpoint" autocomplete="off">
+                <div class="zbx-hint"><?php echo $t('zabbix_reach_hint'); ?></div></div>
             <div class="zbx-row"><span class="lbl"><?php echo $t('zabbix_token'); ?></span><code id="token"></code>
                 <button class="btn btn-secondary btn-small" data-copy="token" id="copyToken"><?php echo $t('zabbix_copy'); ?></button>
                 <button class="btn btn-secondary btn-small" id="rotateBtn"></button></div>
 
-            <h3 style="margin-top:20px"><?php echo $t('zabbix_params'); ?></h3>
+            <h3 style="margin-top:20px"><?php echo $t('zabbix_import'); ?></h3>
+            <p><?php echo $t('zabbix_import_body'); ?></p>
+            <button class="btn btn-primary" id="downloadBtn"><?php echo $t('zabbix_import_download'); ?></button>
+            <div class="zbx-hint" id="downloadNeedsToken" style="display:none"><?php echo $t('zabbix_import_needs_token'); ?></div>
+
+            <h3 style="margin-top:26px"><?php echo $t('zabbix_by_hand'); ?></h3>
+            <p style="font-weight:600;margin-bottom:6px"><?php echo $t('zabbix_params'); ?></p>
             <p><?php echo $t('zabbix_params_hint'); ?></p>
             <pre class="zbx-code" id="params"></pre>
             <button class="btn btn-secondary btn-small" data-copy="params"><?php echo $t('zabbix_copy'); ?></button>
@@ -233,13 +226,10 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
 
         /** The media type's parameters, one "name = value" per line, ready to type into Zabbix. */
         function paramsText() {
-            return [
-                ['endpoint', data.endpoint], ['token', data.token || ''], ['event_id', '{EVENT.ID}'],
-                ['event_value', '{EVENT.VALUE}'], ['severity', '{EVENT.NSEVERITY}'], ['host', '{HOST.NAME}'],
-                ['trigger', '{EVENT.NAME}'], ['message', '{ALERT.MESSAGE}'],
-                ['url', '{$ZABBIX.URL}/tr_events.php?triggerid={TRIGGER.ID}&eventid={EVENT.ID}'],
-                ['http_proxy', '']
-            ].map(function (p) { return p[0] + ' = ' + p[1]; }).join('\n');
+            // From the server's list (the import file uses the same one); the endpoint is this page's field.
+            return data.parameters.map(function (p) {
+                return p[0] + ' = ' + (p[0] === 'endpoint' ? $('endpoint').value.trim() : p[1]);
+            }).join('\n');
         }
 
         function render() {
@@ -248,7 +238,9 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
             var on = !!data.token;
             $('zbxState').className = 'zbx-state ' + (on ? 'on' : 'off');
             $('zbxState').textContent = on ? T.configured : T.not_configured;
-            $('endpoint').textContent = data.endpoint;
+            if (!$('endpoint').value) $('endpoint').value = data.endpoint;
+            $('downloadBtn').disabled = !on;
+            $('downloadNeedsToken').style.display = on ? 'none' : 'block';
             $('token').textContent = on ? data.token : T.token_none;
             $('copyToken').style.display = on ? '' : 'none';
             $('rotateBtn').textContent = on ? T.rotate : T.make;
@@ -375,6 +367,12 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
                 testProblem = null;
                 load();
             } finally { btn.disabled = false; }
+        });
+
+        $('endpoint').addEventListener('input', function () { if (data) $('params').textContent = paramsText(); });
+        $('downloadBtn').addEventListener('click', function () {
+            // A plain navigation: the browser saves the file the API sends.
+            window.location.href = API + '?action=export&endpoint=' + encodeURIComponent($('endpoint').value.trim());
         });
 
         document.querySelectorAll('[data-copy]').forEach(function (b) {

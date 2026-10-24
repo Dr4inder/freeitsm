@@ -355,3 +355,89 @@ function zabbixHandleEvent(PDO $conn, array $p): array
         $conn->query("SELECT RELEASE_LOCK(" . $conn->quote($lock) . ")");
     }
 }
+
+/**
+ * The webhook media type's script, as Zabbix runs it. ONE copy: the settings page
+ * shows it, the import file carries it, and tests/zabbix/run.php gives it to a
+ * real Zabbix - so what is tested is what is handed out.
+ */
+function zabbixMediaTypeScript(): string
+{
+    return <<<'JS'
+var p = JSON.parse(value);
+var req = new HttpRequest();
+if (p.http_proxy) { req.setProxy(p.http_proxy); }
+req.addHeader('Content-Type: application/json');
+var resp = req.post(p.endpoint, JSON.stringify({
+    token: p.token, problem_id: p.event_id, event_value: p.event_value,
+    severity: p.severity, host: p.host, trigger: p.trigger,
+    message: p.message, url: p.url
+}));
+if (req.getStatus() !== 200) {
+    throw 'FreeITSM answered ' + req.getStatus() + ': ' + resp;
+}
+return 'OK';
+JS;
+}
+
+/**
+ * The media type's parameters, in order: [name, value]. The values in braces are
+ * Zabbix macros, filled in for each alert.
+ *
+ * @return array<int,array{0:string,1:string}>
+ */
+function zabbixMediaTypeParameters(string $endpoint, string $token): array
+{
+    return [
+        ['endpoint', $endpoint], ['token', $token], ['event_id', '{EVENT.ID}'], ['event_value', '{EVENT.VALUE}'],
+        ['severity', '{EVENT.NSEVERITY}'], ['host', '{HOST.NAME}'], ['trigger', '{EVENT.NAME}'],
+        ['message', '{ALERT.MESSAGE}'], ['url', '{$ZABBIX.URL}/tr_events.php?triggerid={TRIGGER.ID}&eventid={EVENT.ID}'],
+        ['http_proxy', ''],
+    ];
+}
+
+/**
+ * The three message templates a webhook needs, or an action using it sends
+ * nothing at all: problem, recovery, update. [operation_mode, subject, message].
+ */
+function zabbixMediaTypeTemplates(): array
+{
+    return [
+        ['PROBLEM', 'Problem: {EVENT.NAME}',
+         "Problem started at {EVENT.TIME} on {EVENT.DATE}\nProblem name: {EVENT.NAME}\nHost: {HOST.NAME}\nSeverity: {EVENT.SEVERITY}\nOperational data: {EVENT.OPDATA}"],
+        ['RECOVERY', 'Resolved: {EVENT.NAME}',
+         "Problem resolved at {EVENT.RECOVERY.TIME} on {EVENT.RECOVERY.DATE}\nProblem name: {EVENT.NAME}\nProblem duration: {EVENT.DURATION}\nHost: {HOST.NAME}"],
+        ['UPDATE', 'Updated: {EVENT.NAME}',
+         "{USER.FULLNAME} {EVENT.UPDATE.ACTION} the problem at {EVENT.UPDATE.DATE} {EVENT.UPDATE.TIME}.\n{EVENT.UPDATE.MESSAGE}"],
+    ];
+}
+
+/**
+ * The whole media type as a Zabbix 7.0 import file (Alerts → Media types → Import):
+ * parameters with this install's token, the script, the three message templates,
+ * enabled. The shape is Zabbix's own configuration.export output, and
+ * tests/zabbix/run.php imports this file into a real Zabbix to prove it.
+ *
+ * ⚠️ It carries the token. It is only ever handed to an administrator.
+ */
+function zabbixMediaTypeYaml(string $endpoint, string $token): string
+{
+    $q = fn(string $s): string => "'" . str_replace("'", "''", $s) . "'";   // YAML single-quoted scalar
+    $block = function (string $text, int $indent): string {                // YAML literal block
+        $pad = str_repeat(' ', $indent);
+        return "|\n" . implode("\n", array_map(fn($l) => $l === '' ? '' : $pad . $l, explode("\n", $text))) . "\n";
+    };
+    $y  = "zabbix_export:\n  version: '7.0'\n  media_types:\n";
+    $y .= "    - name: FreeITSM\n      type: WEBHOOK\n      parameters:\n";
+    foreach (zabbixMediaTypeParameters($endpoint, $token) as [$name, $value]) {
+        $y .= "        - name: {$name}\n" . ($value !== '' ? "          value: " . $q($value) . "\n" : '');
+    }
+    $y .= "      script: " . $block(zabbixMediaTypeScript(), 8);
+    $y .= "      description: " . $q('Sends Zabbix problems, updates and recoveries to FreeITSM (System > Integrations > Zabbix).') . "\n";
+    $y .= "      message_templates:\n";
+    foreach (zabbixMediaTypeTemplates() as [$mode, $subject, $message]) {
+        $y .= "        - event_source: TRIGGERS\n          operation_mode: {$mode}\n          subject: " . $q($subject) . "\n"
+            . "          message: " . $block($message, 12);
+    }
+    return $y;
+}

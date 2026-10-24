@@ -35,6 +35,19 @@ try {
         echo json_encode(['success' => true, 'token' => zabbixRotateToken($conn)]);
         exit;
     }
+    if ($action === 'export') {
+        // The media type as a Zabbix import file. A download, not a change: it
+        // carries the token, which only an administrator reaches this far to see.
+        $token = zabbixToken($conn);
+        if ($token === '') throw new InvalidArgumentException('Make a token first.');
+        $endpoint = trim((string)($_GET['endpoint'] ?? '')) ?: publicAbsoluteUrl($conn, 'api/external/zabbix/alert.php');
+        if (!preg_match('#^https?://\S+$#i', $endpoint)) throw new InvalidArgumentException('The address must start with http:// or https://');
+        header('Content-Type: application/x-yaml; charset=utf-8');
+        header('Content-Disposition: attachment; filename="freeitsm_zabbix_media_type.yaml"');
+        header('Cache-Control: no-store');
+        echo zabbixMediaTypeYaml($endpoint, $token);
+        exit;
+    }
     if ($action === 'test') {
         // "Try it": a test problem (then its recovery) through the SAME handler a
         // real alert takes - so it proves the settings and the incident they make,
@@ -88,6 +101,9 @@ try {
         'token'      => zabbixToken($conn),
         'endpoint'   => publicAbsoluteUrl($conn, 'api/external/zabbix/alert.php'),
         'severities' => ZABBIX_SEVERITIES,
+        // The media type's parameters, from the one list the import file uses too.
+        // The endpoint value is filled in by the page from its (editable) address field.
+        'parameters' => zabbixMediaTypeParameters('', zabbixToken($conn)),
         'priorities' => $conn->query("SELECT id, name FROM ticket_priorities WHERE is_active = 1 ORDER BY display_order, id")->fetchAll(PDO::FETCH_ASSOC),
         'statuses'   => $conn->query("SELECT id, name, is_closed FROM ticket_statuses WHERE is_active = 1 ORDER BY display_order, id")->fetchAll(PDO::FETCH_ASSOC),
         'teams'      => $conn->query("SELECT id, name FROM teams WHERE COALESCE(is_active, 1) = 1 ORDER BY name")->fetchAll(PDO::FETCH_ASSOC),

@@ -82,9 +82,7 @@ $conn = connectToDatabase();
 if (!zabbixReady($conn)) { echo "Run Database Verification first (zabbix_events is missing).\n"; exit(1); }
 $tag  = 'zz' . bin2hex(random_bytes(3));
 $host = "$tag-db01";
-$page = (string)file_get_contents(__DIR__ . '/../../system/integrations/zabbix.php');
-if (!preg_match("/<<<'JS'\n(.*?)\nJS;/s", str_replace("\r\n", "\n", $page), $m)) { echo "Could not read the media type script from the settings page.\n"; exit(1); }
-$script = $m[1];
+$BASE = rtrim(getenv('FREEITSM_URL') ?: 'http://localhost/' . basename(dirname(__DIR__, 2)) . '/', '/') . '/';
 
 // FreeITSM snapshots.
 $settingKeys = ['zabbix_token', 'zabbix_requester_email', 'zabbix_requester_name', 'zabbix_tenant_id', 'zabbix_priority_map',
@@ -114,19 +112,30 @@ try {
     $made['host'] = zbx('host.create', ['host' => $host, 'groups' => [['groupid' => $made['group']]]])['hostids'][0];
     zbx('item.create', ['hostid' => $made['host'], 'name' => 'ZZ disk used %', 'key_' => 'zz.disk', 'type' => 2, 'value_type' => 3]);
     zbx('trigger.create', ['description' => 'Disk almost full on {HOST.NAME}', 'expression' => "last(/$host/zz.disk)>90", 'priority' => 5]);
-    $params = [['name' => 'endpoint', 'value' => $ENDPOINT], ['name' => 'token', 'value' => $token],
-               ['name' => 'event_id', 'value' => '{EVENT.ID}'], ['name' => 'event_value', 'value' => '{EVENT.VALUE}'],
-               ['name' => 'severity', 'value' => '{EVENT.NSEVERITY}'], ['name' => 'host', 'value' => '{HOST.NAME}'],
-               ['name' => 'trigger', 'value' => '{EVENT.NAME}'], ['name' => 'message', 'value' => '{ALERT.MESSAGE}'],
-               ['name' => 'url', 'value' => '{$ZABBIX.URL}/tr_events.php?triggerid={TRIGGER.ID}&eventid={EVENT.ID}'],
-               ['name' => 'http_proxy', 'value' => '']];   // empty, as the page hands it out
-    $tpl = fn(int $recovery, string $subject, string $message) => ['eventsource' => 0, 'recovery' => $recovery, 'subject' => $subject, 'message' => $message];
-    $made['mediatype'] = zbx('mediatype.create', [
-        'name' => "FreeITSM $tag", 'type' => 4, 'status' => 0, 'script' => $script, 'parameters' => $params, 'timeout' => '30s',
-        'message_templates' => [$tpl(0, 'Problem: {EVENT.NAME}', 'Problem started at {EVENT.TIME} on {HOST.NAME}. Value: {ITEM.LASTVALUE}'),
-                                $tpl(1, 'Resolved: {EVENT.NAME}', 'Resolved at {EVENT.RECOVERY.TIME}. Value: {ITEM.LASTVALUE}'),
-                                $tpl(2, 'Updated: {EVENT.NAME}', '{USER.FULLNAME} {EVENT.UPDATE.ACTION}: {EVENT.UPDATE.MESSAGE}')],
-    ])['mediatypeids'][0];
+    // The media type is IMPORTED from the file the settings page's "Download for
+    // Zabbix import" button gives an administrator - fetched from the real API, so
+    // the whole run goes through exactly what a person would import. Renamed for
+    // this run, so it can never touch a "FreeITSM" media type somebody made.
+    $dir = rtrim(ini_get('session.save_path') ?: 'c:/wamp64/tmp', '/\\');
+    $sid = 'zzzbx' . bin2hex(random_bytes(5));
+    $admin = (int)$conn->query("SELECT id FROM analysts WHERE is_active = 1 AND is_admin = 1 ORDER BY id LIMIT 1")->fetchColumn();
+    file_put_contents("$dir/sess_$sid", 'analyst_id|i:' . $admin . ';analyst_name|s:7:"ZZ test";');
+    $ch = curl_init($BASE . 'api/system/zabbix_settings.php?action=export&endpoint=' . rawurlencode($ENDPOINT));
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_COOKIE => 'PHPSESSID=' . $sid, CURLOPT_HEADER => true]);
+    $resp = (string)curl_exec($ch); $hsz = (int)curl_getinfo($ch, CURLINFO_HEADER_SIZE); curl_close($ch);
+    @unlink("$dir/sess_$sid");
+    $headers = substr($resp, 0, $hsz); $yaml = substr($resp, $hsz);
+    ok('the settings page\'s download is a Zabbix import file, offered as a download',
+       strpos($yaml, "zabbix_export:\n  version: '7.0'") === 0 && stripos($headers, 'attachment; filename="freeitsm_zabbix_media_type.yaml"') !== false, substr($yaml, 0, 80));
+    ok('...carrying this install\'s token and the address given', strpos($yaml, "value: '$token'") !== false && strpos($yaml, "value: '$ENDPOINT'") !== false);
+    $yaml = str_replace("    - name: FreeITSM\n", "    - name: 'FreeITSM $tag'\n", $yaml);
+    zbx('configuration.import', ['format' => 'yaml', 'source' => $yaml, 'rules' => ['mediaTypes' => ['createMissing' => true, 'updateExisting' => false]]]);
+    $mt = zbx('mediatype.get', ['filter' => ['name' => "FreeITSM $tag"], 'output' => ['mediatypeid', 'status', 'type', 'parameters'],   // 7.0: parameters is a field, not a select
+                                'selectMessageTemplates' => 'extend']);
+    $made['mediatype'] = $mt[0]['mediatypeid'] ?? null;
+    ok('Zabbix imported it: a webhook, ENABLED, with all ten parameters and the three message templates',
+       $made['mediatype'] && (int)$mt[0]['type'] === 4 && (int)$mt[0]['status'] === 0
+       && count($mt[0]['parameters']) === 10 && count($mt[0]['message_templates']) === 3, json_encode($mt[0] ?? null));
     // The alerts go to a user of their own, NOT Admin: Zabbix never sends an update
     // notification to the user who made the update, and the run acknowledges as Admin.
     $superAdmins = zbx('usergroup.get', ['output' => ['usrgrpid'], 'filter' => ['name' => 'Zabbix administrators']]);
@@ -141,7 +150,7 @@ try {
         'filter' => ['evaltype' => 0, 'conditions' => [['conditiontype' => 1, 'operator' => 0, 'value' => $made['host']]]],
         'operations' => [$send], 'recovery_operations' => [$send], 'update_operations' => [$send],
     ])['actionids'][0];
-    ok('Zabbix accepted the host, the trigger, the media type (with the settings page\'s script) and the action', true);
+    ok('Zabbix accepted the host, the trigger, the alert user and the action', true);
     // The server loads new configuration on a timer; ask it to now.
     shell_exec('docker exec ' . escapeshellarg($CONTAINER) . ' zabbix_server -R config_cache_reload 2>&1');
     sleep(5);
@@ -165,7 +174,7 @@ try {
         $t->execute([$made['cmdb'], $made['ticket']]); $row = $t->fetch(PDO::FETCH_ASSOC);
         ok('...at the Disaster priority, linked to the CMDB item', (int)$row['priority_id'] === (int)zabbixSettings($conn)['priority_map'][5] && (int)$row['linked'] === 1, json_encode($row));
         $b = $conn->prepare("SELECT body_content FROM emails WHERE ticket_id = ? ORDER BY id LIMIT 1"); $b->execute([$made['ticket']]);
-        ok('...carrying the media type\'s message (the {ALERT.MESSAGE} macro resolved)', strpos((string)$b->fetchColumn(), 'Value: 97') !== false);
+        ok('...carrying the media type\'s message (the {ALERT.MESSAGE} macro resolved)', strpos((string)$b->fetchColumn(), 'Problem started at') !== false);   // the imported problem template
 
         echo "\nAn update (an acknowledgement in Zabbix)\n";
         zbx('event.acknowledge', ['eventids' => [$ev['problem_id']], 'action' => 4, 'message' => "ZZ looking at it $tag"]);

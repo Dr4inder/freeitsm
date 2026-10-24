@@ -63,12 +63,19 @@
         <h3>Create the media type in Zabbix</h3>
     </div>
     <p>A <strong>media type</strong> is Zabbix's word for a way of sending a notification. This one sends it to FreeITSM.</p>
+    <p><strong>The quick way - import it.</strong> On the FreeITSM Zabbix page, check <em>FreeITSM's address</em> is the one
+       your Zabbix should use, then click <strong>Download for Zabbix import</strong>. In Zabbix, go to
+       <strong>Alerts &rsaquo; Media types</strong>, click <strong>Import</strong>, choose the file and import it. It arrives
+       complete: the address, your token, the script, the three message templates, switched on. Then go to step 4.</p>
+    <p>Keep the file to yourself - it holds the token. After <strong>New token</strong>, download and import it again.</p>
+    <p><strong>Or by hand:</strong></p>
     <ol>
         <li>In Zabbix, go to <strong>Alerts &rsaquo; Media types</strong> and click <strong>Create media type</strong>.</li>
         <li>Name it <strong>FreeITSM</strong> and choose the type <strong>Webhook</strong>.</li>
         <li>Under <strong>Parameters</strong>, first <strong>delete the five Zabbix fills in</strong> (URL, HTTPProxy, To, Subject, Message) - they belong to its example script. Names are case-sensitive, so its <em>Message</em> is not our <em>message</em>. Then add one line for each line in <em>Media type parameters</em> on the FreeITSM page: the name on the left of the <code>=</code>, the value on the right. Leave the values in braces exactly as they are - they are Zabbix macros, filled in for each alert.</li>
         <li>Paste the <em>Media type script</em> into <strong>Script</strong>.</li>
         <li>Leave <code>http_proxy</code> empty unless your Zabbix server reaches FreeITSM through a proxy - then put the proxy's address there.</li>
+        <li>On the <strong>Message templates</strong> tab, add <em>Problem</em>, <em>Problem recovery</em> and <em>Problem update</em> - Zabbix fills each in; just add them. Without them Zabbix has no message to send and the action quietly does nothing.</li>
         <li>Make sure <strong>Enabled</strong> is ticked, and save.</li>
     </ol>
 </div>
