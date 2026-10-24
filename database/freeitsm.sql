@@ -2336,6 +2336,26 @@ CREATE TABLE IF NOT EXISTS `integration_comment_map` (
     CONSTRAINT `fk_integration_comment_link` FOREIGN KEY (`link_id`) REFERENCES `integration_links` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Every event Zabbix sent to api/external/zabbix/alert.php, and what was done with it
+-- (includes/integrations/zabbix.php). problem_id is Zabbix's {EVENT.ID}: a recovery
+-- carries its problem's, which is how it finds the ticket the problem opened.
+-- action: created | updated | resolved | recovery_unmatched | error.
+CREATE TABLE IF NOT EXISTS `zabbix_events` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `problem_id`        VARCHAR(64) NOT NULL,
+    `event_value`       TINYINT NOT NULL DEFAULT 1,                  -- 1 problem, 0 recovery
+    `host`              VARCHAR(255) NOT NULL,
+    `trigger_name`      VARCHAR(500) NULL,
+    `severity`          TINYINT NOT NULL DEFAULT 3,                  -- 0 Not classified .. 5 Disaster
+    `ticket_id`         INT NULL,
+    `action`            VARCHAR(30) NOT NULL,
+    `detail`            VARCHAR(255) NULL,
+    `received_datetime` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `ix_zabbix_events_problem` (`problem_id`),
+    KEY `ix_zabbix_events_received` (`received_datetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- One website chat conversation. Created when a visitor opens the widget and (if the
 -- widget asks for it) gives their name + email. `token` is the browser's capability
 -- for THIS conversation — it is stored in the visitor's browser and presented on every

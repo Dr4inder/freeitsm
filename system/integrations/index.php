@@ -72,6 +72,14 @@ foreach ($providers as $pk => $pmeta) {
     try { $counts[$pk] = tikaConfigured($conn) ? 1 : 0; }
     catch (Exception $e) { $counts[$pk] = 0; }
 }
+
+// Monitoring (Zabbix) is the same shape: one token, made or not.
+require_once dirname(__DIR__, 2) . '/includes/integrations/zabbix.php';
+foreach ($providers as $pk => $pmeta) {
+    if (($pmeta['kind'] ?? 'tracker') !== 'monitoring') continue;
+    try { $counts[$pk] = zabbixConfigured($conn) ? 1 : 0; }
+    catch (Exception $e) { $counts[$pk] = 0; }
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars(I18n::getLocale()); ?>" data-theme="<?php echo htmlspecialchars(Theme::active()); ?>" data-theme-mode="<?php echo htmlspecialchars(Theme::mode()); ?>">
@@ -151,8 +159,8 @@ foreach ($providers as $pk => $pmeta) {
                     <span class="provider-count <?php echo $n === 0 ? 'is-none' : ''; ?>">
                         <?php
                         // "3 connections" is the tracker/messaging shape. An
-                        // extractor is one endpoint, so it reads as a state.
-                        if (($meta['kind'] ?? 'tracker') === 'extractor') {
+                        // extractor (or a monitoring feed) is one endpoint, so it reads as a state.
+                        if (in_array($meta['kind'] ?? 'tracker', ['extractor', 'monitoring'], true)) {
                             echo htmlspecialchars($n > 0
                                 ? t('system.integrations.configured')
                                 : t('system.integrations.not_configured'));

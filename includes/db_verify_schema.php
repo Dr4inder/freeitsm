@@ -1164,6 +1164,21 @@ return [
         'created_datetime'    => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
     ],
 
+    // Zabbix integration: every event received and what was done with it - see
+    // freeitsm.sql and includes/integrations/zabbix.php.
+    'zabbix_events' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'problem_id'        => 'VARCHAR(64) NOT NULL',
+        'event_value'       => 'TINYINT NOT NULL DEFAULT 1',
+        'host'              => 'VARCHAR(255) NOT NULL',
+        'trigger_name'      => 'VARCHAR(500) NULL',
+        'severity'          => 'TINYINT NOT NULL DEFAULT 3',
+        'ticket_id'         => 'INT NULL',
+        'action'            => 'VARCHAR(30) NOT NULL',
+        'detail'            => 'VARCHAR(255) NULL',
+        'received_datetime' => 'DATETIME NOT NULL',
+    ],
+
     // Pre-ticket chat transcript (AI 'deflect' mode) — see freeitsm.sql. sender is
     // 'visitor'|'ai'|'agent'|'system'. Source for the ticket opening message + .txt log.
     'webchat_messages' => [

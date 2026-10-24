@@ -131,6 +131,8 @@ return [
     ['integration_field_maps', 'uq_integration_field_map', 'unique', '(`connection_id`,`map_type`,`local_key`)'],
     ['integration_comment_map', 'uq_integration_comment', 'unique', '(`link_id`,`external_comment_id`)'],
     ['integration_comment_map', 'ix_integration_comment_note', 'key', '(`local_note_id`)'],
+    ['zabbix_events', 'ix_zabbix_events_problem', 'key', '(`problem_id`)'],
+    ['zabbix_events', 'ix_zabbix_events_received', 'key', '(`received_datetime`)'],
     ['webchat_conversations', 'uq_webchat_conversation_token', 'unique', '(`token`)'],
     ['webchat_conversations', 'ix_webchat_conversation_channel', 'key', '(`channel_id`)'],
     ['webchat_conversations', 'ix_webchat_conversation_ticket', 'key', '(`ticket_id`)'],

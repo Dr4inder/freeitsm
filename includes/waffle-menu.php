@@ -1246,11 +1246,17 @@ function renderNotificationBell($path_prefix) {
     // The bell itself is shared with the self-service portal - see
     // includes/notification_bell.php. Only the URLs are the analyst's.
     require_once __DIR__ . '/notification_bell.php';
-    notificationBellRender($path_prefix, [
-        'list'       => $path_prefix . 'api/notifications/get_notifications.php',
-        'markRead'   => $path_prefix . 'api/notifications/mark_read.php',
-        'clear'      => $path_prefix . 'api/notifications/clear.php',
-        'linkPrefix' => $path_prefix,
+    // URLs from BASE_URL, like the rest of the header: $path_prefix is a
+    // FILESYSTEM path, and on a pretty URL served deeper than its file
+    // (system/integrations/<provider>/help) it pointed every bell URL one folder
+    // too high - the script 404'd and the page threw "NotificationBell is not
+    // defined". Found adding the Zabbix help page, October 2026.
+    $url = defined('BASE_URL') ? BASE_URL : $path_prefix;
+    notificationBellRender($url, [
+        'list'       => $url . 'api/notifications/get_notifications.php',
+        'markRead'   => $url . 'api/notifications/mark_read.php',
+        'clear'      => $url . 'api/notifications/clear.php',
+        'linkPrefix' => $url,
         'seenKey'    => 'nbSeenUnread',
     ]);
 }

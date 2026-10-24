@@ -58,6 +58,7 @@ define('ENCRYPTED_SETTING_KEYS', [
     'knowledge_writeup_api_key',
     'warroom_ai_api_key',
     'projects_ai_api_key',
+    'zabbix_token',   // the secret Zabbix sends; shown to administrators to paste into Zabbix, so not masked
 ]);
 
 /**

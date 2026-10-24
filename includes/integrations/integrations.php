@@ -152,6 +152,17 @@ function integrationsAvailableProviders(): array
             'page'        => 'tika.php',   // its own page; see provider.php
             'credential_fields' => [],
         ],
+        // Zabbix — monitoring problems become incidents (contributed by Carl
+        // Steynvaard of Open Resilience, Oct 2026). A "monitoring" kind: nothing
+        // is sent TO it, it calls in; one token, so it reads as a state like Tika.
+        'zabbix' => [
+            'key'         => 'zabbix',
+            'kind'        => 'monitoring',
+            'name'        => 'Zabbix',
+            'blurb'       => 'system.integrations.zabbix_blurb',
+            'page'        => 'zabbix.php',   // its own page; see provider.php
+            'credential_fields' => [],
+        ],
         'slack' => [
             'key'         => 'slack',
             'kind'        => 'messaging',

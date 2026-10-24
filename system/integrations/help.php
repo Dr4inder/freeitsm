@@ -61,6 +61,8 @@ $isDevOps = ($providerKey === 'azuredevops');
 // Slack is not a tracker: no base URL, no API token, no project. It gets its own
 // sections from help_slack.php rather than an awkward reading of the tracker ones.
 $isSlack = ($providerKey === 'slack');
+// Zabbix calls in rather than being called; its sections are in help_zabbix.php.
+$isZabbix = ($providerKey === 'zabbix');
 
 /**
  * What each tracker calls its credential, because getting this wrong is not a
@@ -74,7 +76,15 @@ $isSlack = ($providerKey === 'slack');
 $tokenNoun = $isDevOps ? 'personal access token' : 'API token';
 
 /** The left-nav sections, in order. Single source for nav + scroll-spy. */
-$sections = $isSlack ? [
+$sections = $isZabbix ? [
+    ['id' => 'overview',  'title' => 'What this does'],
+    ['id' => 'token',     'title' => 'Make the token'],
+    ['id' => 'mediatype', 'title' => 'Create the media type in Zabbix'],
+    ['id' => 'action',    'title' => 'Tell Zabbix which alerts to send'],
+    ['id' => 'choices',   'title' => 'Choose what the incidents look like'],
+    ['id' => 'try',       'title' => 'Try it'],
+    ['id' => 'trouble',   'title' => 'If something is wrong'],
+] : ($isSlack ? [
     ['id' => 'overview',  'title' => 'What this does'],
     ['id' => 'workspace', 'title' => 'If you have never used Slack'],
     ['id' => 'add',       'title' => 'Add the workspace here first'],
@@ -92,7 +102,7 @@ $sections = $isSlack ? [
     ['id' => 'mapping',  'title' => 'Mapping'],
     ['id' => 'raise',    'title' => 'Raise an issue'],
     ['id' => 'trouble',  'title' => 'If something is wrong'],
-];
+]);
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars(I18n::getLocale()); ?>" data-theme="<?php echo htmlspecialchars(Theme::active()); ?>" data-theme-mode="<?php echo htmlspecialchars(Theme::mode()); ?>">
@@ -114,7 +124,7 @@ $sections = $isSlack ? [
         }
     </style>
     <!-- Mobile layer LAST, after this page's own <style> (Techniques §9). -->
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=195">
+    <link rel="stylesheet" href="<?php echo $assetBase; ?>assets/css/mobile.css?v=195">
 </head>
 <body data-mobile-module="system" data-mobile-page="integrations-help">
     <?php include __DIR__ . '/../includes/header.php'; ?>
@@ -151,7 +161,7 @@ $sections = $isSlack ? [
 
             <div class="help-content">
 
-                <?php if ($isSlack): include __DIR__ . '/help_slack.php'; else: ?>
+                <?php if ($isZabbix): include __DIR__ . '/help_zabbix.php'; elseif ($isSlack): include __DIR__ . '/help_slack.php'; else: ?>
 
                 <!-- 1 ───────────────────────────────────────────── -->
                 <div class="help-section" id="overview">

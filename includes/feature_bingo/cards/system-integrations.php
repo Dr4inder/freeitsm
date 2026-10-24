@@ -262,6 +262,20 @@ return [
         'check'    => ['sql', "SELECT COUNT(*) FROM system_settings WHERE setting_key IN (" . $aiKeys('provider') . ") AND setting_value = 'openai_compatible'"],
     ],
 
+    // ── Integrations: monitoring ─────────────────────────────────────────────
+    [
+        'id'       => 'system.zabbix_incidents',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'integrations',
+        'title'    => 'Zabbix alerts raise incidents',
+        'what'     => 'Zabbix sends its problems to FreeITSM: each opens an incident at the priority its severity maps to, linked to the server in the CMDB, and the recovery resolves it.',
+        'why'      => 'Nobody has to watch the monitoring screen and log a ticket by hand - the outage is on the board, with its server, the moment Zabbix sees it.',
+        'done'     => 'Zabbix has raised at least one incident.',
+        'link'     => 'system/integrations/zabbix.php',
+        'check'    => ['rows', 'zabbix_events', "action = 'created'"],
+    ],
+
     // ── Integrations: issue trackers────────────────────────────────────────
     [
         'id'       => 'system.jira_connection',
