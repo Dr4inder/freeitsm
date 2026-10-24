@@ -98,6 +98,8 @@ $primaryKeys = [
     'task_tag_map'              => ['task_id', 'tag_id'],
     // 3.3.0: one row per project, day and status - the cumulative flow diagram.
     'project_task_flow'         => ['project_id', 'day', 'status_id'],
+    // Microsoft Teams alerts: one workflow per channel and alert.
+    'msteams_channel_workflows' => ['channel_id', 'alert_key'],
     // 🔴 GH #123. Both of these were missed, and the warning above is the one
     // they were missed in spite of. A table is only safe to leave out of this
     // map if its PK is literally `id`; neither of these has an `id` column at

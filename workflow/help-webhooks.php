@@ -145,6 +145,7 @@ $translationNamespaces = ['common', 'workflow'];
             <table>
                 <tr><th>Format</th><th>Best for</th><th>What it sends</th></tr>
                 <tr><td><strong>Slack / Teams / Discord</strong></td><td>Chat notifications</td><td>A templated <code>message</code> wrapped in that platform&rsquo;s exact chat-message JSON, so it lands as a proper formatted message with zero work on your side.</td></tr>
+                <tr><td><strong>Microsoft Teams (Workflows card)</strong></td><td>Teams channels</td><td>Your <code>message</code> as an Adaptive Card with an <strong>Open in FreeITSM</strong> button on <code>{{link}}</code> - the ticket, or FreeITSM&rsquo;s front page. Use it with a Teams <em>Workflows</em> address (the channel &rsaquo; &hellip; &rsaquo; Workflows &rsaquo; &ldquo;Post to a channel when a webhook request is received&rdquo;): Microsoft switched the old connector webhooks off in May 2026. System &rsaquo; Integrations &rsaquo; Microsoft Teams builds these workflows for you.</td></tr>
                 <tr><td><strong>Custom</strong></td><td>Any other endpoint</td><td>A raw JSON <code>body</code> you write yourself, interpolating event fields with <code>{{&hellip;}}</code> placeholders. Match any target&rsquo;s exact contract.</td></tr>
                 <tr><td><strong>Full record</strong></td><td>Data sync / automation platforms</td><td>The <em>entire object as JSON</em>, in exactly the shape the REST API returns for that record (see next section).</td></tr>
             </table>

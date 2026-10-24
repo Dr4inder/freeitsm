@@ -74,6 +74,7 @@ $sample = [
         'assigned_analyst_id' => null,
         'owner_id'            => null,
         'origin_id'           => null,
+        'assigned_team_id'    => null,   // ticket.created carries it (ticketDispatchCreated)
         'created_by'          => null,
         'requester_email'     => 'jane@example.com',
     ],

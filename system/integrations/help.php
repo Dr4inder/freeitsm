@@ -65,6 +65,8 @@ $isSlack = ($providerKey === 'slack');
 $isZabbix = ($providerKey === 'zabbix');
 // So does 3CX; its sections are in help_threecx.php.
 $isThreecx = ($providerKey === 'threecx');
+// And Teams channel alerts; help_msteams.php.
+$isMsteams = ($providerKey === 'msteams');
 
 /**
  * What each tracker calls its credential, because getting this wrong is not a
@@ -78,7 +80,14 @@ $isThreecx = ($providerKey === 'threecx');
 $tokenNoun = $isDevOps ? 'personal access token' : 'API token';
 
 /** The left-nav sections, in order. Single source for nav + scroll-spy. */
-$sections = $isThreecx ? [
+$sections = $isMsteams ? [
+    ['id' => 'overview', 'title' => 'What this does'],
+    ['id' => 'address',  'title' => 'Get the channel\'s address'],
+    ['id' => 'channel',  'title' => 'Add the channel here'],
+    ['id' => 'alerts',   'title' => 'Choose the alerts'],
+    ['id' => 'workflows','title' => 'Where the alerts live'],
+    ['id' => 'trouble',  'title' => 'If something is wrong'],
+] : ($isThreecx ? [
     ['id' => 'overview', 'title' => 'What this does'],
     ['id' => 'token',    'title' => 'Make the token'],
     ['id' => 'upload',   'title' => 'Upload the template to 3CX'],
@@ -112,7 +121,7 @@ $sections = $isThreecx ? [
     ['id' => 'mapping',  'title' => 'Mapping'],
     ['id' => 'raise',    'title' => 'Raise an issue'],
     ['id' => 'trouble',  'title' => 'If something is wrong'],
-]));
+])));
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars(I18n::getLocale()); ?>" data-theme="<?php echo htmlspecialchars(Theme::active()); ?>" data-theme-mode="<?php echo htmlspecialchars(Theme::mode()); ?>">
@@ -171,7 +180,7 @@ $sections = $isThreecx ? [
 
             <div class="help-content">
 
-                <?php if ($isThreecx): include __DIR__ . '/help_threecx.php'; elseif ($isZabbix): include __DIR__ . '/help_zabbix.php'; elseif ($isSlack): include __DIR__ . '/help_slack.php'; else: ?>
+                <?php if ($isMsteams): include __DIR__ . '/help_msteams.php'; elseif ($isThreecx): include __DIR__ . '/help_threecx.php'; elseif ($isZabbix): include __DIR__ . '/help_zabbix.php'; elseif ($isSlack): include __DIR__ . '/help_slack.php'; else: ?>
 
                 <!-- 1 ───────────────────────────────────────────── -->
                 <div class="help-section" id="overview">

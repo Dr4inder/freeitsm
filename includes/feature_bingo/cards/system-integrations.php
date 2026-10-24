@@ -276,6 +276,20 @@ return [
         'check'    => ['rows', 'zabbix_events', "action = 'created'"],
     ],
 
+    // ── Integrations: alerts ─────────────────────────────────────────────────
+    [
+        'id'       => 'system.msteams_alerts',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'integrations',
+        'title'    => 'Alerts in Teams channels',
+        'what'     => 'Tick what each Teams channel hears about - urgent tickets, SLA breaches, the tickets for its teams - and FreeITSM posts each as a card with a button straight to the ticket.',
+        'why'      => 'An L2 channel sees its own tickets arrive, and the major-incident channel sees the urgent ones, without anyone building a workflow by hand.',
+        'done'     => 'A Teams channel has its address saved on System -> Integrations -> Microsoft Teams.',
+        'link'     => 'system/integrations/msteams.php',
+        'check'    => ['rows', 'msteams_channels', "webhook_url IS NOT NULL AND webhook_url <> ''"],
+    ],
+
     // ── Integrations: telephony ──────────────────────────────────────────────
     [
         'id'       => 'system.threecx_calls',

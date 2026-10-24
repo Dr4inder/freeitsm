@@ -135,6 +135,7 @@ return [
     ['zabbix_events', 'ix_zabbix_events_received', 'key', '(`received_datetime`)'],
     ['threecx_calls', 'uq_threecx_calls_key', 'unique', '(`call_key`)'],
     ['threecx_calls', 'ix_threecx_calls_received', 'key', '(`received_datetime`)'],
+    ['msteams_channel_workflows', 'ix_msteams_channel_workflows_workflow', 'key', '(`workflow_id`)'],
     ['webchat_conversations', 'uq_webchat_conversation_token', 'unique', '(`token`)'],
     ['webchat_conversations', 'ix_webchat_conversation_channel', 'key', '(`channel_id`)'],
     ['webchat_conversations', 'ix_webchat_conversation_ticket', 'key', '(`ticket_id`)'],

@@ -2381,6 +2381,35 @@ CREATE TABLE IF NOT EXISTS `threecx_calls` (
     KEY `ix_threecx_calls_received` (`received_datetime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Microsoft Teams channel alerts (System → Integrations → Microsoft Teams;
+-- includes/integrations/msteams.php). One row per Teams channel: its Workflows
+-- webhook address (ENCRYPTED, so 2000 wide - see webhook_deliveries.url), which
+-- alerts it gets (a JSON list of fixed keys, ticked on the page), the priority
+-- an "urgent ticket" alert starts at, and the teams whose tickets it is sent.
+-- Every ticked alert IS an ordinary workflow (send_webhook, Teams card format);
+-- msteams_channel_workflows says which one, so the page can update or remove
+-- exactly its own and never a workflow somebody wrote by hand.
+CREATE TABLE IF NOT EXISTS `msteams_channels` (
+    `id`                    INT NOT NULL AUTO_INCREMENT,
+    `name`                  VARCHAR(100) NOT NULL,
+    `webhook_url`           VARCHAR(2000) NULL,
+    `alerts`                TEXT NULL,                     -- JSON list, e.g. ["every_new","sla_breached"]
+    `priority_threshold_id` INT NULL,                      -- "at or above" this priority
+    `team_ids`              TEXT NULL,                     -- JSON list of teams.id
+    `display_order`         INT NOT NULL DEFAULT 0,
+    `created_datetime`      DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_datetime`      DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `msteams_channel_workflows` (
+    `channel_id`   INT NOT NULL,
+    `alert_key`    VARCHAR(40) NOT NULL,
+    `workflow_id`  INT NOT NULL,
+    PRIMARY KEY (`channel_id`, `alert_key`),
+    KEY `ix_msteams_channel_workflows_workflow` (`workflow_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- One website chat conversation. Created when a visitor opens the widget and (if the
 -- widget asks for it) gives their name + email. `token` is the browser's capability
 -- for THIS conversation — it is stored in the visitor's browser and presented on every
@@ -6898,7 +6927,8 @@ CREATE TABLE IF NOT EXISTS `webhook_message_formats` (
 INSERT IGNORE INTO `webhook_message_formats` (`format_key`, `label`, `body_template`, `url_pattern`, `markdown_hint`, `is_builtin`, `display_order`) VALUES
     ('slack',   'Slack',            '{"text": "{{message}}"}',    'hooks\\.slack\\.com',                                        'Slack mrkdwn: *bold*, _italic_, `code`. Links are <https://example.com|like this>.', 1, 10),
     ('teams',   'Microsoft Teams',  '{"@type": "MessageCard", "@context": "https://schema.org/extensions", "summary": "{{message}}", "text": "{{message}}"}', 'webhook\\.office\\.com|office\\.com/webhookb2|logic\\.azure\\.com', 'Teams MessageCard: **bold**, *italic*, [link](https://example.com).', 1, 20),
-    ('discord', 'Discord',          '{"content": "{{message}}"}', 'discord(app)?\\.com/api/webhooks',                           'Discord markdown: **bold** (two asterisks — a single *asterisk* is italic). Emoji shortcodes like :rotating_light: work.', 1, 30);
+    ('discord', 'Discord',          '{"content": "{{message}}"}', 'discord(app)?\\.com/api/webhooks',                           'Discord markdown: **bold** (two asterisks — a single *asterisk* is italic). Emoji shortcodes like :rotating_light: work.', 1, 30),
+    ('teams_workflows', 'Microsoft Teams (Workflows card)', '{"type": "message", "attachments": [{"contentType": "application/vnd.microsoft.card.adaptive", "contentUrl": null, "content": {"$schema": "http://adaptivecards.io/schemas/adaptive-card.json", "type": "AdaptiveCard", "version": "1.4", "msteams": {"width": "Full"}, "body": [{"type": "TextBlock", "text": "{{message}}", "wrap": true}], "actions": [{"type": "Action.OpenUrl", "title": "Open in FreeITSM", "url": "{{link}}"}]}}]}', 'logic\\.azure\\.com|powerplatform\\.com|powerautomate\\.com', 'Teams card: **bold**, *italic*, [link](https://example.com), - a list item; a blank line starts a new paragraph.', 1, 40);
 
 CREATE TABLE IF NOT EXISTS `webhook_deliveries` (
     `id`                 INT NOT NULL AUTO_INCREMENT,

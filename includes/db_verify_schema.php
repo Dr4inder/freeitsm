@@ -1179,6 +1179,24 @@ return [
         'received_datetime' => 'DATETIME NOT NULL',
     ],
 
+    // Microsoft Teams channel alerts - see freeitsm.sql and includes/integrations/msteams.php.
+    'msteams_channels' => [
+        'id'                    => 'INT NOT NULL AUTO_INCREMENT',
+        'name'                  => 'VARCHAR(100) NOT NULL',
+        'webhook_url'           => 'VARCHAR(2000) NULL',
+        'alerts'                => 'TEXT NULL',
+        'priority_threshold_id' => 'INT NULL',
+        'team_ids'              => 'TEXT NULL',
+        'display_order'         => 'INT NOT NULL DEFAULT 0',
+        'created_datetime'      => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+        'updated_datetime'      => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+    ],
+    'msteams_channel_workflows' => [
+        'channel_id'  => 'INT NOT NULL',
+        'alert_key'   => 'VARCHAR(40) NOT NULL',
+        'workflow_id' => 'INT NOT NULL',
+    ],
+
     // 3CX integration: every call reported and what was done with it - see
     // freeitsm.sql and includes/integrations/threecx.php.
     'threecx_calls' => [

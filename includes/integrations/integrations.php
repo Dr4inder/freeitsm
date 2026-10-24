@@ -174,6 +174,18 @@ function integrationsAvailableProviders(): array
             'page'        => 'threecx.php',   // its own page; see provider.php
             'credential_fields' => [],
         ],
+        // Microsoft Teams channel alerts (contributed by Carl Steynvaard of
+        // Open Resilience, Oct 2026). An "alerts" kind: it only posts, and each
+        // channel is one connection, so the card counts them. The Teams chat
+        // BOT is a messaging channel under Tickets → Settings → Messaging.
+        'msteams' => [
+            'key'         => 'msteams',
+            'kind'        => 'alerts',
+            'name'        => 'Microsoft Teams',
+            'blurb'       => 'system.integrations.msteams_blurb',
+            'page'        => 'msteams.php',   // its own page; see provider.php
+            'credential_fields' => [],
+        ],
         'slack' => [
             'key'         => 'slack',
             'kind'        => 'messaging',

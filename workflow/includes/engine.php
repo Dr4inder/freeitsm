@@ -320,7 +320,12 @@ class WorkflowEngine
         $stageFields   = ['stage.id', 'stage.name', 'stage.kind', 'stage.end_date'];
         $milestoneFields = ['milestone.id', 'milestone.name', 'milestone.due_date', 'milestone.done_date', 'milestone.stage_id', 'milestone.state'];
         $byTrigger = [
-            'ticket.created'          => $fullTicket,
+            // The team only on these two: ticketDispatchCreated() sends it, and
+            // ticket.team_assigned is ABOUT a team (its own top-level team_id).
+            // Offering it on triggers whose payload does not carry it would
+            // promise a condition that can never match.
+            'ticket.created'          => array_merge($fullTicket, ['ticket.assigned_team_id']),
+            'ticket.team_assigned'    => array_merge($fullTicket, ['team_id']),
             'ticket.status_changed'   => array_merge($fullTicket, ['old_status_id', 'new_status_id']),
             'ticket.priority_changed' => array_merge($fullTicket, ['old_priority_id', 'new_priority_id']),
             'ticket.assigned'         => array_merge($fullTicket, ['analyst_id', 'team_id']),
@@ -567,6 +572,20 @@ class WorkflowEngine
             'url_pattern'   => 'discord(app)?\.com/api/webhooks',
             'markdown_hint' => 'Discord markdown: **bold** (two asterisks — a single *asterisk* is italic). Emoji shortcodes like :rotating_light: work.',
         ],
+        // Teams "Workflows" webhooks (channel → … → Workflows → "Post to a
+        // channel when a webhook request is received") - the replacement for the
+        // Office 365 connectors Microsoft switched off in May 2026. An Adaptive
+        // Card, the shape those webhooks are built for, with an "Open in
+        // FreeITSM" button on {{link}}: the ticket when there is one, otherwise
+        // FreeITSM's front page - never empty, which a card's button must not be.
+        // The older 'teams' MessageCard above is left exactly as it was, so a
+        // workflow already using it sends what it always sent.
+        'teams_workflows' => [
+            'label'         => 'Microsoft Teams (Workflows card)',
+            'body_template' => '{"type": "message", "attachments": [{"contentType": "application/vnd.microsoft.card.adaptive", "contentUrl": null, "content": {"$schema": "http://adaptivecards.io/schemas/adaptive-card.json", "type": "AdaptiveCard", "version": "1.4", "msteams": {"width": "Full"}, "body": [{"type": "TextBlock", "text": "{{message}}", "wrap": true}], "actions": [{"type": "Action.OpenUrl", "title": "Open in FreeITSM", "url": "{{link}}"}]}}]}',
+            'url_pattern'   => 'logic\.azure\.com|powerplatform\.com|powerautomate\.com',
+            'markdown_hint' => 'Teams card: **bold**, *italic*, [link](https://example.com), - a list item; a blank line starts a new paragraph.',
+        ],
     ];
 
     /** Formats that are structurally special and stay in code. */
@@ -713,7 +732,44 @@ class WorkflowEngine
     public static function enrichPayloadForTemplates(PDO $conn, array $payload): array
     {
         $payload = self::enrichWithLookupNames($conn, $payload);
-        return self::enrichWithReferences($conn, $payload);
+        $payload = self::enrichWithReferences($conn, $payload);
+        return self::enrichWithLinks($conn, $payload);
+    }
+
+    /** Records with a page of their own, and its address under the app root. */
+    private const RECORD_LINKS = [
+        'ticket' => 'tickets/?ticket_id=',
+    ];
+
+    /**
+     * Addresses a message can link to, absolute so they work from a chat app or
+     * an email: {{app.url}} (FreeITSM's front page), {{ticket.url}} (that
+     * ticket), and {{link}} - the record's page when the event has one, else the
+     * front page. {{link}} is what a card's button points at, because a button
+     * with an empty address is refused outright by Teams.
+     *
+     * Never clobbers a value the host module already supplied.
+     *
+     * @param array $payload  the event payload
+     */
+    public static function enrichWithLinks(PDO $conn, array $payload): array
+    {
+        require_once dirname(__DIR__, 2) . '/includes/public_url.php';
+        try {
+            $root = rtrim(publicBaseUrl($conn), '/') . '/';
+        } catch (Throwable $e) {
+            return $payload;   // a missing link must never break a run
+        }
+        if (self::dotGet($payload, 'app.url') === null) self::dotSet($payload, 'app.url', $root);
+        $link = null;
+        foreach (self::RECORD_LINKS as $obj => $path) {
+            $id = self::dotGet($payload, $obj . '.id');
+            if ($id === null || $id === '' || !is_numeric($id)) continue;
+            if (self::dotGet($payload, $obj . '.url') === null) self::dotSet($payload, $obj . '.url', $root . $path . (int)$id);
+            $link ??= (string)self::dotGet($payload, $obj . '.url');
+        }
+        if (!isset($payload['link'])) $payload['link'] = $link ?? $root;
+        return $payload;
     }
 
     /**
@@ -839,9 +895,25 @@ class WorkflowEngine
             'path'  => 'event',
             'label' => 'Event name',
             'note'  => 'The trigger that fired — "' . $trigger . '"',
+        ], [
+            'path'  => 'link',
+            'label' => 'Link',
+            'note'  => 'The page this is about - the ticket when there is one, otherwise FreeITSM\'s front page. A full address, so it works from a chat app or an email.',
+        ], [
+            'path'  => 'app.url',
+            'label' => 'FreeITSM address',
+            'note'  => 'The front page, as a full address.',
         ]];
 
         $fields = self::availableFields($trigger);
+        foreach (self::RECORD_LINKS as $obj => $path) {
+            if (!in_array($obj . '.id', $fields, true)) continue;
+            $vars[] = [
+                'path'  => $obj . '.url',
+                'label' => self::humaniseSegment($obj) . ' · Link',
+                'note'  => 'The full address of this ' . $obj . ' in FreeITSM.',
+            ];
+        }
 
         // {{<object>.number}} — the reference a human quotes, e.g. ETC-623-64409,
         // as opposed to {{ticket.id}} which is the database row id (83). Offered

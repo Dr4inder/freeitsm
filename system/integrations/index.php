@@ -81,6 +81,13 @@ foreach ($providers as $pk => $pmeta) {
     catch (Exception $e) { $counts[$pk] = 0; }
 }
 
+// Teams channel alerts: one connection per channel with an address.
+require_once dirname(__DIR__, 2) . '/includes/integrations/msteams.php';
+foreach ($providers as $pk => $pmeta) {
+    if (($pmeta['kind'] ?? 'tracker') !== 'alerts') continue;
+    $counts[$pk] = msteamsChannelCount($conn);
+}
+
 // Telephony (3CX) too: one token, made or not.
 require_once dirname(__DIR__, 2) . '/includes/integrations/threecx.php';
 foreach ($providers as $pk => $pmeta) {
