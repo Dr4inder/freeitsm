@@ -33,6 +33,13 @@
  * NOT CHECKED: GET/HEAD/OPTIONS (they must not change anything - see
  * csrfRequireToken() for the few that do), the CLI, and callers that are
  * deliberately cross-origin and never use the login cookie (CSRF_EXEMPT_PATHS).
+ *
+ * 🔴 "MUST NOT CHANGE ANYTHING" IS ENFORCED, NOT ASSUMED. A SameSite=Lax cookie IS
+ * sent on a top-level GET from another site, so a link on any web page could empty
+ * the ticket trash, run Database Verification or reset a setting for whoever
+ * clicked it - none of which the token check ever saw. Every endpoint that writes
+ * now calls csrfRequireWriteMethod() first, and tests/get-must-not-write.php fails
+ * the build for a writer that does not. Reported privately, October 2026.
  */
 
 const CSRF_SESSION_KEY = 'csrf_token';
@@ -261,6 +268,26 @@ function csrfRequireToken(): void
     $expected = (string)($_SESSION[CSRF_SESSION_KEY] ?? '');
     $given = csrfProvidedToken();
     if ($expected === '' || $given === '' || !hash_equals($expected, $given)) csrfRefuse('token');
+}
+
+/**
+ * For every endpoint that changes something: refuse GET, HEAD and OPTIONS, so the
+ * request has to be one csrfEnforce() checks. Call it before the first write, after
+ * functions.php is loaded.
+ *
+ * TRAP: an endpoint that only reads a JSON body still needs this. A link sends no
+ *   body, every field falls back to its default, and an endpoint whose defaults
+ *   pass validation saves them - wiping SLA settings, switching module permissions
+ *   to "most", blanking branding. Twelve endpoints did exactly that.
+ */
+function csrfRequireWriteMethod(): void
+{
+    if (PHP_SAPI === 'cli' || csrfIsStateChanging()) return;
+    http_response_code(405);
+    header('Allow: POST');
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'error' => 'This request must be sent as a POST.']);
+    exit;
 }
 
 /** The tags every page needs: the token and the script that sends it. */

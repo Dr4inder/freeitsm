@@ -20,6 +20,9 @@ require_once '../../includes/request_guard.php';     // origin + CSRF checks (S4
 
 try {
     $input = json_decode(file_get_contents('php://input'), true);
+
+// Changes data: never on a GET, which a link on another site can send (csrf.php).
+csrfRequireWriteMethod();
     $identifier = trim($input['identifier'] ?? '');
 
     if (empty($identifier)) {

@@ -23,6 +23,9 @@ require_once '../../includes/mailbox_graph.php';
 require_once '../../includes/email_log.php';
 require_once '../../includes/timezone.php';   // fmt_local() for the quoted thread's dates
 
+// Changes data: never on a GET, which a link on another site can send (csrf.php).
+csrfRequireWriteMethod();
+
 // Most bytes of thread pictures one email carries - see processInlineImages().
 // ⚠️ Must stay up here, above the code that sends. Unlike a function, a top-level
 // const only exists once PHP has run the line, and this file's functions are

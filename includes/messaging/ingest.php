@@ -293,17 +293,19 @@ function ingestInboundMessage(PDO $conn, array $channel, array $msg): array
 function findOpenChannelTicket(PDO $conn, string $from, string $channelType, string $replyAddress = '', ?int $channelId = null): ?int
 {
     $byThread = ($channelType === 'slack' && $replyAddress !== '');
-    // 🔴 Telegram: the conversation is (bot, chat), never the chat alone. A chat
-    // id is the person's Telegram user id, the SAME on every bot, so without this
-    // a message to company B's bot threaded into the person's open ticket from
-    // company A's bot - another company's ticket. (WhatsApp is left exactly as it
-    // was: its sender rule predates this and is not part of the Telegram change.)
+    // 🔴 The conversation is (channel, sender), never the sender alone - for EVERY
+    // channel type. A Telegram chat id is the person's user id, the same on every
+    // bot; a Mattermost user id is the same in every configuration on one server; and
+    // a phone number is the same whichever company's WhatsApp number it messages.
+    // Matched on the sender alone, a message to company B's channel threaded into the
+    // person's open ticket from company A's - another company's ticket.
     //
-    // TRAP: a new channel type whose sender id is not unique per channel must be
-    //   added here. Mattermost (PR #166) is one: a user id is the same in every
-    //   configuration on one server, so two companies' support channels would
-    //   share a person's thread - another company's ticket - without this.
-    $byBot = (in_array($channelType, ['telegram', 'mattermost', 'teams'], true) && $channelId !== null);
+    // Telegram, Mattermost and Teams were scoped one at a time; WhatsApp was left
+    // matching across every channel until it was reported privately, October 2026.
+    // Scoping all of them is what stops the next channel type repeating it.
+    // emails.channel_id has been written since the first messaging channel shipped,
+    // so open conversations keep threading.
+    $byBot = ($channelId !== null);
 
     $sql = "SELECT t.id
             FROM tickets t

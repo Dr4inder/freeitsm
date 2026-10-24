@@ -943,7 +943,8 @@ $translationNamespaces = ['common', 'asset-management'];
                 // not_configured, and that is not a failure when other sources
                 // exist - the PR showed a red "not configured" on every sync of a
                 // Proxmox-only install.
-                const vc = await fetch(API_BASE + 'get_vcenter.php').then(r => r.json()).catch(() => ({ success: false }));
+                // POST: the sync writes server records, so the endpoint refuses a GET (csrf.php).
+                const vc = await fetch(API_BASE + 'get_vcenter.php', { method: 'POST' }).then(r => r.json()).catch(() => ({ success: false }));
                 const vcNotConfigured = !vc.success && vc.not_configured;
                 if (vc.success) {
                     lines.push('vCenter: ' + vc.message);

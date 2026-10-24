@@ -34,6 +34,10 @@ require_once __DIR__ . '/request_guard.php';
 // make the seeded-credentials fix cosmetic. See the file.
 require_once __DIR__ . '/password_gate.php';
 
+// Signs out a deactivated or deleted analyst on their next request, rather than
+// leaving every endpoint that only checks "signed in" open to them. See the file.
+require_once __DIR__ . '/analyst_active_gate.php';
+
 // ⚠️ Stop announcing the exact PHP build on every single response.
 //
 // Withholding the version from setup/ (S9) is worth very little while every other
@@ -361,24 +365,28 @@ function requesterIsActive(PDO $conn, int $userId): bool {
 }
 
 /**
- * Cosmetic (UI-layer) admin check for pages: "should this analyst see System?".
- * Reads $_SESSION['is_admin']; if absent (e.g. a session created before this
- * upgrade) it self-heals by looking the flag up once and caching it in the
- * session, so no login-path changes are needed and no admin is ever locked out.
- * Requires a writable session (not read_and_close). For hard enforcement on APIs
- * use requireAdminJson() instead, which re-checks the DB every call.
+ * Is the signed-in analyst an administrator? Asks the database every request
+ * (analystIsAdmin() caches within one), so demoting or deactivating somebody takes
+ * effect on their very next click.
+ *
+ * 🔴 It used to read a copy of the flag cached in the session at sign-in, and was
+ * documented as "cosmetic, for pages" - but endpoints had come to rely on it as a
+ * gate: the Slack channel settings, test_channel.php, approving catalogue requests
+ * as an administrator, editing manager lines. A demoted admin whose session was
+ * still open kept all of those. Reported privately, October 2026.
+ *
+ * $_SESSION['is_admin'] is still written when the session is writable, for older
+ * code that reads it directly - but nothing should decide anything from it.
  */
 function sessionIsAdmin(): bool {
     if (!isset($_SESSION['analyst_id'])) return false;
-    if (!array_key_exists('is_admin', $_SESSION)) {
-        try {
-            $conn = connectToDatabase();
-            $_SESSION['is_admin'] = analystIsAdmin($conn, (int) $_SESSION['analyst_id']) ? 1 : 0;
-        } catch (Throwable $e) {
-            return false; // fail closed
-        }
+    try {
+        $isAdmin = analystIsAdmin(connectToDatabase(), (int) $_SESSION['analyst_id']);
+    } catch (Throwable $e) {
+        return false; // fail closed
     }
-    return !empty($_SESSION['is_admin']);
+    if (session_status() === PHP_SESSION_ACTIVE) $_SESSION['is_admin'] = $isAdmin ? 1 : 0;
+    return $isAdmin;
 }
 
 /**

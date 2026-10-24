@@ -698,7 +698,8 @@ $translationNamespaces = ['common', 'setup'];
         result.style.display = 'none';
 
         try {
-            const resp = await fetch('../api/system/db_verify.php');
+            // POST: it changes the schema, so the endpoint refuses a GET (csrf.php).
+            const resp = await fetch('../api/system/db_verify.php', { method: 'POST' });
             const data = await resp.json();
 
             if (data.success) {

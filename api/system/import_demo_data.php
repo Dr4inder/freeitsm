@@ -12,6 +12,9 @@ require_once '../../includes/demo_data.php';   // DEMO_MODULES, demoTablesWithIn
 
 header('Content-Type: application/json');
 
+// Changes data: never on a GET, which a link on another site can send (csrf.php).
+csrfRequireWriteMethod();
+
 if (!isset($_SESSION['analyst_id'])) {
     echo json_encode(['success' => false, 'error' => 'Not authenticated']);
     exit;

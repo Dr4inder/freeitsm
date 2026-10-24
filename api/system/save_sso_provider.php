@@ -23,6 +23,9 @@ require_once '../../includes/functions.php';
 require_once '../../includes/encryption.php';
 require_once '../../includes/sso_identity.php';
 
+// Changes data: never on a GET, which a link on another site can send (csrf.php).
+csrfRequireWriteMethod();
+
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['analyst_id'])) {

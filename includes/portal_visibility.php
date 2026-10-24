@@ -160,3 +160,44 @@ function portalEmailVisibility(array $email, ?string $requesterEmail, string $po
             return ['visible' => false, 'attachments' => false];
     }
 }
+
+/**
+ * The list-pane preview for each ticket: the first 160 characters of the newest
+ * message the requester is allowed to see, by the same rule as the ticket itself.
+ *
+ * 🔴 The portal lists (get_tickets.php, get_team_tickets.php) used to take the
+ * newest message whatever it was, straight from SQL. With the privacy setting on
+ * "hide", a supplier's reply was withheld from the ticket but its opening lines
+ * were still printed under the ticket's subject in the list. Reported privately,
+ * October 2026. The rule is applied against the TICKET'S requester, as the detail
+ * view does, so a manager's team list shows exactly what the requester would see.
+ *
+ * @param int[] $ticketIds  the tickets on this page of the list
+ * @return array<int, string>  ticket id => preview; a ticket with nothing visible is absent
+ */
+function portalVisiblePreviews(PDO $conn, array $ticketIds): array {
+    $ticketIds = array_values(array_unique(array_map('intval', $ticketIds)));
+    if (!$ticketIds) return [];
+    $policy = portalThirdPartyPolicy($conn);
+    $ph = implode(',', array_fill(0, count($ticketIds), '?'));
+    $stmt = $conn->prepare(
+        "SELECT e.ticket_id, LEFT(e.body_preview, 160) AS preview,
+                e.channel, e.direction, e.from_address, e.to_recipients, e.cc_recipients,
+                u.email AS requester_email
+           FROM emails e
+           JOIN tickets t     ON t.id = e.ticket_id
+      LEFT JOIN users u       ON u.id = t.user_id
+          WHERE e.ticket_id IN ($ph)
+       ORDER BY e.ticket_id, e.received_datetime DESC, e.id DESC"
+    );
+    $stmt->execute($ticketIds);
+    $out = [];
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $m) {
+        $tid = (int)$m['ticket_id'];
+        if (array_key_exists($tid, $out)) continue;   // already have this ticket's newest visible one
+        // NULL (no user, or no address) and '' mean different things - see portalEmailInvolvesRequester().
+        $req = $m['requester_email'] === null ? null : (string)$m['requester_email'];
+        if (portalEmailVisibility($m, $req, $policy)['visible']) $out[$tid] = (string)$m['preview'];
+    }
+    return $out;
+}

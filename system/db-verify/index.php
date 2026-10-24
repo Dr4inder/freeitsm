@@ -659,7 +659,8 @@ if (!isset($_SESSION['analyst_id'])) {
             document.getElementById('resultsArea').innerHTML = '<div class="placeholder-msg"><p>' + window.t('system.db_verify.checking') + '</p></div>';
 
             try {
-                const response = await fetch('../../api/system/db_verify.php');
+                // POST: it changes the schema, so the endpoint refuses a GET (csrf.php).
+                const response = await fetch('../../api/system/db_verify.php', { method: 'POST' });
                 const data = await response.json();
 
                 if (data.success) {

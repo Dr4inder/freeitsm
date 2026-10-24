@@ -47,6 +47,7 @@ function getDebugTools() {
             'duration' => '~2 seconds',
             'persists' => 'The live-import step will populate demo data if it succeeds. Otherwise nothing persists.',
             'input'    => null,
+            'method'   => 'POST',   // it imports - the endpoint refuses a GET (csrfRequireWriteMethod)
         ],
         [
             'id'       => 'D002',
@@ -58,6 +59,7 @@ function getDebugTools() {
             'desc'     => 'Delete a ticket the same way the app does, showing every SQL statement — for foreign-key delete errors.',
             'keywords' => 'ticket delete foreign key fk constraint 1451 email_attachments sql trace destructive d002',
             'when'     => 'Run this when deleting a ticket fails with a foreign-key error (e.g. "1451 Cannot delete or update a parent row" on email_attachments). Enter the ticket reference, and it deletes the ticket the same way the app does — but shows every SQL statement and row count so you can see exactly what happened.',
+            'method'   => 'POST',   // it deletes - the endpoint refuses a GET (csrfRequireWriteMethod)
             'input'    => ['name' => 'ref', 'label' => 'Ticket reference', 'placeholder' => 'e.g. the ticket number shown on the ticket'],
             'checks'   => [
                 'Resolves the ticket from the reference (ticket_number, or raw id as a fallback)',
@@ -194,6 +196,7 @@ function getDebugTools() {
             ],
             'duration' => '~1 second',
             'persists' => 'Writes ONE probe row and deletes it again (removed in a finally block, and the tool reports if any was left behind). It has to write rather than use a rolled-back transaction, because MySQL does not let a search see rows that have not been committed. The row uses a reserved type that nothing else writes. Nothing else is modified.',
+            'method'   => 'POST',   // it writes - the endpoint refuses a GET (csrfRequireWriteMethod)
         ],
         [
             'id'       => 'D008',

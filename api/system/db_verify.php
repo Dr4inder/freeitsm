@@ -13,6 +13,9 @@ require_once '../../includes/uploads.php';      // ATTACHMENT_QUARANTINE_EXT
 
 header('Content-Type: application/json');
 
+// Changes data: never on a GET, which a link on another site can send (csrf.php).
+csrfRequireWriteMethod();
+
 // ⚠️ Database Verification CREATES, ALTERS **AND DROPS**. TAKE A BACKUP FIRST.
 //
 // This comment used to say it "never drops anything". That was false, and had been

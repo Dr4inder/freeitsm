@@ -13,6 +13,9 @@ require_once '../../includes/landing.php';   // re-issue the landing cookie on l
 
 header('Content-Type: application/json');
 
+// Changes data: never on a GET, which a link on another site can send (csrf.php).
+csrfRequireWriteMethod();
+
 // Check for pending MFA state
 if (!isset($_SESSION['mfa_pending_analyst_id'])) {
     echo json_encode(['success' => false, 'error' => 'No MFA challenge pending']);

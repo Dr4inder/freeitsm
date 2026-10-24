@@ -6055,7 +6055,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             }
         }
 
-        function authenticateMailbox(id) {
+        async function authenticateMailbox(id) {
             const mailbox = mailboxes.find(m => m.id == id);
             if (!mailbox) {
                 showToast('Mailbox not found. ID: ' + id, 'error');
@@ -6064,9 +6064,25 @@ function renderOversizeFields(string $px, bool $withLimits): void
 
             const provider = mailbox.provider || 'microsoft';
 
+            // The state comes from the server, which remembers it for this session -
+            // the callback refuses any other (mailbox_oauth_start.php explains why).
+            let state;
+            try {
+                const res = await fetch(API_BASE + 'mailbox_oauth_start.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mailbox_id: id })
+                });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error || 'Could not start the sign-in');
+                state = data.state;
+            } catch (e) {
+                showToast(e.message, 'error');
+                return;
+            }
+
             if (provider === 'google') {
                 // Google OAuth flow
-                const state = 'google_mailbox_' + id + '_' + Math.random().toString(36).substring(2, 18);
                 const params = new URLSearchParams({
                     client_id: mailbox.azure_client_id,
                     redirect_uri: mailbox.oauth_redirect_uri,
@@ -6079,7 +6095,6 @@ function renderOversizeFields(string $px, bool $withLimits): void
                 window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
             } else {
                 // Microsoft OAuth flow
-                const state = 'mailbox_' + id + '_' + Math.random().toString(36).substring(2, 18);
                 const params = new URLSearchParams({
                     client_id: mailbox.azure_client_id,
                     response_type: 'code',

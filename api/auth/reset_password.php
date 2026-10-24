@@ -15,6 +15,9 @@ require_once __DIR__ . '/../../includes/request_guard.php';   // origin + CSRF c
 
 try {
     $input = json_decode(file_get_contents('php://input'), true);
+
+// Changes data: never on a GET, which a link on another site can send (csrf.php).
+csrfRequireWriteMethod();
     $token = trim($input['token'] ?? '');
     $newPassword = $input['new_password'] ?? '';
     $confirmPassword = $input['confirm_password'] ?? '';

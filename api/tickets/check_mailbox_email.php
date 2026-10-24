@@ -17,6 +17,9 @@ require_once '../../includes/uploads.php';   // uploadStoreBytes() — see F1
 
 header('Content-Type: application/json');
 
+// Changes data: never on a GET, which a link on another site can send (csrf.php).
+csrfRequireWriteMethod();
+
 // Check if user is logged in
 if (!isset($_SESSION['analyst_id'])) {
     echo json_encode(['success' => false, 'error' => 'Not authenticated']);

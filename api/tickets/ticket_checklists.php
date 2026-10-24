@@ -78,6 +78,12 @@ if (!$action) {
     }
 }
 
+// The three actions that change data are never run from a GET, which a link on
+// another site can send (csrf.php). The reads stay on GET.
+if (in_array($action, ["attach_template", "toggle_item", "remove_checklist"], true)) {
+    csrfRequireWriteMethod();
+}
+
 try {
     switch ($action) {
         case "get_ticket_checklists":
