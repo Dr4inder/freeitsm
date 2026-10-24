@@ -127,7 +127,7 @@ require __DIR__ . '/_top.php';
     <div class="help-section-header"><?php echo helpSectionNum('passwords'); ?>
         <div>
             <h3>Resetting a password</h3>
-            <p>The key button on a row sets a new local password. Type it twice; the minimum is six characters. It takes effect immediately and the analyst is not emailed — you'll need to tell them yourself.</p>
+            <p>The key button on a row sets a new local password. Type it twice; it must be at least eight characters, and not a published or very common password such as the default. It takes effect immediately and the analyst is not emailed — you'll need to tell them yourself.</p>
         </div>
     </div>
     <p>Any administrator can reset any account's password, including their own. There's no &ldquo;must change at next sign-in&rdquo; flag here; if you want passwords to age out, use the <strong>Password expiry</strong> setting on System &rarr; Security.</p>

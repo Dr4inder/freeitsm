@@ -364,12 +364,12 @@ $translationNamespaces = ['common', 'tickets'];
 
                 <div class="form-group">
                     <label for="newPassword"><?php echo htmlspecialchars(t('tickets.settings.modals.password_reset.new_password')); ?> *</label>
-                    <input type="password" id="newPassword" required minlength="6" placeholder="<?php echo htmlspecialchars(t('tickets.settings.modals.password_reset.new_password_placeholder')); ?>">
+                    <input type="password" id="newPassword" required minlength="8" placeholder="<?php echo htmlspecialchars(t('tickets.settings.modals.password_reset.new_password_placeholder')); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="confirmPassword"><?php echo htmlspecialchars(t('tickets.settings.modals.password_reset.confirm_password')); ?> *</label>
-                    <input type="password" id="confirmPassword" required minlength="6" placeholder="<?php echo htmlspecialchars(t('tickets.settings.modals.password_reset.confirm_password_placeholder')); ?>">
+                    <input type="password" id="confirmPassword" required minlength="8" placeholder="<?php echo htmlspecialchars(t('tickets.settings.modals.password_reset.confirm_password_placeholder')); ?>">
                 </div>
 
                 <div class="modal-actions">
@@ -1127,8 +1127,8 @@ $translationNamespaces = ['common', 'tickets'];
                 showToast('Passwords do not match.', 'error');
                 return;
             }
-            if (newPassword.length < 6) {
-                showToast('Password must be at least 6 characters.', 'error');
+            if (newPassword.length < 8) {   // includes/password_policy.php has the full rule
+                showToast('Password must be at least 8 characters.', 'error');
                 return;
             }
 
