@@ -20,7 +20,7 @@ return [
 
     'executions' => [
         'page_title'    => 'Execution log',
-        'intro'         => 'Every run of every workflow. The engine deliberately swallows its own errors so a broken rule can never break the ticket save that triggered it — which means a failing workflow is otherwise silent. This is where you find it.',
+        'intro'         => 'Every run of every workflow you can see (on an install with several companies, the runs for the companies you can see). The engine deliberately swallows its own errors so a broken rule can never break the ticket save that triggered it — which means a failing workflow is otherwise silent. This is where you find it.',
         'all'           => 'All',
         'f_workflow'    => 'Workflow',
         'f_status'      => 'Status',
@@ -282,7 +282,7 @@ return [
         'anatomy_trigger'    => '<strong>Trigger</strong> &mdash; the event that fires the workflow. Examples: <code>ticket.created</code>, <code>ticket.priority_changed</code>, <code>ticket.assigned</code>. Exactly one trigger per workflow.',
         'anatomy_conditions' => '<strong>Conditions</strong> <em>(optional)</em> &mdash; filters that decide whether the workflow runs. All conditions must match (AND semantics). <em>"Only when priority is Critical AND department is Finance."</em>',
         'anatomy_actions'    => '<strong>Actions</strong> <em>(one or more)</em> &mdash; the things to do when the trigger fires and the conditions pass. Run in order, top to bottom.',
-        'anatomy_exec'    => 'Execution is synchronous &mdash; the workflow runs in the same web request that fired the event. Each run writes a row to the execution log with the full trigger payload, every condition\'s pass/fail, and every action\'s result.',
+        'anatomy_exec'    => 'Execution is synchronous &mdash; the workflow runs in the same web request that fired the event (a webhook is the exception: it is queued and sent in the background). Each run writes a row to the execution log with the full trigger payload, every condition\'s pass/fail, and every action\'s result.',
 
         // 2. Canvas
         'canvas_heading' => 'The visual canvas',
@@ -305,7 +305,7 @@ return [
 
         // 4. Actions
         'actions_heading' => 'Actions',
-        'actions_intro'   => 'Nine handlers ship today. Pick an action\'s type from the dropdown and a labelled form appears below with the right widget per arg (text input, textarea, number input, lookup dropdown):',
+        'actions_intro'   => 'Sixteen handlers ship today - the main ones are below; the others create a project proposal, attach SOP checklists and raise or comment on an issue in an external tracker. Pick an action\'s type from the dropdown and a labelled form appears below with the right widget per arg (text input, textarea, number input, lookup dropdown):',
         'actions_th_type'     => 'Type',
         'actions_th_does'     => 'What it does',
         'actions_th_args'     => 'Key args',
@@ -384,7 +384,7 @@ return [
         'testing_dry_body'    => '<strong>Dry run</strong> evaluates the conditions for real, then <em>describes</em> each action instead of carrying it out. The run appears in <em>Recent runs</em> marked <em>Dry run</em>, listing every action it would have taken with the <code>{{variables}}</code> already filled in &mdash; so you read the actual email subject, the actual chat message, the actual note.',
         'testing_dry_safe'    => 'Nothing is written, emailed, queued or sent: no ticket changes, no notes, no webhook deliveries, and the workflow\'s run counter is untouched. That makes it safe to point at a live workflow &mdash; and it is the sensible first thing to do with a freshly cloned template. (Any signing secret is redacted in the output rather than echoed back.)',
         'testing_log_heading' => 'The execution log &mdash; what actually happened',
-        'testing_log_body'    => 'Every run of every workflow lands in the <strong>Execution log</strong> (in the Workflows header). Filter by workflow, status, trigger, date or free text, and open any run to see <strong>step by step</strong> what the engine did &mdash; which condition matched and which didn\'t (with the <em>actual value</em> it compared against), what each action returned or how it failed, and the <strong>trigger payload snapshot</strong>: exactly what the conditions were tested on and what the <code>{{variables}}</code> resolved from, captured at run time.',
+        'testing_log_body'    => 'Every run of every workflow lands in the <strong>Execution log</strong> (in the Workflows header) - with several companies, filed under the company its event belonged to and shown to the people who can see it. Filter by workflow, status, trigger, date or free text, and open any run to see <strong>step by step</strong> what the engine did &mdash; which condition matched and which didn\'t (with the <em>actual value</em> it compared against), what each action returned or how it failed, and the <strong>trigger payload snapshot</strong>: exactly what the conditions were tested on and what the <code>{{variables}}</code> resolved from, captured at run time.',
         'testing_log_why'     => 'This matters more than it sounds. The engine <strong>deliberately swallows its own errors</strong> &mdash; a broken workflow must never break the ticket save that triggered it. That is the right call, and it means a failing workflow is otherwise <em>completely silent</em>. Nothing tells you. The execution log, and the <strong>Workflows card on Watchtower</strong> (which surfaces failures, loop-protection aborts and webhooks that gave up retrying, in the last 24 hours), are what break that silence.',
         'testing_fire_heading' => 'Test fire &mdash; actually run it',
         'testing_fire'    => '<strong>Test fire</strong> runs the workflow for real with a synthetic payload generated from its own conditions, so the action path actually executes &mdash; it will genuinely send that email. The result lands in <em>Recent runs</em> with status (<em>success / failed / skipped</em>) and full step log.',

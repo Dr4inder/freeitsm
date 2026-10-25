@@ -3,8 +3,8 @@
  * Workflows — Help guide.
  *
  * Full coverage: anatomy of a workflow, the visual canvas builder, condition
- * details (lookups, multi-select, operator-per-type filtering), the eight
- * action handlers, variable substitution, the AI co-author, Test fire, and
+ * details (lookups, multi-select, operator-per-type filtering), the action
+ * handlers, companies, variable substitution, the AI co-author, Test fire, and
  * what's still ahead.
  */
 session_start();
@@ -328,9 +328,6 @@ $helpMultiCompany = isMultiTenant(connectToDatabase());
                 </div>
             <ul>
                 <li><?php echo t('workflow.help.ahead_li1'); ?></li>
-                <li><?php echo t('workflow.help.ahead_li4'); ?></li>
-                <li><?php echo t('workflow.help.ahead_li5'); ?></li>
-                <li><?php echo t('workflow.help.ahead_li6'); ?></li>
                 <li><?php echo t('workflow.help.ahead_li7'); ?></li>
                 <li><?php echo t('workflow.help.ahead_li8'); ?></li>
             </ul>
