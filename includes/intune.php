@@ -372,11 +372,11 @@ function intuneLinkDevicesToAssets(PDO $conn, ?int $companyId = null): array {
 function intuneOsToDrive(?string $os): string {
     if ($os === null || $os === '') return 'System';
     $lc = strtolower($os);
-    if (strpos($lc, 'windows') !== false) return 'C:';
-    if (strpos($lc, 'macos') !== false || strpos($lc, 'mac os') !== false) return '/';
-    if (strpos($lc, 'linux') !== false) return '/';
-    if (strpos($lc, 'ios') !== false || strpos($lc, 'ipados') !== false) return 'Internal';
-    if (strpos($lc, 'android') !== false) return 'Internal';
+    if (str_contains($lc, 'windows')) return 'C:';
+    if (str_contains($lc, 'macos') || str_contains($lc, 'mac os')) return '/';
+    if (str_contains($lc, 'linux')) return '/';
+    if (str_contains($lc, 'ios') || str_contains($lc, 'ipados')) return 'Internal';
+    if (str_contains($lc, 'android')) return 'Internal';
     return 'System';
 }
 

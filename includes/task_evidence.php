@@ -592,7 +592,7 @@ final class TaskEvidence
         }
         if (!$flags || !isset($flags['created_late'])) {
             $createdLocal = self::localDate($t['created_datetime'] ?? null);
-            if ($via && strpos($via, 'repeat') === 0 && $via !== 'repeat_completion' && $createdLocal && $begins && $createdLocal > $begins) {
+            if ($via && str_starts_with($via, 'repeat') && $via !== 'repeat_completion' && $createdLocal && $begins && $createdLocal > $begins) {
                 $flags['created_late'] = true;
             }
         }

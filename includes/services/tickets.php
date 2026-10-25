@@ -621,7 +621,7 @@ class TicketsService
         // a person choosing it. Nothing automatic ever lowers it.
         $departmentChanged = false;
         foreach ($updates as $u) {
-            if (strpos($u, 'department_id = ') === 0) { $departmentChanged = true; }
+            if (str_starts_with($u, 'department_id = ')) { $departmentChanged = true; }
         }
         // ⚠️ Refuse rather than ignore. Before Database Verification there is
         // nowhere to store it, and quietly saving nothing would leave someone

@@ -122,7 +122,7 @@ function portalEmailInvolvesRequester(array $email, ?string $requesterEmail): bo
     if ($requesterEmail === null) return false;
 
     $needle = strtolower(trim($requesterEmail));
-    if ($needle === '' || strpos($needle, '@') === false) return true;   // can't judge → visible
+    if ($needle === '' || !str_contains($needle, '@')) return true;   // can't judge → visible
 
     $to = trim((string)($email['to_recipients'] ?? ''));
     $cc = trim((string)($email['cc_recipients'] ?? ''));

@@ -37,7 +37,7 @@ I18n::initFromSession();
 // Password expiry guard — force redirect if password is expired
 if (!empty($_SESSION['password_expired'])) {
     $currentUrl = $_SERVER['REQUEST_URI'] ?? '';
-    if (strpos($currentUrl, 'force_password_change.php') === false && strpos($currentUrl, 'analyst_logout.php') === false && strpos($currentUrl, 'api/') === false) {
+    if (!str_contains($currentUrl, 'force_password_change.php') && !str_contains($currentUrl, 'analyst_logout.php') && !str_contains($currentUrl, 'api/')) {
         header('Location: ' . BASE_URL . 'force_password_change.php');
         exit;
     }

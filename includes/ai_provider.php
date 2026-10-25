@@ -478,7 +478,7 @@ function aiProviderCallOpenAICompatible(string $url, string $model, array $authH
        Sent only to switch thinking OFF. Leaving it out is "whatever the model
        does by default", which is what an administrator who wants thinking has
        asked for — so there is nothing to send in that case. */
-    if (($opts['reasoning'] ?? true) === false && strpos($base, 'openrouter.ai') !== false) {
+    if (($opts['reasoning'] ?? true) === false && str_contains($base, 'openrouter.ai')) {
         $payload['reasoning'] = ['enabled' => false];
     }
 
@@ -555,7 +555,7 @@ function aiOpenAICompatPost(string $url, array $headers, array &$payload, bool $
         } catch (RuntimeException $e) {
             $msg = $e->getMessage();
             if ($fixes >= 2) throw $e;
-            if (array_key_exists('max_tokens', $payload) && strpos($msg, 'max_completion_tokens') !== false) {
+            if (array_key_exists('max_tokens', $payload) && str_contains($msg, 'max_completion_tokens')) {
                 $payload['max_completion_tokens'] = $payload['max_tokens'];
                 unset($payload['max_tokens']);
                 continue;
@@ -615,7 +615,7 @@ function aiExplainFailure(array $cfg, string $msg): string
         || stripos($msg, 'timed out') !== false || stripos($msg, 'certificate') !== false) {
         return 'The request never reached the provider. That is a network, DNS or certificate problem on this server rather than a setting - debug tool D006 checks HTTPS from here.';
     }
-    if (strpos($msg, '(HTTP 401)') !== false || strpos($msg, '(HTTP 403)') !== false) {
+    if (str_contains($msg, '(HTTP 401)') || str_contains($msg, '(HTTP 403)')) {
         return $azure
             ? 'Azure refused the key. Keys belong to one resource, so a key from a different resource is refused even when the endpoint and deployment are right.'
             : 'The provider refused the key. Check it was copied in full and belongs to this provider.';
@@ -626,7 +626,7 @@ function aiExplainFailure(array $cfg, string $msg): string
     if ($azure && stripos($msg, 'api version') !== false && stripos($msg, 'enabled only') !== false) {
         return 'This model needs a newer API version than the one in use. Copy the api-version from the end of the deployment\'s Target URI in the portal, or enter v1.';
     }
-    if (strpos($msg, '(HTTP 404)') !== false) {
+    if (str_contains($msg, '(HTTP 404)')) {
         if (!$azure) {
             return 'The provider does not recognise the model "' . trim((string)($cfg['model'] ?? '')) . '". Check its exact name in the provider\'s model list.';
         }
@@ -638,7 +638,7 @@ function aiExplainFailure(array $cfg, string $msg): string
         }
         return 'Azure did not recognise the address. That is usually the API version (too old or too new for this deployment), sometimes the endpoint.';
     }
-    if (strpos($msg, '(HTTP 429)') !== false) {
+    if (str_contains($msg, '(HTTP 429)')) {
         return 'The provider is rate limiting this key, or its quota or spending limit is used up.';
     }
     return '';
@@ -673,10 +673,10 @@ function aiExplainCompatibleFailure(array $cfg, string $msg): string
     if (stripos($msg, 'tool') !== false && (stripos($msg, 'support') !== false || stripos($msg, 'enable-auto-tool-choice') !== false)) {
         return 'This model does not support tool calling, which this feature needs. Choose a model that does - Ollama marks them "tools" in its library - or use a different provider for this feature.';
     }
-    if (strpos($msg, '(HTTP 401)') !== false || strpos($msg, '(HTTP 403)') !== false) {
+    if (str_contains($msg, '(HTTP 401)') || str_contains($msg, '(HTTP 403)')) {
         return 'The server refused the request. It needs an API key, or the saved one is wrong.';
     }
-    if (strpos($msg, '(HTTP 404)') !== false) {
+    if (str_contains($msg, '(HTTP 404)')) {
         return stripos($msg, 'model') !== false
             ? 'The server does not have a model called "' . $model . '". Use its exact name as the server lists it (Ollama: ollama list), and pull it first if it is not there.'
             : 'Nothing was found at that address. The base URL is usually the server\'s address ending in /v1 (Ollama: http://host:11434/v1) - FreeITSM adds /chat/completions itself.';

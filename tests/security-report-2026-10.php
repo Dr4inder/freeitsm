@@ -143,12 +143,12 @@ try {
             [$c, $b] = http('GET', $p, forgeSession(''));
             // Routed endpoints decide the action before the gate, so a signed-out GET may
             // stop at the sign-in check instead - also a refusal. Only "reached" is a fail.
-            $refused = $c === 405 || ($c === 401 || strpos($b, 'Not authenticated') !== false || strpos($b, 'Administrator access required') !== false
-                                      || strpos($b, 'FAIL: not logged in') !== false);   // the debug tools' own words
+            $refused = $c === 405 || ($c === 401 || str_contains($b, 'Not authenticated') || str_contains($b, 'Administrator access required')
+                                      || str_contains($b, 'FAIL: not logged in'));   // the debug tools' own words
             ok("GET $p is refused", $refused && $noFatal($b), "HTTP $c: " . substr(trim(strip_tags($b)), 0, 120));
         }
         [$c, $b] = http('GET', 'api/tickets/empty_trash.php', forgeSession(''));
-        ok('...and the refusal is the method check itself (405, before the sign-in check)', $c === 405 && strpos($b, 'must be sent as a POST') !== false, "HTTP $c $b");
+        ok('...and the refusal is the method check itself (405, before the sign-in check)', $c === 405 && str_contains($b, 'must be sent as a POST'), "HTTP $c $b");
 
         // Signed in as an administrator - only on a setting we can snapshot and put back.
         $tok = bin2hex(random_bytes(32));
@@ -162,20 +162,20 @@ try {
         $same = $before === 'least' ? 'least' : 'most';
         [$c, $b] = http('POST', 'api/system/save_module_permission_mode.php', $sid, json_encode(['mode' => $same]),
                         ['Content-Type: application/json', 'X-CSRF-Token: ' . $tok]);
-        ok('POSITIVE CONTROL: the same save as a POST with the token still works', $c === 200 && strpos($b, '"success":true') !== false, "HTTP $c $b");
+        ok('POSITIVE CONTROL: the same save as a POST with the token still works', $c === 200 && str_contains($b, '"success":true'), "HTTP $c $b");
         ok('...and saving the value it already had changed nothing', setting($conn, 'module_permission_mode') === $before);
         [$c, $b] = http('POST', 'api/system/save_module_permission_mode.php', $sid, json_encode(['mode' => $same]), ['Content-Type: application/json']);
-        ok('NEGATIVE CONTROL: a POST without the token is still refused by csrf.php', $c === 403 && strpos($b, 'csrf_token') !== false, "HTTP $c $b");
+        ok('NEGATIVE CONTROL: a POST without the token is still refused by csrf.php', $c === 403 && str_contains($b, 'csrf_token'), "HTTP $c $b");
 
         [$c, $b] = http('GET', 'api/system/tika_settings.php?action=get', $sid);
-        ok('a READ on GET still works (Tika settings, action=get)', $c === 200 && strpos($b, '"success":true') !== false, "HTTP $c " . substr($b, 0, 120));
+        ok('a READ on GET still works (Tika settings, action=get)', $c === 200 && str_contains($b, '"success":true'), "HTTP $c " . substr($b, 0, 120));
         [$c, $b] = http('GET', 'api/system/debug-tools/D007_search_corpus.php', $sid);
         ok('debug tool D007 refuses a GET', $c === 405, "HTTP $c");
         // Safe as an administrator: no ticket has this reference, so even a missing fix deletes nothing.
         [$c, $b] = http('GET', 'api/system/debug-tools/D002_delete_ticket.php?ref=ZZ-NO-SUCH-TICKET', $sid);
         ok("debug tool D002 refuses an administrator's GET", $c === 405, "HTTP $c " . substr($b, 0, 120));
         [$c, $b] = http('POST', 'api/system/debug-tools/D007_search_corpus.php', $sid, '', ['X-CSRF-Token: ' . $tok]);
-        ok('POSITIVE CONTROL: D007 runs as the POST the tool page now sends', $c === 200 && strpos($b, '=== ') !== false && $noFatal($b), "HTTP $c " . substr($b, 0, 160));
+        ok('POSITIVE CONTROL: D007 runs as the POST the tool page now sends', $c === 200 && str_contains($b, '=== ') && $noFatal($b), "HTTP $c " . substr($b, 0, 160));
     } else {
         skip('the GET refusals', 'no web server');
     }
@@ -195,10 +195,10 @@ try {
         $ghost = (int)$conn->query("SELECT COALESCE(MAX(id), 0) + 100000 FROM analysts")->fetchColumn();
         $sid = sessionFor($ghost);
         [$c, $b] = http('GET', 'api/myaccount/get_mfa_status.php', $sid);
-        ok("a session for analyst $ghost, who does not exist, is refused", $c === 401 && strpos($b, 'Not authenticated') !== false, "HTTP $c $b");
+        ok("a session for analyst $ghost, who does not exist, is refused", $c === 401 && str_contains($b, 'Not authenticated'), "HTTP $c $b");
         ok('...and its session file is destroyed, not just refused once', !is_file("$sessDir/sess_$sid"));
         [$c, $b] = http('GET', 'api/myaccount/get_mfa_status.php', sessionFor($nonAdmin));
-        ok('POSITIVE CONTROL: an active analyst on the same endpoint is answered', $c === 200 && strpos($b, 'Not authenticated') === false && $noFatal($b), "HTTP $c " . substr($b, 0, 120));
+        ok('POSITIVE CONTROL: an active analyst on the same endpoint is answered', $c === 200 && !str_contains($b, 'Not authenticated') && $noFatal($b), "HTTP $c " . substr($b, 0, 120));
     } else {
         skip('the deactivated-session checks', 'no web server');
     }
@@ -214,7 +214,7 @@ try {
             $tok = bin2hex(random_bytes(32));
             [$c, $b] = http($m, $p, sessionFor($candidate, $tok), $m === 'POST' ? json_encode(['id' => 0]) : null,
                             ['Content-Type: application/json', 'X-CSRF-Token: ' . $tok]);
-            ok("$p refuses analyst $candidate (Software module, no API keys permission)", strpos($b, '"success":true') === false && strpos($b, 'apikey') === false && $c === 403, "HTTP $c " . substr($b, 0, 120));
+            ok("$p refuses analyst $candidate (Software module, no API keys permission)", !str_contains($b, '"success":true') && !str_contains($b, 'apikey') && $c === 403, "HTTP $c " . substr($b, 0, 120));
         }
     } else {
         skip('the API key permission checks', $online ? 'no active non-admin has Software without the API keys permission' : 'no web server');
@@ -283,7 +283,7 @@ try {
     ok('with "hide" on, a supplier\'s newer reply is NOT the preview', ($p[$t1] ?? '') === 'ZZ the requester wrote this', json_encode($p[$t1] ?? null));
     ok('POSITIVE CONTROL: the requester\'s own newest message is', ($p[$t2] ?? '') === 'ZZ requester follow-up', json_encode($p[$t2] ?? null));
     ok('a ticket with only third-party mail shows no preview at all', !isset($p[$t3]), json_encode($p[$t3] ?? null));
-    ok('nothing marked PRIVATE leaked into any preview', strpos(json_encode($p), 'PRIVATE') === false);
+    ok('nothing marked PRIVATE leaked into any preview', !str_contains(json_encode($p), 'PRIVATE'));
     $src = file_get_contents(__DIR__ . '/../api/self-service/get_tickets.php') . file_get_contents(__DIR__ . '/../api/self-service/get_team_tickets.php');
     ok('both portal lists use it, and neither selects body_preview itself', substr_count($src, 'portalVisiblePreviews(') === 2 && stripos($src, 'body_preview') === false);
 
@@ -314,7 +314,7 @@ try {
         $tokBefore = $conn->query("SELECT MD5(COALESCE(token_data, '')) FROM target_mailboxes WHERE id = (SELECT MIN(id) FROM target_mailboxes)")->fetchColumn();
         foreach (['auth/oauth_callback.php' => 'mailbox_', 'auth/google_oauth_callback.php' => 'google_mailbox_'] as $p => $pre) {
             [$c, $b] = http('GET', "$p?code=zz-not-a-real-code&state={$pre}1_" . bin2hex(random_bytes(8)), forgeSession(''));
-            ok("$p refuses a state nobody issued, before any token exchange", strpos($b, 'Security check failed') !== false && $noFatal($b), substr(trim(strip_tags($b)), 0, 140));
+            ok("$p refuses a state nobody issued, before any token exchange", str_contains($b, 'Security check failed') && $noFatal($b), substr(trim(strip_tags($b)), 0, 140));
         }
         $tokAfter = $conn->query("SELECT MD5(COALESCE(token_data, '')) FROM target_mailboxes WHERE id = (SELECT MIN(id) FROM target_mailboxes)")->fetchColumn();
         ok('...and the mailbox tokens are untouched', $tokBefore === $tokAfter);
@@ -327,10 +327,10 @@ try {
             $state = (string)(json_decode($b, true)['state'] ?? '');
             ok('the settings page can get a state from the server', (bool)preg_match('/^mailbox_' . $mbId . '_[0-9a-f]{32}$/', $state), "HTTP $c $b");
             [$c, $b] = http('GET', 'auth/oauth_callback.php?code=zz-not-a-real-code&state=' . rawurlencode($state), sessionFor($nonAdmin));
-            ok("that state is refused in somebody else's session", strpos($b, 'Security check failed') !== false);
+            ok("that state is refused in somebody else's session", str_contains($b, 'Security check failed'));
             [$c, $b] = http('GET', 'auth/oauth_callback.php?code=zz-not-a-real-code&state=' . rawurlencode($state), $sid);
             ok('POSITIVE CONTROL: in its own session it passes the check (the fake code then fails at Microsoft)',
-               strpos($b, 'Security check failed') === false && strpos($b, 'Error getting tokens') !== false, substr(trim(strip_tags($b)), 0, 140));
+               !str_contains($b, 'Security check failed') && str_contains($b, 'Error getting tokens'), substr(trim(strip_tags($b)), 0, 140));
             ok('...and the mailbox tokens are still untouched', $conn->query("SELECT MD5(COALESCE(token_data, '')) FROM target_mailboxes WHERE id = (SELECT MIN(id) FROM target_mailboxes)")->fetchColumn() === $tokAfter);
         }
     } else {

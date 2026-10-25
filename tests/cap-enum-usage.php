@@ -145,7 +145,7 @@ foreach ($it as $f) {
     $rel = substr($p, strlen($root) + 1);
     if ($rel === 'tests/cap-enum-usage.php') continue;     // its own fixtures
     $src = file_get_contents($p);
-    if (strpos($src, 'Cap::') === false && !preg_match('/\b(requireCapability|requireActionJson|analystHasCapability|analystMayAct|capActionRestricted|domainRequireCap|domainHasCap|filesHasCap)\b/', $src)) continue;
+    if (!str_contains($src, 'Cap::') && !preg_match('/\b(requireCapability|requireActionJson|analystHasCapability|analystMayAct|capActionRestricted|domainRequireCap|domainHasCap|filesHasCap)\b/', $src)) continue;
     $files++;
     $r = scanCapUsage($src);
     $caps += substr_count($src, 'Cap::');
@@ -168,7 +168,7 @@ foreach (GUARDS as $fn => [$file, $param]) {
     check("$fn() takes Cap \$$param", (bool)preg_match('/function ' . $fn . '\s*\([^)]*\bCap \$' . $param . '\b/', $src));
 }
 $fi = file_get_contents("$root/files/index.php");
-check('files/index.php $hasCap takes Cap $cap', strpos($fi, '$hasCap = function (Cap $cap)') !== false);
+check('files/index.php $hasCap takes Cap $cap', str_contains($fi, '$hasCap = function (Cap $cap)'));
 
 // ---------------------------------------------------------------- rule 4
 echo "\nThe enum and the registry\n";

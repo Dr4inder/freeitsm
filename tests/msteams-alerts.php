@@ -61,7 +61,7 @@ echo "\nMicrosoft Teams alerts\n" . str_repeat('=', 72) . "\n";
 try {
     echo "\nThe card format\n";
     ok('it is a built-in format, next to the old Teams one (which is unchanged)',
-       isset(WorkflowEngine::webhookFormats()['teams_workflows']) && strpos(WorkflowEngine::webhookFormats()['teams']['body_template'], 'MessageCard') !== false);
+       isset(WorkflowEngine::webhookFormats()['teams_workflows']) && str_contains(WorkflowEngine::webhookFormats()['teams']['body_template'], 'MessageCard'));
     $msg = "Line \"one\" with a \\ backslash\n\n**two** <b>three</b>";
     $req = WorkflowEngine::buildWebhookRequest(['preset' => 'teams_workflows', 'url' => 'https://x.invalid/', 'message' => $msg],
                                                WorkflowEngine::enrichWithLinks($conn, ['ticket' => ['id' => 4242]]));
@@ -74,13 +74,13 @@ try {
                                                 WorkflowEngine::enrichWithLinks($conn, ['incident' => ['id' => 7, 'title' => 'Mail down']]));
     $u2 = (string)($card($req2['body'])['actions'][0]['url'] ?? '');
     ok('with no ticket, the button is FreeITSM\'s front page - never empty (Teams refuses an empty button)',
-       $u2 !== '' && preg_match('#^https?://#', $u2) && strpos($u2, 'ticket_id') === false, $u2);
+       $u2 !== '' && preg_match('#^https?://#', $u2) && !str_contains($u2, 'ticket_id'), $u2);
     $vars = array_column(WorkflowEngine::availableVariables('ticket.created'), 'path');
     ok('{{link}}, {{app.url}}, {{ticket.url}} and the team are offered on "A ticket is created"',
        !array_diff(['link', 'app.url', 'ticket.url', 'ticket.assigned_team_id'], $vars), implode(',', $vars));
     $vars2 = array_column(WorkflowEngine::availableVariables('ticket.team_assigned'), 'path');
     ok('...and "A ticket is assigned to a team" offers the team it went to', in_array('team_id', $vars2, true) && in_array('team_name', $vars2, true), implode(',', $vars2));
-    ok('a new ticket\'s event now carries its team (ticketDispatchCreated)', strpos((string)file_get_contents(__DIR__ . '/../includes/ticket_events.php'), "'assigned_team_id'    => \$t['assigned_team_id']") !== false);
+    ok('a new ticket\'s event now carries its team (ticketDispatchCreated)', str_contains((string)file_get_contents(__DIR__ . '/../includes/ticket_events.php'), "'assigned_team_id'    => \$t['assigned_team_id']"));
 
     echo "\nSaving a channel makes its workflows\n";
     $prios = $conn->query("SELECT id FROM ticket_priorities WHERE is_active = 1 ORDER BY display_order DESC, id")->fetchAll(PDO::FETCH_COLUMN);
@@ -111,9 +111,9 @@ try {
     $act = json_decode($w['sla_breached']['actions'] ?? '[]', true)[0] ?? [];
     ok('each sends the Teams card, to the channel\'s address - stored encrypted, never readable',
        ($act['type'] ?? '') === 'send_webhook' && ($act['args']['preset'] ?? '') === 'teams_workflows'
-       && strpos((string)$w['sla_breached']['actions'], 'SECRET') === false && webhookDecrypt($act['args']['url'] ?? '') === $hook);
+       && !str_contains((string)$w['sla_breached']['actions'], 'SECRET') && webhookDecrypt($act['args']['url'] ?? '') === $hook);
     $raw = (string)$conn->query("SELECT webhook_url FROM msteams_channels WHERE id = $ch")->fetchColumn();
-    ok('the channel\'s own copy of the address is encrypted too', $raw !== '' && strpos($raw, 'SECRET') === false && decryptValue($raw) === $hook);
+    ok('the channel\'s own copy of the address is encrypted too', $raw !== '' && !str_contains($raw, 'SECRET') && decryptValue($raw) === $hook);
     ok('...and the page\'s list says only that there is one', !array_key_exists('webhook_url', msteamsChannels($conn)[array_search($ch, array_column(msteamsChannels($conn), 'id'))] ?? ['webhook_url' => 1]));
 
     $ids = array_map(fn($x) => (int)$x['id'], $w);
@@ -136,10 +136,10 @@ try {
     $bad = function (array $in) use ($conn, $admin, $tag): string {
         try { msteamsSaveChannel($conn, $admin, $in + ['name' => "$tag bad"]); return 'saved'; } catch (InvalidArgumentException $e) { return $e->getMessage(); }
     };
-    ok('an urgent-ticket alert with no priority is refused, saying so', strpos($bad(['alerts' => ['priority_new']]), 'priority') !== false);
-    ok('a team alert with no team is refused', strpos($bad(['alerts' => ['team_new']]), 'team') !== false);
-    ok('an address that is not https:// is refused', strpos($bad(['webhook_url' => 'http://x.invalid/']), 'https://') !== false);
-    ok('a channel with no name is refused', strpos($bad(['name' => '']), 'name') !== false);
+    ok('an urgent-ticket alert with no priority is refused, saying so', str_contains($bad(['alerts' => ['priority_new']]), 'priority'));
+    ok('a team alert with no team is refused', str_contains($bad(['alerts' => ['team_new']]), 'team'));
+    ok('an address that is not https:// is refused', str_contains($bad(['webhook_url' => 'http://x.invalid/']), 'https://'));
+    ok('a channel with no name is refused', str_contains($bad(['name' => '']), 'name'));
     $leftBad = (int)$conn->query("SELECT COUNT(*) FROM msteams_channels WHERE name = '$tag bad'")->fetchColumn();
     ok('...and none of them left anything behind', $leftBad === 0, (string)$leftBad);
 
@@ -154,7 +154,7 @@ try {
     $tk = fn(array $x) => ['ticket' => $x + ['id' => 990000001, 'subject' => "$tag subject", 'requester_email' => 'zz@example.invalid']];
     [$st, $body] = $fire((int)$w2['priority_new']['id'], $tk(['priority_id' => $top]));
     $c = $card($body);
-    ok('a new ticket at the top priority: sent, as a card with the ticket\'s button', $st === 'success' && strpos((string)($c['body'][0]['text'] ?? ''), "$tag subject") !== false
+    ok('a new ticket at the top priority: sent, as a card with the ticket\'s button', $st === 'success' && str_contains((string)($c['body'][0]['text'] ?? ''), "$tag subject")
        && str_ends_with((string)($c['actions'][0]['url'] ?? ''), 'tickets/?ticket_id=990000001'), "$st " . substr($body, 0, 200));
     [$st] = $fire((int)$w2['priority_new']['id'], $tk(['priority_id' => $low]));
     ok('a new ticket below it: not sent', $top === $low || $st === 'skipped', $st);
@@ -176,11 +176,11 @@ try {
     $t = msteamsSendTest($conn, $ch, 'ZZ tester');
     $got = json_decode((string)@file_get_contents($serverLog), true);
     ok('Test posts a real request, and says Teams accepted it', $t['ok'] && $t['status'] === 202, json_encode($t));
-    ok('...a card saying the channel is connected, and who sent it', strpos((string)($got['attachments'][0]['content']['body'][0]['text'] ?? ''), 'FreeITSM is connected') !== false
-       && strpos((string)$got['attachments'][0]['content']['body'][0]['text'], 'ZZ tester') !== false);
+    ok('...a card saying the channel is connected, and who sent it', str_contains((string)($got['attachments'][0]['content']['body'][0]['text'] ?? ''), 'FreeITSM is connected')
+       && str_contains((string)$got['attachments'][0]['content']['body'][0]['text'], 'ZZ tester'));
     $conn->prepare("UPDATE msteams_channels SET webhook_url = ? WHERE id = ?")->execute([encryptValue("http://127.0.0.1:$port/refuse"), $ch]);
     $t = msteamsSendTest($conn, $ch, 'ZZ tester');
-    ok('a refusal is reported with Teams\' own words', !$t['ok'] && strpos($t['detail'], '400') !== false && strpos($t['detail'], 'BadRequest') !== false, json_encode($t));
+    ok('a refusal is reported with Teams\' own words', !$t['ok'] && str_contains($t['detail'], '400') && str_contains($t['detail'], 'BadRequest'), json_encode($t));
 
     echo "\nThe settings API\n";
     $dir = rtrim(ini_get('session.save_path') ?: 'c:/wamp64/tmp', '/\\');
@@ -202,7 +202,7 @@ try {
     $sA = $sess($admin); $sP = $sess($plain);
     [$c, $d, $raw] = $api($sA, 'GET', null, '?action=get');
     ok('an administrator reads the channels', $c === 200 && !empty($d['success']) && in_array($ch, array_column($d['channels'] ?? [], 'id'), true), "HTTP $c");
-    ok('...and the answer holds no address at all', strpos($raw, '127.0.0.1') === false && strpos($raw, 'webhook_url') === false);
+    ok('...and the answer holds no address at all', !str_contains($raw, '127.0.0.1') && !str_contains($raw, 'webhook_url'));
     [$c, $d2] = $api($sP, 'GET', null, '?action=get');
     ok('a non-administrator is refused', $c === 403 || empty($d2['success']), "HTTP $c");
     [$c] = $api($sA, 'GET', null, '?action=delete&id=' . $ch);

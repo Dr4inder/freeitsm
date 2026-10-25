@@ -68,7 +68,7 @@ try {
                 // and would look like a working rule. Refuse it rather than store it:
                 // a rule that silently never fires is the failure mode this whole
                 // feature is trying to avoid.
-                if (strpos($value, '@') !== false || strpos($value, '.') === false) {
+                if (str_contains($value, '@') || !str_contains($value, '.')) {
                     throw new Exception('"' . $value . '" is not a valid domain. Use the part after the @, e.g. example.com.');
                 }
             }

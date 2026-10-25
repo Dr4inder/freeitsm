@@ -379,7 +379,7 @@ function projectChatTurn(PDO $conn, ActorContext $ctx, array $project, string $m
     $canContracts = $ctx->actorId > 0 && analystCanAccessModule($conn, $ctx->actorId, 'contracts');
     $run = function (string $name, array $args) use ($conn, $pid, $canChange, $canContracts, &$proposals, &$looked): string {
         if ($name === 'list_suppliers' && !$canContracts) return 'This user cannot see suppliers (that needs the Contracts module). Do not offer contractors.';
-        if (strpos($name, 'propose_') !== 0) { $looked[] = $name; return projectChatRead($conn, $pid, $name, $args); }
+        if (!str_starts_with($name, 'propose_')) { $looked[] = $name; return projectChatRead($conn, $pid, $name, $args); }
         if (!$canChange) return 'Not proposed: this user may not change the project.';
         $type = substr($name, 8);
         $ctrMember = $type === 'member' && empty($args['analyst_id']) && (!empty($args['supplier_id']) || !empty($args['contact_id']));

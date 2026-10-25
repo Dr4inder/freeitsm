@@ -174,7 +174,7 @@ try {
                 $hasTitleMatch = false;
                 $matchedKeywordsCount = 0;
 
-                if (strpos($ticketText, $titleLower) !== false) {
+                if (str_contains($ticketText, $titleLower)) {
                     $score += 5;
                     $hasTitleMatch = true;
                 }
@@ -182,7 +182,7 @@ try {
                 if (!empty($tpl['keywords'])) {
                     $kwList = array_map('trim', explode(',', strtolower($tpl['keywords'])));
                     foreach ($kwList as $kw) {
-                        if ($kw !== '' && strpos($ticketText, $kw) !== false) {
+                        if ($kw !== '' && str_contains($ticketText, $kw)) {
                             $score += 2;
                             $matchedKeywordsCount++;
                         }

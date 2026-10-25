@@ -238,10 +238,10 @@ class TicketNumbering
             $out
         );
 
-        if (strpos($out, "{TYPE}") !== false) {
+        if (str_contains($out, "{TYPE}")) {
             $out = str_replace("{TYPE}", self::typeCode($conn, $ticketTypeId), $out);
         }
-        if (strpos($out, "{COMPANY}") !== false) {
+        if (str_contains($out, "{COMPANY}")) {
             $out = str_replace("{COMPANY}", self::companyCode($conn, $tenantId), $out);
         }
         return $out;
@@ -612,10 +612,10 @@ class TicketNumbering
         // format says which is which. Live creation survives it (it proves
         // uniqueness against the table and simply burns numbers), but the
         // per-type counting the administrator asked for silently does nothing.
-        if ($scope === "per_type" && strpos($format, "{TYPE}") === false) {
+        if ($scope === "per_type" && !str_contains($format, "{TYPE}")) {
             $problems[] = "Counting separately for each ticket type needs {TYPE} in the format, or every type produces the same numbers.";
         }
-        if ($scope === "per_company" && strpos($format, "{COMPANY}") === false) {
+        if ($scope === "per_company" && !str_contains($format, "{COMPANY}")) {
             $problems[] = "Counting separately for each company needs {COMPANY} in the format, or every company produces the same numbers.";
         }
         if (mb_strlen(self::render($format, 999999)) > 50) {

@@ -126,7 +126,7 @@ class SlackProvider extends MessagingProvider
         if (abs(time() - (int) $ts) > self::MAX_SKEW_SECONDS) {
             return false;   // replay, or a clock so wrong we cannot trust it
         }
-        if (strpos($sig, 'v0=') !== 0) {
+        if (!str_starts_with($sig, 'v0=')) {
             return false;
         }
 
@@ -267,7 +267,7 @@ class SlackProvider extends MessagingProvider
         // A token that authenticates but cannot post is a connection that "works"
         // right up until the first reply. Say so now rather than at 2am.
         $scopes = $this->lastScopes;
-        if ($scopes !== null && $scopes !== '' && strpos($scopes, 'chat:write') === false) {
+        if ($scopes !== null && $scopes !== '' && !str_contains($scopes, 'chat:write')) {
             $detail .= '. ⚠️ The token is missing the chat:write scope, so replies will fail — reinstall the app after adding it.';
         }
         return $detail . '.';

@@ -184,7 +184,7 @@ try {
         $prev = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'branding_logo_path'");
         $prev->execute();
         $prevPath = (string)($prev->fetchColumn() ?: '');
-        if ($prevPath !== '' && strpos($prevPath, 'system/uploads/branding/') === 0) {
+        if ($prevPath !== '' && str_starts_with($prevPath, 'system/uploads/branding/')) {
             @unlink(__DIR__ . '/../../' . $prevPath);
         }
         foreach (glob($uploadDir . '/logo.*') as $old) {

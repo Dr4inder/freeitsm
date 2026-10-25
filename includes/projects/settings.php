@@ -241,7 +241,7 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
             if (!in_array($v, ['anyone', 'team'], true)) throw new InvalidArgumentException('Choose who may change a project.');
             return $v;
         }
-        if (strpos($rule, 'num:') === 0) {
+        if (str_starts_with($rule, 'num:')) {
             // A number with up to two decimals (37.5 hours a week).
             [, $min, $max] = explode(':', $rule);
             $v = str_replace(',', '.', $v);
@@ -250,7 +250,7 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
             }
             return (string)(float)$v;
         }
-        if (strpos($rule, 'int:') === 0) {
+        if (str_starts_with($rule, 'int:')) {
             [, $min, $max] = explode(':', $rule);
             if (!preg_match('/^\d+$/', $v) || (int)$v < (int)$min || (int)$v > (int)$max) {
                 throw new InvalidArgumentException("Enter a whole number from $min to $max.");

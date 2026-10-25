@@ -674,6 +674,6 @@ function caseReportWhere(string $where): string
 {
     if ($where === 'ticket') return t('case-report.where_ticket');
     if ($where === 'note') return t('case-report.where_note');
-    if (strpos($where, 'task:') === 0) return t('case-report.where_task', ['id' => (int)substr($where, 5)]);
+    if (str_starts_with($where, 'task:')) return t('case-report.where_task', ['id' => (int)substr($where, 5)]);
     return $where;
 }

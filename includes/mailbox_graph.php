@@ -93,7 +93,7 @@ if (!function_exists('mailboxAppOnlyToken')) {
         if (!is_array($claims)) return '';
         // upn / preferred_username are the email-like identity claims; unique_name/email are fallbacks.
         $email = $claims['upn'] ?? $claims['preferred_username'] ?? $claims['email'] ?? $claims['unique_name'] ?? '';
-        return ($email && strpos($email, '@') !== false) ? strtolower(trim($email)) : '';
+        return ($email && str_contains($email, '@')) ? strtolower(trim($email)) : '';
     }
 
     /**
@@ -146,12 +146,12 @@ if (!function_exists('mailboxAppOnlyToken')) {
 
         $set = [];
         foreach ([$data['mail'] ?? '', $data['userPrincipalName'] ?? ''] as $a) {
-            if ($a && strpos($a, '@') !== false) $set[] = strtolower(trim($a));
+            if ($a && str_contains($a, '@')) $set[] = strtolower(trim($a));
         }
         foreach (($data['proxyAddresses'] ?? []) as $p) {
             // proxyAddresses look like "SMTP:ed@x" (primary) / "smtp:alias@x" (secondary).
             $addr = preg_replace('/^smtp:/i', '', (string) $p);
-            if ($addr && strpos($addr, '@') !== false) $set[] = strtolower(trim($addr));
+            if ($addr && str_contains($addr, '@')) $set[] = strtolower(trim($addr));
         }
         return array_values(array_unique($set));
     }

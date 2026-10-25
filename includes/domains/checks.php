@@ -425,7 +425,7 @@ function domainSpfLookupCount(string $spf, string $resolver, int $depth, array &
         } elseif (preg_match('/^(include:|redirect=)(.+)$/', $t, $m)) {
             $count++;
             $target = rtrim($m[2], '.');
-            if (strpos($target, '%') !== false || isset($seen[$target])) continue;   // macros: cannot follow
+            if (str_contains($target, '%') || isset($seen[$target])) continue;   // macros: cannot follow
             $seen[$target] = true;
             $subQ = domainDns($target, 'TXT', $resolver);
             if (!$subQ['ok']) continue;   // could not look it up: not the same as broken

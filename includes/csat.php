@@ -66,7 +66,7 @@ function csatBuildUrl(string $token): string {
     // up from this file's directory to derive it relative to DOCUMENT_ROOT.
     $docRoot = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] ?? ''), '/');
     $appRoot = rtrim(str_replace('\\', '/', realpath(__DIR__ . '/..')), '/');
-    $appPath = $docRoot && strpos($appRoot, $docRoot) === 0
+    $appPath = $docRoot && str_starts_with($appRoot, $docRoot)
         ? substr($appRoot, strlen($docRoot))
         : '';
     // Canonical survey URL since the root-folder tidy (the old /csat.php

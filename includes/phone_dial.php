@@ -29,7 +29,7 @@ function phoneNumberPart(?string $field): string
 /** Is this a dial address FreeITSM will put in a link? A web address or a phone scheme, with {number}. */
 function phoneDialTemplateValid(string $tpl): bool
 {
-    return strpos($tpl, '{number}') !== false && preg_match('#^(https://|tel:|callto:|sip:)\S+$#i', $tpl) === 1;
+    return str_contains($tpl, '{number}') && preg_match('#^(https://|tel:|callto:|sip:)\S+$#i', $tpl) === 1;
 }
 
 /** The dial address, or '' when click-to-call is off (or the install predates it). */

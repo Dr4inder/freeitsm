@@ -58,7 +58,7 @@ foreach ($it as $f) {
     $p = str_replace(DIRECTORY_SEPARATOR, '/', $f->getPathname());
     if (!preg_match('/\.(php|js|html)$/', $p) || preg_match('#/(vendor|node_modules|\.git|tests)/#', $p)) continue;
     $src = file_get_contents($p);
-    if (strpos($src, 'innerHTML') === false) continue;
+    if (!str_contains($src, 'innerHTML')) continue;
     foreach (unsafeHelpers($src) as $line) $found[] = ltrim($p, './') . ':' . $line;
 }
 ok('no escape helper leaves quotes unescaped', !$found, implode("\n        ", $found));

@@ -63,12 +63,12 @@ try {
     $stored = $conn->query("SELECT relation_type, source_ticket_id, target_ticket_id FROM ticket_links WHERE (source_ticket_id = $a AND target_ticket_id = $b)")->fetch(PDO::FETCH_ASSOC);
     ok('stored as relation_type parent, a -> b', $stored && $stored['relation_type'] === 'parent', json_encode($stored));
     $audit = $conn->query("SELECT new_value FROM ticket_audit WHERE ticket_id = $a AND field_name = 'Linked ticket' ORDER BY id DESC LIMIT 1")->fetchColumn();
-    ok("the source's history says 'Parent of ...'", is_string($audit) && strpos($audit, 'Parent of ') === 0, (string)$audit);
+    ok("the source's history says 'Parent of ...'", is_string($audit) && str_starts_with($audit, 'Parent of '), (string)$audit);
 
     $r = ticketLinkCreate($conn, $admin, $c, $b, 'parent_of');
-    ok('GUARD: a child cannot have a second parent', !($r['success'] ?? true) && strpos($r['error'] ?? '', 'already has a parent') !== false, $r['error'] ?? '');
+    ok('GUARD: a child cannot have a second parent', !($r['success'] ?? true) && str_contains($r['error'] ?? '', 'already has a parent'), $r['error'] ?? '');
     $r = ticketLinkCreate($conn, $admin, $b, $a, 'parent_of');
-    ok('GUARD: a loop is refused', !($r['success'] ?? true) && strpos($r['error'] ?? '', 'loop') !== false, $r['error'] ?? '');
+    ok('GUARD: a loop is refused', !($r['success'] ?? true) && str_contains($r['error'] ?? '', 'loop'), $r['error'] ?? '');
 
     $r = ticketLinkCreate($conn, $admin, $c, $a, 'child_of');
     ok('child_of is created', $r['success'] ?? false, $r['error'] ?? '');

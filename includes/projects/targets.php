@@ -294,7 +294,7 @@ function projectTargetAssets(PDO $conn, array $project, array $t, bool $doneOnes
     $cond = $doneOnes ? $done : "NOT COALESCE(($done), 0)";
     // The joins for names go on the outside so the scope SQL stays one piece.
     $st = $conn->prepare("SELECT q.id, q.hostname, q.asset_tag, q.model, q.operating_system, q.feature_release, s.name AS status_name, l.name AS location_name
-                            FROM (SELECT a.* FROM $from" . (strpos($from, ' WHERE ') !== false ? ' AND ' : ' WHERE ') . "$cond ORDER BY a.hostname LIMIT " . (int)$limit . ") q
+                            FROM (SELECT a.* FROM $from" . (str_contains($from, ' WHERE ') ? ' AND ' : ' WHERE ') . "$cond ORDER BY a.hostname LIMIT " . (int)$limit . ") q
                        LEFT JOIN asset_status_types s ON s.id = q.asset_status_id
                        LEFT JOIN asset_locations l ON l.id = q.location_id
                         ORDER BY q.hostname");

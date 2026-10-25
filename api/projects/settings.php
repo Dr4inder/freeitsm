@@ -83,7 +83,7 @@ projectApiRun(function () use ($conn, $analystId, $tabCaps) {
 
     // Hourly rates (Budget tab): the default and each analyst's, from a date.
     // Never shown to anybody without the Budget permission - they are close to pay.
-    if (strpos($action, 'rate_') === 0) {
+    if (str_starts_with($action, 'rate_')) {
         if (empty($canWrite['budget'])) projectApiFail('You do not have permission to change hourly rates.', 403);
         require_once __DIR__ . '/../../includes/projects/budget.php';
         if ($action === 'rate_save') {
@@ -109,7 +109,7 @@ projectApiRun(function () use ($conn, $analystId, $tabCaps) {
         projectApiOk(['rates' => projectRatesForSettings($conn)]);
     }
 
-    if (strpos($action, 'role_') === 0) {
+    if (str_starts_with($action, 'role_')) {
         if (empty($canWrite['roles'])) projectApiFail('You do not have permission to change project roles.', 403);
         if ($action === 'role_save') {
             $name = trim((string)($in['name'] ?? ''));

@@ -94,8 +94,8 @@ $installLine = $m[0] ?? '';
 foreach ($list['installed'] as $ext) {
     check("docker-php-ext-install includes $ext", (bool)preg_match('/\s' . preg_quote($ext, '/') . '(\s|;|$)/', $installLine), $installLine);
 }
-check('the smoke check reads the list', strpos($dockerfile, 'freeitsm-php-extensions.txt') !== false
-      && strpos($dockerfile, 'COPY docker/php-extensions.txt') !== false);
+check('the smoke check reads the list', str_contains($dockerfile, 'freeitsm-php-extensions.txt')
+      && str_contains($dockerfile, 'COPY docker/php-extensions.txt'));
 
 // ---------------------------------------------------------------- 3. what the code uses
 echo "\nWhat the code uses\n";
@@ -105,7 +105,7 @@ $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root, Filesy
 foreach ($it as $file) {
     if ($file->getExtension() !== 'php') continue;
     $path = str_replace('\\', '/', $file->getPathname());
-    foreach ($skipDirs as $d) { if (strpos($path, $d) !== false) continue 2; }
+    foreach ($skipDirs as $d) { if (str_contains($path, $d)) continue 2; }
     $src = file_get_contents($path);
     foreach (OPTIONAL_EXTENSIONS as $ext => $re) {
         if (!isset($used[$ext]) && preg_match($re, $src)) $used[$ext] = substr($path, strlen(str_replace('\\', '/', $root)) + 1);

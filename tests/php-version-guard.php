@@ -96,7 +96,7 @@ foreach (['functions.php', 'ssl.php'] as $carrier) {
 echo "\nPHP 7.4 from the command line\n";
 [$out, $code] = inPhp('php:7.4-cli', 'php /app/includes/functions.php');
 check('functions.php: exits 1', $code === 1, "exit $code");
-check('functions.php: says PHP 8.1 is needed', strpos($out, 'FreeITSM needs PHP 8.1 or newer') !== false, $out);
+check('functions.php: says PHP 8.1 is needed', str_contains($out, 'FreeITSM needs PHP 8.1 or newer'), $out);
 check('functions.php: no parse error', $out !== '' && stripos($out, 'Parse error') === false, $out);
 
 // ---------------------------------------------------------------- 3 + 4
@@ -113,7 +113,7 @@ echo "\nPHP 7.4 serving pages\n";
 [$out, $code] = inPhp('php:7.4-cli', 'apt-get -qq update >/dev/null 2>&1; apt-get -qq install -y curl >/dev/null 2>&1; ' . $probe);
 foreach ($pages as $p) {
     $block = $blockFor($out, $p);
-    check("$p: HTTP 500 with the message", preg_match('#^HTTP/1\.\d 500#', $block) === 1 && strpos($block, 'FreeITSM needs PHP 8.1') !== false, trim(substr($block, 0, 200)));
+    check("$p: HTTP 500 with the message", preg_match('#^HTTP/1\.\d 500#', $block) === 1 && str_contains($block, 'FreeITSM needs PHP 8.1'), trim(substr($block, 0, 200)));
     check("$p: no parse error", $block !== '' && stripos($block, 'Parse error') === false);
 }
 
@@ -121,7 +121,7 @@ echo "\nCONTROL: PHP 8.4 serving the same pages\n";
 [$out, $code] = inPhp('php:8.4-cli', 'apt-get -qq update >/dev/null 2>&1; apt-get -qq install -y curl >/dev/null 2>&1; ' . $probe);
 foreach ($pages as $p) {
     $block = $blockFor($out, $p);
-    check("$p: answered, and without the message", preg_match('#^HTTP/1\.\d#', $block) === 1 && strpos($block, 'FreeITSM needs PHP') === false, trim(substr($block, 0, 200)));
+    check("$p: answered, and without the message", preg_match('#^HTTP/1\.\d#', $block) === 1 && !str_contains($block, 'FreeITSM needs PHP'), trim(substr($block, 0, 200)));
 }
 
 // ---------------------------------------------------------------- 5

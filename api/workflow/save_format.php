@@ -67,7 +67,7 @@ if ($decoded === null && strtolower($template) !== 'null') {
 }
 // And it must actually use {{message}}, or the Message box in the editor would
 // be a field that silently does nothing.
-if (strpos($template, '{{message}}') === false) {
+if (!str_contains($template, '{{message}}')) {
     $fail('The body template must include {{message}} somewhere — that is the slot your workflow\'s message is placed into.');
 }
 // A bad regex would throw at match time in the editor's URL check.

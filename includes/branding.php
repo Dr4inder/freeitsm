@@ -98,9 +98,9 @@ function brandingLogoUrl(?PDO $conn = null): string
  */
 function brandingPathIsSafe(string $rel): bool
 {
-    if (strpos($rel, BRANDING_UPLOAD_DIR) !== 0) return false;
-    if (strpos($rel, '..') !== false) return false;
-    if (strpos($rel, "\0") !== false) return false;
+    if (!str_starts_with($rel, BRANDING_UPLOAD_DIR)) return false;
+    if (str_contains($rel, '..')) return false;
+    if (str_contains($rel, "\0")) return false;
     return (bool)preg_match('/^[A-Za-z0-9._\/-]+$/', $rel);
 }
 

@@ -107,7 +107,7 @@ function ssBuildVerifyUrl(string $rawToken): string {
     $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
     $docRoot = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] ?? ''), '/');
     $appRoot = rtrim(str_replace('\\', '/', realpath(__DIR__ . '/..')), '/');
-    $appPath = ($docRoot && strpos($appRoot, $docRoot) === 0) ? substr($appRoot, strlen($docRoot)) : '';
+    $appPath = ($docRoot && str_starts_with($appRoot, $docRoot)) ? substr($appRoot, strlen($docRoot)) : '';
     return $scheme . '://' . $host . $appPath . '/self-service/verify-email.php?token=' . urlencode($rawToken);
 }
 
@@ -126,7 +126,7 @@ function ssBuildResetUrl(string $rawToken): string {
     $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
     $docRoot = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] ?? ''), '/');
     $appRoot = rtrim(str_replace('\\', '/', realpath(__DIR__ . '/..')), '/');
-    $appPath = ($docRoot && strpos($appRoot, $docRoot) === 0) ? substr($appRoot, strlen($docRoot)) : '';
+    $appPath = ($docRoot && str_starts_with($appRoot, $docRoot)) ? substr($appRoot, strlen($docRoot)) : '';
     return $scheme . '://' . $host . $appPath . '/self-service/reset-password.php?token=' . urlencode($rawToken);
 }
 

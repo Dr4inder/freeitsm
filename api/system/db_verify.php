@@ -2160,7 +2160,7 @@ try {
                     $v = $row['setting_value'];
                     if ($v === null || $v === '') continue;
                     if (!isEncryptedSettingKey($k)) continue;
-                    if (strpos($v, ENCRYPTION_PREFIX) === 0) continue;   // already ciphertext
+                    if (str_starts_with($v, ENCRYPTION_PREFIX)) continue;   // already ciphertext
                     $updSecret->execute([encryptValue($v), $k]);
                     $reencrypted[] = $k;
                 }
@@ -2285,7 +2285,7 @@ try {
                     foreach ($mbCols as $col) {
                         $v = $mbRow[$col] ?? null;
                         if ($v === null || $v === '') continue;
-                        if (strpos($v, ENCRYPTION_PREFIX) === 0) continue;   // already ciphertext
+                        if (str_starts_with($v, ENCRYPTION_PREFIX)) continue;   // already ciphertext
                         $conn->prepare("UPDATE target_mailboxes SET `$col` = ? WHERE id = ?")
                              ->execute([encryptValue($v), $mbRow['id']]);
                         $encryptedCount++;

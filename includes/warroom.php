@@ -736,7 +736,7 @@ function warRoomSend(PDO $conn, int $analystId, int $channelId, string $body): i
  */
 function warRoomResolveMentions(PDO $conn, int $channelId, int $authorId, string $body): array
 {
-    if (strpos($body, '@') === false) return [];
+    if (!str_contains($body, '@')) return [];
 
     $entitled = warRoomChannelAudience($conn, $channelId);
     if (!$entitled) return [];

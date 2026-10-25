@@ -127,7 +127,7 @@ class AssetTagsService
         foreach (['{YYYY}', '{YY}', '{MM}', '{DD}', '{COMPANY}'] as $token) {
             $rest = str_replace($token, '', $rest);
         }
-        if (strpos($rest, '{') !== false || strpos($rest, '}') !== false) {
+        if (str_contains($rest, '{') || str_contains($rest, '}')) {
             $problems[] = 'Only these tokens can be used: {#####}, {YYYY}, {YY}, {MM}, {DD} and {COMPANY}.';
         }
         if (!preg_match('/^[A-Za-z0-9_\-\.\/]*$/', $rest)) {

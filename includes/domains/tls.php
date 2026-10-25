@@ -100,7 +100,7 @@ function domainTlsNameMatches(string $host, array $sans): bool
         if (strncmp($n, '*.', 2) === 0) {
             $suffix = substr($n, 1);                 // ".example.com"
             $rest = substr($host, 0, -strlen($suffix));
-            if (substr($host, -strlen($suffix)) === $suffix && $rest !== '' && strpos($rest, '.') === false) return true;
+            if (substr($host, -strlen($suffix)) === $suffix && $rest !== '' && !str_contains($rest, '.')) return true;
         }
     }
     return false;

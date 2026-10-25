@@ -1069,7 +1069,7 @@ function resolveTenantForNewUser(PDO $conn, string $email): ?int {
     }
 
     $addr = strtolower(trim($email));
-    if ($addr === '' || strpos($addr, '@') === false) return null;
+    if ($addr === '' || !str_contains($addr, '@')) return null;
 
     $domain = strtolower(trim(substr(strrchr($addr, '@'), 1)));
     if ($domain === '') return null;
@@ -1159,7 +1159,7 @@ function resolveTicketTenantForEmail(PDO $conn, $mailboxId, string $fromAddress)
 
     // (3b) Shared intake → route by the sender's domain.
     $domain = '';
-    if (strpos($fromAddress, '@') !== false) {
+    if (str_contains($fromAddress, '@')) {
         $domain = strtolower(trim(substr(strrchr($fromAddress, '@'), 1)));
     }
     if ($domain !== '') {
@@ -1247,7 +1247,7 @@ function resolveTicketTenantForChannel(PDO $conn, $channelId, string $fromIdenti
  */
 function resolveTenantIdForAddress(PDO $conn, string $email): ?int {
     $addr = strtolower(trim($email));
-    if ($addr === '' || strpos($addr, '@') === false) return null;
+    if ($addr === '' || !str_contains($addr, '@')) return null;
 
     // (1) Exact sender-address override (lets a freemail address map to a company).
     try {

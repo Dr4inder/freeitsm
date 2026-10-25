@@ -53,14 +53,14 @@ if ($probe['ok']) {
        !array_intersect(['mx_none', 'dkim_unknown', 'mta_sts_off', 'tls_rpt_off', 'dns_no_ns', 'web_no_host', 'spf_broken_include'], $k), implode(',', $k));
     $f = array_values(array_filter($res['findings'], fn($x) => $x['key'] === 'dns_lookup_failed'))[0] ?? null;
     ok('the failure is reported once, as itself, with the error', $f && count(array_keys($k, 'dns_lookup_failed')) === 1
-       && $f['params']['count'] > 0 && strpos($f['params']['error'], 'status 2') !== false && strpos($f['params']['names'], 'dnssec-failed.org') !== false, json_encode($f));
+       && $f['params']['count'] > 0 && str_contains($f['params']['error'], 'status 2') && str_contains($f['params']['names'], 'dnssec-failed.org'), json_encode($f));
     ok('...and it costs the domain no points - it is not the domain\'s fault', $f && $f['weight'] === 0);
     ok('no grade is given from the checks that happened to work', $res['grade'] === null && $res['score'] === null, var_export($res['grade'], true));
     ok('the change-detection snapshot holds nothing for what was not seen (read as "unknown", never "removed")',
        $res['snapshot']['spf'] === '' && $res['snapshot']['dmarc'] === '' && $res['snapshot']['mx'] === []);
     $title = (require __DIR__ . '/../lang/en/domains.php');
     $has = false;
-    array_walk_recursive($title, function ($v, $key) use (&$has) { if ($key === 'title' && strpos((string)$v, 'DNS lookups could not be answered') !== false) $has = true; });
+    array_walk_recursive($title, function ($v, $key) use (&$has) { if ($key === 'title' && str_contains((string)$v, 'DNS lookups could not be answered')) $has = true; });
     ok('the finding has words', $has);
 
     echo "\nThe Automatic resolver tries again\n";

@@ -138,12 +138,12 @@ try {
             return [$code, $body];
         };
         [$c, $b] = $get('api/forms/catalogue_approvals.php?filter=mine');
-        ok('HTTP: their inbox loads ("For me")', $c === 200 && strpos($b, '"success":true') !== false, substr($b, 0, 120));
-        ok('HTTP: and does not count every pending request', strpos($b, '"all":null') !== false);
+        ok('HTTP: their inbox loads ("For me")', $c === 200 && str_contains($b, '"success":true'), substr($b, 0, 120));
+        ok('HTTP: and does not count every pending request', str_contains($b, '"all":null'));
         [$c, $b] = $get('api/forms/catalogue_approvals.php?filter=all');
         ok('HTTP: "All pending" is refused', $c === 403);
         [$c, $b] = $get('forms/approvals.php');
-        ok('HTTP: the approvals page opens', $c === 200 && strpos($b, 'ca-container') !== false && strpos($b, 'data-filter="all"') === false);
+        ok('HTTP: the approvals page opens', $c === 200 && str_contains($b, 'ca-container') && !str_contains($b, 'data-filter="all"'));
         [$c, $b] = $get('forms/');
         ok('HTTP: the rest of Forms still sends them away', $c === 302);
         @unlink(session_save_path() . '/sess_' . $sess);

@@ -236,7 +236,7 @@ function recentTrailShouldRecord(): bool
     // choosing. Recording one would put a record in the trail that nobody ever
     // looked at, which is worse than missing one they did.
     $purpose = strtolower(($_SERVER['HTTP_SEC_PURPOSE'] ?? '') . ' ' . ($_SERVER['HTTP_PURPOSE'] ?? ''));
-    if (strpos($purpose, 'prefetch') !== false || strpos($purpose, 'prerender') !== false) {
+    if (str_contains($purpose, 'prefetch') || str_contains($purpose, 'prerender')) {
         return false;
     }
     return true;

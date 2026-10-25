@@ -168,7 +168,7 @@ function d005Classify(string $src, string $rel): array {
     if (preg_match('/requireCapabilityJson\s*\(\s*[\'"]([a-z0-9_.]+)[\'"]/', $src, $m)) {
         return ['capability_string', "'" . $m[1] . "'  ⚠ passed as a STRING, not a Cap:: constant"];
     }
-    if (strpos($src, 'admin_api_guard.php') !== false || preg_match('/requireAdminJson\s*\(/', $src)) {
+    if (str_contains($src, 'admin_api_guard.php') || preg_match('/requireAdminJson\s*\(/', $src)) {
         return ['admin', 'Administrators only'];
     }
     if (preg_match('/requireModuleAccessJson\s*\(\s*[\'"]([a-z0-9-]+)[\'"]/', $src, $m)) {
@@ -239,7 +239,7 @@ if (is_dir($apiRoot)) {
         $rel = str_replace('\\', '/', substr($abs, strlen($appRoot) + 1));
 
         // The debug tools themselves are reached through the admin-gated debug runner.
-        if (strpos($rel, 'api/system/debug-tools/') === 0) continue;
+        if (str_starts_with($rel, 'api/system/debug-tools/')) continue;
 
         // By convention a leading underscore means "shared include, not an endpoint"
         // (_ai_helpers.php, _field_catalogue.php …). They define functions and do nothing
@@ -300,7 +300,7 @@ foreach ($rows as $r) {
     if ($r['public'] || $r['level'] !== 'module' || !$r['write']) continue;
     if (!preg_match('/(settings|credential|connection|provider|_key)[^\/]*\.php$/', $r['rel'])) continue;
     $src = (string) file_get_contents($appRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $r['rel']));
-    if (strpos($src, 'encryptValue(') !== false) $credential[] = $r;
+    if (str_contains($src, 'encryptValue(')) $credential[] = $r;
 }
 
 $byDesign = [];

@@ -467,7 +467,7 @@ class TelegramProvider extends MessagingProvider
             throw new Exception('Attachment file not found.');
         }
 
-        $isPhoto = (strpos($mimeType, 'image/') === 0) && $mimeType !== 'image/svg+xml';
+        $isPhoto = (str_starts_with($mimeType, 'image/')) && $mimeType !== 'image/svg+xml';
         $method  = $isPhoto ? 'sendPhoto' : 'sendDocument';
         $field   = $isPhoto ? 'photo' : 'document';
 

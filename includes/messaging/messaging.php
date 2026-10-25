@@ -205,9 +205,9 @@ function messagingOutboundMediaToken(int $attachmentId, int $expires): string
 function messagingMediaCategory(string $mime): string
 {
     $mime = strtolower(trim(explode(';', $mime)[0]));
-    if (strpos($mime, 'image/') === 0) return 'image';
-    if (strpos($mime, 'video/') === 0) return 'video';
-    if (strpos($mime, 'audio/') === 0) return 'audio';
+    if (str_starts_with($mime, 'image/')) return 'image';
+    if (str_starts_with($mime, 'video/')) return 'video';
+    if (str_starts_with($mime, 'audio/')) return 'audio';
     return 'document';
 }
 
@@ -285,7 +285,7 @@ function messagingNormaliseLocale(string $raw): string
         return 'en';
     }
     // Our one locale whose key isn't a bare lowercase tag.
-    if ($lower === 'pt' || strpos($lower, 'pt-br') === 0) {
+    if ($lower === 'pt' || str_starts_with($lower, 'pt-br')) {
         return 'pt-BR';
     }
     // Telegram (and browsers) may send the old generic "no" for Norwegian;
@@ -322,7 +322,7 @@ function messagingExtForMime(string $mime): string
         return $map[$mime];
     }
     // Fallback: the subtype, stripped to something filesystem-safe.
-    $sub = strpos($mime, '/') !== false ? substr($mime, strpos($mime, '/') + 1) : $mime;
+    $sub = str_contains($mime, '/') ? substr($mime, strpos($mime, '/') + 1) : $mime;
     $sub = preg_replace('/[^a-z0-9]+/', '', $sub);
     return $sub !== '' ? substr($sub, 0, 8) : 'bin';
 }

@@ -238,7 +238,7 @@ function encryptValue($plaintext) {
     }
 
     // Don't double-encrypt
-    if (strpos($plaintext, ENCRYPTION_PREFIX) === 0) {
+    if (str_starts_with($plaintext, ENCRYPTION_PREFIX)) {
         return $plaintext;
     }
 
@@ -280,7 +280,7 @@ function decryptValue($encrypted) {
     }
 
     // Not encrypted - return as-is (supports migration)
-    if (strpos($encrypted, ENCRYPTION_PREFIX) !== 0) {
+    if (!str_starts_with($encrypted, ENCRYPTION_PREFIX)) {
         return $encrypted;
     }
 

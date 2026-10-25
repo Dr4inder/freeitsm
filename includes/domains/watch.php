@@ -115,7 +115,7 @@ function domainCtIssuer(string $dn): string
 function domainCtDate($v): ?string
 {
     if (!$v) return null;
-    $t = strtotime($v . (strpos((string)$v, 'Z') === false ? ' UTC' : ''));
+    $t = strtotime($v . (!str_contains((string)$v, 'Z') ? ' UTC' : ''));
     return $t ? gmdate('Y-m-d H:i:s', $t) : null;
 }
 
@@ -164,7 +164,7 @@ function domainLookalikeCandidates(string $name): array
     for ($i = 0; $i < $len; $i++) {
         foreach ($glyph[$label[$i]] ?? [] as $g) $add(substr($label, 0, $i) . $g . substr($label, $i + 1), 'homoglyph');
     }
-    if (strpos($label, 'rn') !== false) $add(str_replace('rn', 'm', $label), 'homoglyph');
+    if (str_contains($label, 'rn')) $add(str_replace('rn', 'm', $label), 'homoglyph');
     // hyphenation: ex-ample
     for ($i = 1; $i < $len; $i++) $add(substr($label, 0, $i) . '-' . substr($label, $i), 'hyphenation');
     // vowel swap: exumple

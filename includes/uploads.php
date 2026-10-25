@@ -538,7 +538,7 @@ function htaccessGuardPhpDirectives(string $text): string
     $bad = htaccessUnguardedPhpDirectives($text);
     if (!$bad) return $text;
 
-    $nl    = strpos($text, "\r\n") !== false ? "\r\n" : "\n";
+    $nl    = str_contains($text, "\r\n") ? "\r\n" : "\n";
     $lines = preg_split('/\r\n|\n|\r/', $text);
     foreach ($bad as $n) {
         $line   = $lines[$n - 1];

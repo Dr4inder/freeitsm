@@ -100,7 +100,7 @@ try {
     // ------------------------------------------------------------------ 7
     echo "\n7. D001 (the demo import) cannot run from a link\n";
     ok('D001 calls csrfRequireWriteMethod(), and runs as POST from the tool page',
-       strpos(src('api/system/debug-tools/D001_demo_core_import.php'), 'csrfRequireWriteMethod();') !== false
+       str_contains(src('api/system/debug-tools/D001_demo_core_import.php'), 'csrfRequireWriteMethod();')
        && (bool)preg_match("/'file'\s*=>\s*'D001_demo_core_import\.php'.*?'method'\s*=>\s*'POST'/s", src('system/debug-tools/includes/tools.php')));
 
     // ------------------------------------------------------------------ 8
@@ -135,7 +135,7 @@ try {
     ok('POSITIVE CONTROL: the owner may archive it', $code(fn() => KnowledgeService::archiveArticle($conn, new ActorContext($owner, null, 'ui', 'en', 'ZZ owner'), $article)) === '');
     ok('the REST create, update and restore hand back the article only through the key\'s read check',
        substr_count(src('api/v1/resources/knowledge.php'), "apiLoadArticle(\$conn, \$res['id'], \$apiKey)") === 2
-       && strpos(src('api/v1/resources/knowledge.php'), "apiLoadArticle(\$conn, \$params[0], \$apiKey), true)") !== false);
+       && str_contains(src('api/v1/resources/knowledge.php'), "apiLoadArticle(\$conn, \$params[0], \$apiKey), true)"));
 
     // ------------------------------------------------------------------ 9
     echo "\n9. Knowledge article bodies are cleaned before they reach the page\n";
@@ -177,7 +177,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
             ok('without the opt-in, no iframe survives - every other caller is unchanged', $res['noOptIn'] === false);
             // A file:// page has no real origin, so this one is read from the code.
             ok('an embed of FreeITSM\'s OWN site is refused (allow-scripts + allow-same-origin would let it lift its sandbox)',
-               strpos(src('assets/js/safe-html.js'), "new URL(src).origin === window.location.origin") !== false);
+               str_contains(src('assets/js/safe-html.js'), "new URL(src).origin === window.location.origin"));
         }
         @array_map('unlink', glob("$dir/*.*") ?: []);
     } else {
@@ -190,7 +190,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
     foreach (array_merge(glob(__DIR__ . '/../api/*/*.php'), glob(__DIR__ . '/../api/*/*/*.php'), glob(__DIR__ . '/../includes/*.php'), glob(__DIR__ . '/../includes/*/*.php')) as $f) {
         foreach (preg_split('/\R/', (string)file_get_contents($f)) as $i => $line) {
             $t = ltrim($line);
-            if ($t === '' || $t[0] === '*' || strpos($t, '//') === 0) continue;
+            if ($t === '' || $t[0] === '*' || str_starts_with($t, '//')) continue;
             if (preg_match('/\$_SESSION\[\'allowed_modules\'\](?!\s*=[^=])/', $line)) $readers[] = basename($f) . ':' . ($i + 1);
         }
     }
@@ -216,7 +216,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
         [$c1] = http('GET', 'api/calendar/feed.php?token=' . $tokens[$feedGone]);
         [$c2, $b2] = http('GET', 'api/calendar/feed.php?token=' . $tokens[$feedActive]);
         ok('a deactivated analyst\'s calendar feed is refused (403)', $c1 === 403, "HTTP $c1");
-        ok('POSITIVE CONTROL: an active analyst\'s feed is served', $c2 === 200 && strpos($b2, 'BEGIN:VCALENDAR') !== false, "HTTP $c2 " . substr($b2, 0, 80));
+        ok('POSITIVE CONTROL: an active analyst\'s feed is served', $c2 === 200 && str_contains($b2, 'BEGIN:VCALENDAR'), "HTTP $c2 " . substr($b2, 0, 80));
         $k = bin2hex(random_bytes(16));
         $conn->prepare("INSERT INTO apikeys (apikey, analyst_id, label) VALUES (?, ?, ?)")->execute([$k, $feedGone, "ZZ $tag"]);
         $made['keys'][] = (int)$conn->lastInsertId();
@@ -227,15 +227,15 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
         $conn->prepare("INSERT INTO apikeys (apikey, analyst_id, label) VALUES (?, ?, ?)")->execute([$k3, $feedActive, "ZZ $tag active"]);
         $made['keys'][] = (int)$conn->lastInsertId();
         [$c, $b] = http('GET', 'api/watchtower/get_dashboard_ext.php', null, null, ['Authorization: ' . $k3]);
-        ok('POSITIVE CONTROL: an active analyst\'s Watchtower key is served', $c === 200 && strpos($b, '"success":true') !== false, "HTTP $c " . substr($b, 0, 100));
+        ok('POSITIVE CONTROL: an active analyst\'s Watchtower key is served', $c === 200 && str_contains($b, '"success":true'), "HTTP $c " . substr($b, 0, 100));
         foreach (['a deactivated analyst\'s key' => $k, 'a key with no analyst (an inventory agent\'s)' => $k2] as $what => $key) {
             [$c, $b] = http('GET', 'api/watchtower/get_dashboard_ext.php', null, null, ['Authorization: ' . $key, 'X-Api-Key: ' . $key]);
-            ok("Watchtower refuses $what", $c === 403 || strpos($b, 'Invalid authorization key') !== false, "HTTP $c " . substr($b, 0, 100));
+            ok("Watchtower refuses $what", $c === 403 || str_contains($b, 'Invalid authorization key'), "HTTP $c " . substr($b, 0, 100));
         }
     } else {
         skip('the feed and Watchtower checks', 'no web server');
     }
-    ok('the schedule feed checks its owner too', strpos(src('api/tickets/schedule_feed.php'), "analystCanAccessModule(\$conn, \$analystId, 'tickets')") !== false);
+    ok('the schedule feed checks its owner too', str_contains(src('api/tickets/schedule_feed.php'), "analystCanAccessModule(\$conn, \$analystId, 'tickets')"));
 
     // ------------------------------------------------------------------ 12
     echo "\n12. A ticket moved to another company leaves the old company's search, and takes its tasks\n";
@@ -268,9 +268,9 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
         $tt->execute([$sub]);  $v2 = (int)$tt->fetchColumn();
         ok('its task and the task\'s subtask moved with it', $v1 === $tB && $v2 === $tB, "$v1 / $v2");
         ok('the move button, PATCH and triage routing all call it',
-           strpos(src('api/tickets/move_ticket_to_company.php'), 'ticketsFollowCompanyMove(') !== false
-           && strpos(src('includes/services/tickets.php'), 'ticketsFollowCompanyMove(') !== false
-           && strpos(src('api/tickets/resolve_triage.php'), 'ticketsFollowCompanyMove(') !== false);
+           str_contains(src('api/tickets/move_ticket_to_company.php'), 'ticketsFollowCompanyMove(')
+           && str_contains(src('includes/services/tickets.php'), 'ticketsFollowCompanyMove(')
+           && str_contains(src('api/tickets/resolve_triage.php'), 'ticketsFollowCompanyMove('));
     } else {
         skip('the search and task move checks', 'needs two companies and the search corpus');
     }
@@ -279,7 +279,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
     echo "\n13. Workflow tickets get a company, and never step over an approval\n";
     $eng = src('workflow/includes/engine.php');
     ok('"Create a ticket" stores a company and numbers the ticket in it',
-       strpos($eng, 'user_id, tenant_id, created_datetime') !== false && strpos($eng, 'TicketNumbering::next($conn, $typeId ? (int)$typeId : null, $ticketTenant)') !== false);
+       str_contains($eng, 'user_id, tenant_id, created_datetime') && str_contains($eng, 'TicketNumbering::next($conn, $typeId ? (int)$typeId : null, $ticketTenant)'));
     $formId = (int)$conn->query("SELECT MIN(id) FROM forms")->fetchColumn();
     if ($formId) {
         foreach (['pending', 'rejected'] as $st) {
@@ -305,7 +305,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
     ok('POSITIVE CONTROL: an ordinary new password is accepted', passwordPolicyError('a decent new passphrase', $h) === null);
     $setters = ['api/myaccount/change_password.php', 'api/auth/reset_password.php', 'api/tickets/reset_analyst_password.php', 'api/tickets/save_analyst.php',
                 'api/self-service/change_password.php', 'api/self-service/register.php', 'api/self-service/reset_password.php', 'api/tickets/save_user.php'];
-    $missing = array_filter($setters, fn($f) => strpos(src($f), 'passwordPolicyError(') === false);
+    $missing = array_filter($setters, fn($f) => !str_contains(src($f), 'passwordPolicyError('));
     ok('every place that sets a password uses the rule', !$missing, implode(', ', $missing));
     $cp = src('api/myaccount/change_password.php');
     ok('"must be different" is only checked AFTER the current password is proved (no guessing oracle)',
@@ -324,12 +324,12 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
     echo "\n16. Errors before sign-in do not show database text\n";
     ok('a database error becomes the generic message', dbSafeClientMessage(new PDOException("SQLSTATE[HY000] [1045] Access denied for user 'x'"), 'generic') === 'generic');
     ok('POSITIVE CONTROL: an identity provider\'s own message still shows', dbSafeClientMessage(new Exception('AADSTS50011: redirect URI mismatch'), 'generic') === 'AADSTS50011: redirect URI mismatch');
-    ok('config.php no longer turns display_errors on', !preg_match("/ini_set\('display_errors',\s*1\)/", src('config.php')) && strpos(src('config.php'), "FREEITSM_DISPLAY_ERRORS") !== false);
+    ok('config.php no longer turns display_errors on', !preg_match("/ini_set\('display_errors',\s*1\)/", src('config.php')) && str_contains(src('config.php'), "FREEITSM_DISPLAY_ERRORS"));
 
     // ------------------------------------------------------------------ 17
     echo "\n17. Portal recordings go through includes/uploads.php\n";
-    ok('upload_recording.php stores through uploadStoreFile()', strpos(src('api/self-service/upload_recording.php'), 'uploadStoreFile(') !== false
-       && strpos(src('api/self-service/upload_recording.php'), "strpos(\$first, 'ftyp')") === false);
+    ok('upload_recording.php stores through uploadStoreFile()', str_contains(src('api/self-service/upload_recording.php'), 'uploadStoreFile(')
+       && !str_contains(src('api/self-service/upload_recording.php'), "strpos(\$first, 'ftyp')"));
     $portalUser = (int)$conn->query("SELECT id FROM users WHERE COALESCE(is_active, 1) = 1 ORDER BY id LIMIT 1")->fetchColumn();
     if ($online && $portalUser) {
         $tok = bin2hex(random_bytes(32));
@@ -339,7 +339,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
         $before = (int)$conn->query("SELECT COALESCE(MAX(id), 0) FROM ticket_recordings")->fetchColumn();
         [$c, $b] = http('POST', 'api/self-service/upload_recording.php', $sid,
                         ['file' => new CURLFile($tmp, 'video/mp4', 'screen-recording-zz.mp4')], ['X-CSRF-Token: ' . $tok]);
-        ok('a text file DECLARED as video/mp4 is refused (it used to be accepted unchecked)', strpos($b, '"success":false') !== false, "HTTP $c $b");
+        ok('a text file DECLARED as video/mp4 is refused (it used to be accepted unchecked)', str_contains($b, '"success":false'), "HTTP $c $b");
         $after = (int)$conn->query("SELECT COALESCE(MAX(id), 0) FROM ticket_recordings")->fetchColumn();
         ok('...and nothing was stored', $after === $before);
         if ($after > $before) $conn->exec("DELETE FROM ticket_recordings WHERE id > $before AND ticket_id IS NULL");
@@ -364,7 +364,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
     }
     ok('every lockout / expiry parse in sign-in reads the database time as UTC',
        substr_count(src('auth/login.php'), ", new DateTimeZone('UTC'))") >= 3 + 3
-       && strpos(src('api/auth/reset_password.php'), "\$resetToken['expires_datetime'], new DateTimeZone('UTC')") !== false);
+       && str_contains(src('api/auth/reset_password.php'), "\$resetToken['expires_datetime'], new DateTimeZone('UTC')"));
 
     // ------------------------------------------------------------------ 19
     echo "\n19. Ticket history cannot be written freely\n";
@@ -378,15 +378,15 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
         $sid = forge(['analyst_id' => $adminId, 'analyst_name' => 'ZZ test', 'csrf_token' => $tok]);
         $post = fn(array $b) => http('POST', 'api/tickets/log_ticket_audit.php', $sid, json_encode(['ticket_id' => $at] + $b), ['Content-Type: application/json', 'X-CSRF-Token: ' . $tok]);
         [, $b1] = $post(['field_name' => 'Ticket Created', 'old_value' => null, 'new_value' => 'forged']);
-        ok('an invented field is refused', strpos($b1, '"success":false') !== false, $b1);
+        ok('an invented field is refused', str_contains($b1, '"success":false'), $b1);
         [, $b2] = $post(['field_name' => 'Status', 'old_value' => $statusRow['name'], 'new_value' => 'ZZ On Hold']);
-        ok('a Status row that does not match the ticket is refused (no fake SLA pause)', strpos($b2, '"success":false') !== false, $b2);
+        ok('a Status row that does not match the ticket is refused (no fake SLA pause)', str_contains($b2, '"success":false'), $b2);
         [, $b3] = $post(['field_name' => 'Status', 'old_value' => 'x', 'new_value' => $statusRow['name']]);
-        ok('POSITIVE CONTROL: a Status row matching the real status is recorded', strpos($b3, '"success":true') !== false, $b3);
+        ok('POSITIVE CONTROL: a Status row matching the real status is recorded', str_contains($b3, '"success":true'), $b3);
         [, $b4] = $post(['field_name' => 'Status', 'old_value' => 'x', 'new_value' => $statusRow['name']]);
-        ok('...once - the same transition again is refused', strpos($b4, '"success":false') !== false, $b4);
+        ok('...once - the same transition again is refused', str_contains($b4, '"success":false'), $b4);
         [, $b5] = $post(['field_name' => 'Priority', 'old_value' => 'Low', 'new_value' => 'High']);
-        ok('POSITIVE CONTROL: an ordinary field the inbox logs is recorded', strpos($b5, '"success":true') !== false, $b5);
+        ok('POSITIVE CONTROL: an ordinary field the inbox logs is recorded', str_contains($b5, '"success":true'), $b5);
     } else {
         skip('the history checks', 'no web server');
     }
@@ -395,7 +395,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
     echo "\n20. Webhook URLs and secrets are encrypted on every save route\n";
     if (webhookEncryptionAvailable()) {
         $enc = webhookEncryptActions([['type' => 'send_webhook', 'args' => ['url' => 'https://hooks.example/zz', 'secret' => 's3']], ['type' => 'add_note', 'args' => ['url' => 'leave me']]]);
-        ok('the url and secret come back encrypted', strpos($enc[0]['args']['url'], 'ENC:') === 0 && strpos($enc[0]['args']['secret'], 'ENC:') === 0);
+        ok('the url and secret come back encrypted', str_starts_with($enc[0]['args']['url'], 'ENC:') && str_starts_with($enc[0]['args']['secret'], 'ENC:'));
         ok('...other actions are untouched', $enc[1]['args']['url'] === 'leave me');
         ok('...encrypting again changes nothing (a GET-then-PATCH round trip is safe)', webhookEncryptActions($enc) === $enc);
         ok('POSITIVE CONTROL: and they decrypt back', webhookDecryptActions($enc)[0]['args']['url'] === 'https://hooks.example/zz');
@@ -403,17 +403,17 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
         skip('the encryption round trip', 'no encryption key on this install');
     }
     ok('the browser save, REST create and update, and form action lists all use it',
-       strpos(src('api/workflow/save.php'), 'webhookEncryptActions(') !== false
+       str_contains(src('api/workflow/save.php'), 'webhookEncryptActions(')
        && substr_count(src('api/v1/resources/workflows.php'), 'webhookEncryptActions(') === 2
-       && strpos(src('includes/services/forms.php'), 'webhookEncryptActions(') !== false);
+       && str_contains(src('includes/services/forms.php'), 'webhookEncryptActions('));
 
     // ------------------------------------------------------------------ 21
     echo "\n21. Every debug tool is administrators-only\n";
-    $ungated = array_map('basename', array_filter(glob(__DIR__ . '/../api/system/debug-tools/D*.php'), fn($f) => strpos((string)file_get_contents($f), '$__dbgAdmin') === false));
+    $ungated = array_map('basename', array_filter(glob(__DIR__ . '/../api/system/debug-tools/D*.php'), fn($f) => !str_contains((string)file_get_contents($f), '$__dbgAdmin')));
     ok('no debug tool lacks the administrator gate', !$ungated, implode(', ', $ungated));
     if ($online) {
         [$c, $b] = http('GET', 'api/system/debug-tools/D005_endpoint_permissions.php', forge([]));
-        ok('D005 refuses someone signed out', $c === 403 && strpos($b, 'Administrator access required') !== false, "HTTP $c " . substr($b, 0, 80));
+        ok('D005 refuses someone signed out', $c === 403 && str_contains($b, 'Administrator access required'), "HTTP $c " . substr($b, 0, 80));
     }
 
     // ------------------------------------------------------------------ 22
@@ -453,7 +453,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
         ok('the company clause is the same one ticket lists use', wtCompanyClause($conn, $wtAnalyst, 't') === ticketTenantFilter($conn, $wtAnalyst, 't'));
         ok('...and every ticket, change, task and asset count carries it', substr_count(src('includes/watchtower_queries.php'), 'wtCompanyClause(') >= 6);
     }
-    ok('a scope lookup that throws no longer means "all companies"', strpos(src('includes/service_context.php'), "tenancyDegradeAllowed(\$e)) ? null : []") !== false);
+    ok('a scope lookup that throws no longer means "all companies"', str_contains(src('includes/service_context.php'), "tenancyDegradeAllowed(\$e)) ? null : []"));
 
     // ------------------------------------------------------------------ 4b
     echo "\n4b. A company-limited key cannot name, or create, another company's requester when raising a ticket\n";
@@ -471,19 +471,19 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
         $api = fn(array $b) => http('POST', 'api/v1/index.php?path=/tickets', null, json_encode($b), ['Content-Type: application/json', 'Authorization: Bearer ' . $key]);
         $ticketsBefore = (int)$conn->query("SELECT COALESCE(MAX(id), 0) FROM tickets")->fetchColumn();
         [$c, $b] = $api(['subject' => 'ZZ must not exist', 'requester_email' => "$tag-x@zz.test", 'user_id' => $otherUser]);
-        ok("naming company $tB's requester by id is refused", $c === 422 && strpos($b, 'no longer exists') !== false, "HTTP $c $b");
+        ok("naming company $tB's requester by id is refused", $c === 422 && str_contains($b, 'no longer exists'), "HTTP $c $b");
         [$c, $b] = $api(['subject' => 'ZZ must not exist', 'requester_email' => "$tag-new@$tag-b.test"]);
         ok("an address on company $tB's domain is refused before the requester is created", $c === 403, "HTTP $c $b");
         $n = $conn->prepare("SELECT COUNT(*) FROM users WHERE email = ?"); $n->execute(["$tag-new@$tag-b.test"]);
         ok('...and no requester was created', (int)$n->fetchColumn() === 0);
         [$c, $b] = $api(['requester_email' => "$tag-y@zz.test"]);
-        ok('POSITIVE CONTROL: the key is otherwise reaching the endpoint (a missing subject is its own 422)', $c === 422 && strpos($b, 'subject') !== false, "HTTP $c $b");
+        ok('POSITIVE CONTROL: the key is otherwise reaching the endpoint (a missing subject is its own 422)', $c === 422 && str_contains($b, 'subject'), "HTTP $c $b");
         ok('...and no ticket was created by any of it', (int)$conn->query("SELECT COALESCE(MAX(id), 0) FROM tickets")->fetchColumn() === $ticketsBefore);
         $conn->prepare("DELETE FROM api_keys WHERE id = ? AND name LIKE 'ZZ %'")->execute([$apiKeyId]);
     } else {
         skip('the REST ticket checks', 'needs the web server and two companies');
     }
-    ok('the analyst New ticket form checks the company a new requester would land in', strpos(src('api/tickets/create_ticket.php'), 'resolveTenantForNewUser($conn, $fromEmail)') !== false);
+    ok('the analyst New ticket form checks the company a new requester would land in', str_contains(src('api/tickets/create_ticket.php'), 'resolveTenantForNewUser($conn, $fromEmail)'));
 } finally {
     $_SESSION = [];
     foreach ($made['acl'] as $id) $conn->prepare("DELETE FROM knowledge_acl WHERE id = ?")->execute([$id]);

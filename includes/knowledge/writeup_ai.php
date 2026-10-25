@@ -457,7 +457,7 @@ function writeupStem(string $w): string
     // "jamming" → "jamm" → "jam", "stopped" → "stopp" → "stop". Never collapse
     // l/s/z: "call", "pass" and "buzz" are words, not doubled stems.
     $len = mb_strlen($w);
-    if ($len > 3 && $w[$len - 1] === $w[$len - 2] && strpos('lsz', $w[$len - 1]) === false) {
+    if ($len > 3 && $w[$len - 1] === $w[$len - 2] && !str_contains('lsz', $w[$len - 1])) {
         $w = substr($w, 0, -1);
     }
 
@@ -825,7 +825,7 @@ function writeupExtractQuestions(string $body): array
     $out = [];
     foreach (preg_split('/\r?\n/', $body) as $line) {
         $line = trim($line);
-        if ($line !== '' && (strpos($line, '- ') === 0 || strpos($line, '• ') === 0)) {
+        if ($line !== '' && (str_starts_with($line, '- ') || str_starts_with($line, '• '))) {
             $q = trim(mb_substr($line, 2));
             if ($q !== '') {
                 $out[] = $q;
@@ -845,7 +845,7 @@ function writeupExtractExplanation(string $body): string
     $keep = [];
     foreach (preg_split('/\r?\n/', $body) as $line) {
         $t = trim($line);
-        if ($t === '' || strpos($t, '- ') === 0 || strpos($t, '• ') === 0) {
+        if ($t === '' || str_starts_with($t, '- ') || str_starts_with($t, '• ')) {
             continue;
         }
         $keep[] = $t;

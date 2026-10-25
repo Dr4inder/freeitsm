@@ -218,7 +218,7 @@ function featureBingoAssertReadOnly(string $sql): void
     // Judge the SQL, not the text inside it: `rejected_action <> 'delete'` is a
     // read, and the word inside the quotes must not trip the keyword test.
     $s = preg_replace("/'(?:[^'\\\\]|\\\\.|'')*'/", "''", $s);
-    if (strpos($s, ';') !== false) throw new Exception('a check must be a single statement');
+    if (str_contains($s, ';')) throw new Exception('a check must be a single statement');
     if (!preg_match('/^SELECT\s/i', $s)) throw new Exception('a check must be a SELECT');
     if (preg_match('/\b(INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|TRUNCATE|REPLACE|GRANT)\b/i', $s)) throw new Exception('a check may only read');
 }

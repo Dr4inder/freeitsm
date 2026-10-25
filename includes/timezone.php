@@ -377,7 +377,7 @@ class DateFmt {
         // A day number beside the month selects the in-date month form for the
         // languages that inflect (see months()). "March 2026" on a calendar
         // header stays nominative; "5 March 2026" does not.
-        $withDay     = strpos($template, 'D') !== false;
+        $withDay     = str_contains($template, 'D');
         $months      = self::months(false, $withDay);
         $monthsShort = self::months(true);
         $hour24      = (int)$dt->format('G');

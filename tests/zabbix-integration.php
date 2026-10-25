@@ -79,7 +79,7 @@ try {
     [$c] = send($endpoint, $event($pid('nokey')) + ['token' => 'anything']);
     ok('with no token made yet, every call is refused (403) - the integration is off', $c === 403, "HTTP $c");
     $token = zabbixRotateToken($conn);
-    ok('the token is stored encrypted', strpos((string)zabbixSetting($conn, 'zabbix_token'), 'ENC:') === 0 || !webhookEncryptionAvailableSafe());
+    ok('the token is stored encrypted', str_starts_with((string)zabbixSetting($conn, 'zabbix_token'), 'ENC:') || !webhookEncryptionAvailableSafe());
     [$c] = send($endpoint, $event($pid('bad')) + ['token' => 'wrong-' . $token]);
     ok('a wrong token is refused (403)', $c === 403, "HTTP $c");
     [$c] = send($endpoint . '?token=' . $token, null, 'GET');
@@ -123,7 +123,7 @@ try {
     $s = $conn->prepare("SELECT status_id FROM tickets WHERE id = ?"); $s->execute([$tid]);
     ok('...which moves to the chosen status', (int)$s->fetchColumn() === (int)zabbixDefaultResolveStatusId($conn));
     $m = $conn->prepare("SELECT body_content FROM emails WHERE ticket_id = ? ORDER BY id DESC LIMIT 1"); $m->execute([$tid]);
-    ok('...with a RECOVERED message on the thread', strpos((string)$m->fetchColumn(), 'RECOVERED') === 0);
+    ok('...with a RECOVERED message on the thread', str_starts_with((string)$m->fetchColumn(), 'RECOVERED'));
     [$c, $r] = send($endpoint, $event($pid('never'), ['event_value' => '0']) + ['token' => $token]);
     ok('a recovery for a problem with no ticket opens nothing', ($r['action'] ?? '') === 'recovery_unmatched' && empty($r['ticket_id']), json_encode($r));
 
@@ -141,8 +141,8 @@ try {
     [$c, $r] = send($endpoint, $event($p3, ['trigger' => '<img src=x onerror=alert(1)>', 'message' => '<script>alert(2)</script>', 'url' => 'javascript:alert(3)']) + ['token' => $token]);
     $tid3 = (int)($r['ticket_id'] ?? 0); if ($tid3) $tickets[] = $tid3;
     $b = $conn->prepare("SELECT body_content FROM emails WHERE ticket_id = ?"); $b->execute([$tid3]); $body = (string)$b->fetchColumn();
-    ok('markup from Zabbix is stored as text', $tid3 > 0 && strpos($body, '<img') === false && strpos($body, '<script') === false && strpos($body, '&lt;img') !== false, substr($body, 0, 120));
-    ok('...and a non-web link is dropped, not shown', strpos($body, 'javascript:') === false);
+    ok('markup from Zabbix is stored as text', $tid3 > 0 && !str_contains($body, '<img') && !str_contains($body, '<script') && str_contains($body, '&lt;img'), substr($body, 0, 120));
+    ok('...and a non-web link is dropped, not shown', !str_contains($body, 'javascript:'));
 
     [$c, $r] = send($endpoint, ['token' => $token, 'problem_id' => $pid('bare')]);
     ok('an event with no host is refused (400)', $c === 400, "HTTP $c");
@@ -171,7 +171,7 @@ try {
     $sA = $sess($admin); $sP = $sess($plain);
     [$c, $d] = $api($sA, 'GET', null, '?action=get');
     ok('an administrator reads the settings, with the token and the address to give Zabbix',
-       $c === 200 && !empty($d['success']) && ($d['token'] ?? '') === $token && strpos((string)($d['endpoint'] ?? ''), 'api/external/zabbix/alert.php') !== false, "HTTP $c");
+       $c === 200 && !empty($d['success']) && ($d['token'] ?? '') === $token && str_contains((string)($d['endpoint'] ?? ''), 'api/external/zabbix/alert.php'), "HTTP $c");
     [$c, $d2] = $api($sP, 'GET', null, '?action=get');
     ok('a non-administrator is refused - and never sees the token', ($c === 403 || empty($d2['success'])) && !isset($d2['token']), "HTTP $c");
     [$c] = $api($sA, 'GET', null, '?action=rotate');
@@ -183,7 +183,7 @@ try {
     ok('POSITIVE CONTROL: the page\'s save works, with the token', !empty($d3['success']) && zabbixSettings($conn)['requester_name'] === 'ZZ renamed'
        && zabbixSettings($conn)['resolve_status_id'] === null, json_encode($d3));
     [$c, $d4] = $api($sA, 'POST', ['action' => 'save', 'requester_email' => 'not an address']);
-    ok('...and a bad value is refused with a sentence', empty($d4['success']) && strpos((string)($d4['error'] ?? ''), 'email') !== false, json_encode($d4));
+    ok('...and a bad value is refused with a sentence', empty($d4['success']) && str_contains((string)($d4['error'] ?? ''), 'email'), json_encode($d4));
     echo "\nTry it (the page's test button)\n";
     [$c, $t1] = $api($sA, 'POST', ['action' => 'test', 'step' => 'problem', 'trigger' => 'Test alert from FreeITSM', 'message' => 'ZZ test']);
     if (!empty($t1['ticket_id'])) $tickets[] = (int)$t1['ticket_id'];
@@ -194,7 +194,7 @@ try {
     [$c, $t2] = $api($sA, 'POST', ['action' => 'test', 'step' => 'recovery', 'problem_id' => $t1['problem_id'] ?? '']);
     ok('...and its recovery resolves it', !empty($t2['success']) && ($t2['action'] ?? '') === 'resolved' && (int)($t2['ticket_id'] ?? 0) === (int)($t1['ticket_id'] ?? -1), json_encode($t2));
     [$c, $t3] = $api($sA, 'POST', ['action' => 'test', 'step' => 'recovery', 'problem_id' => $p1]);
-    ok('the button cannot recover a REAL problem - only a test one it made', empty($t3['success']) && strpos((string)($t3['error'] ?? ''), 'not a test') !== false, json_encode($t3));
+    ok('the button cannot recover a REAL problem - only a test one it made', empty($t3['success']) && str_contains((string)($t3['error'] ?? ''), 'not a test'), json_encode($t3));
     [$c] = $api($sA, 'GET', null, '?action=test');
     ok('a test sent as a GET is refused (405)', $c === 405, "HTTP $c");
     $conn->exec("DELETE FROM zabbix_events WHERE problem_id = " . $conn->quote((string)($t1['problem_id'] ?? '-')));

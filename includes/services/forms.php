@@ -1935,7 +1935,7 @@ class FormsService
             $q->execute($args);
             $linked = (int)$q->fetchColumn();
             $needed = 0;
-            if (strpos($where, 'form_id') === 0) {
+            if (str_starts_with($where, 'form_id')) {
                 $r = $conn->prepare("SELECT COUNT(*) FROM task_forms WHERE $where");
                 $r->execute($args);
                 $needed = (int)$r->fetchColumn();
@@ -1945,7 +1945,7 @@ class FormsService
         }
         if ($linked > 0) {
             throw new ServiceError('conflict', 'task_evidence',
-                $linked === 1 && strpos($where, 'id = ?') === 0
+                $linked === 1 && str_starts_with($where, 'id = ?')
                     ? 'This submission is the record of work done on a task, so it cannot be deleted. It stays with that task\'s history and its evidence report.'
                     : 'Submissions of this form are the record of work on ' . $linked . ' task occurrence(s), so it cannot be deleted. Make it inactive instead.');
         }
@@ -3012,7 +3012,7 @@ class FormsService
 
             // Resolve the referenced field to a position in this payload.
             $ref = $rule['field'] ?? null;
-            if (is_string($ref) && strpos($ref, 'idx:') === 0) {
+            if (is_string($ref) && str_starts_with($ref, 'idx:')) {
                 $refIndex = (int)substr($ref, 4);
                 $refValue = $ref;
             } else {
@@ -3112,7 +3112,7 @@ class FormsService
             if (is_array($config) && isset($config['visible_if']['rules'])) {
                 foreach ($config['visible_if']['rules'] as $r => $rule) {
                     $ref = $rule['field'] ?? null;
-                    if (is_string($ref) && strpos($ref, 'idx:') === 0) {
+                    if (is_string($ref) && str_starts_with($ref, 'idx:')) {
                         $refIndex = (int)substr($ref, 4);
                         // validateFields already proved this position exists and is earlier.
                         $config['visible_if']['rules'][$r]['field'] = $idByIndex[$refIndex] ?? 0;

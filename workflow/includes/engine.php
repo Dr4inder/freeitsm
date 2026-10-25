@@ -959,7 +959,7 @@ class WorkflowEngine
         // AND that we know how to hydrate.
         $seen = [];
         foreach ($fields as $path) {
-            $obj = strpos($path, '.') === false ? null : explode('.', $path)[0];
+            $obj = !str_contains($path, '.') ? null : explode('.', $path)[0];
             if ($obj === null || isset($seen[$obj])) continue;
             $seen[$obj] = true;
             if (!in_array($obj, self::FULL_OBJECT_KEYS, true)) continue;
@@ -1922,8 +1922,8 @@ class WorkflowEngine
             // older workflows that stored "1,2" as a string still work.
             case 'in':           return self::value_in_list($actual, $value);
             case 'not_in':       return !self::value_in_list($actual, $value);
-            case 'contains':     return is_string($actual) && is_string($value) && $value !== '' && strpos($actual, $value) !== false;
-            case 'not_contains': return !(is_string($actual) && is_string($value) && $value !== '' && strpos($actual, $value) !== false);
+            case 'contains':     return is_string($actual) && is_string($value) && $value !== '' && str_contains($actual, $value);
+            case 'not_contains': return !(is_string($actual) && is_string($value) && $value !== '' && str_contains($actual, $value));
             case 'gt':           return is_numeric($actual) && is_numeric($value) && $actual > $value;
             case 'lt':           return is_numeric($actual) && is_numeric($value) && $actual < $value;
             case 'is_empty':     return $actual === null || $actual === '' || $actual === [];
@@ -2954,7 +2954,7 @@ class WorkflowEngine
         $payload = $redacted;
 
         $preset = strtolower(trim((string)($args['preset'] ?? '')));
-        if (!$isConfidential && ($preset === 'full' || strpos((string)($args['body'] ?? ''), '.full') !== false)) {
+        if (!$isConfidential && ($preset === 'full' || str_contains((string)($args['body'] ?? ''), '.full'))) {
             $payload = self::enrichWithFullObjects($conn, $payload);
         }
 

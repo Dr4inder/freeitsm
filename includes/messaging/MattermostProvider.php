@@ -300,7 +300,7 @@ class MattermostProvider extends MessagingProvider
     private function serverUrl(): string
     {
         $url = rtrim(trim((string)($this->channel['credentials']['server_url'] ?? '')), '/');
-        if ($url === '' || strpos($url, 'https://') !== 0 && strpos($url, 'http://') !== 0) {
+        if ($url === '' || !str_starts_with($url, 'https://') && !str_starts_with($url, 'http://')) {
             throw new Exception('Mattermost channel is missing its server address (https://…).');
         }
         return $url;

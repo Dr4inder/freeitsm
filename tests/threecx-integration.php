@@ -139,7 +139,7 @@ try {
     $ct = $r['contacts'][0] ?? [];
     ok('an international number finds the person stored with a national-looking number and an extension',
        count($r['contacts'] ?? []) === 1 && ($ct['id'] ?? '') === (string)$alice && ($ct['first_name'] ?? '') === 'ZZ Alice', json_encode($r));
-    ok('...with the address 3CX opens: the caller page, by person', strpos((string)($ct['url'] ?? ''), 'tickets/caller.php?user_id=' . $alice) !== false, (string)($ct['url'] ?? ''));
+    ok('...with the address 3CX opens: the caller page, by person', str_contains((string)($ct['url'] ?? ''), 'tickets/caller.php?user_id=' . $alice), (string)($ct['url'] ?? ''));
     ok('...and the phone 3CX searched for handed back, as its template rules require', ($ct['phone'] ?? '') === $aNum);
     ok('a lookup says nothing about tickets - not even that there are any', !preg_grep('/ticket|subject/i', array_keys($ct)), json_encode(array_keys($ct)));
     [$c, $r] = send($endpoint, ['action' => 'lookup', 'number' => substr($aDigits, -9)], $token);
@@ -170,14 +170,14 @@ try {
     ok('the next call is noted on that ticket - not a second ticket', ($r['action'] ?? '') === 'noted' && (int)($r['ticket_id'] ?? 0) === ($aT[0] ?? -1) && count($ticketsOf($alice)) === 1, json_encode($r));
     ok('...an internal note, written by the analyst who took the call', (int)($n['analyst_id'] ?? 0) === $agent['id'] && (int)($n['is_internal'] ?? 0) === 1, json_encode($n));
     ok('...saying how long (hh:mm:ss read), with the recording link and 3CX\'s summary',
-       strpos((string)($n['note_text'] ?? ''), 'Duration: 4m 05s') !== false && strpos((string)$n['note_text'], 'https://pbx.example.invalid/rec/1.wav') !== false
-       && strpos((string)$n['note_text'], 'Printer') !== false, (string)($n['note_text'] ?? ''));
+       str_contains((string)($n['note_text'] ?? ''), 'Duration: 4m 05s') && str_contains((string)$n['note_text'], 'https://pbx.example.invalid/rec/1.wav')
+       && str_contains((string)$n['note_text'], 'Printer'), (string)($n['note_text'] ?? ''));
     ok('a variable 3CX had no value for ("[Summary]") is treated as not sent, never stored', !preg_grep('/\[(Summary|RecordingUrl)\]/', array_column($notes, 'note_text')));
     [$c, $r] = send($endpoint, $second, $token);
     ok('the same report twice (3CX retrying) is noted once', ($r['action'] ?? '') === 'duplicate' && count($notesOn($aT[0] ?? 0)) === count($notes), json_encode($r));
     [$c, $r] = send($endpoint, $call($aNum, ['recording_url' => 'javascript:alert(1)']), $token);
     $last = $notesOn($aT[0] ?? 0); $last = (string)(end($last)['note_text'] ?? '');
-    ok('a recording "link" that is not a web link is dropped', ($r['action'] ?? '') === 'noted' && strpos($last, 'javascript:') === false, $last);
+    ok('a recording "link" that is not a web link is dropped', ($r['action'] ?? '') === 'noted' && !str_contains($last, 'javascript:'), $last);
 
     [$c, $r] = send($endpoint, $call($cNum, ['call_type' => 'Outbound']), $token);
     $tickets = array_merge($tickets, $ticketsOf($carol));
@@ -190,7 +190,7 @@ try {
     [$c, $r] = send($endpoint, $call($aNum, ['agent_email' => 'reception@example.invalid', 'agent_name' => 'Front Desk']), $token);
     $fb = $notesOn($aT[0] ?? 0); $fb = end($fb) ?: [];
     ok('...with a fallback: noted, written by the fallback analyst, saying who took it',
-       ($r['action'] ?? '') === 'noted' && (int)($fb['analyst_id'] ?? 0) === $back['id'] && strpos((string)$fb['note_text'], 'Taken in 3CX by Front Desk (ext 201)') !== false
+       ($r['action'] ?? '') === 'noted' && (int)($fb['analyst_id'] ?? 0) === $back['id'] && str_contains((string)$fb['note_text'], 'Taken in 3CX by Front Desk (ext 201)')
        && count($notesOn($aT[0] ?? 0)) === $cnt + 1, json_encode($fb));
 
     // A second open ticket for Alice, then the rules.
@@ -202,7 +202,7 @@ try {
     threecxPutSetting($conn, 'threecx_ticket_rule', 'only_one');
     [$c, $r] = send($endpoint, $call($aNum), $token);
     ok('rule "only one": a caller with two open tickets - only listed, saying why', ($r['action'] ?? '') === 'logged'
-       && strpos((string)$conn->query("SELECT detail FROM threecx_calls ORDER BY id DESC LIMIT 1")->fetchColumn(), '2 open tickets') !== false, json_encode($r));
+       && str_contains((string)$conn->query("SELECT detail FROM threecx_calls ORDER BY id DESC LIMIT 1")->fetchColumn(), '2 open tickets'), json_encode($r));
     threecxPutSetting($conn, 'threecx_ticket_rule', 'latest_open');
     [$c, $r] = send($endpoint, $call($aNum), $token);
     ok('rule "latest open": the most recently updated one', ($r['action'] ?? '') === 'noted' && (int)($r['ticket_id'] ?? 0) === $tid2, json_encode($r));
@@ -215,7 +215,7 @@ try {
 
     [$c, $r] = send($endpoint, $call($shared), $token);
     ok('a call from a shared number is only listed - "2 people have this number"', ($r['action'] ?? '') === 'logged'
-       && strpos((string)$conn->query("SELECT detail FROM threecx_calls ORDER BY id DESC LIMIT 1")->fetchColumn(), '2 people') !== false, json_encode($r));
+       && str_contains((string)$conn->query("SELECT detail FROM threecx_calls ORDER BY id DESC LIMIT 1")->fetchColumn(), '2 people'), json_encode($r));
 
     $uNum = $num(); $uDigits = preg_replace('/\D+/', '', $uNum);
     [$c, $r] = send($endpoint, $call($uNum), $token);
@@ -249,7 +249,7 @@ try {
            && $param('Url') === 'https://desk.example.invalid/api/external/3cx/crm.php' && $param('Token') === $token);
         $urls = array_map('strval', $doc->xpath('//Request/@Url'));
         ok('...the token is in a header on both requests, never in an address', $urls === ['[Url]', '[Url]']
-           && count($doc->xpath("//Headers/Value[@Key='Authorization']")) === 2 && strpos(implode('', $urls), 'Token') === false);
+           && count($doc->xpath("//Headers/Value[@Key='Authorization']")) === 2 && !str_contains(implode('', $urls), 'Token'));
         ok('...a lookup scenario (empty Id) and a ReportCall scenario', count($doc->xpath("//Scenario[@Id='']")) === 1 && count($doc->xpath("//Scenario[@Id='ReportCall']")) === 1);
         $keys = array_map('strval', $doc->xpath("//Scenario[@Id='ReportCall']//PostValues/Value/@Key"));
         ok('...the report sends what the endpoint reads', !array_diff(['action', 'call_type', 'number', 'agent', 'agent_email', 'agent_name', 'duration', 'start', 'recording_url', 'summary'], $keys), implode(',', $keys));
@@ -288,14 +288,14 @@ try {
     $sA = $sess($admin); $sP = $sess($agent['id']);
     [$c, $d] = $api($sA, 'GET', null, '?action=get');
     ok('an administrator reads the settings, with the token and the address to give 3CX',
-       $c === 200 && !empty($d['success']) && ($d['token'] ?? '') === $token && strpos((string)($d['endpoint'] ?? ''), 'api/external/3cx/crm.php') !== false, "HTTP $c");
+       $c === 200 && !empty($d['success']) && ($d['token'] ?? '') === $token && str_contains((string)($d['endpoint'] ?? ''), 'api/external/3cx/crm.php'), "HTTP $c");
     [$c, $d2] = $api($sP, 'GET', null, '?action=get');
     ok('a non-administrator is refused - and never sees the token', ($c === 403 || empty($d2['success'])) && !isset($d2['token']), "HTTP $c");
     [$c, , $raw] = $api($sP, 'GET', null, '?action=export');
-    ok('...nor downloads the template that carries it', strpos($raw, $token) === false, "HTTP $c");
+    ok('...nor downloads the template that carries it', !str_contains($raw, $token), "HTTP $c");
     [$c, , $raw, $type] = $api($sA, 'GET', null, '?action=export&endpoint=' . urlencode('https://desk.example.invalid/api/external/3cx/crm.php'));
-    ok('an administrator downloads the template, as XML, with the address typed on the page', strpos($type, 'xml') !== false
-       && strpos($raw, 'https://desk.example.invalid/api/external/3cx/crm.php') !== false && simplexml_load_string($raw) !== false, "HTTP $c $type");
+    ok('an administrator downloads the template, as XML, with the address typed on the page', str_contains($type, 'xml')
+       && str_contains($raw, 'https://desk.example.invalid/api/external/3cx/crm.php') && simplexml_load_string($raw) !== false, "HTTP $c $type");
     [$c] = $api($sA, 'GET', null, '?action=rotate');
     ok('a rotate sent as a GET (a link) is refused, and the token is unchanged', $c === 405 && threecxToken($conn) === $token, "HTTP $c");
     $set = $d['settings'] ?? [];
@@ -306,13 +306,13 @@ try {
     ok('POSITIVE CONTROL: the page\'s save works', !empty($d3['success']) && $now['ticket_rule'] === 'only_one' && $now['dial_url'] === 'tel:{number}'
        && $now['fallback_analyst_id'] === $back['id'] && phoneDialTemplate($conn) === 'tel:{number}', json_encode($d3));
     [$c, $d4] = $api($sA, 'POST', ['action' => 'save', 'ticket_rule' => 'latest_open', 'dial_url' => 'javascript:alert({number})']);
-    ok('...and a dial address that is not a phone link is refused with a sentence', empty($d4['success']) && strpos((string)($d4['error'] ?? ''), '{number}') !== false, json_encode($d4));
+    ok('...and a dial address that is not a phone link is refused with a sentence', empty($d4['success']) && str_contains((string)($d4['error'] ?? ''), '{number}'), json_encode($d4));
 
     echo "\nTry a call (the page's button)\n";
     $before = (int)$conn->query("SELECT (SELECT COUNT(*) FROM threecx_calls) + (SELECT COUNT(*) FROM ticket_notes) + (SELECT COUNT(*) FROM tickets)")->fetchColumn();
     [$c, $t1] = $api($sA, 'POST', ['action' => 'try', 'number' => $aNum, 'call_type' => 'Inbound', 'agent_email' => $agent['email']]);
     ok('it describes the real decision: the caller, and why it would only be listed ("only one", two open tickets)',
-       !empty($t1['success']) && ($t1['caller']['id'] ?? 0) === $alice && ($t1['action'] ?? '') === 'logged' && strpos((string)$t1['detail'], '2 open') !== false, json_encode($t1));
+       !empty($t1['success']) && ($t1['caller']['id'] ?? 0) === $alice && ($t1['action'] ?? '') === 'logged' && str_contains((string)$t1['detail'], '2 open'), json_encode($t1));
     [$c, $t2] = $api($sA, 'POST', ['action' => 'try', 'number' => $cNum, 'call_type' => 'Inbound', 'agent_email' => 'nobody@example.invalid']);
     ok('...and for a caller with one ticket: noted on it, by the fallback analyst', ($t2['action'] ?? '') === 'noted' && ($t2['author'] ?? '') === 'ZZ Fallback'
        && !empty($t2['ticket_number']), json_encode($t2));

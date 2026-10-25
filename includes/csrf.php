@@ -233,7 +233,7 @@ function csrfRefuse(string $why): void
 {
     http_response_code(403);
     header('X-CSRF-Refused: ' . $why);
-    $wantsJson = strpos(csrfRequestPath(), 'api/') === 0
+    $wantsJson = str_starts_with(csrfRequestPath(), 'api/')
         || stripos((string)($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json') !== false
         || stripos((string)($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json') !== false;
     $msg = $why === 'origin'
@@ -335,7 +335,7 @@ function csrfStartPageInjection(): void
 {
     if (PHP_SAPI === 'cli') return;
     $path = csrfRequestPath();
-    if (strpos($path, 'api/') === 0 || strpos($path, 'cron/') === 0) return;
+    if (str_starts_with($path, 'api/') || str_starts_with($path, 'cron/')) return;
     if (!isset($_SESSION)) return;   // no session, nothing to protect
     $tags = csrfHeadTags();          // create the token NOW, while headers can still be sent
     if ($tags === '') return;
@@ -343,7 +343,7 @@ function csrfStartPageInjection(): void
         foreach (headers_list() as $h) {
             if (stripos($h, 'content-type:') === 0 && stripos($h, 'text/html') === false) return $html;
         }
-        if (strpos($html, 'name="csrf-token"') !== false) return $html;   // already there
+        if (str_contains($html, 'name="csrf-token"')) return $html;   // already there
         $n = 0;
         $out = preg_replace_callback('/<head\b[^>]*>/i', fn($m) => $m[0] . $tags, $html, 1, $n);
         return ($n && $out !== null) ? $out : $html;

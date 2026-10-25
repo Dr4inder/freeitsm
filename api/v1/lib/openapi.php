@@ -307,7 +307,7 @@ function apiV1EndpointErrors(array $ep, array $extras): array {
     if (($ep['perm'] ?? 'none') !== 'none') {
         $add(403, 'The key does not have the ' . $ep['perm'] . ' permission.');
     }
-    if (strpos($ep['p'], '{') !== false) {
+    if (str_contains($ep['p'], '{')) {
         $add(404, $glossary[404]);
     }
     if (in_array($ep['m'], ['POST', 'PATCH'], true)) {

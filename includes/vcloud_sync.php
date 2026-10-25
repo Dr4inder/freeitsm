@@ -473,7 +473,7 @@ function vcdSaveConnection(PDO $conn, array $in): int
     if ($org === '' || mb_strlen($org) > 100) {
         throw new Exception('The organization is required. Use the organization name, or System for a provider administrator.');
     }
-    if ($username === '' || mb_strlen($username) > 100 || strpos($username, ':') !== false) {
+    if ($username === '' || mb_strlen($username) > 100 || str_contains($username, ':')) {
         throw new Exception('A user name is required (without a colon).');
     }
     if (!preg_match('/^\d+\.\d+$/', $version)) {

@@ -70,7 +70,7 @@ $pageData    = $pageData ?? [];
         'show_my_assets'   => !empty($ssAppearance['show_my_assets']),
     ]); ?>;</script>
     <?php if ($pageScripts !== ''): ?>
-    <?php if (strpos($pageScripts, '<?php') !== false): ?>
+    <?php if (str_contains($pageScripts, '<?php')): ?>
     <?php /* Fail LOUD. A PHP tag in here never ran (see the note above) and would
              otherwise take the page's entire script block down with a syntax error
              that says nothing about the cause. */ ?>

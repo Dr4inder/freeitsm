@@ -510,5 +510,5 @@ function domainTransferLockNotApplicable(string $name): bool
 function domainTldPublishesAllStatuses(string $name): bool
 {
     $tld = strtolower(domainTld(trim($name)));
-    return $tld !== '' && strpos($name, '.') !== false && strlen($tld) > 2 && strpos($tld, 'xn--') !== 0;
+    return $tld !== '' && str_contains($name, '.') && strlen($tld) > 2 && !str_starts_with($tld, 'xn--');
 }

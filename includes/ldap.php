@@ -322,7 +322,7 @@ function ldapAuthenticate(array $provider, string $login, string $password): arr
     // password of non-zero length, the directory checks it properly, and
     // silently trimming would mean rejecting a password some directory might
     // legitimately hold.
-    if ($password === '' || strpos($password, "\0") !== false) {
+    if ($password === '' || str_contains($password, "\0")) {
         return ['ok' => false, 'reason' => 'credentials', 'error' => 'A password is required.'];
     }
     if ($login === '') {
@@ -479,7 +479,7 @@ function ldapPortalProviders(PDO $conn, ?string $identifier = null): array {
         } else {
             $tenantId = null;
             $addr = strtolower(trim((string)$identifier));
-            if ($addr !== '' && strpos($addr, '@') !== false) {
+            if ($addr !== '' && str_contains($addr, '@')) {
                 $tenantId = resolveTenantIdForAddress($conn, $addr);
             }
 

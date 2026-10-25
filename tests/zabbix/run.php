@@ -64,7 +64,7 @@ function zbx(string $method, array $params) {
 function push(string $host, int $value): void {
     global $CONTAINER;
     $out = shell_exec('docker exec ' . escapeshellarg($CONTAINER) . ' zabbix_sender -z 127.0.0.1 -s ' . escapeshellarg($host) . ' -k zz.disk -o ' . $value . ' 2>&1');
-    if (strpos((string)$out, 'processed: 1') === false) throw new RuntimeException("zabbix_sender: $out");
+    if (!str_contains((string)$out, 'processed: 1')) throw new RuntimeException("zabbix_sender: $out");
 }
 /** Waits (up to $secs) for FreeITSM to log an event of this action for this host. */
 function waitFor(PDO $conn, string $host, string $action, int $secs = 90): ?array {
@@ -126,8 +126,8 @@ try {
     @unlink("$dir/sess_$sid");
     $headers = substr($resp, 0, $hsz); $yaml = substr($resp, $hsz);
     ok('the settings page\'s download is a Zabbix import file, offered as a download',
-       strpos($yaml, "zabbix_export:\n  version: '7.0'") === 0 && stripos($headers, 'attachment; filename="freeitsm_zabbix_media_type.yaml"') !== false, substr($yaml, 0, 80));
-    ok('...carrying this install\'s token and the address given', strpos($yaml, "value: '$token'") !== false && strpos($yaml, "value: '$ENDPOINT'") !== false);
+       str_starts_with($yaml, "zabbix_export:\n  version: '7.0'") && stripos($headers, 'attachment; filename="freeitsm_zabbix_media_type.yaml"') !== false, substr($yaml, 0, 80));
+    ok('...carrying this install\'s token and the address given', str_contains($yaml, "value: '$token'") && str_contains($yaml, "value: '$ENDPOINT'"));
     $yaml = str_replace("    - name: FreeITSM\n", "    - name: 'FreeITSM $tag'\n", $yaml);
     zbx('configuration.import', ['format' => 'yaml', 'source' => $yaml, 'rules' => ['mediaTypes' => ['createMissing' => true, 'updateExisting' => false]]]);
     $mt = zbx('mediatype.get', ['filter' => ['name' => "FreeITSM $tag"], 'output' => ['mediatypeid', 'status', 'type', 'parameters'],   // 7.0: parameters is a field, not a select
@@ -174,7 +174,7 @@ try {
         $t->execute([$made['cmdb'], $made['ticket']]); $row = $t->fetch(PDO::FETCH_ASSOC);
         ok('...at the Disaster priority, linked to the CMDB item', (int)$row['priority_id'] === (int)zabbixSettings($conn)['priority_map'][5] && (int)$row['linked'] === 1, json_encode($row));
         $b = $conn->prepare("SELECT body_content FROM emails WHERE ticket_id = ? ORDER BY id LIMIT 1"); $b->execute([$made['ticket']]);
-        ok('...carrying the media type\'s message (the {ALERT.MESSAGE} macro resolved)', strpos((string)$b->fetchColumn(), 'Problem started at') !== false);   // the imported problem template
+        ok('...carrying the media type\'s message (the {ALERT.MESSAGE} macro resolved)', str_contains((string)$b->fetchColumn(), 'Problem started at'));   // the imported problem template
 
         echo "\nAn update (an acknowledgement in Zabbix)\n";
         zbx('event.acknowledge', ['eventids' => [$ev['problem_id']], 'action' => 4, 'message' => "ZZ looking at it $tag"]);
