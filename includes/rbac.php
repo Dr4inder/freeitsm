@@ -141,16 +141,43 @@ function analystMayAct(PDO $conn, int $analystId, Cap $capability): bool {
 }
 
 /**
+ * End the request with a JSON refusal. The guards below all refuse this way.
+ *
+ * `never` (4.0): it does not return, and PHP now holds it to that - until 4.0 each
+ * guard repeated these lines and declared `void`, which a reader could take to mean
+ * the request carries on.
+ *
+ * @param int $status  the HTTP status, 401 or 403
+ * @param string $error  the message for the caller
+ * @param string|null $code  a machine-readable code, when the caller has one
+ */
+function rbacRefuseJson(int $status, string $error, ?string $code = null): never {
+    http_response_code($status);
+    header('Content-Type: application/json');
+    $body = ['success' => false, 'error' => $error];
+    if ($code !== null) $body['code'] = $code;
+    echo json_encode($body);
+    exit;
+}
+
+/**
+ * End the request by sending the browser somewhere else - the page twin of rbacRefuseJson().
+ *
+ * @param string $location  where to send the browser
+ */
+function rbacRefusePage(string $location): never {
+    header('Location: ' . $location);
+    exit;
+}
+
+/**
  * JSON gate for an everyday-work action: 403 unless analystMayAct().
  *
  * @param Cap $capability  an everyday-work capability
  */
 function requireActionJson(Cap $capability, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
-        http_response_code(401);
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'error' => 'Not authenticated']);
-        exit;
+        rbacRefuseJson(401, 'Not authenticated');
     }
     try {
         if ($conn === null) $conn = connectToDatabase();
@@ -159,10 +186,7 @@ function requireActionJson(Cap $capability, ?PDO $conn = null): void {
         $ok = false;
     }
     if (!$ok) {
-        http_response_code(403);
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'error' => 'You do not have permission to do this', 'code' => 'forbidden']);
-        exit;
+        rbacRefuseJson(403, 'You do not have permission to do this', 'forbidden');
     }
 }
 
@@ -177,8 +201,7 @@ function requireActionJson(Cap $capability, ?PDO $conn = null): void {
  */
 function requireCapability(Cap $capability, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
-        header('Location: ' . BASE_URL . 'auth/login.php');
-        exit;
+        rbacRefusePage(BASE_URL . 'auth/login.php');
     }
     try {
         if ($conn === null) $conn = connectToDatabase();
@@ -187,8 +210,7 @@ function requireCapability(Cap $capability, ?PDO $conn = null): void {
         $ok = false;
     }
     if (!$ok) {
-        header('Location: ' . BASE_URL . '?denied=' . urlencode($capability->value));
-        exit;
+        rbacRefusePage(BASE_URL . '?denied=' . urlencode($capability->value));
     }
 }
 
@@ -200,10 +222,7 @@ function requireCapability(Cap $capability, ?PDO $conn = null): void {
  */
 function requireCapabilityJson(Cap $capability, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
-        http_response_code(401);
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'error' => 'Not authenticated']);
-        exit;
+        rbacRefuseJson(401, 'Not authenticated');
     }
     try {
         if ($conn === null) $conn = connectToDatabase();
@@ -212,9 +231,6 @@ function requireCapabilityJson(Cap $capability, ?PDO $conn = null): void {
         $ok = false;
     }
     if (!$ok) {
-        http_response_code(403);
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'error' => 'You do not have permission to manage these settings']);
-        exit;
+        rbacRefuseJson(403, 'You do not have permission to manage these settings');
     }
 }

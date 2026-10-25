@@ -46,7 +46,7 @@ function filesApiBody(): array
  *
  * @param array $data  extra keys merged into the reply beside success
  */
-function filesApiOk(array $data = []): void
+function filesApiOk(array $data = []): never
 {
     echo json_encode(['success' => true] + $data);
     exit;
@@ -60,7 +60,7 @@ function filesApiOk(array $data = []): void
  * @param int $status      the HTTP status; 200 (the default) leaves it unchanged
  * @param array $extra     extra keys merged into the reply beside success and error
  */
-function filesApiFail(string $message, int $status = 200, array $extra = []): void
+function filesApiFail(string $message, int $status = 200, array $extra = []): never
 {
     if ($status !== 200) http_response_code($status);
     echo json_encode(['success' => false, 'error' => $message] + $extra);

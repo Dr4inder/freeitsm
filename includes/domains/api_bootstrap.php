@@ -45,7 +45,7 @@ function domainApiBody(): array
  *
  * @param array $data  extra keys to send alongside success
  */
-function domainApiOk(array $data = []): void
+function domainApiOk(array $data = []): never
 {
     echo json_encode(['success' => true] + $data);
     exit;
@@ -57,7 +57,7 @@ function domainApiOk(array $data = []): void
  * @param string $message  the error text, shown to the user as it stands
  * @param int    $status   HTTP status code; 200 leaves the status alone
  */
-function domainApiFail(string $message, int $status = 200): void
+function domainApiFail(string $message, int $status = 200): never
 {
     if ($status !== 200) http_response_code($status);
     echo json_encode(['success' => false, 'error' => $message]);
