@@ -161,7 +161,7 @@ function catalogueApprovalDecide(PDO $conn, int $actorId, int $submissionId, str
                     'fields' => $answers['fields'],
                 ],
             ]);
-        } catch (Exception $e) { /* notification is a bonus, not the mechanism */ }
+        } catch (Exception) { /* notification is a bonus, not the mechanism */ }
     }
 
     // The form's own list for this decision. After the commit, so nothing it does
@@ -607,7 +607,7 @@ function catalogueApproverCanEnter(PDO $conn, int $analystId): bool {
         );
         $st->execute([$analystId, $analystId]);
         return (bool)$st->fetchColumn();
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return false;
     }
 }

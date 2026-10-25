@@ -168,7 +168,7 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
             foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) {
                 if ($r['setting_value'] !== null && $r['setting_value'] !== '') $out[$r['setting_key']] = (string)$r['setting_value'];
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // Before Database Verification: the defaults.
         }
         return $cache = $out;
@@ -422,7 +422,7 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
         try {
             require_once __DIR__ . '/../rbac.php';
             return analystHasCapability($conn, $analystId, Cap::PROJECTS_MANAGE);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return false;
         }
     }
@@ -453,7 +453,7 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
                                    WHERE m.project_id = ? AND (m.analyst_id = ? OR at.analyst_id IS NOT NULL) LIMIT 1");
             $st->execute([$analystId, (int)$project['id'], $analystId]);
             return (bool)$st->fetchColumn();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return false;
         }
     }

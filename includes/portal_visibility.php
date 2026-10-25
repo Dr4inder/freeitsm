@@ -78,7 +78,7 @@ function portalThirdPartyPolicy(PDO $conn): string {
         $stmt->execute();
         $val = $stmt->fetchColumn();
         $cached = ($val !== false && in_array($val, $valid, true)) ? $val : PORTAL_THIRD_PARTY_HIDE;
-    } catch (Exception $e) {
+    } catch (Exception) {
         $cached = PORTAL_THIRD_PARTY_HIDE;   // unreadable settings → protect.
     }
     return $cached;

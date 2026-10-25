@@ -622,7 +622,7 @@ class WorkflowEngine
                     'markdown_hint' => $r['markdown_hint'] !== null ? (string)$r['markdown_hint'] : null,
                 ];
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Table not created yet (pre-Database-Verify), or unreadable.
             // The built-ins above already cover Slack / Teams / Discord.
         }
@@ -710,7 +710,7 @@ class WorkflowEngine
                     $stmt->execute([(int)$id]);
                     $v = $stmt->fetchColumn();
                     $cache[$key] = ($v === false || $v === null) ? null : (string)$v;
-                } catch (Exception $e) {
+                } catch (Exception) {
                     $cache[$key] = null;
                 }
             }
@@ -757,7 +757,7 @@ class WorkflowEngine
         require_once dirname(__DIR__, 2) . '/includes/public_url.php';
         try {
             $root = rtrim(publicBaseUrl($conn), '/') . '/';
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return $payload;   // a missing link must never break a run
         }
         if (self::dotGet($payload, 'app.url') === null) self::dotSet($payload, 'app.url', $root);
@@ -812,7 +812,7 @@ class WorkflowEngine
             $stmt->execute([$id]);
             $v = $stmt->fetchColumn();
             $cache[$key] = ($v === false || $v === null) ? null : (string)$v;
-        } catch (Exception $e) {
+        } catch (Exception) {
             $cache[$key] = null;   // a missing lookup table must never break a run
         }
         return $cache[$key];
@@ -1270,7 +1270,7 @@ class WorkflowEngine
                 fn($r) => ['id' => (string)$r['id'], 'label' => (string)$r['label']],
                 $rows
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             return null;
         }
     }
@@ -3232,7 +3232,7 @@ class WorkflowEngine
             try {
                 $full = $loader((int)$payload[$key]['id']);
                 if ($full) $payload[$key]['full'] = $full;
-            } catch (Throwable $e) { /* full object is best-effort */ }
+            } catch (Throwable) { /* full object is best-effort */ }
         }
         return $payload;
     }

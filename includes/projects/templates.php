@@ -49,7 +49,7 @@ function projectGateKindReady(PDO $conn): bool
 {
     static $ready = null;
     if ($ready === null) {
-        try { $conn->query("SELECT gate_kind FROM project_stages LIMIT 0"); $ready = true; } catch (Throwable $e) { $ready = false; }
+        try { $conn->query("SELECT gate_kind FROM project_stages LIMIT 0"); $ready = true; } catch (Throwable) { $ready = false; }
     }
     return $ready;
 }
@@ -59,7 +59,7 @@ function projectTemplatesReady(PDO $conn): bool
 {
     static $ready = null;
     if ($ready === null) {
-        try { $conn->query("SELECT 1 FROM project_templates LIMIT 0"); $ready = true; } catch (Throwable $e) { $ready = false; }
+        try { $conn->query("SELECT 1 FROM project_templates LIMIT 0"); $ready = true; } catch (Throwable) { $ready = false; }
     }
     return $ready;
 }

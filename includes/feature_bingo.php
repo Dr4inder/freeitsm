@@ -228,7 +228,7 @@ function featureBingoDismissed(PDO $conn): array
 {
     try {
         return array_fill_keys($conn->query("SELECT card_id FROM feature_bingo_dismissed")->fetchAll(PDO::FETCH_COLUMN), true);
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return [];   // before Database Verification: nothing dismissed
     }
 }
@@ -258,7 +258,7 @@ function featureBingoEvaluate(PDO $conn): array
 function featureBingoReady(PDO $conn): bool
 {
     try { $conn->query("SELECT card_id FROM feature_bingo_dismissed LIMIT 0"); return true; }
-    catch (Throwable $e) { return false; }
+    catch (Throwable) { return false; }
 }
 
 /**

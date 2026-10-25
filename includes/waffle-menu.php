@@ -807,7 +807,7 @@ function renderWaffleMenuJS() {
                     $desktopNotif = $row['preference_value'];
                 }
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Defaults stand
         }
     }
@@ -1292,7 +1292,7 @@ function renderWarRoomAlerts($path_prefix) {
         );
         $__s->execute([':a' => (int) $_SESSION['analyst_id']]);
         $__wraDesktop = ((string) $__s->fetchColumn()) === '1';
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         $__wraDesktop = false;              // fail quiet, never noisy
     }
     ?>
@@ -1535,7 +1535,7 @@ function renderHeaderRight($analyst_name, $path_prefix) {
             );
             $__pa->execute([$_SESSION['analyst_email']]);
             $__portalAccount = (bool)$__pa->fetchColumn();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $__portalAccount = false;
         }
     }
@@ -1553,7 +1553,7 @@ function renderHeaderRight($analyst_name, $path_prefix) {
             ob_start();
             renderTenantSwitcher(connectToDatabase(), (int) $_SESSION['analyst_id']);
             $__tenantSwitcherHtml = ob_get_clean();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $__tenantSwitcherHtml = '';
         }
     }
@@ -1931,7 +1931,7 @@ function renderHeaderRight($analyst_name, $path_prefix) {
 
     <div class="header-right">
         <?php // The "Back to ..." link (3.5.0) - System -> Branding. Nothing unless set up.
-        try { if (!function_exists('connectToDatabase')) require_once __DIR__ . '/functions.php'; require_once __DIR__ . '/back_link.php'; echo backLinkHtml(connectToDatabase(), 'analyst'); } catch (Throwable $e) {} ?>
+        try { if (!function_exists('connectToDatabase')) require_once __DIR__ . '/functions.php'; require_once __DIR__ . '/back_link.php'; echo backLinkHtml(connectToDatabase(), 'analyst'); } catch (Throwable) {} ?>
         <?php echo $__tenantSwitcherHtml; ?>
         <?php renderNotificationBell($path_prefix); ?>
         <?php renderWarRoomAlerts($path_prefix); ?>

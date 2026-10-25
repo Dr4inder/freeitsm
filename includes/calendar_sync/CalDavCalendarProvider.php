@@ -659,7 +659,7 @@ class CalDavCalendarProvider extends CalendarSyncProvider
                 $dt   = clone $start['dt'];
                 $neg ? $dt->sub($iv) : $dt->add($iv);
                 $end = ['dt' => $dt, 'date_only' => $allDay];
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $end = null;
             }
         }
@@ -720,7 +720,7 @@ class CalDavCalendarProvider extends CalendarSyncProvider
         } elseif (!empty($params['TZID'])) {
             try {
                 $zone = new DateTimeZone(ltrim($params['TZID'], '/'));
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $zone = $local;
             }
         }
@@ -762,7 +762,7 @@ class CalDavCalendarProvider extends CalendarSyncProvider
     {
         try {
             return $this->checkCalendar($calendarAddress)['ok'];
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }

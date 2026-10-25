@@ -132,7 +132,7 @@ function proxmoxTryGet(array $c, array $auth, string $path)
 {
     try {
         return proxmoxCall($c, 'GET', '/api2/json' . $path, null, $auth)['data'] ?? null;
-    } catch (Exception $e) {
+    } catch (Exception) {
         return null;
     }
 }

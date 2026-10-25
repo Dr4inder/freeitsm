@@ -289,7 +289,7 @@ final class AssetReviewService
         static $ready = null;
         if ($ready === null) {
             try { $conn->query('SELECT 1 FROM asset_review_items LIMIT 0'); $ready = true; }
-            catch (Throwable $e) { $ready = false; }
+            catch (Throwable) { $ready = false; }
         }
         return $ready;
     }

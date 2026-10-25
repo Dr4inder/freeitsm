@@ -51,7 +51,7 @@ function tenantSetting(PDO $conn, ?int $tenantId, string $key, ?string $default 
                 $row = $st->fetchColumn();
                 if ($row !== false) $value = (string) $row;
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // Table absent on a part-migrated install: fall through to the
             // install-wide value rather than failing the page.
         }
@@ -64,7 +64,7 @@ function tenantSetting(PDO $conn, ?int $tenantId, string $key, ?string $default 
             $st->execute([$key]);
             $row = $st->fetchColumn();
             if ($row !== false) $value = (string) $row;
-        } catch (Throwable $e) { /* fall through */ }
+        } catch (Throwable) { /* fall through */ }
     }
 
     // 3. The caller's default.
@@ -148,7 +148,7 @@ function tenantSettingsForKey(PDO $conn, string $key): array
         foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) {
             $out[(int) $r['tenant_id']] = (string) $r['setting_value'];
         }
-    } catch (Throwable $e) { /* table absent — everyone follows the default */ }
+    } catch (Throwable) { /* table absent — everyone follows the default */ }
     return $out;
 }
 
@@ -286,7 +286,7 @@ function ticketTenantId(PDO $conn, int $ticketId): ?int
         $st->execute([$ticketId]);
         $v = $st->fetchColumn();
         return ($v === false || $v === null) ? null : (int) $v;
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return null;
     }
 }

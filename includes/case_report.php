@@ -453,7 +453,7 @@ final class CaseReport
                     $e = $conn->prepare("SELECT event_type, actor_name, from_value, to_value, created_datetime FROM task_events WHERE task_id = ? ORDER BY id");
                     $e->execute([$taskId]);
                     foreach ($e->fetchAll(PDO::FETCH_ASSOC) as $x) $rows[] = ['kind' => 'event'] + $x;
-                } catch (Throwable $ex) { /* task_events only exists once #181's Database Verification has run */ }
+                } catch (Throwable) { /* task_events only exists once #181's Database Verification has run */ }
                 usort($rows, fn($a, $b) => strcmp((string)$a['created_datetime'], (string)$b['created_datetime']));
                 return $rows;
             }, []);

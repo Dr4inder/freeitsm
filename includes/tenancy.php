@@ -221,7 +221,7 @@ function getAccessibleTenantIds(PDO $conn, int $analystId): array {
         if ($stmt->fetchColumn()) {
             return $cache[$analystId] = $allTenantIds();
         }
-    } catch (Exception $e) { /* column not migrated yet — ignore team all-access */ }
+    } catch (Exception) { /* column not migrated yet — ignore team all-access */ }
 
     // Otherwise: the analyst's own granted tenants, unioned with the specific
     // companies granted by any team they belong to.
@@ -235,7 +235,7 @@ function getAccessibleTenantIds(PDO $conn, int $analystId): array {
         );
         $stmt->execute([':aid' => $analystId]);
         return $cache[$analystId] = array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN));
-    } catch (Exception $e) {
+    } catch (Exception) {
         // team_tenant_access not migrated yet — fall back to analyst-only grants.
         $stmt = $conn->prepare("SELECT tenant_id FROM analyst_tenant_access WHERE analyst_id = ?");
         $stmt->execute([$analystId]);
@@ -1077,7 +1077,7 @@ function resolveTenantForNewUser(PDO $conn, string $email): ?int {
     // Freemail is never mapped by domain — see (3) above.
     try {
         if (isFreemailDomain($conn, $domain)) return null;
-    } catch (Exception $e) {
+    } catch (Exception) {
         return null;   // can't prove it's safe → don't guess.
     }
 
@@ -1086,7 +1086,7 @@ function resolveTenantForNewUser(PDO $conn, string $email): ?int {
         $stmt->execute([$domain]);
         $val = $stmt->fetchColumn();
         if ($val !== false && $val !== null) return (int) $val;
-    } catch (Exception $e) { /* table missing → no answer */ }
+    } catch (Exception) { /* table missing → no answer */ }
 
     return null;
 }
@@ -1135,7 +1135,7 @@ function resolveTicketTenantForEmail(PDO $conn, $mailboxId, string $fromAddress)
             if ($val !== false && $val !== null) {
                 return (int) $val;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // tenant_id column missing on a part-migrated install → treat as shared.
         }
     }
@@ -1152,7 +1152,7 @@ function resolveTicketTenantForEmail(PDO $conn, $mailboxId, string $fromAddress)
             if ($val !== false && $val !== null) {
                 return (int) $val;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // tenant_sender_addresses missing → fall through to domain routing.
         }
     }
@@ -1170,7 +1170,7 @@ function resolveTicketTenantForEmail(PDO $conn, $mailboxId, string $fromAddress)
             if ($val !== false && $val !== null) {
                 return (int) $val;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // tenant_domains missing → fall through to triage.
         }
     }
@@ -1211,7 +1211,7 @@ function resolveTicketTenantForChannel(PDO $conn, $channelId, string $fromIdenti
             if ($val !== false && $val !== null) {
                 return (int) $val;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // tenant_id column missing on a part-migrated install → treat as shared.
         }
     }
@@ -1226,7 +1226,7 @@ function resolveTicketTenantForChannel(PDO $conn, $channelId, string $fromIdenti
             if ($val !== false && $val !== null) {
                 return (int) $val;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // table missing → fall through to triage.
         }
     }
@@ -1255,7 +1255,7 @@ function resolveTenantIdForAddress(PDO $conn, string $email): ?int {
         $stmt->execute([$addr]);
         $val = $stmt->fetchColumn();
         if ($val !== false && $val !== null) return (int) $val;
-    } catch (Exception $e) { /* table missing → fall through */ }
+    } catch (Exception) { /* table missing → fall through */ }
 
     // (2) Registered domain → tenant.
     $domain = strtolower(trim(substr(strrchr($addr, '@'), 1)));
@@ -1265,7 +1265,7 @@ function resolveTenantIdForAddress(PDO $conn, string $email): ?int {
             $stmt->execute([$domain]);
             $val = $stmt->fetchColumn();
             if ($val !== false && $val !== null) return (int) $val;
-        } catch (Exception $e) { /* table missing → fall through */ }
+        } catch (Exception) { /* table missing → fall through */ }
     }
 
     return null;
@@ -1301,7 +1301,7 @@ function getCustomFreemailDomains(PDO $conn): array {
                 $d = strtolower(trim($row['domain']));
                 if ($d !== '') $cache[] = $d;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $cache = [];
         }
     }
@@ -1409,7 +1409,7 @@ function getTenantConfigRows(PDO $conn, string $table, string $entityType, int $
     if (!isMultiTenant($conn)) {
         try {
             return $conn->query("SELECT $cols FROM $table$tail")->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return [];
         }
     }
@@ -1427,11 +1427,11 @@ function getTenantConfigRows(PDO $conn, string $table, string $entityType, int $
         $stmt = $conn->prepare($sql);
         $stmt->execute([$tenantId, $entityType, $tenantId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
+    } catch (Exception) {
         // Part-migrated (no tenant_id column / no hidden table) → fall back to all.
         try {
             return $conn->query("SELECT $cols FROM $table$tail")->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e2) {
+        } catch (Exception) {
             return [];
         }
     }

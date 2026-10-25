@@ -354,7 +354,7 @@ function analystLcColumnExists(PDO $conn, string $table, string $col): bool {
     if (!array_key_exists($k, $cache)) {
         try {
             $cache[$k] = (bool) $conn->query("SHOW COLUMNS FROM `$table` LIKE " . $conn->quote($col))->fetch();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $cache[$k] = false;
         }
     }
@@ -375,7 +375,7 @@ function analystLcCount(PDO $conn, array $ref, int $analystId): int {
         $st = $conn->prepare("SELECT COUNT(*) FROM `$table` WHERE $where");
         $st->execute([$analystId]);
         return (int) $st->fetchColumn();
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return 0;   // a column the extraWhere needs is absent on this install
     }
 }
@@ -427,7 +427,7 @@ function analystLcIds(PDO $conn, array $ref, int $analystId): array {
         $st = $conn->prepare("SELECT id FROM `$table` WHERE $where");
         $st->execute([$analystId]);
         return array_map('intval', $st->fetchAll(PDO::FETCH_COLUMN));
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return [];
     }
 }

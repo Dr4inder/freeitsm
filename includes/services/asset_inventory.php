@@ -288,7 +288,7 @@ final class AssetInventoryService
                 $del = $conn->prepare('DELETE FROM asset_connections WHERE asset_id = ? AND source = ?');
                 $del->execute([$assetId, self::storedSource($source)]);
                 $removed['connections'] = $del->rowCount();
-            } catch (PDOException $e) {
+            } catch (PDOException) {
                 // asset_connections before Database Verification: there are none.
             }
             $conn->prepare('DELETE FROM asset_inventory_sections WHERE inventory_source_id = ?')->execute([$binding['id']]);
@@ -356,7 +356,7 @@ final class AssetInventoryService
             $st = $conn->prepare('SELECT setting_value FROM system_settings WHERE setting_key = ?');
             $st->execute([self::STALE_SETTING]);
             $days = (int)$st->fetchColumn();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $days = 0;
         }
         return $days >= 1 && $days <= 365 ? $days : 7;
@@ -371,7 +371,7 @@ final class AssetInventoryService
         static $has = null;
         if ($has === null) {
             try { $has = (bool)$conn->query("SHOW COLUMNS FROM asset_inventory_sections LIKE 'last_outcome'")->fetch(); }
-            catch (Throwable $e) { $has = false; }
+            catch (Throwable) { $has = false; }
         }
         return $has;
     }
@@ -394,7 +394,7 @@ final class AssetInventoryService
             self::invalid('observed_at must be an RFC3339 timestamp with seconds and an explicit timezone.');
         }
         try { $date = new DateTimeImmutable($stamp); }
-        catch (Exception $e) { self::invalid('Invalid observed_at.'); }
+        catch (Exception) { self::invalid('Invalid observed_at.'); }
         $errors = DateTimeImmutable::getLastErrors();
         if (($errors && ($errors['warning_count'] || $errors['error_count'])) || $date->getTimestamp() > time() + 300
             || (int)$date->format('Y') < 1000) { self::invalid('observed_at must be a valid observation, at most five minutes in the future.'); }

@@ -104,7 +104,7 @@ class TeamsProvider extends MessagingProvider
         JWT::$leeway = 300;
         try {
             $claims = (array)JWT::decode(trim(substr($auth, 7)), JWK::parseKeySet(['keys' => $keys], 'RS256'));
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return false;   // bad signature, unknown key, expired, not yet valid
         } finally {
             JWT::$leeway = $leeway;

@@ -267,7 +267,7 @@ function ingestInboundMessage(PDO $conn, array $channel, array $msg): array
     try {
         $conn->prepare("UPDATE messaging_channels SET last_inbound_datetime = UTC_TIMESTAMP() WHERE id = ?")
              ->execute([(int) $channel['id']]);
-    } catch (Exception $e) { /* non-fatal */ }
+    } catch (Exception) { /* non-fatal */ }
 
     return ['status' => $isInitial ? 'created' : 'appended', 'ticket_id' => (int) $ticketId];
 }
@@ -387,7 +387,7 @@ function resolveSlackRequester(PDO $conn, array $channel, string $slackUserId): 
                 "UPDATE users SET display_name = ? WHERE id = ? AND display_name = ?"
             );
             $upd->execute([$displayName, $userId, $fallbackName]);
-        } catch (Exception $e) { /* cosmetic — never worth failing the ticket */ }
+        } catch (Exception) { /* cosmetic — never worth failing the ticket */ }
     }
 
     return [$userId, $displayName];
@@ -419,7 +419,7 @@ function messagingKnownPersonByEmail(PDO $conn, string $email, string $name): ?a
             $known = trim((string) ($row['display_name'] ?? ''));
             return [(int) $row['id'], $known !== '' ? $known : ($name !== '' ? $name : $email)];
         }
-    } catch (Exception $e) { /* the caller falls back to a contact of its own */ }
+    } catch (Exception) { /* the caller falls back to a contact of its own */ }
     return null;
 }
 
@@ -476,7 +476,7 @@ function resolveDirectoryRequester(PDO $conn, array $channel, array $msg, string
         try {
             $conn->prepare("UPDATE users SET display_name = ? WHERE id = ? AND display_name = ?")
                  ->execute([$name, $userId, $from]);
-        } catch (Exception $e) { /* cosmetic */ }
+        } catch (Exception) { /* cosmetic */ }
     }
     return [$userId, $label];
 }
@@ -527,7 +527,7 @@ function messagingIdentityLinksReady(PDO $conn): bool
     if ($ready === null) {
         try {
             $ready = (bool) $conn->query("SHOW COLUMNS FROM messaging_identity_links LIKE 'channel_id'")->fetch();
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             $ready = false;
         }
     }
@@ -643,7 +643,7 @@ function messagingTelegramResolveIdentity(PDO $conn, array $channel, string $cha
             try {
                 $conn->prepare("UPDATE messaging_identity_links SET locale = ? WHERE channel_id = ? AND external_id = ?")
                      ->execute([$locale, $channelId, $chatId]);
-            } catch (Exception $e) { /* cosmetic - never worth failing ingest over */ }
+            } catch (Exception) { /* cosmetic - never worth failing ingest over */ }
         }
     }
 
@@ -966,7 +966,7 @@ function getOrCreateChannelUser(PDO $conn, string $from, string $displayName, st
         $ins = $conn->prepare("INSERT INTO users (email, display_name, created_at) VALUES (?, ?, UTC_TIMESTAMP())");
         $ins->execute([$pseudoEmail, $displayName !== '' ? $displayName : $from]);
         return (int) $conn->lastInsertId();
-    } catch (Exception $e) {
+    } catch (Exception) {
         // users table shape differs / unavailable → leave the ticket requester unset.
         return null;
     }
@@ -985,7 +985,7 @@ function getChannelOriginId(PDO $conn, string $channelType): ?int
         $stmt->execute([$name]);
         $id = $stmt->fetchColumn();
         return $id ? (int) $id : null;
-    } catch (Exception $e) {
+    } catch (Exception) {
         return null;
     }
 }

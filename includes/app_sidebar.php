@@ -62,7 +62,7 @@ function appSidebarPrefs(): array
         if (isset($rows['app_sidebar_modules']) && $rows['app_sidebar_modules'] !== '') {
             $memo['modules'] = displayOrderParse($rows['app_sidebar_modules']);
         }
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         // No preferences table yet: no sidebar.
     }
     return $memo;

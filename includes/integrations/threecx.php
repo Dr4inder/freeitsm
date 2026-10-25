@@ -51,7 +51,7 @@ const THREECX_PLACEHOLDER_DOMAIN = 'phone.invalid';
 function threecxReady(PDO $conn): bool
 {
     try { $conn->query("SELECT 1 FROM threecx_calls LIMIT 1"); return true; }
-    catch (Exception $e) { return false; }
+    catch (Exception) { return false; }
 }
 
 /** One system_settings value, or $default when it was never saved. */
@@ -488,7 +488,7 @@ function threecxHandleCall(PDO $conn, array $p): array
         return ['ok' => true, 'action' => 'logged', 'ticket_id' => null];
     } catch (Throwable $ex) {
         error_log('3CX call: ' . $ex->getMessage());
-        try { threecxLog($conn, $key, $c, $plan + ['author' => null, 'caller' => null], null, 'error', $ex->getMessage()); } catch (Throwable $ignored) {}
+        try { threecxLog($conn, $key, $c, $plan + ['author' => null, 'caller' => null], null, 'error', $ex->getMessage()); } catch (Throwable) {}
         return ['ok' => false, 'action' => 'error', 'ticket_id' => null, 'error' => 'Could not log the call'];
     } finally {
         $conn->query("SELECT RELEASE_LOCK(" . $conn->quote($lock) . ")");

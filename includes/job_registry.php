@@ -88,7 +88,7 @@ function jobSetting(PDO $conn, string $key): string
         $s->execute([$key]);
         $v = $s->fetchColumn();
         return $v === false || $v === null ? '' : (string)$v;
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return '';
     }
 }

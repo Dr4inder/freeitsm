@@ -323,7 +323,7 @@ class SlackProvider extends MessagingProvider
     {
         try {
             return (string) ($this->call('auth.test')['user_id'] ?? '');
-        } catch (Exception $e) {
+        } catch (Exception) {
             return '';
         }
     }
@@ -345,7 +345,7 @@ class SlackProvider extends MessagingProvider
     {
         try {
             $this->call('auth.test');
-        } catch (Exception $e) {
+        } catch (Exception) {
             return [];
         }
         if ($this->lastScopes === null || $this->lastScopes === '') {

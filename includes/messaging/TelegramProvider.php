@@ -582,7 +582,7 @@ class TelegramProvider extends MessagingProvider
                     $result .= ' This bot was connected by an older version, so rating buttons will not respond - press Connect again to fix it.';
                 }
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // The check is advice; the connection itself has already succeeded.
         }
         return $result;

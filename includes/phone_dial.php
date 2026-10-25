@@ -39,7 +39,7 @@ function phoneDialTemplate(PDO $conn): string
         $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'phone_dial_url'");
         $s->execute();
         $tpl = (string)($s->fetchColumn() ?: '');
-    } catch (Exception $e) {
+    } catch (Exception) {
         return '';
     }
     return phoneDialTemplateValid($tpl) ? $tpl : '';

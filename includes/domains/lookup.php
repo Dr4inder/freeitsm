@@ -93,7 +93,7 @@ function domainRdapBootstrap(PDO $conn): array
             if ($k === 'domain_rdap_bootstrap') $cached = json_decode((string)$v, true);
             if ($k === 'domain_rdap_bootstrap_at') $cachedAt = (int)$v;
         }
-    } catch (Throwable $e) {}
+    } catch (Throwable) {}
 
     if (is_array($cached) && $cached && (time() - $cachedAt) < 7 * 86400) {
         return $map = $cached;
@@ -117,7 +117,7 @@ function domainRdapBootstrap(PDO $conn): array
                                     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_datetime = UTC_TIMESTAMP()")
                          ->execute([$k, $v]);
                 }
-            } catch (Throwable $e) {}
+            } catch (Throwable) {}
             return $map = $fresh;
         }
     }
@@ -372,7 +372,7 @@ function domainWhoisServer(PDO $conn, string $tld): ?string
     try {
         $v = $conn->query("SELECT setting_value FROM system_settings WHERE setting_key = 'domain_whois_servers'")->fetchColumn();
         $map = $v ? (json_decode((string)$v, true) ?: []) : [];
-    } catch (Throwable $e) {}
+    } catch (Throwable) {}
     if (isset($map[$tld])) return $mem[$tld] = ($map[$tld] ?: null);
 
     $reply = domainWhoisQuery('whois.iana.org', $tld);
@@ -383,7 +383,7 @@ function domainWhoisServer(PDO $conn, string $tld): ?string
         $conn->prepare("INSERT INTO system_settings (setting_key, setting_value, updated_datetime) VALUES ('domain_whois_servers', ?, UTC_TIMESTAMP())
                         ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_datetime = UTC_TIMESTAMP()")
              ->execute([json_encode($map)]);
-    } catch (Throwable $e) {}
+    } catch (Throwable) {}
     return $mem[$tld] = $server;
 }
 

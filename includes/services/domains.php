@@ -293,7 +293,7 @@ class DomainsService
             // Database Verification the tables are not there, and a missing table
             // must never stop a domain being deleted.
             foreach (['domain_cmdb_objects', 'domain_status_services', 'ticket_domains', 'domain_knowledge_articles', 'domain_status_incidents', 'domain_manual_certificates'] as $t) {
-                try { $conn->prepare("DELETE FROM `$t` WHERE domain_id = ?")->execute([$id]); } catch (Throwable $e) { /* not created yet */ }
+                try { $conn->prepare("DELETE FROM `$t` WHERE domain_id = ?")->execute([$id]); } catch (Throwable) { /* not created yet */ }
             }
             // Its subdomains stay, standing on their own: deleting a parent
             // from the register says nothing about whether they still exist.
@@ -1203,7 +1203,7 @@ class DomainsService
         if ($want === '') return null;
         try {
             $rows = $conn->query("SELECT id, legal_name, trading_name FROM suppliers WHERE is_active = 1")->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Throwable $e) { return null; }
+        } catch (Throwable) { return null; }
         foreach ($rows as $r) {
             foreach ([$r['legal_name'], $r['trading_name']] as $n) {
                 if ($n && $clean($n) === $want) return (int)$r['id'];
@@ -1290,7 +1290,7 @@ class DomainsService
         ][$field] ?? null;
         if ($q) {
             try { $st = $conn->prepare($q); $st->execute([(int)$v]); $n = $st->fetchColumn(); if ($n) return (string)$n; }
-            catch (Throwable $e) {}
+            catch (Throwable) {}
         }
         if (in_array($field, ['transfer_lock', 'registry_lock', 'dnssec', 'monitoring_enabled'], true)) return (int)$v ? 'Yes' : 'No';
         return (string)$v;

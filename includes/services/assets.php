@@ -413,7 +413,7 @@ class AssetsService
                 "INSERT INTO asset_checkout_log (asset_id, user_id, user_name, action, expected_return_date, analyst_id, notes, action_datetime)
                  VALUES (?, NULL, ?, 'checkout', ?, ?, ?, UTC_TIMESTAMP())"
             )->execute([$assetId, $analystName, $expectedReturn, $actorId, $notes]);
-        } catch (Exception $clogEx) { /* custody log not critical */ }
+        } catch (Exception) { /* custody log not critical */ }
 
         $oldName = null;
         if (!empty($in['previous_analyst_id'])) {
@@ -484,7 +484,7 @@ class AssetsService
                 "INSERT INTO asset_checkout_log (asset_id, user_id, user_name, action, expected_return_date, analyst_id, notes, action_datetime)
                  VALUES (?, ?, ?, 'checkout', ?, ?, ?, UTC_TIMESTAMP())"
             )->execute([$assetId, $userId, $userName, $expectedReturn, $actorId, $notes]);
-        } catch (Exception $clogEx) { /* custody log not critical */ }
+        } catch (Exception) { /* custody log not critical */ }
 
         // On a UI re-assign the outgoing holder is the audit's old_value.
         $oldName = null;
@@ -541,7 +541,7 @@ class AssetsService
                 "INSERT INTO asset_checkout_log (asset_id, user_id, user_name, action, expected_return_date, analyst_id, action_datetime)
                  VALUES (?, ?, ?, 'checkin', ?, ?, UTC_TIMESTAMP())"
             )->execute([$assetId, $userId, $row['display_name'], $row['expected_return_date'], $actorId]);
-        } catch (Exception $clogEx) { /* custody log not critical */ }
+        } catch (Exception) { /* custody log not critical */ }
 
         if (!$skipAudit) {
             self::auditWrite($conn, $assetId, $actorId, 'assigned_user', $row['display_name'], null);
@@ -588,7 +588,7 @@ class AssetsService
                 "INSERT INTO asset_checkout_log (asset_id, user_id, user_name, action, expected_return_date, analyst_id, action_datetime)
                  VALUES (?, NULL, ?, 'checkin', ?, ?, UTC_TIMESTAMP())"
             )->execute([$assetId, $row['full_name'], $row['expected_return_date'], $actorId]);
-        } catch (Exception $clogEx) { /* custody log not critical */ }
+        } catch (Exception) { /* custody log not critical */ }
 
         if (!$skipAudit) {
             self::auditWrite($conn, $assetId, $actorId, 'assigned_analyst', $row['full_name'], null);
@@ -808,7 +808,7 @@ class AssetsService
             $st = $conn->prepare("SELECT source, source_device_ref FROM asset_inventory_sources WHERE asset_id = ?");
             $st->execute([$assetId]);
             return $st->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             return [];
         }
     }
@@ -970,7 +970,7 @@ class AssetsService
     private static function syncWarranty(PDO $conn): void
     {
         require_once __DIR__ . '/../asset_warranty_calendar.php';
-        try { syncAssetWarrantyCalendar($conn); } catch (Exception $syncEx) { /* non-critical */ }
+        try { syncAssetWarrantyCalendar($conn); } catch (Exception) { /* non-critical */ }
     }
 
     // ======================================================================
@@ -1342,7 +1342,7 @@ class AssetsService
                     if ($line !== '') $map[$line] = true;
                 }
             }
-        } catch (Throwable $e) { /* setting missing: the defaults stand */ }
+        } catch (Throwable) { /* setting missing: the defaults stand */ }
         return $map;
     }
 

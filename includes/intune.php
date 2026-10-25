@@ -167,7 +167,7 @@ function intuneIsoToMysql(?string $iso): ?string {
     if ($iso === null || $iso === '') return null;
     try {
         return (new DateTime($iso))->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return null;
     }
 }

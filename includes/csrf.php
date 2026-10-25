@@ -182,7 +182,7 @@ function csrfOwnHosts(bool $withConfigured = false): array
             $ph = $u !== '' ? strtolower((string)parse_url($u, PHP_URL_HOST)) : '';
             $pp = $u !== '' ? parse_url($u, PHP_URL_PORT) : null;
             if ($ph !== '') $hosts[] = $pp ? "$ph:$pp" : $ph;
-        } catch (Throwable $e) {}
+        } catch (Throwable) {}
     }
     return array_values(array_unique($hosts));
 }

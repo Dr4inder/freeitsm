@@ -41,7 +41,7 @@ function searchMinTokenSize(PDO $conn): int {
     if ($n !== null) return $n;
     try {
         $n = (int)$conn->query("SELECT @@innodb_ft_min_token_size")->fetchColumn();
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         $n = 3;   // stock MySQL
     }
     return $n;
@@ -180,7 +180,7 @@ function searchScopeForAnalyst(PDO $conn, int $analystId, array $overrides = [])
         $scope['document_clause'] = documentSearchVisibilityClause(
             $conn, $analystId, $scope['allowed_modules'], 'sd'
         );
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         // If the clause cannot be built, exclude documents entirely rather than
         // letting them through unfiltered. Fail closed.
         $scope['document_clause'] = [" AND sd.source_type <> 'document'", []];

@@ -79,7 +79,7 @@ function getModuleColors() {
                 $colors[$moduleKey] = [trim($parts[0]), trim($parts[1])];
             }
         }
-    } catch (Exception $e) {
+    } catch (Exception) {
         // Fall back to defaults if DB unavailable
     }
 

@@ -337,7 +337,7 @@ function templateRulesByTemplate(PDO $conn, array $templateIds): array
             ];
         }
         return $out;
-    } catch (Exception $e) {
+    } catch (Exception) {
         // A part-upgraded install without the table has no rules, which means every
         // template applies to everyone — exactly the behaviour before this existed.
         return [];

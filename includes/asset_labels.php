@@ -53,7 +53,7 @@ function assetLabelsSchemaReady(PDO $conn): bool {
     try {
         $cols = $conn->query("SHOW COLUMNS FROM `assets` LIKE 'qr_token'")->fetch(PDO::FETCH_ASSOC);
         $ready = (bool)$cols;
-    } catch (Exception $e) {
+    } catch (Exception) {
         $ready = false;
     }
     return $ready;
@@ -223,7 +223,7 @@ function assetLabelCustomFields(PDO $conn, ?int $tenantId = null): array {
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $out['cf_' . $r['field_key']] = (string)$r['label'];
         }
-    } catch (Exception $e) { /* custom fields not installed yet */ }
+    } catch (Exception) { /* custom fields not installed yet */ }
     return $out;
 }
 

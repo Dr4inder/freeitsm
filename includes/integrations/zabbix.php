@@ -43,7 +43,7 @@ const ZABBIX_DEFAULT_REQUESTER = 'zabbix@monitoring.invalid';
 function zabbixReady(PDO $conn): bool
 {
     try { $conn->query("SELECT 1 FROM zabbix_events LIMIT 1"); return true; }
-    catch (Exception $e) { return false; }
+    catch (Exception) { return false; }
 }
 
 /** One system_settings value, or $default when it was never saved. */
@@ -250,7 +250,7 @@ function zabbixAddThreadMessage(PDO $conn, int $ticketId, string $subject, strin
     try {
         require_once __DIR__ . '/../search/indexer.php';
         searchIndexTicket($conn, $ticketId);
-    } catch (Throwable $e) { /* search catches up on the next re-index */ }
+    } catch (Throwable) { /* search catches up on the next re-index */ }
 }
 
 function zabbixLog(PDO $conn, array $e, ?int $ticketId, string $action, string $detail = ''): void
@@ -349,7 +349,7 @@ function zabbixHandleEvent(PDO $conn, array $p): array
         return ['ok' => true, 'action' => 'created', 'ticket_id' => $ticketId];
     } catch (Throwable $ex) {
         error_log('Zabbix alert: ' . $ex->getMessage());
-        try { zabbixLog($conn, $e, $ticketId ?? null, 'error', $ex->getMessage()); } catch (Throwable $ignored) {}
+        try { zabbixLog($conn, $e, $ticketId ?? null, 'error', $ex->getMessage()); } catch (Throwable) {}
         return ['ok' => false, 'action' => 'error', 'ticket_id' => null, 'error' => 'Could not process the alert'];
     } finally {
         $conn->query("SELECT RELEASE_LOCK(" . $conn->quote($lock) . ")");

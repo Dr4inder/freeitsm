@@ -73,7 +73,7 @@ function analystModuleOrderSaved(): array {
         );
         $st->execute([$aid]);
         $memo = displayOrderParse($st->fetchColumn());
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         // No table yet, or no database: the default order.
     }
     return $memo;

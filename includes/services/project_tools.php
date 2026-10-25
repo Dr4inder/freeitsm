@@ -108,7 +108,7 @@ class ProjectToolsService
         static $ready = null;
         if ($ready === null) {
             try { $conn->query("SELECT supplier_id, contact_id FROM project_members LIMIT 0"); $conn->query("SELECT 1 FROM suppliers LIMIT 0"); $ready = true; }
-            catch (Throwable $e) { $ready = false; }
+            catch (Throwable) { $ready = false; }
         }
         if (!$ready) return ['cols' => 'NULL AS supplier_id, NULL AS contact_id, NULL AS supplier_name', 'name' => 'NULL', 'join' => ''];
         return [
@@ -166,7 +166,7 @@ class ProjectToolsService
         static $ready = null;
         if ($ready === null) {
             try { $conn->query("SELECT power, interest, stance, keep_informed FROM project_members LIMIT 0"); $ready = true; }
-            catch (Throwable $e) { $ready = false; }
+            catch (Throwable) { $ready = false; }
         }
         return $ready;
     }
@@ -442,7 +442,7 @@ class ProjectToolsService
         static $ready = null;
         if ($ready === null) {
             try { $conn->query("SELECT escalated_datetime, decided_by FROM project_raid LIMIT 0"); $ready = true; }
-            catch (Throwable $e) { $ready = false; }
+            catch (Throwable) { $ready = false; }
         }
         return $ready;
     }
@@ -536,7 +536,7 @@ class ProjectToolsService
         static $ready = null;
         if ($ready === null) {
             try { $conn->query("SELECT 1 FROM project_raid_tasks LIMIT 0"); $ready = true; }
-            catch (Throwable $e) { $ready = false; }
+            catch (Throwable) { $ready = false; }
         }
         return $ready;
     }
@@ -730,7 +730,7 @@ class ProjectToolsService
             $st = $conn->prepare("SELECT dimension, value FROM project_tolerances WHERE project_id = ? AND stage_id IS NULL");
             $st->execute([$projectId]);
             foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) $out[$r['dimension']] = (int)$r['value'];
-        } catch (Throwable $e) { /* before Verification */ }
+        } catch (Throwable) { /* before Verification */ }
         return $out;
     }
 
@@ -860,7 +860,7 @@ class ProjectToolsService
             }
             unset($r);
             return $rows;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return [];
         }
     }
@@ -1130,7 +1130,7 @@ class ProjectToolsService
                   WHERE m.project_id = ? ORDER BY m.position, m.id");
             $st->execute([$projectId]);
             return $st->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return [];
         }
     }
@@ -1146,7 +1146,7 @@ class ProjectToolsService
                                    WHERE i.project_id = ? ORDER BY i.position, i.id");
             $st->execute([$projectId]);
             return $st->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return [];
         }
     }
@@ -1159,7 +1159,7 @@ class ProjectToolsService
             $st = $conn->prepare("SELECT item_id, member_id, letter FROM project_raci WHERE project_id = ?");
             $st->execute([$projectId]);
             foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) $out[(int)$r['item_id']][(int)$r['member_id']] = $r['letter'];
-        } catch (Throwable $e) { /* before Verification */ }
+        } catch (Throwable) { /* before Verification */ }
         return $out;
     }
 
@@ -1365,7 +1365,7 @@ class ProjectToolsService
             $st = $conn->prepare("SELECT * FROM project_gate_items WHERE id = ? AND project_id = ?");
             $st->execute([$itemId, $projectId]);
             $r = $st->fetch(PDO::FETCH_ASSOC);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             throw new ServiceError('validation', 'not_ready', 'Run System - Database Verification first.');
         }
         if (!$r) throw new ServiceError('not_found', 'not_found', 'That item is not on this project\'s gates.');
@@ -1502,7 +1502,7 @@ class ProjectToolsService
             $st = $conn->prepare("SELECT * FROM project_benefits WHERE id = ? AND project_id = ?");
             $st->execute([$benefitId, $projectId]);
             $r = $st->fetch(PDO::FETCH_ASSOC);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             throw new ServiceError('validation', 'not_ready', 'Run System - Database Verification first.');
         }
         if (!$r) throw new ServiceError('not_found', 'not_found', 'That benefit is not part of this project.');
@@ -1685,7 +1685,7 @@ class ProjectToolsService
             $st = $conn->prepare("SELECT * FROM project_change_requests WHERE id = ? AND project_id = ?");
             $st->execute([$crId, $projectId]);
             $r = $st->fetch(PDO::FETCH_ASSOC);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             throw new ServiceError('validation', 'not_ready', 'Run System - Database Verification first.');
         }
         if (!$r) throw new ServiceError('not_found', 'not_found', 'That change request is not part of this project.');
@@ -1916,7 +1916,7 @@ class ProjectToolsService
     {
         try {
             $conn->prepare("UPDATE project_budget_lines SET planned_date = ?, spent_date = ?, forecast_amount = ? WHERE id = ?")->execute([$plannedDate, $spentDate, $forecast, $lineId]);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             if ($plannedDate !== null || $spentDate !== null || $forecast !== null) throw new ServiceError('validation', 'not_ready', 'Run System - Database Verification to add dates and forecasts to budget lines.');
         }
     }

@@ -169,7 +169,7 @@ function csatChannelLocale(PDO $conn, array $channel, string $from): string {
         $stmt = $conn->prepare("SELECT locale FROM messaging_identity_links WHERE channel_type = 'telegram' AND external_id = ?");
         $stmt->execute([$from]);
         $locale = (string)($stmt->fetchColumn() ?: '');
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         $locale = '';
     }
     return $locale !== '' ? $locale : 'en';
@@ -234,7 +234,7 @@ function csatPendingRequestForChat(PDO $conn, int $channelId, string $from): ?in
         );
         $stmt->execute([$channelId, $from]);
         $id = $stmt->fetchColumn();
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return null;   // before Database Verification: no chat surveys exist yet
     }
     return $id ? (int)$id : null;
@@ -252,7 +252,7 @@ function csatResponseBelongsToChat(PDO $conn, int $responseId, int $channelId, s
         $stmt = $conn->prepare("SELECT 1 FROM ticket_csat_responses WHERE id = ? AND channel_id = ? AND channel_from = ?");
         $stmt->execute([$responseId, $channelId, $from]);
         return (bool)$stmt->fetchColumn();
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return false;
     }
 }
@@ -268,7 +268,7 @@ function csatStoredRating(PDO $conn, int $responseId): ?int {
         $stmt->execute([$responseId]);
         $r = $stmt->fetchColumn();
         return ($r === false || $r === null) ? null : (int)$r;
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return null;
     }
 }

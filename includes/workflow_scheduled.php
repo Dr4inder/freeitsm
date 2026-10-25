@@ -287,7 +287,7 @@ function workflowPruneEmissions(PDO $conn, int $keepDays = 365): int
         );
         $stmt->execute([$keepDays]);
         return $stmt->rowCount();
-    } catch (Exception $e) {
+    } catch (Exception) {
         return 0;
     }
 }

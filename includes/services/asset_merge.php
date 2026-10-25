@@ -202,7 +202,7 @@ final class AssetMergeService
                 $m = $conn->prepare('SELECT into_asset_id FROM asset_merges WHERE merged_asset_id = ?');
                 $m->execute([$assetId]);
                 $into = $m->fetchColumn();
-            } catch (PDOException $e) {
+            } catch (PDOException) {
                 return null;   // before Database Verification
             }
             if ($into === false) { return null; }
@@ -218,7 +218,7 @@ final class AssetMergeService
             $st = $conn->prepare('SELECT into_asset_id FROM asset_merges WHERE merged_qr_token = ? ORDER BY id DESC LIMIT 1');
             $st->execute([$token]);
             $into = $st->fetchColumn();
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             return null;
         }
         return $into === false ? null : self::current($conn, (int)$into);
@@ -383,7 +383,7 @@ final class AssetMergeService
         static $known = [];
         if (!isset($known[$table])) {
             try { $conn->query("SELECT 1 FROM `$table` LIMIT 0"); $known[$table] = true; }
-            catch (PDOException $e) { $known[$table] = false; }
+            catch (PDOException) { $known[$table] = false; }
         }
         return $known[$table];
     }

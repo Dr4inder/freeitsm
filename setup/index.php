@@ -7,6 +7,10 @@
 
 session_start();
 
+// FIRST: this page loads includes/i18n.php before config.php, so the version guard must
+// run before that file is read - see includes/php_version_guard.php. This is the page a
+// new install opens first; on an old PHP it must say why, not show a parse error.
+require_once __DIR__ . '/../includes/php_version_guard.php';
 require_once __DIR__ . '/../includes/i18n.php';
 require_once __DIR__ . '/../includes/setup_state.php';
 I18n::initFromSession();

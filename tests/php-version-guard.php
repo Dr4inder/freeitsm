@@ -48,8 +48,36 @@ function inPhp(string $image, string $cmd, array $extraArgs = []): array {
 echo "Old PHP gets a sentence, not a parse error (PHP floor 8.1)\n";
 echo str_repeat('=', 72) . "\n";
 
+// ---------------------------------------------------------------- 0 (no Docker)
+// A PAGE whose first require is an includes/ file has that file read BEFORE the guard
+// can run - so 8.x syntax in it (includes/ may use 8.x) shows an old PHP a parse error.
+// Such a page must require the guard first. Found 2026-10-25: setup (includes/i18n.php
+// first), the self-service portal (its includes/header.php) and the debug-tool pages.
+// API endpoints and scripts/ are not pages a person opens and are left out.
+echo "\nPages load the guard before any includes/ file\n";
+$late = []; $pagesSeen = 0;
+$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS));
+foreach ($it as $f) {
+    if ($f->getExtension() !== 'php') continue;
+    $rel = substr(str_replace('\\', '/', $f->getPathname()), strlen($root) + 1);
+    if (preg_match('#(^|/)(includes|tests|vendor|local|node_modules|\.git|scripts|docker)/#', $rel)
+        || preg_match('#^api/|/manifest\.php$|^config\.php$|(^|/)_[^/]*\.php$#', $rel)) continue;   // _x.php = a partial, never opened
+    $pagesSeen++;
+    $tokens = token_get_all(file_get_contents($f->getPathname()));
+    foreach ($tokens as $i => $tk) {
+        if (!is_array($tk) || !in_array($tk[0], [T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE], true)) continue;
+        $expr = ''; for ($k = $i + 1; isset($tokens[$k]) && $tokens[$k] !== ';'; $k++) $expr .= is_array($tokens[$k]) ? $tokens[$k][1] : $tokens[$k];
+        if (preg_match('#includes/#', $expr) && !preg_match('#config\.php|includes/(functions|ssl|php_version_guard)\.php#', $expr)) {
+            $late[] = "$rel: first loads " . trim(preg_replace('/\s+/', ' ', $expr));
+        }
+        break;
+    }
+}
+check("CONTROL: pages were examined ($pagesSeen - more than 300)", $pagesSeen > 300);
+check('no page loads an includes/ file before the guard', !$late, implode("\n          ", $late));
+
 exec('docker version --format "{{.Server.Version}}" 2>&1', $v, $dc);
-if ($dc !== 0) { echo "  SKIP  Docker is not running\n"; exit(2); }
+if ($dc !== 0) { echo "  SKIP  Docker is not running - the rest needs it\n"; exit($fail ? 1 : 2); }
 
 // ---------------------------------------------------------------- 1
 echo "\nThe guard file\n";
@@ -72,7 +100,8 @@ check('functions.php: says PHP 8.1 is needed', strpos($out, 'FreeITSM needs PHP 
 check('functions.php: no parse error', $out !== '' && stripos($out, 'Parse error') === false, $out);
 
 // ---------------------------------------------------------------- 3 + 4
-$pages = ['/setup/', '/system/analysts/', '/api/tickets/get_analysts.php',
+$pages = ['/setup/', '/self-service/', '/self-service/tickets.php', '/system/debug-tools/d005/', '/lms/native-player.php',
+          '/system/help/analysts.php', '/system/analysts/', '/api/tickets/get_analysts.php',
           '/api/self-service/submit_catalogue_form.php', '/api/rfp-builder/upload_document.php', '/index.php'];
 $probe = 'php -S 127.0.0.1:8099 -t /app >/dev/null 2>&1 & sleep 2; for p in ' . implode(' ', $pages)
        . '; do echo === $p; curl -s -i http://127.0.0.1:8099$p | head -c 900; echo; done';

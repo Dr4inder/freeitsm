@@ -490,7 +490,7 @@ function debugToolAnalystOptions(): array {
         require_once __DIR__ . '/../../../includes/functions.php';
         $rows = connectToDatabase()->query("SELECT id, full_name FROM analysts WHERE is_active = 1 ORDER BY full_name")->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as $r) $opts[] = ['value' => (string)$r['id'], 'label' => $r['full_name']];
-    } catch (Throwable $e) {
+    } catch (Throwable) {
     }
     return $opts;
 }

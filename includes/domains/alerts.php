@@ -227,7 +227,7 @@ function domainAlertsRun(PDO $conn, bool $dryRun = false): array
                 if (!$items) continue;
                 $msg = domainAlertDigest($conn, $r['name'] ?? '', $items);
                 $ok = false;
-                try { $ok = ssSendSystemEmail($conn, $email, $msg['subject'], $msg['body'], 'domain_alert'); } catch (Throwable $e) { $ok = false; }
+                try { $ok = ssSendSystemEmail($conn, $email, $msg['subject'], $msg['body'], 'domain_alert'); } catch (Throwable) { $ok = false; }
                 if ($ok) {
                     $out['emails']++;
                     foreach ($items as $a) $delivered[$a['id'] . '|' . $a['kind'] . '|' . $a['fingerprint']] = true;
@@ -411,7 +411,7 @@ function domainAlertOnChange(PDO $conn, array $row, array $serious): void
           . '<p><a href="' . $e(domainPublicLink($conn, (int)$row['id'])) . '" style="color:#4d7c0f;font-weight:bold;">Open ' . $e($dn) . ' in FreeITSM</a></p></div>';
     $anyOk = false;
     foreach ($recips as $email => $name) {
-        try { $anyOk = ssSendSystemEmail($conn, $email, "Change detected on $dn", $body, 'domain_alert') || $anyOk; } catch (Throwable $e2) {}
+        try { $anyOk = ssSendSystemEmail($conn, $email, "Change detected on $dn", $body, 'domain_alert') || $anyOk; } catch (Throwable) {}
     }
     if (!$anyOk) domainAlertRelease($conn, (int)$row['id'], 'mail_changed', $fp);
 }

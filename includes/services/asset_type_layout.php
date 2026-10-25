@@ -76,7 +76,7 @@ final class AssetTypeLayout
                                         FROM asset_type_layout WHERE asset_type_id IN ($in)");
                 $st->execute($typeIds);
                 foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) $rowsByType[(int)$r['asset_type_id']][] = $r;
-            } catch (PDOException $e) {
+            } catch (PDOException) {
                 // No table yet (DB Verify not run since the upgrade): every type shows everything,
                 // which is exactly what the page did before this feature.
             }
@@ -172,7 +172,7 @@ final class AssetTypeLayout
             $st = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
             $st->execute([self::NOTICE_SETTING]);
             $v = (string)$st->fetchColumn();
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             $v = '';
         }
         return in_array($v, self::NOTICE_MODES, true) ? $v : 'notice';

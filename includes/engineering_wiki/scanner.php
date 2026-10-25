@@ -215,7 +215,7 @@ final class EwScanner
     {
         $d = ['kind' => 'php', 'doc' => null, 'functions' => [], 'classes' => [], 'includes' => [], 'calls' => [], 'sql' => [],
               'traps' => [], 'inputs' => [], 'guards' => [], 'scripts' => [], 'session' => [], 'lines' => substr_count($src, "\n") + 1];
-        try { $tokens = token_get_all($src); } catch (Throwable $e) { return $d; }
+        try { $tokens = token_get_all($src); } catch (Throwable) { return $d; }
         $n = count($tokens);
         $sig = function (int $i, int $dir) use ($tokens, $n) {     // next/previous significant token index
             for ($k = $i + $dir; $k >= 0 && $k < $n; $k += $dir) {

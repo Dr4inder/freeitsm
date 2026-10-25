@@ -153,7 +153,7 @@ function projectCapacity(PDO $conn, int $viewerId, int $weeks = 4): array
     // Analyst members of these projects show even with nothing assigned.
     try {
         foreach ($conn->query("SELECT DISTINCT analyst_id FROM project_members WHERE project_id IN ($pin) AND analyst_id IS NOT NULL")->fetchAll(PDO::FETCH_COLUMN) as $a) $person((int)$a);
-    } catch (Throwable $e) { /* before phase 2 verification */ }
+    } catch (Throwable) { /* before phase 2 verification */ }
 
     foreach ($tasks as $t) {
         $remaining = $t['estimate_hours'] !== null ? max(0.0, (float)$t['estimate_hours'] - (int)$t['logged_minutes'] / 60) : null;
@@ -225,7 +225,7 @@ function projectCapacity(PDO $conn, int $viewerId, int $weeks = 4): array
                 $w = $weekOf(substr((string)$r['rota_date'], 0, 10));
                 if ($w !== null) $people[(int)$r['analyst_id']]['weeks'][$w]['desk'] += projectCapacityShiftHours((string)$r['start_time'], (string)$r['end_time']);
             }
-        } catch (Throwable $e) { /* no rota tables */ }
+        } catch (Throwable) { /* no rota tables */ }
         // Open tickets they own, in the companies the viewer can see.
         [$kSql, $kArgs] = allAccessibleTenantsFilter($conn, $viewerId, 't.tenant_id');
         $ks = $conn->prepare("SELECT t.owner_id, COUNT(*) FROM tickets t LEFT JOIN ticket_statuses s ON s.id = t.status_id

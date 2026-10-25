@@ -152,7 +152,7 @@ if (!defined('DOMAIN_SETTINGS_LOADED')) {
                     $out[$r['setting_key']] = '';   // an emptied list IS a value
                 }
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // Settings unreachable: the defaults, which are the inert choices.
         }
         return $cache = $out;

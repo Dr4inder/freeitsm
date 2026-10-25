@@ -180,7 +180,7 @@ function userSignsInElsewhere(PDO $conn, $providerId): bool
         $st = $conn->prepare("SELECT protocol FROM auth_providers WHERE id = ?");
         $st->execute([$providerId]);
         $protocol = $st->fetchColumn();
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return true;
     }
     return strtolower((string)$protocol) !== 'carddav';
@@ -233,7 +233,7 @@ function userSourcesInScope(PDO $conn, string $tenantSql, array $tenantArgs): ar
             return ['id' => (int)$r['id'], 'name' => $r['name'],
                     'protocol' => $r['protocol'], 'people' => (int)$r['people']];
         }, $st->fetchAll(PDO::FETCH_ASSOC));
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return [];
     }
 }
@@ -267,7 +267,7 @@ function portalProfileSettingRaw(PDO $conn, string $key): ?string
         $st->execute([$key]);
         $v = $st->fetchColumn();
         return $v === false ? null : (string)$v;
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return null;
     }
 }

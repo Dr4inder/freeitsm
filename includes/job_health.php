@@ -274,7 +274,7 @@ function jobHealthReachesAllCompanies(PDO $conn, int $analystId): bool
         $ids = getAccessibleTenantIds($conn, $analystId);
         $all = $conn->query("SELECT id FROM tenants")->fetchAll(PDO::FETCH_COLUMN);
         return !array_diff(array_map('intval', $all), array_map('intval', $ids));
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return false;   // fail closed
     }
 }

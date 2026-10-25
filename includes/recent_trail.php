@@ -210,7 +210,7 @@ function recentTrailWrite(string $type, int $id, ?PDO $conn = null): void
         if (random_int(1, 10) === 1) {
             recentTrailPrune($conn, $analystId);
         }
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         // Deliberately silent. See the note above.
     }
 }
@@ -420,7 +420,7 @@ function recentTrailLabels(PDO $conn, int $analystId, array $rows): array
             foreach (recentTrailLabelsForType($conn, $analystId, $type, array_keys($ids)) as $id => $label) {
                 $out[$type . ':' . $id] = $label;
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // A type whose table is missing on this install contributes nothing,
             // rather than emptying the whole drawer.
         }

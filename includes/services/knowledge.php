@@ -102,7 +102,7 @@ class KnowledgeService
             if (!$st->fetchColumn() || ($viewer && !knowledgeFolderIsReadable($conn, $viewer, $id))) {
                 throw new ServiceError('validation', 'invalid_field', "'folder_id' is not a known folder.");
             }
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             // Table absent (pre-Database-Verify): no folders exist, so the only
             // honest answer is the root.
             return null;
@@ -558,7 +558,7 @@ class KnowledgeService
                     return true;
                 }
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Embedding is a bonus, never a blocker — same as the UI.
         }
         return false;

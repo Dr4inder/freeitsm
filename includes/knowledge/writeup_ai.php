@@ -77,7 +77,7 @@ function writeupSchemaReady(PDO $conn): bool
     try {
         $st = $conn->query("SHOW TABLES LIKE 'knowledge_gap_clusters'");
         $ready = $st && $st->fetchColumn() !== false;
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         $ready = false;
     }
     return $ready;
@@ -129,7 +129,7 @@ function writeupSettings(PDO $conn): array
             }
             $out[$r['setting_key']] = is_float($defaults[$r['setting_key']]) ? (float)$v : (int)$v;
         }
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         // Settings table unreadable — defaults are all perfectly usable.
     }
 
@@ -277,14 +277,14 @@ function writeupTicketBundle(PDO $conn, int $ticketId): ?array
         );
         $st->execute([$ticketId]);
         $minutes = (int)$st->fetchColumn();
-    } catch (Throwable $e) { $minutes = 0; }
+    } catch (Throwable) { $minutes = 0; }
 
     $hasProblem = false;
     try {
         $st = $conn->prepare("SELECT 1 FROM problem_tickets WHERE ticket_id = ? LIMIT 1");
         $st->execute([$ticketId]);
         $hasProblem = (bool)$st->fetchColumn();
-    } catch (Throwable $e) { $hasProblem = false; }
+    } catch (Throwable) { $hasProblem = false; }
 
     // Build the narrative.
     $lines   = [];

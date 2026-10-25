@@ -260,7 +260,7 @@ class NotificationsService
             );
             $stmt->execute([$analystId]);
             $raw = $stmt->fetchColumn();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return [];
         }
         if (!is_string($raw) || $raw === '') {
@@ -400,7 +400,7 @@ class NotificationsService
             );
             $stmt->execute([$id]);
             return (int)$stmt->fetchColumn();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return 0;
         }
     }

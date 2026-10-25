@@ -255,7 +255,7 @@ final class AnalystsService
             $s->execute([$analystId]);
             $id = $s->fetchColumn();
             return $id === false ? null : (int)$id;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return null;   // before Database Verification adds the column
         }
     }

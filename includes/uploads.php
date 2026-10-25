@@ -928,7 +928,7 @@ function attachmentRejectPolicy(PDO $conn): string
         $stmt = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'attachment_rejected_behaviour'");
         $stmt->execute();
         $v = (string)$stmt->fetchColumn();
-    } catch (Exception $e) {
+    } catch (Exception) {
         $v = '';   // table not migrated yet — fall through to the default
     }
     return $cached = ($v === ATTACHMENT_POLICY_DROP ? ATTACHMENT_POLICY_DROP : ATTACHMENT_POLICY_STORE);

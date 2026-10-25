@@ -59,7 +59,7 @@ class ChecklistsService
             $stmt = $conn->prepare("SELECT 1 FROM ticket_checklists WHERE ticket_id = ? LIMIT 1");
             $stmt->execute([$ticketId]);
             return (bool)$stmt->fetchColumn();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return false;
         }
     }
@@ -87,7 +87,7 @@ class ChecklistsService
             );
             $stmt->execute([$ticketId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return [];
         }
     }
@@ -443,7 +443,7 @@ class ChecklistsService
             $st = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'tasks_checklists_enabled'");
             $st->execute();
             return (string)$st->fetchColumn() === '1';
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return false;
         }
     }
@@ -456,7 +456,7 @@ class ChecklistsService
             $st->execute([$taskId]);
             $v = $st->fetchColumn();
             return ($v === false || $v === null) ? null : (int)$v;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return null;
         }
     }
@@ -477,7 +477,7 @@ class ChecklistsService
         try {
             $conn->query("SELECT result_mode FROM task_checklist_items LIMIT 0");
             $resultCols = ', result_mode, result, exception_note';
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $resultCols = '';   // before Database Verification has added #181's columns
         }
         if (self::hasStepDescription($conn)) $resultCols .= ', description';   // GH #190
@@ -802,7 +802,7 @@ class ChecklistsService
             $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'tasks_evidence_completed_checklist'");
             $s->execute();
             if ((string)$s->fetchColumn() !== 'refuse') return;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return;
         }
         throw new ServiceError('validation', 'checklist_locked',
@@ -816,7 +816,7 @@ class ChecklistsService
             $s = $conn->prepare("SELECT ts.is_closed FROM tasks t JOIN task_statuses ts ON ts.id = t.status_id WHERE t.id = ?");
             $s->execute([$taskId]);
             return (bool)$s->fetchColumn();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return false;
         }
     }
@@ -829,7 +829,7 @@ class ChecklistsService
         try {
             $conn->query("SELECT description FROM task_checklist_items LIMIT 0");
             return $has = true;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return $has = false;
         }
     }
@@ -843,7 +843,7 @@ class ChecklistsService
             $conn->query("SELECT result_mode FROM task_checklist_items LIMIT 0");
             $conn->query("SELECT result_mode FROM checklist_template_items LIMIT 0");
             return $has = true;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return $has = false;
         }
     }
@@ -856,7 +856,7 @@ class ChecklistsService
             $s->execute([$templateId]);
             $v = (int)$s->fetchColumn();
             return $v > 0 ? $v : null;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return null;
         }
     }
@@ -949,7 +949,7 @@ class ChecklistsService
                               JOIN task_checklists c ON c.id = i.task_checklist_id
                              WHERE c.task_id IN ($in)")->execute($taskIds);
             $conn->prepare("DELETE FROM task_checklists WHERE task_id IN ($in)")->execute($taskIds);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // tables not there yet on a part-upgraded install: nothing to remove
         }
     }
@@ -968,7 +968,7 @@ class ChecklistsService
             );
             $st->execute([$taskId]);
             return $st->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return [];   // tables not created yet: completing a task must not start failing
         }
     }

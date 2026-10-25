@@ -33,7 +33,7 @@ function projectTargetsReady(PDO $conn): bool
     static $ready = null;
     if ($ready === null) {
         try { $conn->query("SELECT 1 FROM project_asset_targets LIMIT 0"); $conn->query("SELECT 1 FROM project_asset_target_snapshots LIMIT 0"); $ready = true; }
-        catch (Throwable $e) { $ready = false; }
+        catch (Throwable) { $ready = false; }
     }
     return $ready;
 }
@@ -204,7 +204,7 @@ function projectTargetsFor(PDO $conn, array $projectIds): array
     $st->execute(array_map('intval', $projectIds));
     foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $t) {
         $project = ['id' => (int)$t['project_id'], 'tenant_id' => $t['p_tenant_id']];
-        try { [$done, $total] = projectTargetCount($conn, $project, $t); } catch (Throwable $e) { $done = $total = 0; }
+        try { [$done, $total] = projectTargetCount($conn, $project, $t); } catch (Throwable) { $done = $total = 0; }
         $due = $t['target_date'] ?: $t['p_target_end_date'];
         $live = !in_array($t['p_status'], ['closed', 'cancelled'], true);
         $out[(int)$t['project_id']][] = [
@@ -248,7 +248,7 @@ function projectTargetsDetail(PDO $conn, int $projectId): array
     $since = gmdate('Y-m-d', strtotime('-120 days'));
     $names = projectTargetValueNames($conn, $targets);
     foreach ($targets as &$t) {
-        try { $up->execute([$t['id'], $today, $t['done'], $t['total']]); } catch (Throwable $e) { /* a reader on a read-only replica still sees the counts */ }
+        try { $up->execute([$t['id'], $today, $t['done'], $t['total']]); } catch (Throwable) { /* a reader on a read-only replica still sees the counts */ }
         $pts->execute([$t['id'], $since]);
         $t['points'] = array_map(fn($r) => ['d' => $r['snap_date'], 'done' => (int)$r['done'], 'total' => (int)$r['total']], $pts->fetchAll(PDO::FETCH_ASSOC));
         $t['done_value_name'] = $names[$t['done_field'] . ':' . $t['done_value']] ?? $t['done_value'];

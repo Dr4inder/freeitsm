@@ -198,7 +198,7 @@ function lmsUserGroupsAvailable(PDO $conn): bool {
     try {
         $conn->query("SELECT 1 FROM knowledge_user_groups LIMIT 1");
         return $available = true;
-    } catch (PDOException $e) {
+    } catch (PDOException) {
         return $available = false;
     }
 }

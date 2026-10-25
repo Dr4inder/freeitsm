@@ -488,7 +488,7 @@ function knowledgeViewerHasAdminFloor(PDO $conn, KnowledgeViewer $viewer): bool
     if (!function_exists('analystHasCapability')) return false;
     try {
         return analystHasCapability($conn, $viewer->analystId(), Cap::KNOWLEDGE_MANAGE);
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return false;   // cannot confirm the floor => no floor
     }
 }
@@ -732,7 +732,7 @@ function knowledgeViewerPrincipals(PDO $conn, KnowledgeViewer $viewer): array
             $st = $conn->prepare("SELECT team_id FROM analyst_teams WHERE analyst_id = ?");
             $st->execute([$viewer->analystId()]);
             foreach ($st->fetchAll(PDO::FETCH_COLUMN) as $t) $out[] = 'team:' . (int)$t;
-        } catch (PDOException $e) { /* no teams table yet — no team principals */ }
+        } catch (PDOException) { /* no teams table yet — no team principals */ }
     }
     if ($viewer->userId() !== null) {
         $out[] = 'user:' . $viewer->userId();
@@ -750,7 +750,7 @@ function knowledgeViewerPrincipals(PDO $conn, KnowledgeViewer $viewer): array
             );
             $st->execute([$memberType, $memberId]);
             foreach ($st->fetchAll(PDO::FETCH_COLUMN) as $g) $out[] = 'user_group:' . (int)$g;
-        } catch (PDOException $e) { /* groups not created yet */ }
+        } catch (PDOException) { /* groups not created yet */ }
     }
     return $out;
 }
@@ -820,7 +820,7 @@ function knowledgeFolderPermissionModel(PDO $conn): string
         $st = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'knowledge_folder_permission_model'");
         $st->execute();
         $v = (string)($st->fetchColumn() ?: '');
-    } catch (PDOException $e) { $v = ''; }
+    } catch (PDOException) { $v = ''; }
     return KnowledgeAclCache::set("mode", ($v === "filing") ? "filing" : "containers");
 }
 
@@ -847,7 +847,7 @@ function knowledgeAclHasAnyRows(PDO $conn): bool
         $any = (bool)$conn->query("SELECT 1 FROM knowledge_acl LIMIT 1")->fetchColumn()
             || (bool)$conn->query("SELECT 1 FROM knowledge_folders WHERE is_restricted = 1 LIMIT 1")->fetchColumn()
             || (bool)$conn->query("SELECT 1 FROM knowledge_articles WHERE is_restricted = 1 LIMIT 1")->fetchColumn();
-    } catch (PDOException $e) {
+    } catch (PDOException) {
         // Cannot tell — assume there ARE rules so the guard still runs, matching
         // tenancyColumnExists()'s direction. Failing the other way would drop the
         // access list on exactly the hiccup where you least want it dropped.
@@ -867,7 +867,7 @@ function knowledgeAclIndex(PDO $conn): array
         foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) {
             $idx[$r['object_type']][(int)$r['object_id']][$r['principal_type'] . ':' . (int)$r['principal_id']] = true;
         }
-    } catch (PDOException $e) { $idx = []; }
+    } catch (PDOException) { $idx = []; }
     return KnowledgeAclCache::set("acl", $idx);
 }
 
@@ -886,7 +886,7 @@ function knowledgeFolderIndex(PDO $conn): array
                 'inherit'    => (int)$r['inherit_permissions'],
             ];
         }
-    } catch (PDOException $e) { $idx = []; }
+    } catch (PDOException) { $idx = []; }
     return KnowledgeAclCache::set("folders", $idx);
 }
 

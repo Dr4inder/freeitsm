@@ -550,7 +550,7 @@ class FormsService
             // All three, not any: two of the three is a half-migrated database
             // and offering the feature there writes stamps nothing can read.
             $known = ((int)$q->fetchColumn() === 3);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $known = false;
         }
         return $known;
@@ -569,7 +569,7 @@ class FormsService
             $q = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'forms_collection_close_effect'");
             $q->execute();
             $v = (string)$q->fetchColumn();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $v = '';
         }
         $cached = in_array($v, self::CLOSE_EFFECTS, true) ? $v : self::CLOSE_EFFECT_DEFAULT;
@@ -940,7 +940,7 @@ class FormsService
             $q->execute([$formId]);
             $name = $q->fetchColumn();
             return $name === false ? null : (string)$name;
-        } catch (Exception $e) {
+        } catch (Exception) {
             // A broken probe must not stop people filling forms in.
             return null;
         }
@@ -1940,7 +1940,7 @@ class FormsService
                 $r->execute($args);
                 $needed = (int)$r->fetchColumn();
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return;
         }
         if ($linked > 0) {
@@ -2221,7 +2221,7 @@ class FormsService
             );
             $q->execute();
             $known = ((int)$q->fetchColumn() === 1);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $known = false;
         }
         return $known;
@@ -2361,7 +2361,7 @@ class FormsService
             );
             $q->execute();
             $known = ((int)$q->fetchColumn() === 1);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $known = false;
         }
         return $known;
@@ -2538,7 +2538,7 @@ class FormsService
             );
             $q->execute();
             $known = ((int)$q->fetchColumn() === 1);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $known = false;
         }
         return $known;

@@ -123,7 +123,7 @@ final class AssetProtectionService
             $st = $conn->prepare('SELECT setting_value FROM system_settings WHERE setting_key = ?');
             $st->execute([self::AUTO_SETTING]);
             return $st->fetchColumn() !== '0';
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return true;
         }
     }
@@ -133,7 +133,7 @@ final class AssetProtectionService
         static $ready = null;
         if ($ready === null) {
             try { $conn->query('SELECT 1 FROM asset_protected_fields LIMIT 0'); $ready = true; }
-            catch (Throwable $e) { $ready = false; }
+            catch (Throwable) { $ready = false; }
         }
         return $ready;
     }

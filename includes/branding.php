@@ -85,7 +85,7 @@ function brandingLogoUrl(?PDO $conn = null): string
         if ($rel !== '' && brandingPathIsSafe($rel) && file_exists(__DIR__ . '/../' . $rel)) {
             $cached = $base . $rel;
         }
-    } catch (Exception $e) {
+    } catch (Exception) {
         // Fall through to the bundled logo.
     }
     return $cached;
@@ -311,7 +311,7 @@ function brandingLoginDesign(?PDO $conn = null, string $scope = 'login'): array
             if (!isset($fields[$field])) continue;
             $out[$field] = brandingLoginValidate($field, $row['setting_value'], $fields[$field]);
         }
-    } catch (Exception $e) {
+    } catch (Exception) {
         // Defaults. A login screen that cannot be styled still has to be usable.
     }
     return $out;

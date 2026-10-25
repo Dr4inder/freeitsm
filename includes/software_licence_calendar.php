@@ -143,7 +143,7 @@ if (!function_exists('syncSoftwareLicenceCalendar')) {
             $ins = $conn->prepare("INSERT INTO calendar_categories (name, color, is_active) VALUES (?, ?, 1)");
             $ins->execute(['Renewals', '#5c6bc0']);   // the Software module colour
             return (int)$conn->lastInsertId();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return null;   // events just go uncategorised rather than failing
         }
     }

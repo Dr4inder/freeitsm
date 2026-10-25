@@ -74,7 +74,7 @@ function filesApiFail(string $message, int $status = 200, array $extra = []): ne
  */
 function filesHasCap(PDO $conn, int $analystId, Cap $cap): bool
 {
-    try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable $e) { return false; }
+    try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable) { return false; }
 }
 
 /**
@@ -216,7 +216,7 @@ function filesArticleTarget(PDO $conn, int $analystId, int $id): ?array
                 require_once __DIR__ . '/../knowledge/visibility.php';
                 $viewer[$analystId] = KnowledgeViewer::forAnalyst($conn, $analystId);
             }
-        } catch (Throwable $e) { /* fail closed */ }
+        } catch (Throwable) { /* fail closed */ }
     }
     if (!$viewer[$analystId]) return null;
     [$sql, $params] = knowledgeVisibilitySql($conn, $viewer[$analystId], 'a', ['no_admin_floor' => true]);

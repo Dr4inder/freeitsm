@@ -81,7 +81,7 @@ function domainRequireCap(PDO $conn, Cap $cap): void
  */
 function domainHasCap(PDO $conn, int $analystId, Cap $cap): bool
 {
-    try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable $e) { return false; }
+    try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable) { return false; }
 }
 
 /**

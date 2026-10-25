@@ -387,7 +387,7 @@ class MattermostProvider extends MessagingProvider
         if (!array_key_exists($key, self::$botIdCache)) {
             try {
                 self::$botIdCache[$key] = (string)($this->api('GET', 'users/me')['id'] ?? '');
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 self::$botIdCache[$key] = '';
             }
         }

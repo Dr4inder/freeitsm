@@ -33,7 +33,7 @@ function enforceAnalystStillActive(): void
         $stmt = connectToDatabase()->prepare("SELECT COALESCE(is_active, 1) FROM analysts WHERE id = ?");
         $stmt->execute([(int)$_SESSION['analyst_id']]);
         $active = $stmt->fetchColumn();
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return;   // see the TRAP above
     }
     if ($active !== false && (int)$active === 1) {

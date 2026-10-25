@@ -261,11 +261,11 @@ class ProjectsService
             // Database Verification a table may not exist, and that must never
             // stop a project being deleted.
             // Benefit measurements (3.3.0), then their benefits below.
-            try { $conn->prepare("DELETE m FROM project_benefit_measures m JOIN project_benefits b ON b.id = m.benefit_id WHERE b.project_id = ?")->execute([$id]); } catch (Throwable $e) { /* not created yet */ }
+            try { $conn->prepare("DELETE m FROM project_benefit_measures m JOIN project_benefits b ON b.id = m.benefit_id WHERE b.project_id = ?")->execute([$id]); } catch (Throwable) { /* not created yet */ }
             // RAID actions first (3.3.0): joined to the entries about to go; the tasks stay.
-            try { $conn->prepare("DELETE rt FROM project_raid_tasks rt JOIN project_raid r ON r.id = rt.raid_id WHERE r.project_id = ?")->execute([$id]); } catch (Throwable $e) { /* not created yet */ }
+            try { $conn->prepare("DELETE rt FROM project_raid_tasks rt JOIN project_raid r ON r.id = rt.raid_id WHERE r.project_id = ?")->execute([$id]); } catch (Throwable) { /* not created yet */ }
             foreach (['project_raci', 'project_members', 'project_items', 'project_raid', 'project_tolerances', 'project_budget_lines', 'project_reports', 'project_milestones', 'project_change_requests', 'project_baselines', 'project_benefits', 'project_gate_items', 'project_task_flow'] as $t) {
-                try { $conn->prepare("DELETE FROM `$t` WHERE project_id = ?")->execute([$id]); } catch (Throwable $e) { /* not created yet */ }
+                try { $conn->prepare("DELETE FROM `$t` WHERE project_id = ?")->execute([$id]); } catch (Throwable) { /* not created yet */ }
             }
             foreach (['project_stages', 'project_audit'] as $t) {
                 $conn->prepare("DELETE FROM `$t` WHERE project_id = ?")->execute([$id]);
@@ -277,11 +277,11 @@ class ProjectsService
             projectLinksDeleteAll($conn, $id);
             // A project's own hourly rate (3.3.0 budget): project_labour_rates has no
             // foreign key - scope + ref_id point at different tables - so by hand.
-            try { $conn->prepare("DELETE FROM project_labour_rates WHERE scope = 'project' AND ref_id = ?")->execute([$id]); } catch (Throwable $e) { /* not created yet */ }
+            try { $conn->prepare("DELETE FROM project_labour_rates WHERE scope = 'project' AND ref_id = ?")->execute([$id]); } catch (Throwable) { /* not created yet */ }
             // Disruption it announced stays on Service Status - it is real work on
             // real services - but no longer names a project that is gone. By hand:
             // a table made by Database Verification has no FK to do it.
-            try { $conn->prepare("UPDATE status_planned SET project_id = NULL WHERE project_id = ?")->execute([$id]); } catch (Throwable $e) { /* not created yet */ }
+            try { $conn->prepare("UPDATE status_planned SET project_id = NULL WHERE project_id = ?")->execute([$id]); } catch (Throwable) { /* not created yet */ }
             $conn->prepare("DELETE FROM projects WHERE id = ?")->execute([$id]);
             $conn->commit();
         } catch (Throwable $e) {
@@ -404,9 +404,9 @@ class ProjectsService
         try {
             $conn->prepare("UPDATE tasks SET project_stage_id = NULL" . self::clearPlanPosition($conn) . " WHERE project_stage_id = ?")->execute([$stageId]);
             // Its milestones stay, as the whole project's - by hand, for an install whose FK failed to add.
-            try { $conn->prepare("UPDATE project_milestones SET stage_id = NULL WHERE stage_id = ?")->execute([$stageId]); } catch (Throwable $e) { /* not created yet */ }
+            try { $conn->prepare("UPDATE project_milestones SET stage_id = NULL WHERE stage_id = ?")->execute([$stageId]); } catch (Throwable) { /* not created yet */ }
             // Its gate's checklist goes with the gate (3.3.0) - by hand, for an install whose FK failed to add.
-            try { $conn->prepare("DELETE FROM project_gate_items WHERE stage_id = ?")->execute([$stageId]); } catch (Throwable $e) { /* not created yet */ }
+            try { $conn->prepare("DELETE FROM project_gate_items WHERE stage_id = ?")->execute([$stageId]); } catch (Throwable) { /* not created yet */ }
             $conn->prepare("DELETE FROM project_stages WHERE id = ?")->execute([$stageId]);
             $conn->commit();
         } catch (Throwable $e) {

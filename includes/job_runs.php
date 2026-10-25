@@ -67,7 +67,7 @@ final class JobRun
                             VALUES (?, ?, 'running', UTC_TIMESTAMP(), ?)")
                  ->execute([$job, $trigger, $analystId ?: null]);
             $id = (int)$conn->lastInsertId();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return null;
         }
         self::$open[$id] = $conn;
@@ -103,7 +103,7 @@ final class JobRun
                             VALUES (?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())")
                  ->execute([$runId, $job, mb_substr($sourceKey, 0, 80), mb_substr($label, 0, 190), $ok ? 1 : 0,
                             $message !== null && $message !== '' ? self::clean($message) : null]);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // never break the job
         }
     }
@@ -151,7 +151,7 @@ final class JobRun
                      ->execute([$key, $runId, (int)$def['max_runtime']]);
             }
             if (random_int(1, 50) === 1) self::prune($conn);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // never break the job
         }
     }
@@ -214,7 +214,7 @@ final class JobRun
             $conn->prepare("INSERT INTO system_settings (setting_key, setting_value) VALUES (?, ?)
                             ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)")
                  ->execute(['job_refused_' . $job, json_encode(['at' => gmdate('Y-m-d H:i:s'), 'reason' => mb_substr($reason, 0, 120)])]);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // never break the job
         }
     }
@@ -238,7 +238,7 @@ final class JobRun
             }
             // Sources whose run was a skip, or has gone.
             $conn->exec("DELETE s FROM job_run_sources s LEFT JOIN job_runs r ON r.id = s.run_id WHERE r.id IS NULL");
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // never break the job
         }
     }

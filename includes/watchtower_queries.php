@@ -26,7 +26,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     // midnight. Morning Checks above already binds $today for exactly this reason.
     $todaySql = naive_today_sql();
     // Planned maintenance due now becomes an incident before the cards count them.
-    try { require_once __DIR__ . '/service_status_planned.php'; statusPlannedDue($conn); } catch (Throwable $e) { /* never break the dashboard */ }
+    try { require_once __DIR__ . '/service_status_planned.php'; statusPlannedDue($conn); } catch (Throwable) { /* never break the dashboard */ }
 
     // Whose work this dashboard is answering about (#58). 'all' reproduces the
     // behaviour every card had before, so nothing changes for anyone who never
@@ -396,7 +396,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     try {
         require_once __DIR__ . '/changes/approvals.php';
         $chEmergencyOpen = changeApprovalEmergencyOpenCount($conn, $chScopeSql, $chScopeArgs);
-    } catch (Throwable $e) { /* never break the dashboard (approval tables not created yet) */ }
+    } catch (Throwable) { /* never break the dashboard (approval tables not created yet) */ }
 
     $changes = [
         'upcoming_7d'       => $chUpcoming,
@@ -545,7 +545,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     try {
         $swSet = $conn->query("SELECT setting_value FROM system_settings WHERE setting_key = 'software_renewal_surface'")->fetchColumn();
         if ($swSet !== false && $swSet !== null && $swSet !== '') $swSurface = (string)$swSet;
-    } catch (Exception $e) { /* default */ }
+    } catch (Exception) { /* default */ }
 
     if (in_array($swSurface, ['dashboard', 'both'], true)) try {
         $swTotal = (int)$conn->query(
@@ -579,7 +579,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
         )->fetchColumn();
 
         $swShow = true;
-    } catch (Exception $e) {
+    } catch (Exception) {
         $swShow = false;   // tables not there yet — draw nothing rather than zeroes
     }
 
@@ -669,11 +669,11 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
                               WHERE $live AND (" . implode(' OR ', $why) . "){$dmT}");
                         $sr->execute($dmA);
                         $dm['services_at_risk'] = (int)$sr->fetchColumn();
-                    } catch (Throwable $e) { /* links not created yet: nothing at risk to report */ }
+                    } catch (Throwable) { /* links not created yet: nothing at risk to report */ }
                 }
             }
         }
-    } catch (Exception $e) {
+    } catch (Exception) {
         $dm['show'] = false;   // tables not there yet — draw nothing rather than zeroes
     }
     // `allowed` lets the page hide the card from somebody who cannot open Domains
@@ -750,7 +750,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
         $set = $conn->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('asset_warranty_surface','asset_warranty_days')")->fetchAll(PDO::FETCH_KEY_PAIR);
         if (!empty($set['asset_warranty_surface'])) $wtSurface = $set['asset_warranty_surface'];
         if (!empty($set['asset_warranty_days']) && (int)$set['asset_warranty_days'] > 0) $wtDays = (int)$set['asset_warranty_days'];
-    } catch (Exception $e) { /* defaults */ }
+    } catch (Exception) { /* defaults */ }
     $wtShowWarranty = in_array($wtSurface, ['dashboard', 'both'], true);
     $asWarranty = 0;
     if ($wtShowWarranty) {
@@ -758,7 +758,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
             $w = $conn->prepare("SELECT COUNT(*) FROM assets WHERE warranty_expiry IS NOT NULL AND warranty_expiry <= DATE_ADD({$todaySql}, INTERVAL ? DAY)" . $asCo);
             $w->execute(array_merge([$wtDays], $asCoArgs));
             $asWarranty = (int)$w->fetchColumn();
-        } catch (Exception $e) { $wtShowWarranty = false; }
+        } catch (Exception) { $wtShowWarranty = false; }
     }
 
     // Lease expiries — the same shape as warranty above, with its own setting
@@ -776,7 +776,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
         $lset = $conn->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('asset_lease_surface','asset_lease_days')")->fetchAll(PDO::FETCH_KEY_PAIR);
         if (!empty($lset['asset_lease_surface'])) $ltSurface = $lset['asset_lease_surface'];
         if (!empty($lset['asset_lease_days']) && (int)$lset['asset_lease_days'] > 0) $ltDays = (int)$lset['asset_lease_days'];
-    } catch (Exception $e) { /* defaults */ }
+    } catch (Exception) { /* defaults */ }
     $wtShowLease = in_array($ltSurface, ['dashboard', 'both'], true);
     $asLease = 0;
     if ($wtShowLease) {
@@ -788,7 +788,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
             $l = $conn->prepare("SELECT COUNT(*) FROM assets a WHERE a.lease_expiry IS NOT NULL AND a.lease_expiry <= DATE_ADD({$todaySql}, INTERVAL ? DAY){$goneBack}" . $aCo);
             $l->execute(array_merge([$ltDays], $aCoArgs));
             $asLease = (int)$l->fetchColumn();
-        } catch (Exception $e) { $wtShowLease = false; }
+        } catch (Exception) { $wtShowLease = false; }
     }
 
     $assets = [
@@ -916,10 +916,10 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
                           WHERE project_id IN $ids AND done_date IS NULL
                             AND due_date BETWEEN {$todaySql} AND DATE_ADD({$todaySql}, INTERVAL 7 DAY)"
                     )->fetchColumn();
-                } catch (Throwable $e) { /* no milestones yet */ }
+                } catch (Throwable) { /* no milestones yet */ }
             }
             $pj['show'] = true;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $pj['show'] = false;   // tables not there yet - draw nothing rather than zeroes
         }
     }
@@ -979,7 +979,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
                   WHERE status = 'dead'
                     AND updated_datetime >= UTC_TIMESTAMP() - INTERVAL 24 HOUR"
             )->fetchColumn();
-        } catch (Exception $ignore) { /* table may not exist yet */ }
+        } catch (Exception) { /* table may not exist yet */ }
 
         $wf = [
             'failed_24h'    => (int)$wfFailed,
@@ -993,7 +993,7 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
             'all_clear'     => ((int)$wfFailed + (int)$wfAborted + $wfDead) === 0,
             'available'     => true,
         ];
-    } catch (Exception $e) {
+    } catch (Exception) {
         // workflow_executions missing (pre-Database-Verify) — show nothing rather
         // than breaking the whole dashboard for every other module.
         $wf['available'] = false;

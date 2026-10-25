@@ -36,7 +36,7 @@ function projectIntakeReady(PDO $conn): bool
     static $ready = null;
     if ($ready === null) {
         try { $conn->query("SELECT approval_status, estimated_cost, form_submission_id FROM projects LIMIT 0"); $ready = true; }
-        catch (Throwable $e) { $ready = false; }
+        catch (Throwable) { $ready = false; }
     }
     return $ready;
 }

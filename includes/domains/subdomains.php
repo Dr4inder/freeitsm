@@ -28,7 +28,7 @@ function domainSubdomainsReady(PDO $conn): bool
     static $ok = null;
     if ($ok !== null) return $ok;
     try { $conn->query("SELECT parent_domain_id FROM domains LIMIT 0"); return $ok = true; }
-    catch (Throwable $e) { return $ok = false; }
+    catch (Throwable) { return $ok = false; }
 }
 
 /** Are the recorded-certificate tables there yet? */
@@ -40,7 +40,7 @@ function domainManualCertsReady(PDO $conn): bool
         $conn->query("SELECT 1 FROM domain_manual_certificates LIMIT 0");
         $conn->query("SELECT 1 FROM domain_certificate_types LIMIT 0");
         return $ok = true;
-    } catch (Throwable $e) { return $ok = false; }
+    } catch (Throwable) { return $ok = false; }
 }
 
 /** Is $name under $parent (students.example.org under example.org)? Never itself. */

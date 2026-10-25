@@ -91,7 +91,7 @@ class AssetImportService
                 try {
                     $conn->query("SELECT `{$k}` FROM assets LIMIT 1");
                     $keys[] = $k;
-                } catch (Exception $e) {
+                } catch (Exception) {
                     // column not present on this install
                 }
             }
@@ -109,7 +109,7 @@ class AssetImportService
             try {
                 $conn->query("SELECT 1 FROM asset_import_runs LIMIT 1");
                 $ready = true;
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $ready = false;
             }
         }
@@ -538,7 +538,7 @@ class AssetImportService
             try {
                 $conn->query("SELECT tenant_id FROM {$table} LIMIT 1");
                 $cache[$table] = true;
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $cache[$table] = false;
             }
         }

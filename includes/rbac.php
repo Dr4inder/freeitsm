@@ -74,7 +74,7 @@ function getAnalystCapabilities(PDO $conn, int $analystId): array {
         $stmt = $conn->prepare($sql);
         $stmt->execute([$analystId, $analystId]);
         $granted = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return []; // fail closed — a broken query must not grant access (and don't cache it)
     }
 
@@ -119,7 +119,7 @@ function capActionRestricted(PDO $conn, Cap $capability): bool {
         $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
         $s->execute([$r['setting']]);
         return (string)$s->fetchColumn() === (string)$r['value'];
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         return false;   // unreadable settings: today's behaviour
     }
 }
@@ -182,7 +182,7 @@ function requireActionJson(Cap $capability, ?PDO $conn = null): void {
     try {
         if ($conn === null) $conn = connectToDatabase();
         $ok = analystMayAct($conn, (int) $_SESSION['analyst_id'], $capability);
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         $ok = false;
     }
     if (!$ok) {
@@ -206,7 +206,7 @@ function requireCapability(Cap $capability, ?PDO $conn = null): void {
     try {
         if ($conn === null) $conn = connectToDatabase();
         $ok = analystHasCapability($conn, (int) $_SESSION['analyst_id'], $capability);
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         $ok = false;
     }
     if (!$ok) {
@@ -227,7 +227,7 @@ function requireCapabilityJson(Cap $capability, ?PDO $conn = null): void {
     try {
         if ($conn === null) $conn = connectToDatabase();
         $ok = analystHasCapability($conn, (int) $_SESSION['analyst_id'], $capability);
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         $ok = false;
     }
     if (!$ok) {

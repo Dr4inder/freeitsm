@@ -38,7 +38,7 @@ class TaskForms
             $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'tasks_forms_enabled'");
             $s->execute();
             return (string)$s->fetchColumn() === '1';
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return false;
         }
     }
@@ -58,7 +58,7 @@ class TaskForms
             $conn->query("SELECT task_id, tenant_id, client_reference, superseded_by_id FROM form_submissions LIMIT 0");
             $conn->query("SELECT id FROM task_forms LIMIT 0");
             return $ready = true;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return $ready = false;
         }
     }
@@ -416,7 +416,7 @@ class TaskForms
             $st->execute([$taskId]);
             return array_map(function ($r) { return ['title' => (string)$r['title'], 'mode' => (string)$r['requirement_mode']]; },
                              $st->fetchAll(PDO::FETCH_ASSOC));
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return [];   // completing a task must not start failing on a part-upgraded install
         }
     }
@@ -453,7 +453,7 @@ class TaskForms
         try {
             $place = implode(',', array_fill(0, count($taskIds), '?'));
             $conn->prepare("DELETE FROM task_forms WHERE task_id IN ($place)")->execute(array_values($taskIds));
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // the table does not exist yet on a part-upgraded install: nothing to remove
         }
     }

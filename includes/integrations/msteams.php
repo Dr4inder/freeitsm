@@ -89,7 +89,7 @@ function msteamsReady(PDO $conn): bool
         $conn->query("SELECT 1 FROM msteams_channels LIMIT 1");
         $conn->query("SELECT 1 FROM msteams_channel_workflows LIMIT 1");
         return true;
-    } catch (Exception $e) {
+    } catch (Exception) {
         return false;
     }
 }
@@ -99,7 +99,7 @@ function msteamsChannelCount(PDO $conn): int
 {
     try {
         return (int)$conn->query("SELECT COUNT(*) FROM msteams_channels WHERE webhook_url IS NOT NULL AND webhook_url <> ''")->fetchColumn();
-    } catch (Exception $e) {
+    } catch (Exception) {
         return 0;
     }
 }

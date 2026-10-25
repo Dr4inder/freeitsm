@@ -69,7 +69,7 @@ function projectChatReady(PDO $conn): bool
     static $ready = null;
     if ($ready === null) {
         try { $conn->query("SELECT 1 FROM project_ai_messages LIMIT 0"); $conn->query("SELECT 1 FROM project_ai_threads LIMIT 0"); $ready = true; }
-        catch (Throwable $e) { $ready = false; }
+        catch (Throwable) { $ready = false; }
     }
     return $ready;
 }
@@ -121,7 +121,7 @@ function projectChatMessages(PDO $conn, int $threadId): array
 function projectChatMaturity(PDO $conn, array $project): array
 {
     $pid = (int)$project['id'];
-    $n = function (string $sql) use ($conn, $pid) { try { $st = $conn->prepare($sql); $st->execute([$pid]); return (int)$st->fetchColumn(); } catch (Throwable $e) { return 0; } };
+    $n = function (string $sql) use ($conn, $pid) { try { $st = $conn->prepare($sql); $st->execute([$pid]); return (int)$st->fetchColumn(); } catch (Throwable) { return 0; } };
     $tasks   = $n("SELECT COUNT(*) FROM tasks WHERE project_id = ? AND parent_task_id IS NULL");
     $dated   = $n("SELECT COUNT(*) FROM tasks WHERE project_id = ? AND parent_task_id IS NULL AND due_date IS NOT NULL");
     $overdue = $n("SELECT COUNT(*) FROM tasks t LEFT JOIN task_statuses s ON s.id = t.status_id WHERE t.project_id = ? AND t.parent_task_id IS NULL AND COALESCE(s.is_closed, 0) = 0 AND t.due_date < UTC_DATE()");

@@ -30,7 +30,7 @@ if (!$__hasAnalystAccount && !empty($ss_user_email)) {
         );
         $__aa->execute([$ss_user_email]);
         $__hasAnalystAccount = (bool)$__aa->fetchColumn();
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         $__hasAnalystAccount = false;
     }
 }

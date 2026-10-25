@@ -56,7 +56,7 @@ function loadMessagingChannel(PDO $conn, $channelId): ?array
         $stmt = $conn->prepare("SELECT * FROM messaging_channels WHERE id = ?");
         $stmt->execute([(int) $channelId]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
+    } catch (Exception) {
         return null;
     }
     if (!$row) {
@@ -68,7 +68,7 @@ function loadMessagingChannel(PDO $conn, $channelId): ?array
     // empty rows still work (migration-safe).
     foreach (['verify_token', 'relay_secret'] as $secretCol) {
         if (isset($row[$secretCol]) && $row[$secretCol] !== null && $row[$secretCol] !== '') {
-            try { $row[$secretCol] = decryptValue($row[$secretCol]); } catch (Exception $e) { /* leave as-is */ }
+            try { $row[$secretCol] = decryptValue($row[$secretCol]); } catch (Exception) { /* leave as-is */ }
         }
     }
     $row['is_active'] = (bool) ($row['is_active'] ?? 1);
@@ -87,7 +87,7 @@ function messagingDecodeCredentials($stored): array
     }
     try {
         $plain = decryptValue($stored);
-    } catch (Exception $e) {
+    } catch (Exception) {
         return [];
     }
     $decoded = json_decode((string) $plain, true);
@@ -108,7 +108,7 @@ function messagingPublicBaseUrl(PDO $conn): string
         if ($configured !== '') {
             return rtrim($configured, '/');
         }
-    } catch (Exception $e) { /* table missing → derive from request */ }
+    } catch (Exception) { /* table missing → derive from request */ }
 
     // ⚠️ Deliberately NOT requestIsHttps() (GH #152): this is the address shown
     // for the provider to call, and api/messaging/webhook.php rebuilds it the same
@@ -489,7 +489,7 @@ function messagingAdminMayAdministerChannel(PDO $conn, int $channelId): bool
         $stmt = $conn->prepare("SELECT provider FROM messaging_channels WHERE id = ?");
         $stmt->execute([$channelId]);
         return ((string) $stmt->fetchColumn()) === 'slack';
-    } catch (Exception $e) {
+    } catch (Exception) {
         return false;
     }
 }

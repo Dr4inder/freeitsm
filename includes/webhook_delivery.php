@@ -37,7 +37,7 @@ function webhookEncryptionAvailable(): bool {
     static $ok = null;
     if ($ok === null) {
         try { getEncryptionKey(); $ok = true; }
-        catch (Exception $e) { $ok = false; }
+        catch (Exception) { $ok = false; }
     }
     return $ok;
 }
@@ -135,7 +135,7 @@ function webhookPayloadRetentionDays(PDO $conn): int {
         $v = $stmt->fetchColumn();
         if ($v === false || $v === null || $v === '') return WEBHOOK_RETENTION_DEFAULT;
         return (int)$v;
-    } catch (Exception $e) {
+    } catch (Exception) {
         return WEBHOOK_RETENTION_DEFAULT;
     }
 }
