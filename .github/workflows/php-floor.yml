@@ -50,7 +50,11 @@ jobs:
           coverage: none
       - name: files run directly parse on PHP 7.4, so the version message can show
         run: |
+          # The guard, and the two files that load it FIRST: PHP reads a whole file before
+          # running any of it, so 8.x syntax in either would beat the guard they carry.
           php -l includes/php_version_guard.php
+          php -l includes/functions.php
+          php -l includes/ssl.php
           find . -name '*.php' -not -path '*/includes/*' -not -path './tests/*' -not -path './vendor/*' -not -path './node_modules/*' -not -path './local/*' -print0 \
             | xargs -0 -n1 -P4 php -l > lint.txt 2>&1 || true
           if grep -E 'Parse error|Fatal error' lint.txt; then

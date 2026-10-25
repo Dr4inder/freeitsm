@@ -9,6 +9,7 @@ require_once '../../includes/i18n.php';
 require_once '../../includes/theme.php';
 require_once '../../includes/timezone.php';
 require_once '../../includes/ai_settings_panel.php';
+require_once '../../includes/messaging/MessagingProviderKind.php';   // the Messaging tab's provider badges
 I18n::initFromSession();
 Tz::init();
 
@@ -3592,6 +3593,13 @@ function renderOversizeFields(string $px, bool $withLimits): void
         const API_SETTINGS = '../../api/settings/';
         // value => {label, background, color, oauth}, from the MailboxProvider enum (4.0).
         const MAILBOX_PROVIDERS = <?php echo json_encode(MailboxProvider::forJs(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        // value => {label, background, color}, from the MessagingProviderKind enum (4.0).
+        const MESSAGING_PROVIDERS = <?php echo json_encode(MessagingProviderKind::forJs(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        /** A messaging provider's badge; none saved is Twilio, as MessagingProviderKind::fromChannel() says. */
+        function messagingProviderBadge(provider) {
+            const p = MESSAGING_PROVIDERS[provider || 'twilio'] || { label: String(provider), background: '#eceff1', color: '#455a64' };
+            return `<span class="status-badge" style="background:${p.background};color:${p.color};">${escapeHtml(p.label)}</span>`;
+        }
         let currentTab = 'departments';
 
         let mailboxes = [];
@@ -4803,15 +4811,9 @@ function renderOversizeFields(string $px, bool $withLimits): void
                 return;
             }
             tbody.innerHTML = list.map(c => {
-                const providerBadge = c.provider === 'meta'
-                    ? ' <span class="status-badge" style="background:#e3f2fd;color:#1565c0;">Meta</span>'
-                    : c.provider === 'telegram'
-                    ? ' <span class="status-badge" style="background:#e1f5fe;color:#0288d1;">Telegram</span>'
-                    : c.provider === 'teams'
-                    ? ' <span class="status-badge" style="background:#ede7f6;color:#4527a0;">Teams</span>'
-                    : c.provider === 'mattermost'
-                    ? ' <span class="status-badge" style="background:#e6f4ea;color:#1e7e34;">Mattermost</span>'
-                    : ' <span class="status-badge" style="background:#e8f5e9;color:#2e7d32;">Twilio</span>';
+                // From MessagingProviderKind (PHP), so every provider has a badge - until 4.0
+                // a Slack channel fell through this list and was badged "Twilio".
+                const providerBadge = ' ' + messagingProviderBadge(c.provider);
                 const activeBadge = c.is_active ? '' : ' <span class="status-badge status-inactive">Inactive</span>';
                 const credBadge = c.has_credentials
                     ? '<span class="status-badge status-active">Configured</span>'
@@ -5350,9 +5352,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
                 return;
             }
             tbody.innerHTML = list.map(tpl => {
-                const prov = tpl.provider === 'meta'
-                    ? '<span class="status-badge" style="background:#e3f2fd;color:#1565c0;">Meta</span>'
-                    : '<span class="status-badge" style="background:#e8f5e9;color:#2e7d32;">Twilio</span>';
+                const prov = messagingProviderBadge(tpl.provider);
                 const active = tpl.is_active ? '' : ' <span class="status-badge status-inactive">Inactive</span>';
                 const vars = tpl.var_count ? ` <span class="status-badge" style="background:#f3e5f5;color:#6a1b9a;">${tpl.var_count} var${tpl.var_count > 1 ? 's' : ''}</span>` : '';
                 const safeName = escapeHtml(tpl.name).replace(/'/g, "\\'");

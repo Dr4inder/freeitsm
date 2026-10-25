@@ -55,6 +55,12 @@ if ($dc !== 0) { echo "  SKIP  Docker is not running\n"; exit(2); }
 echo "\nThe guard file\n";
 [$out, $code] = inPhp('php:7.4-cli', 'php -l /app/includes/php_version_guard.php');
 check('parses on PHP 7.4', $code === 0, $out);
+// And the two files that load it first - PHP parses a whole file before running it,
+// so PHP 8 syntax in either would beat the guard. Loading an enum file with require is fine.
+foreach (['functions.php', 'ssl.php'] as $carrier) {
+    [$out, $code] = inPhp('php:7.4-cli', "php -l /app/includes/$carrier");
+    check("includes/$carrier (loads it first) parses on PHP 7.4", $code === 0, $out);
+}
 
 // ---------------------------------------------------------------- 2
 // TRAP (this harness): exec() goes through cmd.exe on Windows, which eats % and

@@ -17,6 +17,7 @@
  */
 
 require_once __DIR__ . '/MessagingProvider.php';
+require_once __DIR__ . '/MessagingProviderKind.php';
 require_once __DIR__ . '/TwilioProvider.php';
 require_once __DIR__ . '/MetaCloudProvider.php';
 require_once __DIR__ . '/SlackProvider.php';
@@ -39,24 +40,7 @@ if (!defined('MESSAGING_WINDOW_SECONDS')) {
  */
 function messagingProvider(array $channel): MessagingProvider
 {
-    switch ($channel['provider'] ?? 'twilio') {
-        case 'twilio':
-            return new TwilioProvider($channel);
-        case 'meta':
-            return new MetaCloudProvider($channel);
-        case 'freeitsm':
-            return new FreeitsmProvider($channel);
-        case 'slack':
-            return new SlackProvider($channel);
-        case 'telegram':
-            return new TelegramProvider($channel);
-        case 'teams':
-            return new TeamsProvider($channel);
-        case 'mattermost':
-            return new MattermostProvider($channel);
-        default:
-            throw new Exception('Unknown messaging provider: ' . ($channel['provider'] ?? '?'));
-    }
+    return MessagingProviderKind::fromChannel($channel)->create($channel);
 }
 
 /**
