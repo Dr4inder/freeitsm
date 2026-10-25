@@ -91,6 +91,18 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
         </div>
         <?php endif; ?>
 
+        <?php if (settingsTabVisible($visibleTabs, 'cert-types')): ?>
+        <div class="tab-content<?php echo $activeTabId === 'cert-types' ? ' active' : ''; ?>" id="cert-types-tab" data-capability="<?php echo Cap::DOMAINS_CERT_TYPES; ?>">
+            <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <div><h2 style="margin:0;font-size:18px"><?php echo $tt('ct_title'); ?></h2><div class="dom-hint" style="font-size:13px"><?php echo $tt('ct_intro'); ?></div></div>
+                <button type="button" class="dom-btn primary" id="ctAdd"><?php echo htmlspecialchars(t('common.add')); ?></button>
+            </div>
+            <table class="st-list"><thead><tr>
+                <th><?php echo $tt('st_name'); ?></th><th><?php echo $tt('st_active'); ?></th><th><?php echo $tt('ct_in_use'); ?></th><th><?php echo $tt('st_order'); ?></th><th></th>
+            </tr></thead><tbody id="ctBody"></tbody></table>
+        </div>
+        <?php endif; ?>
+
         <?php if (settingsTabVisible($visibleTabs, 'alerts')): ?>
         <div class="tab-content<?php echo $activeTabId === 'alerts' ? ' active' : ''; ?>" id="alerts-tab" data-capability="<?php echo Cap::DOMAINS_ALERTS; ?>" data-settings-tab="alerts">
             <h2 style="margin:0 0 4px;font-size:18px"><?php echo $tt('alerts_title'); ?></h2>
@@ -237,6 +249,21 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
         </div>
     </div>
 
+    <div class="modal" id="mCertType">
+        <div class="modal-content" style="max-width:480px">
+            <div class="modal-header" id="ctTitle"></div>
+            <div class="modal-body">
+                <div class="form-group"><label for="ctName"><?php echo $tt('st_name'); ?></label><input type="text" id="ctName" maxlength="100"></div>
+                <div class="form-group"><label for="ctOrder"><?php echo $tt('st_order'); ?></label><input type="number" id="ctOrder" value="0"></div>
+                <div class="form-group"><label class="toggle-label"><span class="toggle-switch"><input type="checkbox" id="ctActive" checked><span class="toggle-slider"></span></span> <?php echo $tt('st_active'); ?></label></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close="mCertType"><?php echo htmlspecialchars(t('common.cancel')); ?></button>
+                <button type="button" class="btn btn-primary" id="ctSave"><?php echo htmlspecialchars(t('common.save')); ?></button>
+            </div>
+        </div>
+    </div>
+
     <script src="../../assets/js/domains.js?v=2"></script>
     <script>
     (function () {
@@ -367,7 +394,50 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => { loadSettings().catch(e => showToast(e.message, 'error')); loadStatuses().catch(() => {}); });
+        // ---- certificate types (the same shape as the statuses list) ------------
+        let certTypes = [], ctEditing = null;
+        async function loadCertTypes() {
+            const body = document.getElementById('ctBody'); if (!body) return;
+            const d = await api('cert_types.php');
+            certTypes = d.types || [];
+            if (!d.ready) { body.innerHTML = '<tr><td colspan="5" class="dom-hint">' + esc(T('settings.ct_not_ready')) + '</td></tr>'; return; }
+            body.innerHTML = certTypes.map(s => '<tr data-id="' + s.id + '"><td>' + esc(s.name) + '</td>'
+                + '<td>' + (s.is_active ? '<span class="status-badge status-active">' + esc(T('settings.on')) + '</span>' : '<span class="status-badge status-inactive">' + esc(T('settings.off')) + '</span>') + '</td>'
+                + '<td>' + s.in_use + '</td><td>' + s.display_order + '</td>'
+                + '<td><button type="button" class="action-btn ct-edit" title="' + esc(window.t('common.edit')) + '">' + SVG_EDIT + '</button>'
+                + '<button type="button" class="action-btn delete ct-del" title="' + esc(window.t('common.delete')) + '">' + SVG_DEL + '</button></td></tr>').join('');
+        }
+        function openCertType(s) {
+            ctEditing = s ? s.id : null;
+            document.getElementById('ctTitle').textContent = s ? T('settings.ct_edit') : T('settings.ct_add');
+            document.getElementById('ctName').value = s ? s.name : '';
+            document.getElementById('ctOrder').value = s ? s.display_order : (certTypes.length + 1);
+            document.getElementById('ctActive').checked = s ? s.is_active : true;
+            window.Dom.openModal('mCertType');
+        }
+        const ctBody = document.getElementById('ctBody');
+        if (ctBody) {
+            document.getElementById('ctAdd').addEventListener('click', () => openCertType(null));
+            // 🔴 closest(), never e.target.classList: the click lands on the svg.
+            ctBody.addEventListener('click', async e => {
+                const tr = e.target.closest('tr[data-id]'); if (!tr) return;
+                const s = certTypes.find(x => String(x.id) === tr.dataset.id);
+                if (e.target.closest('.ct-edit')) openCertType(s);
+                if (e.target.closest('.ct-del')) {
+                    if (!(await showConfirm({ title: T('settings.ct_delete'), message: T('settings.ct_delete_body', { name: s.name }), okLabel: window.t('common.delete'), okClass: 'danger' }))) return;
+                    try { await api('cert_types.php', { action: 'delete', id: s.id }); await loadCertTypes(); } catch (err) { showToast(err.message, 'error'); }
+                }
+            });
+            document.getElementById('ctSave').addEventListener('click', async () => {
+                try {
+                    await api('cert_types.php', { action: 'save', id: ctEditing, name: document.getElementById('ctName').value,
+                        display_order: document.getElementById('ctOrder').value, is_active: document.getElementById('ctActive').checked ? 1 : 0 });
+                    window.Dom.closeModal('mCertType'); await loadCertTypes();
+                } catch (err) { showToast(err.message, 'error'); }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { loadSettings().catch(e => showToast(e.message, 'error')); loadStatuses().catch(() => {}); loadCertTypes().catch(() => {}); });
     })();
     </script>
     <script src="../../assets/js/mobile.js?v=82"></script>

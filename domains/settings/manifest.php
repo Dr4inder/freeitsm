@@ -33,6 +33,12 @@ return [
             'grant'     => 'Maintain the list of domain statuses',
         ],
         [
+            'id'        => 'cert-types',
+            'cap'       => Cap::DOMAINS_CERT_TYPES,
+            'label_key' => 'domains.settings.tab_cert_types',
+            'grant'     => 'Maintain the list of certificate types a recorded certificate can be',
+        ],
+        [
             'id'        => 'alerts',
             'cap'       => Cap::DOMAINS_ALERTS,
             'label_key' => 'domains.settings.tab_alerts',

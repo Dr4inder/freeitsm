@@ -39,6 +39,7 @@ require_once __DIR__ . '/../domains/lookup.php';
 require_once __DIR__ . '/../domains/checks.php';
 require_once __DIR__ . '/../domains/monitor.php';
 require_once __DIR__ . '/../domains/customer.php';
+require_once __DIR__ . '/../domains/subdomains.php';
 require_once __DIR__ . '/../contract_party.php';
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 
@@ -85,6 +86,7 @@ class DomainsService
             'tags'                  => ['type' => 'tags'],
             'notes'                 => ['type' => 'text'],
             'monitoring_enabled'    => ['type' => 'bool'],
+            'parent_domain_id'      => ['type' => 'parent'],     // a subdomain's parent - includes/domains/subdomains.php
         ];
     }
 
@@ -146,6 +148,12 @@ class DomainsService
         $cols = ['domain_name', 'display_name', 'tenant_id', 'created_by'];
         $vals = [$n['name'], $n['display'], $store, $ctx->actorId > 0 ? $ctx->actorId : null];
         $row  = ['tenant_id' => $store];
+        // A subdomain of a domain already in the register is linked to it unless
+        // the caller said otherwise - the closest parent, when there are several.
+        if (!array_key_exists('parent_domain_id', $in) && domainSubdomainsReady($conn)) {
+            $cand = domainParentCandidates($conn, $n['name'], $store);
+            if ($cand) $in['parent_domain_id'] = $cand[0]['id'];
+        }
         $in   = self::normaliseParties($conn, $in, []);
         $in   = self::normaliseCostCentre($conn, $in, ['tenant_id' => $store]);
         foreach (self::fieldMap() as $field => $def) {
@@ -170,7 +178,16 @@ class DomainsService
             $conn->prepare("UPDATE domains SET auth_code = ? WHERE id = ?")->execute([encryptValue((string)$in['auth_code']), $id]);
         }
 
-        self::audit($conn, $id, $ctx->actorId, 'domain_created', null, $n['name'], $source === 'app' ? ($ctx->source === 'api' ? 'api' : 'app') : $source);
+        $auditSource = $source === 'app' ? ($ctx->source === 'api' ? 'api' : 'app') : $source;
+        self::audit($conn, $id, $ctx->actorId, 'domain_created', null, $n['name'], $auditSource);
+        // And the other way round: subdomains added before their parent are
+        // linked to it now - unless the new domain is a subdomain itself.
+        if (domainSubdomainsReady($conn) && empty($in['parent_domain_id'])) {
+            foreach (domainOrphanSubdomains($conn, $id, $n['name'], $store) as $childId) {
+                $conn->prepare("UPDATE domains SET parent_domain_id = ?, updated_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$id, $childId]);
+                self::audit($conn, $childId, $ctx->actorId, 'parent_domain_id', null, $n['name'], $auditSource);
+            }
+        }
         self::afterDateChange($conn);
         self::dispatchCrud($conn, 'created', $id);
         return $id;
@@ -208,6 +225,13 @@ class DomainsService
                 // detection knew about the old one means nothing for the new one.
                 $sets[] = 'watch_baseline = NULL';
                 $changes[] = ['domain_name', $cur['domain_name'], $n['name']];
+                // Renamed out from under its parent: no longer its subdomain.
+                if (!empty($cur['parent_domain_id']) && !array_key_exists('parent_domain_id', $in)) {
+                    $p = $conn->prepare("SELECT domain_name FROM domains WHERE id = ?");
+                    $p->execute([(int)$cur['parent_domain_id']]);
+                    if (!domainIsUnder($n['name'], (string)$p->fetchColumn())) $in['parent_domain_id'] = null;
+                }
+                $renamedTo = $n['name'];
             }
         }
 
@@ -237,7 +261,15 @@ class DomainsService
         foreach ($changes as [$f, $o, $nv]) {
             self::audit($conn, $id, $ctx->actorId, $f, self::auditDisplay($conn, $f, $o), self::auditDisplay($conn, $f, $nv), $source);
         }
-        if (array_intersect(array_column($changes, 0), ['expiry_date', 'domain_name', 'status_id'])) self::afterDateChange($conn);
+        // A renamed parent keeps only the subdomains still under its new name.
+        if (isset($renamedTo) && domainSubdomainsReady($conn)) {
+            foreach (domainSubdomains($conn, $id) as $child) {
+                if (domainIsUnder($child['domain_name'], $renamedTo)) continue;
+                $conn->prepare("UPDATE domains SET parent_domain_id = NULL WHERE id = ?")->execute([$child['id']]);
+                self::audit($conn, $child['id'], $ctx->actorId, 'parent_domain_id', $cur['domain_name'], null, $source);
+            }
+        }
+        if (array_intersect(array_column($changes, 0), ['expiry_date', 'domain_name', 'status_id', 'parent_domain_id'])) self::afterDateChange($conn);
         if ($changes) self::dispatchCrud($conn, 'updated', $id);
         return $id;
     }
@@ -260,8 +292,13 @@ class DomainsService
             // The 3.0.0 links, by the same rule - each on its own, because before
             // Database Verification the tables are not there, and a missing table
             // must never stop a domain being deleted.
-            foreach (['domain_cmdb_objects', 'domain_status_services', 'ticket_domains', 'domain_knowledge_articles', 'domain_status_incidents'] as $t) {
+            foreach (['domain_cmdb_objects', 'domain_status_services', 'ticket_domains', 'domain_knowledge_articles', 'domain_status_incidents', 'domain_manual_certificates'] as $t) {
                 try { $conn->prepare("DELETE FROM `$t` WHERE domain_id = ?")->execute([$id]); } catch (Throwable $e) { /* not created yet */ }
+            }
+            // Its subdomains stay, standing on their own: deleting a parent
+            // from the register says nothing about whether they still exist.
+            if (domainSubdomainsReady($conn)) {
+                $conn->prepare("UPDATE domains SET parent_domain_id = NULL WHERE parent_domain_id = ?")->execute([$id]);
             }
             $conn->prepare("DELETE FROM domains WHERE id = ?")->execute([$id]);
             $conn->commit();
@@ -344,6 +381,14 @@ class DomainsService
     public static function refreshLookup(PDO $conn, ActorContext $ctx, int $id): array
     {
         $row = self::loadForActor($conn, $ctx, $id);
+        // A subdomain has no registration of its own: the registry would only
+        // answer "not found". Nothing is recorded as a failure.
+        if (!empty($row['parent_domain_id'])) {
+            $p = $conn->prepare("SELECT domain_name FROM domains WHERE id = ?");
+            $p->execute([(int)$row['parent_domain_id']]);
+            return ['ok' => false, 'subdomain' => true, 'changes' => [],
+                    'error' => 'This is a subdomain: its registration is ' . ($p->fetchColumn() ?: 'its parent') . '\'s - refresh that domain instead.'];
+        }
         $r = domainLookup($conn, $row['domain_name']);
         if (!$r['ok']) {
             self::recordLookupError($conn, $id, (string)$r['error']);
@@ -458,7 +503,18 @@ class DomainsService
     public static function runChecks(PDO $conn, ?ActorContext $ctx, int $id): array
     {
         $row = $ctx ? self::loadForActor($conn, $ctx, $id) : self::loadRow($conn, $id);
-        $res = domainRunChecks($row, domainSettings($conn));
+        // A subdomain's checks need its parent: its name (DMARC and CAA are
+        // inherited from it) and its DNSSEC (signed at the parent's zone).
+        $checkRow = $row;
+        if (!empty($row['parent_domain_id'])) {
+            $p = $conn->prepare("SELECT domain_name, dnssec FROM domains WHERE id = ?");
+            $p->execute([(int)$row['parent_domain_id']]);
+            if ($pr = $p->fetch(PDO::FETCH_ASSOC)) {
+                $checkRow['parent_name'] = $pr['domain_name'];
+                $checkRow['parent_dnssec'] = $pr['dnssec'];
+            }
+        }
+        $res = domainRunChecks($checkRow, domainSettings($conn));
 
         $old = $row['watch_baseline'] ? json_decode($row['watch_baseline'], true) : null;
         $new = domainBaseline($row, $res['snapshot']);
@@ -582,6 +638,140 @@ class DomainsService
             throw new ServiceError('conflict', 'in_use', 'Domains still use this status. Move them to another status first, or switch this one off instead.');
         }
         $conn->prepare("DELETE FROM domain_statuses WHERE id = ?")->execute([$id]);
+    }
+
+    // ======================================================================
+    //  Recorded certificates (and their types)
+    // ======================================================================
+
+    /**
+     * Adds or updates a certificate recorded by hand on a domain - one its checks
+     * cannot reach. Recorded in the domain's history; its expiry joins the
+     * certificate alerts, calendar and Watchtower (includes/domains/subdomains.php).
+     *
+     * @param array $in  id (absent = new), domain_id (required on create), purpose (required),
+     *     cert_type_id, supplier_id OR provider_name, expiry_date (required, YYYY-MM-DD), url (http/https), notes
+     * @return array{id:int, created:bool}
+     */
+    public static function saveManualCertificate(PDO $conn, ActorContext $ctx, array $in): array
+    {
+        if (!domainManualCertsReady($conn)) throw new ServiceError('validation', 'not_ready', 'Run Database Verification first.');
+        $id = (int)($in['id'] ?? 0);
+        $cur = null;
+        if ($id > 0) {
+            $st = $conn->prepare("SELECT * FROM domain_manual_certificates WHERE id = ?");
+            $st->execute([$id]);
+            $cur = $st->fetch(PDO::FETCH_ASSOC);
+            if (!$cur) throw new ServiceError('not_found', 'not_found', 'Certificate not found.');
+            $domainId = (int)$cur['domain_id'];
+        } else {
+            $domainId = (int)($in['domain_id'] ?? 0);
+        }
+        self::loadForActor($conn, $ctx, $domainId);   // out of scope reads as not found
+
+        // One line: it goes into alert e-mail subjects and calendar titles.
+        $purpose = trim(preg_replace('/\s+/u', ' ', (string)($in['purpose'] ?? '')));
+        if ($purpose === '') throw new ServiceError('validation', 'missing_field', 'Say what the certificate is for.');
+        if (mb_strlen($purpose) > 255) throw new ServiceError('validation', 'invalid_field', 'What it is for can be at most 255 characters.');
+        $expiry = trim((string)($in['expiry_date'] ?? ''));
+        $d = DateTimeImmutable::createFromFormat('Y-m-d', $expiry);
+        if (!$d || $d->format('Y-m-d') !== $expiry) throw new ServiceError('validation', 'invalid_field', 'Enter the expiry date.');
+        $type = (int)($in['cert_type_id'] ?? 0);
+        if ($type > 0) {
+            $t = $conn->prepare("SELECT id FROM domain_certificate_types WHERE id = ? AND (is_active = 1 OR id = ?)");
+            $t->execute([$type, (int)($cur['cert_type_id'] ?? 0)]);
+            if (!$t->fetchColumn()) throw new ServiceError('validation', 'invalid_field', 'That certificate type is not available.');
+        }
+        // The provider: a Contracts supplier, or plain text when it is not one.
+        $supplier = (int)($in['supplier_id'] ?? 0);
+        $provider = trim((string)($in['provider_name'] ?? ''));
+        if ($supplier > 0) {
+            self::lookup($conn, 'suppliers', $supplier, 'supplier');
+            $provider = '';
+        }
+        if (mb_strlen($provider) > 255) throw new ServiceError('validation', 'invalid_field', 'The provider can be at most 255 characters.');
+        $url = trim((string)($in['url'] ?? ''));
+        if ($url !== '' && !preg_match('#^https?://\S+$#i', $url)) throw new ServiceError('validation', 'invalid_field', 'The address must start with http:// or https://');
+        if (mb_strlen($url) > 500) throw new ServiceError('validation', 'invalid_field', 'The address can be at most 500 characters.');
+        $notes = trim((string)($in['notes'] ?? ''));
+
+        $vals = [$purpose, $type ?: null, $supplier ?: null, $provider !== '' ? $provider : null, $expiry,
+                 $url !== '' ? $url : null, $notes !== '' ? mb_substr($notes, 0, 20000) : null];
+        $source = $ctx->source === 'api' ? 'api' : 'app';
+        if ($cur) {
+            $conn->prepare("UPDATE domain_manual_certificates SET purpose = ?, cert_type_id = ?, supplier_id = ?, provider_name = ?,
+                                   expiry_date = ?, url = ?, notes = ?, updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
+                 ->execute([...$vals, $id]);
+            $old = $cur['purpose'] . ' (' . $cur['expiry_date'] . ')';
+            $new = $purpose . ' (' . $expiry . ')';
+            if ($old !== $new) self::audit($conn, $domainId, $ctx->actorId, 'certificate_changed', $old, $new, $source);
+        } else {
+            $conn->prepare("INSERT INTO domain_manual_certificates (domain_id, purpose, cert_type_id, supplier_id, provider_name, expiry_date, url, notes,
+                                                                    created_by, created_datetime, updated_datetime)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())")
+                 ->execute([$domainId, ...$vals, $ctx->actorId > 0 ? $ctx->actorId : null]);
+            $id = (int)$conn->lastInsertId();
+            self::audit($conn, $domainId, $ctx->actorId, 'certificate_added', null, $purpose . ' (' . $expiry . ')', $source);
+        }
+        if (!$cur || (string)$cur['expiry_date'] !== $expiry || (string)$cur['purpose'] !== $purpose) self::afterDateChange($conn);
+        return ['id' => $id, 'created' => $cur === null];
+    }
+
+    /**
+     * Removes a recorded certificate, recording it in the domain's history.
+     *
+     * @param int $id  the domain_manual_certificates row
+     */
+    public static function deleteManualCertificate(PDO $conn, ActorContext $ctx, int $id): void
+    {
+        if (!domainManualCertsReady($conn)) return;
+        $st = $conn->prepare("SELECT * FROM domain_manual_certificates WHERE id = ?");
+        $st->execute([$id]);
+        $cur = $st->fetch(PDO::FETCH_ASSOC);
+        if (!$cur) throw new ServiceError('not_found', 'not_found', 'Certificate not found.');
+        self::loadForActor($conn, $ctx, (int)$cur['domain_id']);
+        $conn->prepare("DELETE FROM domain_manual_certificates WHERE id = ?")->execute([$id]);
+        self::audit($conn, (int)$cur['domain_id'], $ctx->actorId, 'certificate_removed', $cur['purpose'] . ' (' . $cur['expiry_date'] . ')', null,
+                    $ctx->source === 'api' ? 'api' : 'app');
+        self::afterDateChange($conn);
+    }
+
+    /**
+     * Adds or updates a certificate type (Domains → Settings); names must be unique.
+     *
+     * @param array $in  id (0 or absent = new), name (unique), is_active, display_order
+     */
+    public static function saveCertType(PDO $conn, array $in): array
+    {
+        $name = trim((string)($in['name'] ?? ''));
+        if ($name === '') throw new ServiceError('validation', 'missing_field', 'Enter a name.');
+        if (mb_strlen($name) > 100) throw new ServiceError('validation', 'invalid_field', 'A name can be at most 100 characters.');
+        $id = (int)($in['id'] ?? 0);
+        $dup = $conn->prepare("SELECT id FROM domain_certificate_types WHERE LOWER(name) = LOWER(?) AND id <> ?");
+        $dup->execute([$name, $id]);
+        if ($dup->fetchColumn()) throw new ServiceError('conflict', 'conflict', 'There is already a certificate type with that name.');
+        $vals = [$name, (!isset($in['is_active']) || $in['is_active']) ? 1 : 0, (int)($in['display_order'] ?? 0)];
+        if ($id > 0) {
+            $conn->prepare("UPDATE domain_certificate_types SET name = ?, is_active = ?, display_order = ? WHERE id = ?")->execute([...$vals, $id]);
+            return ['id' => $id, 'created' => false];
+        }
+        $conn->prepare("INSERT INTO domain_certificate_types (name, is_active, display_order, created_datetime) VALUES (?, ?, ?, UTC_TIMESTAMP())")->execute($vals);
+        return ['id' => (int)$conn->lastInsertId(), 'created' => true];
+    }
+
+    /**
+     * Deletes a certificate type; refuses while a recorded certificate uses it.
+     *
+     * @param int $id  the domain_certificate_types row
+     */
+    public static function deleteCertType(PDO $conn, int $id): void
+    {
+        $inUse = $conn->prepare("SELECT COUNT(*) FROM domain_manual_certificates WHERE cert_type_id = ?");
+        $inUse->execute([$id]);
+        if ((int)$inUse->fetchColumn() > 0) {
+            throw new ServiceError('conflict', 'in_use', 'Recorded certificates still use this type. Change them first, or switch this one off instead.');
+        }
+        $conn->prepare("DELETE FROM domain_certificate_types WHERE id = ?")->execute([$id]);
     }
 
     // ======================================================================
@@ -748,6 +938,32 @@ class DomainsService
                     throw new ServiceError('validation', 'invalid_field', 'That registrar account belongs to a different company.');
                 }
                 return (int)$v;
+            case 'parent':
+                // A subdomain's parent: a domain in the SAME company that this
+                // name really is under, that is not a subdomain itself (one
+                // level), and never the domain itself.
+                if ($blank) return null;
+                $st = $conn->prepare("SELECT id, domain_name, tenant_id, parent_domain_id FROM domains WHERE id = ?");
+                $st->execute([(int)$v]);
+                $p = $st->fetch(PDO::FETCH_ASSOC);
+                if (!$p) throw new ServiceError('validation', 'invalid_field', 'That parent domain does not exist.');
+                if (((isset($p['tenant_id']) ? (int)$p['tenant_id'] : null) <=> (isset($row['tenant_id']) ? (int)$row['tenant_id'] : null)) !== 0) {
+                    throw new ServiceError('validation', 'invalid_field', 'The parent domain belongs to a different company.');
+                }
+                if (!domainIsUnder($domainName, (string)$p['domain_name'])) {
+                    throw new ServiceError('validation', 'invalid_field', "$domainName is not a subdomain of {$p['domain_name']}.");
+                }
+                if (!empty($p['parent_domain_id'])) {
+                    throw new ServiceError('validation', 'invalid_field', "{$p['domain_name']} is a subdomain itself - choose the domain it belongs to.");
+                }
+                if (!empty($row['id'])) {
+                    $kids = $conn->prepare("SELECT COUNT(*) FROM domains WHERE parent_domain_id = ?");
+                    $kids->execute([(int)$row['id']]);
+                    if ((int)$kids->fetchColumn() > 0) {
+                        throw new ServiceError('validation', 'invalid_field', 'This domain has subdomains of its own, so it cannot be a subdomain.');
+                    }
+                }
+                return (int)$p['id'];
             case 'analyst':
                 if ($blank) return null;
                 self::requireAnalyst($conn, (int)$v);
@@ -859,6 +1075,7 @@ class DomainsService
         if ($field === 'customer_user_id') return domainCustomerReady($conn);
         if (in_array($field, ['customer_supplier_id', 'customer_contact_id', 'tech_analyst_id'], true)) return domainPartiesReady($conn);
         if ($field === 'cost_centre_id') return costCentreReady($conn, 'domains');
+        if ($field === 'parent_domain_id') return domainSubdomainsReady($conn);
         return true;
     }
 
@@ -1069,6 +1286,7 @@ class DomainsService
             'contract_id'           => "SELECT CONCAT(contract_number, ' ', title) FROM contracts WHERE id = ?",
             'cost_centre_id'        => "SELECT CONCAT(code, ' ', name) FROM cost_centres WHERE id = ?",
             'customer_user_id'      => "SELECT COALESCE(NULLIF(display_name, ''), email) FROM users WHERE id = ?",
+            'parent_domain_id'      => "SELECT domain_name FROM domains WHERE id = ?",
         ][$field] ?? null;
         if ($q) {
             try { $st = $conn->prepare($q); $st->execute([(int)$v]); $n = $st->fetchColumn(); if ($n) return (string)$n; }

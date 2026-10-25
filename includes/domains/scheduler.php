@@ -46,9 +46,12 @@ function domainScheduledRun(PDO $conn, float $budgetSeconds = 240, bool $include
         $days = max(1, (int)$s['domain_lookup_refresh_days']);
         // Stale ones, plus anything expiring inside 45 days daily — that is when
         // a renewal (a new expiry date) most needs noticing.
+        // Never a subdomain: its registration is its parent's, and the registry
+        // would only answer "not found" (includes/domains/subdomains.php).
+        $notSub = domainSubdomainsReady($conn) ? ' AND parent_domain_id IS NULL' : '';
         $ids = $conn->query(
             "SELECT id, domain_name FROM domains
-              WHERE monitoring_enabled = 1
+              WHERE monitoring_enabled = 1$notSub
                 AND (last_lookup_datetime IS NULL
                      OR last_lookup_datetime < DATE_SUB(UTC_TIMESTAMP(), INTERVAL $days DAY)
                      OR (expiry_date IS NOT NULL AND expiry_date <= DATE_ADD(UTC_DATE(), INTERVAL 45 DAY)
@@ -94,7 +97,8 @@ function domainScheduledRun(PDO $conn, float $budgetSeconds = 240, bool $include
             }
         }
         if ($s['domain_lookalike_scan'] === '1' && !$out['out_of_time']) {
-            $rows = domainWatchDue($conn, 'lookalikes_scanned', 7, "purpose IN ('primary', 'secondary')");
+            // Look-alikes are of names somebody could register - never a subdomain.
+            $rows = domainWatchDue($conn, 'lookalikes_scanned', 7, "purpose IN ('primary', 'secondary')" . (domainSubdomainsReady($conn) ? ' AND parent_domain_id IS NULL' : ''));
             foreach ($rows as $r) {
                 if ($left() < 70) { $out['out_of_time'] = true; break; }
                 domainLookalikeScan($conn, (int)$r['id'], $r['domain_name'], $s['domain_dns_resolver'], 60);

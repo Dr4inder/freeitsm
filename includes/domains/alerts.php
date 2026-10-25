@@ -100,8 +100,11 @@ function domainAlertsDue(PDO $conn, array $s): array
     $sslDays  = (int)$s['domain_ssl_warn_days'];
     $today    = new DateTimeImmutable(gmdate('Y-m-d'));
 
+    require_once __DIR__ . '/subdomains.php';
+    $subReady = domainSubdomainsReady($conn);
     $rows = $conn->query(
         "SELECT d.id, d.domain_name, d.display_name, d.expiry_date, d.ssl_expiry_date, d.ssl_issuer, d.renewal_mode,
+                " . ($subReady ? 'd.parent_domain_id' : 'NULL AS parent_domain_id') . ",
                 d.owner_analyst_id, d.tenant_id, d.purpose, d.status_id, d.registrar_name, d.security_grade,
                 a.full_name AS owner_name, a.email AS owner_email, t.name AS company_name
            FROM domains d
@@ -115,7 +118,8 @@ function domainAlertsDue(PDO $conn, array $s): array
 
     $due = [];
     foreach ($rows as $r) {
-        if (!empty($r['expiry_date']) && ($autoToo || $r['renewal_mode'] !== 'auto')) {
+        // A subdomain's registration is its parent's: the parent is the one reminded.
+        if (!empty($r['expiry_date']) && empty($r['parent_domain_id']) && ($autoToo || $r['renewal_mode'] !== 'auto')) {
             $left = (int)$today->diff(new DateTimeImmutable($r['expiry_date']))->format('%r%a');
             if ($left >= 0 && in_array($left, $days, true)) {
                 $due[] = $r + ['kind' => 'expiry', 'days' => $left, 'date' => $r['expiry_date'], 'fingerprint' => $r['expiry_date'] . ':' . $left];
@@ -129,6 +133,33 @@ function domainAlertsDue(PDO $conn, array $s): array
             if ($left <= $sslDays && $left >= -7) {
                 // Once per certificate expiry date — a renewed certificate has a new date.
                 $due[] = $r + ['kind' => 'ssl', 'days' => $left, 'date' => $r['ssl_expiry_date'], 'fingerprint' => $r['ssl_expiry_date']];
+            }
+        }
+    }
+
+    // Certificates recorded by hand: the same alert, the same window, one per
+    // certificate. Fingerprinted by certificate AND date ("m12:2027-03-01"), so
+    // each fires once, a renewed one (new date) fires again, and it can never
+    // collide with the checked certificate's own date fingerprint.
+    if ($sslOn && domainManualCertsReady($conn)) {
+        $certs = $conn->query(
+            "SELECT d.id, d.domain_name, d.display_name, d.expiry_date, d.ssl_issuer, d.renewal_mode,
+                    d.owner_analyst_id, d.tenant_id, d.purpose, d.status_id, d.registrar_name, d.security_grade,
+                    a.full_name AS owner_name, a.email AS owner_email, t.name AS company_name,
+                    m.id AS cert_id, m.purpose AS cert_purpose, m.expiry_date AS cert_expiry
+               FROM domain_manual_certificates m
+               JOIN domains d ON d.id = m.domain_id
+          LEFT JOIN domain_statuses s ON s.id = d.status_id
+          LEFT JOIN analysts a ON a.id = d.owner_analyst_id AND a.is_active = 1
+          LEFT JOIN tenants t ON t.id = d.tenant_id
+              WHERE (s.id IS NULL OR s.alerts_enabled = 1)
+                AND d.renewal_mode <> 'do_not_renew'"
+        )->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($certs as $r) {
+            $left = (int)$today->diff(new DateTimeImmutable($r['cert_expiry']))->format('%r%a');
+            if ($left <= $sslDays && $left >= -7) {
+                $due[] = $r + ['ssl_expiry_date' => $r['cert_expiry'], 'certificate' => $r['cert_purpose'],
+                               'kind' => 'ssl', 'days' => $left, 'date' => $r['cert_expiry'], 'fingerprint' => 'm' . $r['cert_id'] . ':' . $r['cert_expiry']];
             }
         }
     }
@@ -158,6 +189,8 @@ function domainAlertsRun(PDO $conn, bool $dryRun = false): array
                 'domain'         => domainAlertPayload($a),
                 'days_remaining' => (int)$a['days'],
                 'expired'        => $a['days'] < 0 ? 1 : 0,
+                // A certificate recorded by hand says which one; '' for the checked one.
+                'certificate'    => (string)($a['certificate'] ?? ''),
             ]);
             $out['events']++;
         }
@@ -290,14 +323,14 @@ function domainAlertDigest(PDO $conn, string $name, array $items): array
         $i = $items[0];
         $dn = $i['display_name'] ?: $i['domain_name'];
         $subject = $i['kind'] === 'ssl'
-            ? "Certificate for $dn expires " . domainAlertWhen($i['days'])
+            ? (!empty($i['certificate']) ? "Certificate \"{$i['certificate']}\" ($dn) expires " : "Certificate for $dn expires ") . domainAlertWhen($i['days'])
             : ($i['days'] < 0 ? "$dn has EXPIRED" : "$dn expires " . domainAlertWhen($i['days']));
     }
 
     $rows = '';
     foreach ($items as $i) {
         $dn = $i['display_name'] ?: $i['domain_name'];
-        $what = $i['kind'] === 'ssl' ? 'Certificate' : 'Registration';
+        $what = $i['kind'] === 'ssl' ? 'Certificate' . (!empty($i['certificate']) ? ': ' . $e($i['certificate']) : '') : 'Registration';
         $colour = $i['days'] < 0 ? '#dc2626' : ($i['days'] <= 7 ? '#d97706' : '#374151');
         $rows .= '<tr>'
               . '<td style="padding:8px 10px;border-bottom:1px solid #eee;"><a href="' . $e(domainPublicLink($conn, (int)$i['id'])) . '" style="color:#4d7c0f;font-weight:bold;text-decoration:none;">' . $e($dn) . '</a>'

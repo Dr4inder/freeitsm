@@ -863,6 +863,33 @@ try {
             $results[] = ['table' => 'domain_statuses', 'status' => 'seeded', 'details' => ['Inserted 5 default domain statuses']];
         }
     }
+    // Subdomains already in the register are linked to their parents ONCE, the
+    // first time Database Verification sees the column - after that, adding a
+    // domain links it (includes/domains/subdomains.php). Shortest names first,
+    // so in a chain (example.org, a.example.org, x.a.example.org) every one is
+    // linked to the domain itself, one level deep. A marker setting stops it
+    // ever running again: an operator who unlinks one is never overruled.
+    try {
+        $colOk = (bool)$conn->query("SHOW COLUMNS FROM domains LIKE 'parent_domain_id'")->fetch();
+        $done  = $colOk && $conn->query("SELECT 1 FROM system_settings WHERE setting_key = 'domain_subdomains_linked'")->fetchColumn();
+        if ($colOk && !$done) {
+            require_once dirname(__DIR__, 2) . '/includes/domains/subdomains.php';
+            $linked = domainLinkExistingSubdomains($conn);
+            $conn->prepare("INSERT INTO system_settings (setting_key, setting_value) VALUES ('domain_subdomains_linked', ?)")->execute([gmdate('Y-m-d H:i:s')]);
+            if ($linked) $results[] = ['table' => 'domains', 'status' => 'updated', 'details' => ["Linked $linked subdomain(s) to their parent domain"]];
+        }
+    } catch (Throwable $e) { /* the domains table is not there yet - next run */ }
+    // The certificate types a recorded certificate can be - into an empty table only.
+    if ($tableExists('domain_certificate_types')) {
+        $cnt = (int) $conn->query("SELECT COUNT(*) FROM domain_certificate_types")->fetchColumn();
+        if ($cnt === 0) {
+            $conn->exec("INSERT INTO domain_certificate_types (name, display_order) VALUES
+                ('DV (domain validated)', 1), ('OV (organisation validated)', 2), ('EV (extended validation)', 3),
+                ('Wildcard', 4), ('Multi-domain (SAN)', 5), ('Code signing', 6), ('Email (S/MIME)', 7),
+                ('Client / device', 8), ('Internal CA', 9), ('Other', 10)");
+            $results[] = ['table' => 'domain_certificate_types', 'status' => 'seeded', 'details' => ['Inserted 10 certificate types']];
+        }
+    }
 
     if ($tableExists('ticket_types')) {
         $cnt = (int) $conn->query("SELECT COUNT(*) FROM ticket_types")->fetchColumn();

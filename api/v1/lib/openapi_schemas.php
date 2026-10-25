@@ -4349,6 +4349,11 @@ return array (
         array (
           'type' => 'boolean',
         ),
+        'parent_domain_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
         'security_grade' => 
         array (
           'type' => 'string',
@@ -4789,6 +4794,11 @@ return array (
         'monitoring_enabled' => 
         array (
           'type' => 'boolean',
+        ),
+        'parent_domain_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
         ),
         'security_grade' => 
         array (
@@ -5238,6 +5248,11 @@ return array (
         'monitoring_enabled' => 
         array (
           'type' => 'boolean',
+        ),
+        'parent_domain_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
         ),
         'security_grade' => 
         array (

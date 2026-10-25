@@ -470,7 +470,7 @@ class WorkflowEngine
             ],
             'domain.ssl_expiring' => [
                 'domain.id', 'domain.name', 'domain.ssl_expiry_date', 'domain.owner_analyst_id', 'domain.company_id',
-                'days_remaining', 'expired',
+                'days_remaining', 'expired', 'certificate',   // a certificate recorded by hand: what it is for; '' for the checked one
             ],
             // `serious` is 1 when a lock was lost or the name/mail servers or the
             // registrar moved — what a hijack looks like; `summary` is the list.

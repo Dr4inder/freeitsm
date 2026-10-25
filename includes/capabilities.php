@@ -239,6 +239,7 @@ final class Cap
     // domain away, so seeing or changing one is its own sensitive capability.
     const DOMAINS_MANAGE     = 'domains.manage';       // umbrella
     const DOMAINS_STATUSES   = 'domains.statuses';
+    const DOMAINS_CERT_TYPES = 'domains.cert_types';   // the list of certificate types
     const DOMAINS_ALERTS     = 'domains.alerts';
     const DOMAINS_MONITORING = 'domains.monitoring';
     const DOMAINS_AUTH_CODES = 'domains.auth_codes';   // reveal / change transfer secrets

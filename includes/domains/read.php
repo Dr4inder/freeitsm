@@ -13,6 +13,7 @@
 
 require_once __DIR__ . '/../tenancy.php';
 require_once __DIR__ . '/customer.php';
+require_once __DIR__ . '/subdomains.php';
 require_once __DIR__ . '/../cost_centre_assign.php';   // GH #188
 
 /** The columns + joins every register read uses. */
@@ -37,6 +38,17 @@ function domainListSelect(?PDO $conn = null): string
         $custCols .= " NULL AS customer_supplier_id, NULL AS customer_supplier_name, NULL AS customer_contact_id,
                        NULL AS customer_contact_name, NULL AS customer_contact_email, NULL AS tech_analyst_id, NULL AS tech_analyst_name,";
     }
+    // A subdomain's parent, and the soonest certificate recorded by hand - once
+    // Database Verification has added them (includes/domains/subdomains.php).
+    if ($conn !== null && domainSubdomainsReady($conn)) {
+        $custCols .= " d.parent_domain_id, pd.domain_name AS parent_name,";
+        $custJoin .= " LEFT JOIN domains pd ON pd.id = d.parent_domain_id";
+    } else {
+        $custCols .= " NULL AS parent_domain_id, NULL AS parent_name,";
+    }
+    $custCols .= $conn !== null && domainManualCertsReady($conn)
+        ? " (SELECT MIN(mc.expiry_date) FROM domain_manual_certificates mc WHERE mc.domain_id = d.id) AS manual_cert_expiry,"
+        : " NULL AS manual_cert_expiry,";
     return "SELECT d.id, d.tenant_id, tn.name AS company_name,
                    d.domain_name, d.display_name, d.purpose,
                    d.status_id, s.name AS status_name, s.colour AS status_colour, s.alerts_enabled,
@@ -104,7 +116,7 @@ function domainShapeRow(array $r): array
     $today = new DateTimeImmutable(gmdate('Y-m-d'));
     $days = fn($d) => $d ? (int)$today->diff(new DateTimeImmutable(substr($d, 0, 10)))->format('%r%a') : null;
     foreach (['id', 'tenant_id', 'status_id', 'registrar_supplier_id', 'registrar_account_id', 'owner_analyst_id',
-              'tech_contact_id', 'customer_user_id', 'customer_supplier_id', 'customer_contact_id', 'tech_analyst_id', 'contract_id', 'cost_centre_id', 'security_score', 'billing_years', 'lookalike_count', 'new_certificate_count'] as $k) {
+              'tech_contact_id', 'customer_user_id', 'customer_supplier_id', 'customer_contact_id', 'tech_analyst_id', 'contract_id', 'cost_centre_id', 'security_score', 'billing_years', 'lookalike_count', 'new_certificate_count', 'parent_domain_id'] as $k) {
         if (array_key_exists($k, $r)) $r[$k] = $r[$k] === null ? null : (int)$r[$k];
     }
     foreach (['transfer_lock', 'registry_lock', 'dnssec'] as $k) {
@@ -117,6 +129,7 @@ function domainShapeRow(array $r): array
     $r['customer_contact_name'] = isset($r['customer_contact_name']) && trim($r['customer_contact_name']) !== '' ? trim($r['customer_contact_name']) : null;
     $r['days_left']     = $days($r['expiry_date'] ?? null);
     $r['ssl_days_left'] = $days($r['ssl_expiry_date'] ?? null);
+    $r['manual_cert_days_left'] = $days($r['manual_cert_expiry'] ?? null);
     $r['annual_cost']   = ($r['cost'] ?? null) !== null ? round((float)$r['cost'] / max(1, (int)($r['billing_years'] ?? 1)), 2) : null;
     $r['attention']     = domainNeedsAttention($r);
     return $r;
@@ -134,7 +147,8 @@ function domainNeedsAttention(array $r): array
     $alerting = !array_key_exists('alerts_enabled', $r) || $r['alerts_enabled'] === null || $r['alerts_enabled'];
     if ($alerting && $r['days_left'] !== null && $r['days_left'] < 0 && ($r['renewal_mode'] ?? '') !== 'do_not_renew') $why[] = 'expired';
     elseif ($alerting && $r['days_left'] !== null && $r['days_left'] <= 30 && ($r['renewal_mode'] ?? '') !== 'do_not_renew') $why[] = 'expiring';
-    if ($r['ssl_days_left'] !== null && $r['ssl_days_left'] <= 14) $why[] = 'certificate';
+    if (($r['ssl_days_left'] !== null && $r['ssl_days_left'] <= 14)
+        || (($r['manual_cert_days_left'] ?? null) !== null && $r['manual_cert_days_left'] <= 14)) $why[] = 'certificate';
     if (($r['transfer_lock'] ?? null) === false) $why[] = 'unlocked';
     if (in_array($r['security_grade'] ?? '', ['D', 'F'], true)) $why[] = 'grade';
     if (!empty($r['lookalike_count'])) $why[] = 'lookalikes';
@@ -179,6 +193,22 @@ function domainDetail(PDO $conn, int $id, ?int $analystId = null): ?array
     $r['checked_at']   = $checks['at'] ?? null;
     // GH #188: the cost centres this domain may be charged to - its company's
     // active ones, plus its current one if that has since been switched off.
+    // A subdomain's registration is its parent's: shown on its page as such.
+    $r['parent'] = null;
+    if (!empty($r['parent_domain_id'])) {
+        $p = $conn->prepare("SELECT d.id, d.domain_name, d.display_name, d.expiry_date, d.renewal_mode, d.registrar_name,
+                                    COALESCE(NULLIF(sup.trading_name, ''), sup.legal_name) AS supplier_name,
+                                    d.transfer_lock, d.registry_lock, d.dnssec, d.last_lookup_datetime
+                               FROM domains d LEFT JOIN suppliers sup ON sup.id = d.registrar_supplier_id WHERE d.id = ?");
+        $p->execute([(int)$r['parent_domain_id']]);
+        if ($pr = $p->fetch(PDO::FETCH_ASSOC)) {
+            $today = new DateTimeImmutable(gmdate('Y-m-d'));
+            $pr['id'] = (int)$pr['id'];
+            $pr['days_left'] = $pr['expiry_date'] ? (int)$today->diff(new DateTimeImmutable($pr['expiry_date']))->format('%r%a') : null;
+            foreach (['transfer_lock', 'registry_lock', 'dnssec'] as $k) $pr[$k] = $pr[$k] === null ? null : (bool)(int)$pr[$k];
+            $r['parent'] = $pr;
+        }
+    }
     $r['cost_centre_ready']   = costCentreReady($conn, 'domains');
     $r['cost_centre_options'] = $r['cost_centre_ready']
         ? costCentreOptions($conn, costCentreRecordTenant($conn, $r['tenant_id']), $r['cost_centre_id'] ?? null) : [];

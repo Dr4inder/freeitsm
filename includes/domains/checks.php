@@ -74,7 +74,17 @@ function domainRunChecks(array $d, array $settings): array
         return array_values(array_filter($r['records'], fn($t) => stripos(ltrim($t), $prefix) === 0));
     };
 
+    // A subdomain (includes/domains/subdomains.php): its registration is its
+    // parent's, so none of the registration checks are its own; and what DNS
+    // keeps at the parent's zone - name servers, DNSSEC, CAA, DMARC - is read
+    // there when the subdomain has none of its own.
+    $parent = (string)($d['parent_name'] ?? '');
+    $isSub  = !empty($d['parent_domain_id']) && $parent !== '';
+
     // ------------------------------------------------------------------ registration
+    if ($isSub) {
+        $add('sub_registration', 'registration', 'info', 0, ['parent' => $parent]);
+    } else {
     $statuses = array_filter(array_map('trim', explode(',', (string)($d['registry_statuses'] ?? ''))));
     if (in_array('redemption period', $statuses, true) || in_array('pending delete', $statuses, true)) {
         $add('reg_redemption', 'registration', 'fail', 40);
@@ -102,12 +112,17 @@ function domainRunChecks(array $d, array $settings): array
     if ($renew === 'auto')          $add('renew_auto', 'registration', 'pass');
     elseif ($renew === 'manual')    $add('renew_manual', 'registration', 'info');
     elseif ($renew === 'unknown')   $add('renew_unknown', 'registration', 'warn', 3);
+    }
 
     // ------------------------------------------------------------------ DNS
     $nsQ = $ask($name, 'NS');
     $dnsNs = $nsQ['records'];
     if ($nsQ['nxdomain']) {
         $add('dns_nxdomain', 'dns', 'fail', 25);
+    } elseif ($nsQ['ok'] && !$dnsNs && $isSub) {
+        // Normal for a subdomain: it lives in its parent's zone, answered by the
+        // parent's name servers. Only a delegated subdomain has name servers of its own.
+        $add('dns_sub_parent_zone', 'dns', 'pass', 0, ['parent' => $parent]);
     } elseif ($nsQ['ok'] && !$dnsNs) {
         $add('dns_no_ns', 'dns', 'fail', 20);
     } elseif ($dnsNs) {
@@ -122,8 +137,16 @@ function domainRunChecks(array $d, array $settings): array
 
     // DNSSEC — the registry's word first, a DS lookup when it gave none.
     $dnssec = ($d['dnssec'] === null || $d['dnssec'] === '') ? null : (int)$d['dnssec'] === 1;
+    // A subdomain in its parent's zone is signed (or not) with that zone: there
+    // is no DS record at the subdomain to find, so its own lookup would say "off".
+    $dsName = $name;
+    if ($dnssec === null && $isSub && !$dnsNs) {
+        $pd = $d['parent_dnssec'] ?? null;
+        if ($pd !== null && $pd !== '') $dnssec = (int)$pd === 1;
+        else $dsName = $parent;
+    }
     if ($dnssec === null) {
-        $ds = domainDns($name, 'DS', $resolver === 'system' ? 'google' : $resolver);
+        $ds = domainDns($dsName, 'DS', $resolver === 'system' ? 'google' : $resolver);
         if ($ds['ok']) $dnssec = (bool)$ds['records'];
     }
     if ($dnssec === true)                         $add('dnssec_on', 'dns', 'pass');
@@ -131,6 +154,8 @@ function domainRunChecks(array $d, array $settings): array
     elseif ($dnssec === false)                    $add('dnssec_off', 'dns', 'info');
 
     $caa = $ask($name, 'CAA');
+    // CAA climbs the tree (RFC 8659): with none at the subdomain, the parent's apply.
+    if ($isSub && $caa['ok'] && !$caa['records']) $caa = $ask($parent, 'CAA');
     if ($caa['ok'] && $caa['records']) {
         $issuers = [];
         foreach ($caa['records'] as $c) if (in_array($c[1], ['issue', 'issuewild'], true)) $issuers[] = $c[2];
@@ -148,6 +173,23 @@ function domainRunChecks(array $d, array $settings): array
     $spfs   = $txt($name, 'v=spf1');
     $dmarcs = $txt('_dmarc.' . $name, 'v=DMARC1');
     $dmarc  = $dmarcs ? domainParseTags($dmarcs[0]) : [];
+    // DMARC for a subdomain with no record of its own is its parent's (RFC 7489
+    // §6.6.3: the organisational domain's record, with sp= - the subdomain
+    // policy - in place of p= when it is there). Not "No DMARC record".
+    $inherited = null;
+    if ($isSub && $dmarcs === []) {
+        $pDmarcs = $txt('_dmarc.' . $parent, 'v=DMARC1');
+        if ($pDmarcs === null) {
+            $dmarcs = null;                        // could not ask the parent: say nothing
+        } elseif (count($pDmarcs) === 1) {
+            $tags = domainParseTags($pDmarcs[0]);
+            $inherited = strtolower($tags['sp'] ?? $tags['p'] ?? '');
+            $dmarcs = $pDmarcs;
+            $dmarc  = $tags + ['p' => ''];
+            $dmarc['p'] = $inherited;              // the policy that applies HERE
+            $add('dmarc_inherited', 'email', 'info', 0, ['parent' => $parent, 'policy' => $inherited ?: 'none']);
+        }
+    }
 
     if ($isNonMail) {
         // Lock-down: this name should never send or receive mail.
@@ -200,7 +242,7 @@ function domainRunChecks(array $d, array $settings): array
         if ($dmarcs === null) {
             // could not look it up - said once, below
         } elseif (!$dmarcs) {
-            $add('dmarc_missing', 'email', 'fail', 12, ['domain' => $name]);
+            $add('dmarc_missing', 'email', 'fail', 12, ['domain' => $isSub ? $parent : $name]);   // a subdomain: one record at the parent covers it
         } elseif (count($dmarcs) > 1) {
             $add('dmarc_multiple', 'email', 'fail', 10);
         } else {

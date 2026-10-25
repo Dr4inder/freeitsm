@@ -147,6 +147,9 @@ return [
         'hosting_provider'   => 'Web host',
         'ssl_hosts'          => 'Extra hosts to check',
         'ssl_hosts_hint'     => 'Sub-domains whose certificates matter too, e.g. mail.example.com, shop.example.com. The domain itself and www are always checked.',
+        'parent'             => 'Subdomain of',
+        'parent_none'        => 'Not a subdomain',
+        'parent_hint'        => 'Its registration, expiry and renewal are the parent\'s, and are not looked up or reminded here. Found for you when the parent is in the register.',
         'dkim_selectors'     => 'DKIM selectors',
         'dkim_selectors_hint'=> 'Ask your email provider, e.g. selector1, selector2 for Microsoft 365, google for Google Workspace.',
         'cost'               => 'Renewal cost',
@@ -271,6 +274,18 @@ return [
 
     // ---- check findings: title + advice, per key -----------------------------------
     'check' => [
+        'sub_registration' => [
+            'title'  => 'A subdomain of {parent} - its registration is the parent\'s',
+            'advice' => 'Expiry, renewal and the registrar are checked and reminded on {parent}.',
+        ],
+        'dns_sub_parent_zone' => [
+            'title'  => 'Answered by {parent}\'s name servers',
+            'advice' => '',
+        ],
+        'dmarc_inherited' => [
+            'title'  => 'No DMARC record of its own - {parent}\'s applies (policy: {policy})',
+            'advice' => 'Receivers use the parent\'s record for a subdomain without one, with its sp= policy when it sets one. Publish a record at _dmarc of this subdomain only if it needs a different policy.',
+        ],
         'reg_redemption' => [
             'title'  => 'The registration has lapsed and is in the registry\'s redemption or deletion period',
             'advice' => 'Contact the registrar today. A domain in redemption can usually still be recovered, at a fee; once it is deleted anyone can register it.',
@@ -423,6 +438,13 @@ return [
         'delete_title'    => 'Delete domain',
         'delete_body'     => 'Delete {name} from the register, with its history? This does not touch the registration itself.',
         'saved'           => 'Saved.',
+        'subdomain_of'    => 'subdomain of {name}',
+        'parent_reg'      => 'Registration - {name}\'s',
+        'parent_reg_note' => 'A subdomain is registered as part of its parent. These are {name}\'s details; renew and refresh it there.',
+        'parent_open'     => 'Open {name}',
+        'subdomains'      => 'Subdomains',
+        'subdomains_hint' => 'Each is checked on its own - DNS, email and certificates - and renews with this domain.',
+        'sub_refresh'     => 'A subdomain has no registration of its own to refresh.',
     ],
     'tab' => [
         'overview'     => 'Overview',
@@ -548,6 +570,26 @@ return [
         'ack_all'      => 'Mark all seen',
         'new'          => 'New',
         'scanned'      => '{n} current certificates, {fresh} new.',
+        'manual_title' => 'Recorded certificates',
+        'manual_intro' => 'Certificates the checks cannot reach - an internal server, a VPN appliance, a SAML signing or code-signing certificate. Their expiry gets the same alerts, calendar entries and Watchtower count as the checked ones.',
+        'manual_none'  => 'None recorded.',
+        'manual_add'   => 'Add',
+        'manual_new'   => 'Record a certificate',
+        'manual_edit'  => 'Edit certificate',
+        'm_purpose'    => 'System or purpose',
+        'm_purpose_ph' => 'e.g. ADFS token signing, VPN appliance, staff portal',
+        'm_type'       => 'Type',
+        'm_provider'   => 'Provider',
+        'm_provider_other' => 'Not a supplier - type the name',
+        'm_provider_ph'=> 'e.g. Let\'s Encrypt, internal CA',
+        'm_expiry'     => 'Expiry date',
+        'm_url'        => 'Address',
+        'm_url_ph'     => 'https://… where it is used or renewed',
+        'm_notes'      => 'Notes',
+        'm_delete'     => 'Delete certificate',
+        'm_delete_body'=> 'Delete the record of "{name}"? Its reminders stop.',
+        'm_saved'      => 'Certificate saved.',
+        'm_not_ready'  => 'Run Database Verification to record certificates here.',
     ],
     'la' => [
         'explain'       => 'Names one slip away from yours - a missing letter, a swapped pair, a 1 for an l, another ending. A look-alike that exists may be innocent; one that receives email can catch invoices and password resets meant for you.',
@@ -584,6 +626,10 @@ return [
         'blank'       => '(blank)',
         'f' => [
             'domain_created'        => 'Added',
+            'parent_domain_id'      => 'Subdomain of',
+            'certificate_added'     => 'Certificate recorded',
+            'certificate_changed'   => 'Certificate changed',
+            'certificate_removed'   => 'Certificate removed',
             'domain_name'           => 'Domain name',
             'status_id'             => 'Status',
             'purpose'               => 'Purpose',
@@ -634,6 +680,7 @@ return [
     // ---- settings ----------------------------------------------------------------------
     'settings' => [
         'tab_statuses'   => 'Statuses',
+        'tab_cert_types' => 'Certificate types',
         'tab_alerts'     => 'Alerts',
         'tab_monitoring' => 'Monitoring',
         'tab_auth_codes' => 'Auth codes',
@@ -659,6 +706,15 @@ return [
         'st_edit'        => 'Edit status',
         'st_delete'      => 'Delete status',
         'st_delete_body' => 'Delete the status "{name}"?',
+
+        'ct_title'       => 'Certificate types',
+        'ct_intro'       => 'The types a certificate recorded on a domain can be. Switch one off to stop offering it; a type in use cannot be deleted.',
+        'ct_in_use'      => 'Certificates',
+        'ct_add'         => 'Add a certificate type',
+        'ct_edit'        => 'Edit certificate type',
+        'ct_delete'      => 'Delete certificate type',
+        'ct_delete_body' => 'Delete the certificate type "{name}"?',
+        'ct_not_ready'   => 'Run Database Verification to create this list.',
 
         'alerts_title'        => 'Alerts',
         'alerts_off_state'    => 'Email alerts are OFF. Nothing is emailed until you switch them on. The notification bell and workflows are told regardless - they need no switch.',
@@ -852,6 +908,16 @@ return [
             'p4'    => 'About a sixth of domain endings - mostly country codes such as .de, .io and .co - have no modern lookup service (RDAP). For those FreeITSM uses the older WHOIS service. Some registries, .de among them, never publish an expiry date at all; enter it from the registrar\'s invoice so the alerts still work.',
             'p5'    => 'Give each domain a Purpose. It changes what the checks look for: a parked or defensive domain should never send email, so it is checked for being locked down rather than for having email set up.',
         ],
+        'subdomains' => [
+            'nav'   => 'Subdomains',
+            'title' => 'Subdomains',
+            'intro' => 'students.example.org, shop.example.org - names under a domain you hold, kept with it.',
+            'p1'    => 'Add a subdomain like any domain. When the domain it belongs to is already in the register, it is linked to it for you - and add the parent after its subdomains and they are linked then. The subdomain\'s page says **subdomain of** its parent, and the parent\'s page lists its subdomains.',
+            'p2'    => 'A subdomain is registered as part of its parent, so its registration is the parent\'s: it is never looked up at a registry, its page shows the parent\'s registrar, expiry and renewal, and the renewal reminders go to the parent only.',
+            'p3'    => 'Everything else is checked for the subdomain itself: its mail servers, SPF, DKIM and certificates. (Look-alikes are not scanned for it - only a name somebody could register has those.) What DNS keeps at the parent is read there - a subdomain with no name servers of its own is answered by the parent\'s, its CAA can be the parent\'s, and its DNSSEC is the parent zone\'s.',
+            'p4'    => 'DMARC: a subdomain with no DMARC record of its own is covered by its parent\'s - with the parent\'s subdomain policy (sp=) when it sets one, otherwise its main policy. The checks say which applies. A parent with p=reject but sp=none protects itself and not its subdomains.',
+            'p5'    => 'To change or remove the link, choose **Subdomain of** in the Edit dialog. A subdomain cannot have subdomains of its own: every one is linked to the domain that is actually registered.',
+        ],
         'grade' => [
             'nav'   => 'The security grade',
             'title' => 'The security grade',
@@ -880,6 +946,8 @@ return [
             'p3'    => 'Certificate Transparency: every publicly trusted certificate is published in open logs. With the watch switched on (Settings → Monitoring), FreeITSM asks crt.sh weekly for every certificate issued for each domain and flags the new ones. A certificate you did not ask for is often the first sign of a phishing site being prepared.',
             'p4'    => 'The first look at a domain records what already exists as seen, so switching the watch on does not bury you in years-old certificates.',
             'p5'    => 'Certificate renewals can appear on the Watchtower card and in the Calendar, set separately from domain renewals in Settings → Alerts → Where certificate renewals are shown. And a certificate that expires on a domain linked to Service Status services flags those services as at risk - see **Service Status** below.',
+            'p6'    => '**Recorded certificates** are the ones the checks cannot reach: an internal server, a VPN appliance, a SAML or ADFS signing certificate, a code-signing certificate. Add them on the domain\'s (or subdomain\'s) Certificates tab: what it is for, its type, the provider - one of your Contracts suppliers, or typed in - its expiry date and where it is used. Each gets the same certificate alert, Calendar entry and Watchtower count as the checked ones, named so you know which.',
+            'p7'    => 'The list of certificate types is yours to change in Settings → Certificate types. Switch a type off to stop offering it; certificates that already have it keep it.',
         ],
         'lookalikes' => [
             'nav'   => 'Look-alikes',

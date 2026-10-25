@@ -5583,6 +5583,7 @@ return [
         'security_grade'        => 'VARCHAR(2) NULL',
         'check_results'         => 'LONGTEXT NULL',
         'watch_baseline'        => 'LONGTEXT NULL',
+        'parent_domain_id'      => 'INT NULL',      // a subdomain's parent - see freeitsm.sql
         'created_by'            => 'INT NULL',
         'created_datetime'      => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
         'updated_datetime'      => 'DATETIME NULL',
@@ -5667,6 +5668,29 @@ return [
         'not_after'           => 'DATETIME NULL',
         'first_seen_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
         'acknowledged'        => 'TINYINT(1) NOT NULL DEFAULT 0',
+    ],
+
+    // Certificates recorded by hand, and their types - see freeitsm.sql.
+    'domain_manual_certificates' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'domain_id'        => 'INT NOT NULL',
+        'purpose'          => 'VARCHAR(255) NOT NULL',
+        'cert_type_id'     => 'INT NULL',
+        'supplier_id'      => 'INT NULL',
+        'provider_name'    => 'VARCHAR(255) NULL',
+        'expiry_date'      => 'DATE NOT NULL',
+        'url'              => 'VARCHAR(500) NULL',
+        'notes'            => 'TEXT NULL',
+        'created_by'       => 'INT NULL',
+        'created_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'updated_datetime' => 'DATETIME NULL',
+    ],
+    'domain_certificate_types' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'name'             => 'VARCHAR(100) NOT NULL',
+        'is_active'        => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'display_order'    => 'INT NOT NULL DEFAULT 0',
+        'created_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
     ],
 
     // Cost centres (GH #160, stage 1). Always one company's (tenant_id NOT NULL);

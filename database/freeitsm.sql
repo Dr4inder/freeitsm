@@ -8353,6 +8353,11 @@ CREATE TABLE IF NOT EXISTS `domains` (
     `security_grade`         VARCHAR(2) NULL,
     `check_results`          LONGTEXT NULL,          -- JSON: the last posture checks
     `watch_baseline`         LONGTEXT NULL,          -- JSON: what change detection compares against
+    -- A subdomain's parent (students.example.org → example.org), in the same
+    -- company. Its registration - registrar, expiry, renewal - is the parent's:
+    -- it is never looked up at a registry and has no expiry alerts of its own.
+    -- One level only: a parent is never itself a subdomain.
+    `parent_domain_id`       INT NULL,
     `created_by`             INT NULL,
     `created_datetime`       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_datetime`       DATETIME NULL,
@@ -8367,6 +8372,7 @@ CREATE TABLE IF NOT EXISTS `domains` (
     KEY `idx_domains_customer_contact` (`customer_contact_id`),
     KEY `idx_domains_tech_analyst` (`tech_analyst_id`),
     KEY `idx_domains_cost_centre` (`cost_centre_id`),
+    KEY `idx_domains_parent` (`parent_domain_id`),
     CONSTRAINT `fk_domains_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_domains_status` FOREIGN KEY (`status_id`) REFERENCES `domain_statuses` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_domains_registrar` FOREIGN KEY (`registrar_supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE SET NULL,
@@ -8449,6 +8455,40 @@ CREATE TABLE IF NOT EXISTS `domain_certificates` (
     CONSTRAINT `fk_domain_certificates_domain` FOREIGN KEY (`domain_id`) REFERENCES `domains` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
+-- Certificates recorded by hand against a domain or subdomain: the ones its
+-- checks cannot reach (an internal server, a VPN appliance, a SAML signing or
+-- code-signing certificate). Their expiry joins the checked certificates'
+-- alerts, calendar entries and Watchtower count. The provider is a Contracts
+-- supplier (supplier_id) or, when it is not one, plain text (provider_name).
+CREATE TABLE IF NOT EXISTS `domain_manual_certificates` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `domain_id`        INT NOT NULL,
+    `purpose`          VARCHAR(255) NOT NULL,         -- the system or purpose it is for
+    `cert_type_id`     INT NULL,
+    `supplier_id`      INT NULL,
+    `provider_name`    VARCHAR(255) NULL,
+    `expiry_date`      DATE NOT NULL,
+    `url`              VARCHAR(500) NULL,
+    `notes`            TEXT NULL,
+    `created_by`       INT NULL,
+    `created_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_datetime` DATETIME NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_dmc_domain` (`domain_id`),
+    KEY `idx_dmc_expiry` (`expiry_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- The certificate types a recorded certificate can be (Domains → Settings),
+-- one list for every company, like the domain statuses.
+CREATE TABLE IF NOT EXISTS `domain_certificate_types` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `name`             VARCHAR(100) NOT NULL,
+    `is_active`        TINYINT(1) NOT NULL DEFAULT 1,
+    `display_order`    INT NOT NULL DEFAULT 0,
+    `created_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------------
 -- Domains, joined to the rest of FreeITSM (3.0.0). Four plain links - each is
@@ -9650,6 +9690,22 @@ SELECT * FROM (
     SELECT 'Cancelled', '#dc2626', 0, 5
 ) s
 WHERE NOT EXISTS (SELECT 1 FROM `domain_statuses` LIMIT 1);
+
+-- Seed: the certificate types, into an empty table only (the same rule).
+INSERT INTO `domain_certificate_types` (`name`, `display_order`)
+SELECT * FROM (
+    SELECT 'DV (domain validated)' AS n, 1 AS o UNION ALL
+    SELECT 'OV (organisation validated)', 2 UNION ALL
+    SELECT 'EV (extended validation)', 3 UNION ALL
+    SELECT 'Wildcard', 4 UNION ALL
+    SELECT 'Multi-domain (SAN)', 5 UNION ALL
+    SELECT 'Code signing', 6 UNION ALL
+    SELECT 'Email (S/MIME)', 7 UNION ALL
+    SELECT 'Client / device', 8 UNION ALL
+    SELECT 'Internal CA', 9 UNION ALL
+    SELECT 'Other', 10
+) t
+WHERE NOT EXISTS (SELECT 1 FROM `domain_certificate_types` LIMIT 1);
 
 -- ----------------------------------------------------------
 -- Seed: Default admin account

@@ -127,6 +127,7 @@ function apiSerializeDomain(array $r): array {
         'tags'              => $list($r['tags'], '/\s*,\s*/'),
         'notes'             => $r['notes'],
         'monitoring_enabled'=> (bool)(int)$r['monitoring_enabled'],
+        'parent_domain_id'  => isset($r['parent_domain_id']) ? (int)$r['parent_domain_id'] : null,   // a subdomain's parent domain
         'security_grade'    => $r['security_grade'],
         'security_score'    => $r['security_score'] === null ? null : (int)$r['security_score'],
         'ssl_expiry_date'   => $r['ssl_expiry_date'],

@@ -6555,6 +6555,12 @@
                             "req": false
                         },
                         {
+                            "name": "parent_domain_id",
+                            "in": "body",
+                            "desc": "Makes it a subdomain of that domain (same company; the name must be under it; one level). Found for you when omitted and the parent is in the register; null to unlink. A subdomain's registration is its parent's and is never looked up.",
+                            "req": false
+                        },
+                        {
                             "name": "lookup",
                             "in": "body",
                             "desc": "true = ask the registry now",

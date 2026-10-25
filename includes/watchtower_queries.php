@@ -621,12 +621,17 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
             // somebody's deliberate decision, not something to shout about.
             $live = "(s.id IS NULL OR s.alerts_enabled = 1) AND d.renewal_mode <> 'do_not_renew'";
             $sslDays = max(1, (int)$dmS['domain_ssl_warn_days']);
+            // A certificate recorded by hand counts too (Domains: recorded certificates).
+            require_once __DIR__ . '/domains/subdomains.php';
+            $dmManual = domainManualCertsReady($conn)
+                ? " OR EXISTS (SELECT 1 FROM domain_manual_certificates mc WHERE mc.domain_id = d.id AND mc.expiry_date <= DATE_ADD({$todaySql}, INTERVAL {$sslDays} DAY))"
+                : '';
             $st = $conn->prepare(
                 "SELECT COUNT(*) AS total,
                         SUM($live AND d.expiry_date < {$todaySql}) AS expired,
                         SUM($live AND d.expiry_date BETWEEN {$todaySql} AND DATE_ADD({$todaySql}, INTERVAL 30 DAY)) AS exp30,
                         SUM($live AND d.expiry_date BETWEEN {$todaySql} AND DATE_ADD({$todaySql}, INTERVAL 90 DAY)) AS exp90,
-                        SUM($live AND d.ssl_expiry_date IS NOT NULL AND d.ssl_expiry_date <= DATE_ADD({$todaySql}, INTERVAL {$sslDays} DAY)) AS ssl_expiring,
+                        SUM($live AND ((d.ssl_expiry_date IS NOT NULL AND d.ssl_expiry_date <= DATE_ADD({$todaySql}, INTERVAL {$sslDays} DAY)){$dmManual})) AS ssl_expiring,
                         SUM(d.transfer_lock = 0) AS unlocked,
                         SUM(d.security_grade IN ('D', 'F')) AS weak
                    FROM domains d LEFT JOIN domain_statuses s ON s.id = d.status_id
