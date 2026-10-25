@@ -1,7 +1,7 @@
 FROM php:8.4-apache
 
 # PHP extensions beyond the ones PHP builds in - the list, and why each one, is
-# docker/php-extensions.txt (GH #207: until 3.17.0 this installed only pdo_mysql,
+# docker/php-extensions.txt (GH #207: until 4.0.0 this installed only pdo_mysql,
 # so LDAP sign-in, SCORM upload and .docx reading could not work in the image).
 #
 # The -dev packages are only needed to compile. The apt-mark dance is the one

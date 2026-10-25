@@ -296,7 +296,7 @@ if (extension_loaded('imap')) {
     $checks[] = ['name' => t('setup.checks.php_extension_optional', ['ext' => 'imap']), 'status' => 'warn', 'detail' => t('setup.detail.imap_not_loaded')];
 }
 // The others a feature needs (GH #207 - the Docker image had none of them until
-// 3.17.0). docker/php-extensions.txt lists what each one is for.
+// 4.0.0). docker/php-extensions.txt lists what each one is for.
 foreach (['ldap', 'zip', 'intl'] as $ext) {
     $loaded = extension_loaded($ext);
     $checks[] = ['name' => t('setup.checks.php_extension_optional', ['ext' => $ext]),

@@ -48,7 +48,7 @@ if ($ext !== 'zip') {
 
 // Without PHP's zip extension `new ZipArchive` is an Error the catch below does
 // not see, and the person got a broken response instead of a reason (GH #207 -
-// the Docker image lacked it until 3.17.0).
+// the Docker image lacked it until 4.0.0).
 if (!class_exists('ZipArchive')) {
     echo json_encode(['success' => false, 'error' => "This server's PHP does not have the zip extension, which course upload needs. Ask whoever runs FreeITSM to enable it."]);
     exit;
