@@ -2620,9 +2620,10 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     <div class="form-group" style="grid-column: span 2;">
                         <label for="mailboxProvider"><?php echo htmlspecialchars(t('tickets.settings.modals.mailbox.provider')); ?> *</label>
                         <select id="mailboxProvider" onchange="toggleProviderFields()">
-                            <option value="microsoft"><?php echo htmlspecialchars(t('tickets.settings.modals.mailbox.provider_microsoft')); ?></option>
-                            <option value="google"><?php echo htmlspecialchars(t('tickets.settings.modals.mailbox.provider_google')); ?></option>
-                            <option value="imap"><?php echo htmlspecialchars(t('tickets.settings.modals.mailbox.provider_imap')); ?></option>
+                            <?php // One option per MailboxProvider case (4.0) - the enum is the list. ?>
+                            <?php foreach (MailboxProvider::cases() as $mbp): ?>
+                            <option value="<?php echo htmlspecialchars($mbp->value); ?>"><?php echo htmlspecialchars(t('tickets.settings.modals.mailbox.provider_' . $mbp->value)); ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
@@ -3589,6 +3590,8 @@ function renderOversizeFields(string $px, bool $withLimits): void
     <script>
         const API_BASE = '../../api/tickets/';
         const API_SETTINGS = '../../api/settings/';
+        // value => {label, background, color, oauth}, from the MailboxProvider enum (4.0).
+        const MAILBOX_PROVIDERS = <?php echo json_encode(MailboxProvider::forJs(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
         let currentTab = 'departments';
 
         let mailboxes = [];
@@ -5596,14 +5599,10 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>`;
 
-                let providerBadge;
-                if (mb.provider === 'google') {
-                    providerBadge = ' <span class="status-badge" style="background:#e8f5e9;color:#2e7d32;">Google</span>';
-                } else if (mb.provider === 'imap') {
-                    providerBadge = ' <span class="status-badge" style="background:#ede7f6;color:#5e35b1;">IMAP</span>';
-                } else {
-                    providerBadge = ' <span class="status-badge" style="background:#e3f2fd;color:#1565c0;">Microsoft</span>';
-                }
+                // Label and colours come from MailboxProvider (PHP) - never spelled out here.
+                // Unknown or missing is Microsoft, as MailboxProvider::fromMailbox() says.
+                const pv = MAILBOX_PROVIDERS[mb.provider] || MAILBOX_PROVIDERS.microsoft;
+                const providerBadge = ` <span class="status-badge" style="background:${pv.background};color:${pv.color};">${escapeHtml(pv.label)}</span>`;
 
                 // Multi-tenancy: show the routing target — pinned company, or shared intake.
                 let companyBadge = '';

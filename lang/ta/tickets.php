@@ -1009,7 +1009,7 @@ return [
                 'provider' => 'வழங்குநர்',
                 'provider_microsoft' => 'Microsoft 365 (Exchange / Graph API)',
                 'provider_google' => 'Google Workspace (Gmail API)',
-                'provider_imap' => 'அடிப்படை IMAP / SMTP (பயனர்பெயர் &amp; கடவுச்சொல்)',
+                'provider_imap' => 'அடிப்படை IMAP / SMTP (பயனர்பெயர் & கடவுச்சொல்)',
                 'display_name' => 'காட்சிப் பெயர்',
                 'display_name_placeholder' => 'எ.கா. Service Desk',
                 'target_mailbox' => 'இலக்கு அஞ்சல் பெட்டி',

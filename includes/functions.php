@@ -11,6 +11,11 @@
 // that loads this before config.php. includes/php_version_guard.php.
 require_once __DIR__ . '/php_version_guard.php';
 
+// Where a mailbox's mail comes from - used across Tickets, Workflow and the portal.
+// TRAP: loaded with require, never written into this file: this file must stay
+// readable by old PHP so the guard above can speak, and an enum is PHP 8.1.
+require_once __DIR__ . '/mailbox_provider.php';
+
 // Session hardening helpers. Pulled in here rather than added to each of the ten
 // files that establish or change an identity, because every one of them already
 // includes this file — one require instead of ten, and a new sign-in path gets

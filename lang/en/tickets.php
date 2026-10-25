@@ -1227,7 +1227,7 @@ return [
                 'provider'                    => 'Provider',
                 'provider_microsoft'          => 'Microsoft 365 (Exchange / Graph API)',
                 'provider_google'             => 'Google Workspace (Gmail API)',
-                'provider_imap'               => 'Basic IMAP / SMTP (username &amp; password)',
+                'provider_imap'               => 'Basic IMAP / SMTP (username & password)',
                 'display_name'                => 'Display name',
                 'display_name_placeholder'    => 'e.g., Service Desk',
                 'target_mailbox'              => 'Target mailbox',

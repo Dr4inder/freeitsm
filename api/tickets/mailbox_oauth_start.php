@@ -48,7 +48,7 @@ try {
     // The callbacks read the mailbox id from the prefix, so the shape stays as it
     // was; the random part is what makes it unguessable and the session is what
     // makes it single-use.
-    $prefix = ($provider === 'google' ? 'google_mailbox_' : 'mailbox_') . $mailboxId . '_';
+    $prefix = (MailboxProvider::fromValue($provider) === MailboxProvider::Google ? 'google_mailbox_' : 'mailbox_') . $mailboxId . '_';
     $state  = $prefix . bin2hex(random_bytes(16));
 
     // Drop expired entries so an abandoned sign-in does not linger.

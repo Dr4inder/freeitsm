@@ -17,6 +17,7 @@
  * so the cached app-only token read below is plaintext on the way in and re-encrypted
  * on the way out.
  */
+require_once __DIR__ . '/mailbox_provider.php';   // MailboxProvider
 require_once __DIR__ . '/encryption.php';   // encryptValue() for the token cache write
 
 if (!function_exists('mailboxAppOnlyToken')) {
@@ -202,7 +203,7 @@ if (!function_exists('mailboxAppOnlyToken')) {
      * @param mixed $mailbox  the target_mailboxes row, decrypted (provider, auth_mode, target_mailbox, authenticated_*)
      */
     function mailboxIdentityMismatch($mailbox) {
-        if (($mailbox['provider'] ?? 'microsoft') !== 'microsoft') return null;
+        if (MailboxProvider::fromMailbox($mailbox) !== MailboxProvider::Microsoft) return null;
         if (($mailbox['auth_mode'] ?? 'delegated') === 'app_only') return null;
         $target = strtolower(trim((string) ($mailbox['target_mailbox'] ?? '')));
         if ($target === '') return null;
@@ -225,7 +226,7 @@ if (!function_exists('mailboxAppOnlyToken')) {
      * @param mixed $accessToken  the mailbox's current delegated Graph access token
      */
     function mailboxBackfillIdentity($conn, $mailbox, $accessToken) {
-        if (($mailbox['provider'] ?? 'microsoft') !== 'microsoft') return $mailbox;
+        if (MailboxProvider::fromMailbox($mailbox) !== MailboxProvider::Microsoft) return $mailbox;
         if (($mailbox['auth_mode'] ?? 'delegated') === 'app_only') return $mailbox;
         if (!empty($mailbox['authenticated_as']) && !empty($mailbox['authenticated_addresses'])) {
             return $mailbox;
@@ -266,7 +267,7 @@ if (!function_exists('mailboxAppOnlyToken')) {
      * @param mixed $mailbox  the target_mailboxes row (provider, auth_mode)
      */
     function mailboxIsAppOnly($mailbox) {
-        return (($mailbox['provider'] ?? 'microsoft') === 'microsoft')
+        return (MailboxProvider::fromMailbox($mailbox) === MailboxProvider::Microsoft)
             && (($mailbox['auth_mode'] ?? 'delegated') === 'app_only');
     }
 
@@ -294,8 +295,8 @@ if (!function_exists('mailboxAppOnlyToken')) {
      * @param mixed $mailbox  the target_mailboxes row, decrypted
      */
     function mailboxCanSend($mailbox) {
-        $provider = $mailbox['provider'] ?? 'microsoft';
-        if ($provider === 'imap') {
+        $provider = MailboxProvider::fromMailbox($mailbox);
+        if ($provider === MailboxProvider::Imap) {
             return !empty($mailbox['smtp_server']) && !empty($mailbox['imap_username']);
         }
         if (mailboxIsAppOnly($mailbox)) {

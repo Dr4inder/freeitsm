@@ -2560,7 +2560,7 @@ class WorkflowEngine
             if (!$mailbox) throw new Exception('Ticket has no associated mailbox — cannot send');
         }
 
-        $provider  = $mailbox['provider'] ?? 'microsoft';
+        $provider  = MailboxProvider::fromMailbox($mailbox);
         $graphBase = '/me';
         $accessToken = null;
 
@@ -2571,9 +2571,9 @@ class WorkflowEngine
         // a basic mailbox failed every time, with a message pointing at OAuth.
         // template_email.php has had the equivalent branch all along; this one was
         // simply never given it. Reported by Kraleemil in GH #119.
-        if ($provider === 'imap') {
+        if ($provider === MailboxProvider::Imap) {
             require_once dirname(dirname(__DIR__)) . '/includes/mailbox_imap.php';
-        } elseif ($provider === 'google') {
+        } elseif ($provider === MailboxProvider::Google) {
             $tokenJson = preg_replace('/[\x00-\x1F\x7F]/', '', $mailbox['token_data'] ?? '');
             $tokenData = $tokenJson ? json_decode($tokenJson, true) : null;
             if (!$tokenData || !isset($tokenData['access_token'])) {
@@ -2605,12 +2605,12 @@ class WorkflowEngine
             : self::plainEmailBody($body);
 
         try {
-            if ($provider === 'imap') {
+            if ($provider === MailboxProvider::Imap) {
                 // SMTP, using this mailbox's own sending credentials (or the IMAP
                 // ones when it has none). HTML body, no attachments — the same
                 // parity note as the reply path in send_email.php.
                 imapSmtpSend($mailbox, $recipient, '', $fullSubject, $fullBody);
-            } elseif ($provider === 'google') {
+            } elseif ($provider === MailboxProvider::Google) {
                 $fromAddress = $mailbox['target_mailbox'] ?? '';
                 gmailSendEmail($accessToken, $recipient, $fullSubject, $fullBody, $fromAddress);
             } else {
