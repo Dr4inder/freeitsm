@@ -15,7 +15,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends libldap-dev libzip-dev libicu-dev; \
     docker-php-ext-configure ldap --with-libdir="lib/$(dpkg-architecture --query DEB_HOST_MULTIARCH)"; \
-    docker-php-ext-install -j"$(nproc)" pdo pdo_mysql ldap zip intl; \
+    docker-php-ext-install -j"$(nproc)" pdo_mysql ldap zip intl; \
     apt-mark auto '.*' > /dev/null; \
     [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
     find /usr/local -type f -executable -exec ldd '{}' ';' \
