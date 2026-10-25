@@ -57,7 +57,7 @@ const PREF_TEMPLATE_SECTIONS = [
     'position'       => ['system.preferences.position_heading',        ['toast_position']],
     'animation'      => ['system.preferences.animation_heading',       ['toast_animation']],
     'module-order'   => ['system.preferences.modorder_heading',        ['module_order']],
-    'app-sidebar'    => ['system.preferences.sidebar_heading',         ['app_sidebar', 'app_sidebar_modules', 'app_sidebar_names']],
+    'app-sidebar'    => ['system.preferences.sidebar_heading',         ['app_sidebar', 'app_sidebar_modules', 'app_sidebar_names', 'app_sidebar_waffle']],
     'left-panels'    => ['system.preferences.panels_heading',          ['knowledge_sidebar_mode', 'process_mapper_sidebar_mode', 'contracts_sidebar_mode',
                                                                          'calendar_sidebar_mode', 'tasks_sidebar_mode', 'cmdb_sidebar_mode',
                                                                          'change_management_sidebar_mode', 'asset_management_sidebar_mode',

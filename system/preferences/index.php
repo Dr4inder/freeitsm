@@ -956,6 +956,15 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                         <option value="<?php echo $sbMode; ?>"<?php echo $sbPrefs['names'] === $sbMode ? ' selected' : ''; ?>><?php echo htmlspecialchars(t('system.preferences.sidebar_names_' . $sbMode)); ?></option>
                         <?php endforeach; ?>
                     </select>
+                    <?php /* The waffle button (#124). Show is the default; hiding
+                             leaves the panel, which the rail's Recent opens. */ ?>
+                    <div class="app-sidebar-pick">
+                        <label class="app-sidebar-pick-hint" for="appSidebarWaffle"><?php echo htmlspecialchars(t('system.preferences.sidebar_waffle')); ?></label>
+                        <select id="appSidebarWaffle" class="pref-language-select">
+                            <option value="show"<?php echo $sbPrefs['waffle'] ? ' selected' : ''; ?>><?php echo htmlspecialchars(t('system.preferences.sidebar_waffle_show')); ?></option>
+                            <option value="hide"<?php echo $sbPrefs['waffle'] ? '' : ' selected'; ?>><?php echo htmlspecialchars(t('system.preferences.sidebar_waffle_hide')); ?></option>
+                        </select>
+                    </div>
                     <p class="app-sidebar-pick-hint"><?php echo htmlspecialchars(t('system.preferences.sidebar_pick')); ?></p>
                     <div class="app-sidebar-pick-list">
                         <?php foreach ($moItems as $sbItem): ?>
@@ -1442,6 +1451,14 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             if (names) names.addEventListener('change', async () => {
                 hint.classList.add('show');
                 const ok = await savePref('app_sidebar_names', names.value);
+                hint.classList.remove('show');
+                if (ok) showToast(P('sidebar_saved'), 'success');
+            });
+            // 'show' is stored as no row at all - the built-in default.
+            const waffle = document.getElementById('appSidebarWaffle');
+            if (waffle) waffle.addEventListener('change', async () => {
+                hint.classList.add('show');
+                const ok = await savePref('app_sidebar_waffle', waffle.value === 'hide' ? 'hide' : '');
                 hint.classList.remove('show');
                 if (ok) showToast(P('sidebar_saved'), 'success');
             });

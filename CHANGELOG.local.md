@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2571 | System            | Feature     | **Hide the waffle button when the sidebar is on** (discussion #124, Kraleemil): Preferences -> Display -> Sidebar -> Waffle button, Show (default) / Hide. New `app_sidebar_waffle` preference (`hide`, absent = show), carried by Preference Templates. Only the button is hidden, and only above 768px - the panel stays for the rail's Recent button, and a phone (no rail) always keeps the waffle. |
 
 
 

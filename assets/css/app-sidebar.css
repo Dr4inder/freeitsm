@@ -9,6 +9,10 @@
     /* Pinned open with names (#124): the page moves over by the full width.
        On hover it does NOT - the wider rail lies over the page instead. */
     body:has(.app-sidebar--pinned) { padding-left: 220px; }
+    /* Waffle button hidden (#124): the rail does its job here. Inside this
+       query on purpose - a phone has no rail, so it always keeps the button.
+       The panel stays; the rail's Recent button still opens it. */
+    body:has(.app-sidebar--nowaffle) .waffle-btn { display: none; }
 
     .app-sidebar {
         position: fixed;

@@ -1339,7 +1339,7 @@ return [
         // the home page and the ⌘K "Go to" list.
         // The optional sidebar (#124).
         'sidebar_heading' => 'Sidebar',
-        'sidebar_desc'    => 'Keep your modules one click away down the left of every screen, instead of opening the waffle menu. The waffle stays where it is either way. Not shown on a phone.',
+        'sidebar_desc'    => 'Keep your modules one click away down the left of every screen, instead of opening the waffle menu. Not shown on a phone, which keeps the waffle.',
         'sidebar_label'   => 'Show the sidebar',
         'sidebar_pick'    => 'Tick the modules you want on it. They appear in your module order, above.',
         'sidebar_on'      => 'Sidebar on - you will see it on the next page you open',
@@ -1349,6 +1349,9 @@ return [
         'sidebar_names_icons'  => 'Icons only - point at one for its name',
         'sidebar_names_hover'  => 'Open with names when you point at the sidebar',
         'sidebar_names_pinned' => 'Always open with names',
+        'sidebar_waffle'       => 'Waffle button',
+        'sidebar_waffle_show'  => 'Show',
+        'sidebar_waffle_hide'  => 'Hide - Recent is on the sidebar, and a phone still shows it',
         'modorder_heading' => 'Module order',
         'modorder_desc'    => 'The order of the modules in your waffle menu, on the home page and in the Ctrl+K "Go to" list. Drag a module by its handle, use the arrows, or select one and press Alt with the up or down arrow. Only you see this order.',
         'modorder_note'    => 'Saved as you go, and used from the next page you open. A module added in a later update joins the list on its own.',

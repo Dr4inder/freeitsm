@@ -5,7 +5,7 @@
  * than open the waffle each time.
  *
  * - OFF unless the analyst turns it on (Preferences -> Display -> Sidebar). The
- *   waffle stays exactly as it is either way.
+ *   waffle stays unless they choose to hide its button (below).
  * - The analyst ticks which modules it holds; it only ever offers modules they
  *   can open, and it follows THEIR module order (GH #187) - the same
  *   analystVisibleModules() list the waffle, the home page and ⌘K draw from, so
@@ -23,6 +23,11 @@
  *                        'pinned' - always open with names; the page moves over.
  *                        The pin button at the foot of the rail switches
  *                        between 'hover' and 'pinned'.
+ *   app_sidebar_waffle   'hide' = hide the waffle BUTTON while the rail shows
+ *                        (discussion #124, Kraleemil); absent = show it. Only
+ *                        the button goes - the panel stays, so the rail's
+ *                        Recent button (and Recent's search) still open it. A
+ *                        phone has no rail, so it always keeps the button.
  *
  * Drawn by renderWaffleMenuPanel(), which every analyst header already calls,
  * so no page needs editing to have it.
@@ -33,25 +38,27 @@
 require_once __DIR__ . '/display_order.php';
 
 /**
- * The signed-in analyst's sidebar settings: ['on' => bool, 'modules' => ?array].
- * 'modules' null means "never chosen" = every module. Read once per request.
+ * The signed-in analyst's sidebar settings: ['on' => bool, 'modules' => ?array,
+ * 'names' => string, 'waffle' => bool]. 'modules' null means "never chosen" =
+ * every module. Read once per request.
  */
 function appSidebarPrefs(): array
 {
     static $memo = null;
     if ($memo !== null) return $memo;
-    $memo = ['on' => false, 'modules' => null, 'names' => 'icons'];
+    $memo = ['on' => false, 'modules' => null, 'names' => 'icons', 'waffle' => true];
     $aid = (int)($_SESSION['analyst_id'] ?? 0);
     if ($aid <= 0 || !function_exists('connectToDatabase')) return $memo;
     try {
         $st = connectToDatabase()->prepare(
             "SELECT preference_key, preference_value FROM user_preferences
-              WHERE analyst_id = ? AND preference_key IN ('app_sidebar', 'app_sidebar_modules', 'app_sidebar_names')"
+              WHERE analyst_id = ? AND preference_key IN ('app_sidebar', 'app_sidebar_modules', 'app_sidebar_names', 'app_sidebar_waffle')"
         );
         $st->execute([$aid]);
         $rows = $st->fetchAll(PDO::FETCH_KEY_PAIR);
         $memo['on'] = ($rows['app_sidebar'] ?? '') === '1';
         if (in_array($rows['app_sidebar_names'] ?? '', ['hover', 'pinned'], true)) $memo['names'] = $rows['app_sidebar_names'];
+        $memo['waffle'] = ($rows['app_sidebar_waffle'] ?? '') !== 'hide';
         if (isset($rows['app_sidebar_modules']) && $rows['app_sidebar_modules'] !== '') {
             $memo['modules'] = displayOrderParse($rows['app_sidebar_modules']);
         }
@@ -96,8 +103,8 @@ function renderAppSidebar(array $modules, $current_module): void
     // repeat the word beside it.
     $tip = fn($s) => $names === 'icons' ? ' title="' . $h($s) . '"' : '';
     ?>
-    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=3">
-    <nav class="app-sidebar app-sidebar--<?php echo $h($names); ?>" id="appSidebar" aria-label="<?php echo $h(t('common.sidebar.label')); ?>">
+    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=4">
+    <nav class="app-sidebar app-sidebar--<?php echo $h($names); ?><?php echo appSidebarPrefs()['waffle'] ? '' : ' app-sidebar--nowaffle'; ?>" id="appSidebar" aria-label="<?php echo $h(t('common.sidebar.label')); ?>">
         <div class="app-sidebar-modules">
             <?php foreach (appSidebarModules($modules) as $key => $module): ?>
             <a href="<?php echo $h(BASE_URL . $module['path']); ?>" class="app-sidebar-link<?php echo $key === $current_module ? ' current' : ''; ?>"
