@@ -307,7 +307,7 @@ ok('v1: still the api-key header', !empty($log[0]['has_api_key_header']) && empt
 // ── 5. The registry ─────────────────────────────────────────────────────────
 section('5. Wiring');
 
-ok('azure is an accepted provider', in_array('azure', AI_PROVIDER_VALID, true));
+ok('azure is an accepted provider', AiProvider::tryFrom('azure') === AiProvider::Azure);
 require_once 'includes/ai_settings.php';
 $keys = aiSettingsKeys('tickets_reply_cleanup');
 foreach (['azure_endpoint', 'azure_deployment', 'azure_api_version'] as $f) {

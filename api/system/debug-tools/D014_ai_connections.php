@@ -156,8 +156,7 @@ function setupKey(array $cfg): string {
  * @param string $p  the provider key, e.g. 'anthropic' or 'azure'
  */
 function providerLabel(string $p): string {
-    return ['anthropic' => 'Anthropic', 'openai' => 'OpenAI', 'openrouter' => 'OpenRouter', 'azure' => 'Azure OpenAI',
-            'openai_compatible' => 'Custom endpoint'][$p] ?? $p;
+    return AiProvider::tryFrom($p)?->label() ?? $p;
 }
 
 $conn     = connectToDatabase();
