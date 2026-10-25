@@ -43,6 +43,14 @@ class ProjectToolsService
         }
         if ($analyst > 0) self::mustExist($conn, "SELECT 1 FROM analysts WHERE id = ? AND is_active = 1", $analyst, 'That analyst does not exist or is inactive.');
         if ($team > 0)    self::mustExist($conn, "SELECT 1 FROM teams WHERE id = ?", $team, 'That team does not exist.');
+        // GH #210: like a person, an analyst or team must be able to see the
+        // project's company - membership never lets anyone past the company.
+        if ($analyst > 0 && !projectAnalystReachesCompany($conn, $analyst, $project['tenant_id'])) {
+            throw new ServiceError('validation', 'invalid_field', 'That analyst cannot see this project\'s company, so could never open the project. Give them access to the company first.');
+        }
+        if ($team > 0 && !projectTeamReachesCompany($conn, $team, $project['tenant_id'])) {
+            throw new ServiceError('validation', 'invalid_field', 'That team does not give access to this project\'s company. Give the team access to it under System - Teams, or add its people one by one.');
+        }
         if ($user > 0) {
             // A person from People must be in the project's company - a project is
             // one company's work.
@@ -1129,7 +1137,21 @@ class ProjectToolsService
               LEFT JOIN users u ON u.id = m.user_id" . $c['join'] . "
                   WHERE m.project_id = ? ORDER BY m.position, m.id");
             $st->execute([$projectId]);
-            return $st->fetchAll(PDO::FETCH_ASSOC);
+            $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+            // GH #210: somebody added before the rule, who cannot see the project's
+            // company - still listed (nothing vanishes), but flagged on their card.
+            if ($rows && isMultiTenant($conn)) {
+                $pt = $conn->prepare("SELECT tenant_id FROM projects WHERE id = ?");
+                $pt->execute([$projectId]);
+                $tenant = $pt->fetchColumn();
+                $tenant = ($tenant === false || $tenant === null) ? null : (int)$tenant;
+                foreach ($rows as &$r) {
+                    $r['outside_company'] = ($r['analyst_id'] !== null && !projectAnalystReachesCompany($conn, (int)$r['analyst_id'], $tenant))
+                        || ($r['team_id'] !== null && !projectTeamReachesCompany($conn, (int)$r['team_id'], $tenant));
+                }
+                unset($r);
+            }
+            return $rows;
         } catch (Throwable) {
             return [];
         }

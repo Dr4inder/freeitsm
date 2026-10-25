@@ -124,6 +124,12 @@ class ProjectsService
         $pending = projectProposalNeedsApproval($conn, !empty($in['_from_form']));
         if ($pending) $in['status'] = 'proposed';
 
+        // GH #210: the project manager must be able to see the project's company.
+        if (!empty($in['owner_analyst_id']) && (int)$in['owner_analyst_id'] > 0
+            && !projectAnalystReachesCompany($conn, (int)$in['owner_analyst_id'], $store)) {
+            throw new ServiceError('validation', 'invalid_field', 'That project manager cannot see this project\'s company. Choose somebody who can, or give them access to the company first.');
+        }
+
         $cols = ['tenant_id', 'created_by_id'];
         $vals = [$store, $ctx->actorId > 0 ? $ctx->actorId : null];
         if ($pending) { $cols[] = 'approval_status'; $vals[] = 'pending'; }
@@ -180,6 +186,13 @@ class ProjectsService
             $changes[$field] = [$cur[$field], $v];
         }
         if (!$sets) return $id;
+        // GH #210: a NEW project manager must be able to see the project's company.
+        // Only when it changes, so one appointed before the rule never blocks an
+        // unrelated edit.
+        if (isset($changes['owner_analyst_id']) && $changes['owner_analyst_id'][1] !== null
+            && !projectAnalystReachesCompany($conn, (int)$changes['owner_analyst_id'][1], $cur['tenant_id'])) {
+            throw new ServiceError('validation', 'invalid_field', 'That project manager cannot see this project\'s company. Choose somebody who can, or give them access to the company first.');
+        }
         // Members-only (3.3.0): only the team or Manage Projects say who can see it -
         // under "anyone may change", an outsider must not be able to shut the door.
         if (isset($changes['visibility']) && $ctx->actorId > 0

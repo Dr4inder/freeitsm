@@ -46,6 +46,8 @@
                 + '<div class="prj-person-main">'
                 +   '<div class="prj-person-name">' + esc(m.name) + (m.kind === 'analyst' && String(m.analyst_id) === String(pm) ? ' <span class="prj-pm-badge">' + esc(T('people.pm_badge')) + '</span>' : '') + '</div>'
                 +   '<div class="prj-person-kind">' + kindIcon(m.kind) + esc(T('people.kind_label_' + m.kind)) + (m.kind === 'contractor' && m.contact_id && m.supplier_name ? ' &middot; ' + esc(m.supplier_name) : '') + (m.job_title ? ' &middot; ' + esc(m.job_title) : '') + '</div>'
+                // GH #210: added before the company rule; still listed, but they cannot open the project.
+                +   (m.outside_company ? '<div class="prj-person-warn" style="font-size:12px; color: var(--warning-text, #b45309); margin-top: 2px;">' + esc(T('people.outside_company')) + '</div>' : '')
                 +   (canChange()
                         ? '<select class="prj-role-select" data-member-role="' + m.id + '" aria-label="' + esc(T('people.role')) + '">' + roleOpts(m.role_id) + '</select>'
                         : '<div class="prj-person-role">' + esc(m.role_name || T('people.no_role')) + '</div>')
@@ -162,7 +164,9 @@
         const list = memberKind === 'team' ? (L.teams || []).map(t => ({ id: t.id, name: t.name })) : L.analysts.map(a => ({ id: a.id, name: a.full_name }));
         const col = memberKind === 'team' ? 'team_id' : 'analyst_id';
         document.getElementById('pmPickLabel').textContent = T('people.pick_' + memberKind);
-        document.getElementById('pmPick').innerHTML = list.filter(x => !taken.some(m => String(m[col]) === String(x.id)))
+        // GH #210: only analysts and teams that can see the project's company.
+        document.getElementById('pmPick').innerHTML = list.filter(x => !taken.some(m => String(m[col]) === String(x.id))
+                && P.reachesCompany(L, memberKind, x.id, ctx.data.project.tenant_id))
             .map(x => '<option value="' + x.id + '">' + esc(x.name) + '</option>').join('');
     }
     let peopleTimer = null;

@@ -54,7 +54,7 @@ $translationNamespaces = ['common', 'projects'];
         <div id="capBody"><div class="prj-plan-empty"><?php echo htmlspecialchars(t('projects.capacity.loading')); ?></div></div>
     </div>
 
-    <script src="../assets/js/projects.js?v=10"></script>
+    <script src="../assets/js/projects.js?v=11"></script>
     <script src="../assets/js/projects-capacity.js?v=3"></script>
     <script src="../assets/js/mobile.js?v=82"></script>
 </body>

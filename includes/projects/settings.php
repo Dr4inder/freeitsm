@@ -459,6 +459,48 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
     }
 
     /**
+     * Can this analyst see the project's company? (GH #210)
+     *
+     * A project is one company's work, and being on it never lets anyone past
+     * that: every read checks the company first (ProjectsService::loadForActor()).
+     * So somebody who cannot see the company could be listed as the manager or a
+     * member and still never open the project - while its notifications named it
+     * to them. They are refused instead. Always true on a single-company install.
+     *
+     * @param mixed $projectTenant  projects.tenant_id as stored; NULL is the Default company
+     */
+    function projectAnalystReachesCompany(PDO $conn, int $analystId, $projectTenant): bool
+    {
+        if (!isMultiTenant($conn)) return true;
+        $tid = $projectTenant === null ? getDefaultTenantId($conn) : (int)$projectTenant;
+        return analystCanAccessTenant($conn, $analystId, $tid);
+    }
+
+    /**
+     * Does this TEAM give access to the project's company - every company, or that
+     * one under System -> Teams? (GH #210) A team on a project makes everyone in it
+     * part of the project's team, so the team itself must reach the company; whether
+     * some of its people happen to reach it on their own does not count.
+     *
+     * @param mixed $projectTenant  projects.tenant_id as stored; NULL is the Default company
+     */
+    function projectTeamReachesCompany(PDO $conn, int $teamId, $projectTenant): bool
+    {
+        if (!isMultiTenant($conn)) return true;
+        $tid = $projectTenant === null ? getDefaultTenantId($conn) : (int)$projectTenant;
+        try {
+            $st = $conn->prepare("SELECT can_access_all_tenants FROM teams WHERE id = ?");
+            $st->execute([$teamId]);
+            if ((int)$st->fetchColumn() === 1) return true;
+            $st = $conn->prepare("SELECT 1 FROM team_tenant_access WHERE team_id = ? AND tenant_id = ?");
+            $st->execute([$teamId, $tid]);
+            return (bool)$st->fetchColumn();
+        } catch (Exception $e) {
+            return tenancyDegradeAllowed($e);
+        }
+    }
+
+    /**
      * True when the analyst may change the project - anyone, if the change policy says so,
      * else its team and project managers.
      *
