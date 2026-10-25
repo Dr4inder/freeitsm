@@ -202,7 +202,7 @@ $translationNamespaces = ['common', 'calendar'];
         <?php renderSettingsTabBar($visibleTabs, $activeTabId); ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'categories')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'categories' ? ' active' : ''; ?>" id="categories-tab" data-capability="<?php echo Cap::CALENDAR_CATEGORIES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'categories' ? ' active' : ''; ?>" id="categories-tab" data-capability="<?php echo capKey(Cap::CALENDAR_CATEGORIES); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('calendar.settings.heading')); ?></h2>
                 <button class="add-btn" onclick="openCategoryModal()"><?php echo htmlspecialchars(t('calendar.settings.add')); ?></button>

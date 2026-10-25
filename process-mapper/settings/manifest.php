@@ -11,13 +11,13 @@ return [
     'module' => 'process-mapper',
     'label'  => 'Process mapper',
     'umbrella' => [
-        'cap'   => Cap::PROCESS_MAPPER_MANAGE->value,
+        'cap'   => capKey(Cap::PROCESS_MAPPER_MANAGE),
         'grant' => 'Manage everything in Process mapper settings',
     ],
     'tabs' => [
         [
             'id'        => 'step-types',
-            'cap'       => Cap::PROCESS_MAPPER_STEP_TYPES->value,
+            'cap'       => capKey(Cap::PROCESS_MAPPER_STEP_TYPES),
             'label_key' => 'process-mapper.settings_tabs.step_types',
             'grant'     => 'Manage the step types maps are drawn with',
         ],

@@ -17,11 +17,11 @@ require_once __DIR__ . '/../../includes/i18n.php';
 I18n::initFromSession();
 
 $tabCaps = [
-    'general' => Cap::PROJECTS_GENERAL->value,
-    'health'  => Cap::PROJECTS_HEALTH->value,
-    'roles'   => Cap::PROJECTS_ROLES->value,
-    'raid'    => Cap::PROJECTS_RAID->value,
-    'budget'  => Cap::PROJECTS_BUDGET->value,
+    'general' => capKey(Cap::PROJECTS_GENERAL),
+    'health'  => capKey(Cap::PROJECTS_HEALTH),
+    'roles'   => capKey(Cap::PROJECTS_ROLES),
+    'raid'    => capKey(Cap::PROJECTS_RAID),
+    'budget'  => capKey(Cap::PROJECTS_BUDGET),
 ];
 
 /** The roles list with how many members hold each - for the Roles tab. */

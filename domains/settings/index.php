@@ -80,7 +80,7 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
         <?php else: renderSettingsTabBar($visibleTabs, $activeTabId); endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'statuses')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="statuses-tab" data-capability="<?php echo Cap::DOMAINS_STATUSES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="statuses-tab" data-capability="<?php echo capKey(Cap::DOMAINS_STATUSES); ?>">
             <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
                 <div><h2 style="margin:0;font-size:18px"><?php echo $tt('statuses_title'); ?></h2><div class="dom-hint" style="font-size:13px"><?php echo $tt('statuses_intro'); ?></div></div>
                 <button type="button" class="dom-btn primary" id="stAdd"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -92,7 +92,7 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'cert-types')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'cert-types' ? ' active' : ''; ?>" id="cert-types-tab" data-capability="<?php echo Cap::DOMAINS_CERT_TYPES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'cert-types' ? ' active' : ''; ?>" id="cert-types-tab" data-capability="<?php echo capKey(Cap::DOMAINS_CERT_TYPES); ?>">
             <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
                 <div><h2 style="margin:0;font-size:18px"><?php echo $tt('ct_title'); ?></h2><div class="dom-hint" style="font-size:13px"><?php echo $tt('ct_intro'); ?></div></div>
                 <button type="button" class="dom-btn primary" id="ctAdd"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -104,7 +104,7 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'alerts')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'alerts' ? ' active' : ''; ?>" id="alerts-tab" data-capability="<?php echo Cap::DOMAINS_ALERTS->value; ?>" data-settings-tab="alerts">
+        <div class="tab-content<?php echo $activeTabId === 'alerts' ? ' active' : ''; ?>" id="alerts-tab" data-capability="<?php echo capKey(Cap::DOMAINS_ALERTS); ?>" data-settings-tab="alerts">
             <h2 style="margin:0 0 4px;font-size:18px"><?php echo $tt('alerts_title'); ?></h2>
             <div class="set-box" id="alertsState"></div>
             <div class="set-row"><div><div class="lbl"><?php echo $tt('alerts_enabled'); ?></div><div class="desc"><?php echo $tt('alerts_enabled_desc'); ?></div></div>
@@ -154,7 +154,7 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'monitoring')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'monitoring' ? ' active' : ''; ?>" id="monitoring-tab" data-capability="<?php echo Cap::DOMAINS_MONITORING->value; ?>" data-settings-tab="monitoring">
+        <div class="tab-content<?php echo $activeTabId === 'monitoring' ? ' active' : ''; ?>" id="monitoring-tab" data-capability="<?php echo capKey(Cap::DOMAINS_MONITORING); ?>" data-settings-tab="monitoring">
             <h2 style="margin:0 0 4px;font-size:18px"><?php echo $tt('monitoring_title'); ?></h2>
             <div class="set-box" id="schedState"></div>
             <div class="set-row"><div><div class="lbl"><?php echo $tt('lookup_mode'); ?></div><div class="desc"><?php echo $tt('lookup_mode_desc'); ?></div></div>
@@ -194,7 +194,7 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
             $ssLevels = [];
             try { $ssLevels = connectToDatabase()->query("SELECT id, name FROM service_impact_levels WHERE is_active = 1 ORDER BY severity_order, display_order, id")->fetchAll(PDO::FETCH_ASSOC); } catch (Throwable $e) {}
         ?>
-        <div class="tab-content<?php echo $activeTabId === 'service-status' ? ' active' : ''; ?>" id="service-status-tab" data-capability="<?php echo Cap::DOMAINS_SERVICE_STATUS->value; ?>" data-settings-tab="service-status">
+        <div class="tab-content<?php echo $activeTabId === 'service-status' ? ' active' : ''; ?>" id="service-status-tab" data-capability="<?php echo capKey(Cap::DOMAINS_SERVICE_STATUS); ?>" data-settings-tab="service-status">
             <h2 style="margin:0 0 4px;font-size:18px"><?php echo $tt('ss_title'); ?></h2>
             <div class="set-box"><?php echo $tt('ss_intro'); ?></div>
             <div class="set-row"><div><div class="lbl"><?php echo $tt('ss_mode'); ?></div><div class="desc"><?php echo $tt('ss_mode_desc'); ?></div></div>
@@ -221,7 +221,7 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'auth-codes')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'auth-codes' ? ' active' : ''; ?>" id="auth-codes-tab" data-capability="<?php echo Cap::DOMAINS_AUTH_CODES->value; ?>" data-settings-tab="auth-codes">
+        <div class="tab-content<?php echo $activeTabId === 'auth-codes' ? ' active' : ''; ?>" id="auth-codes-tab" data-capability="<?php echo capKey(Cap::DOMAINS_AUTH_CODES); ?>" data-settings-tab="auth-codes">
             <h2 style="margin:0 0 4px;font-size:18px"><?php echo $tt('codes_title'); ?></h2>
             <div class="set-box"><?php echo $tt('codes_intro'); ?></div>
             <div class="set-row"><div><div class="lbl"><?php echo $tt('code_audit'); ?></div><div class="desc"><?php echo $tt('code_audit_desc'); ?></div></div>

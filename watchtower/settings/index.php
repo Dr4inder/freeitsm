@@ -130,7 +130,7 @@ $translationNamespaces = ['common', 'watchtower'];
         <?php renderSettingsTabBar($visibleTabs, $activeTabId); ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'cards')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'cards' ? ' active' : ''; ?>" id="cards-tab" data-capability="<?php echo Cap::WATCHTOWER_CARDS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'cards' ? ' active' : ''; ?>" id="cards-tab" data-capability="<?php echo capKey(Cap::WATCHTOWER_CARDS); ?>">
             <div class="section-header"><h2><?php echo htmlspecialchars(t('watchtower.settings.cards_heading')); ?></h2></div>
             <p class="intro"><?php echo htmlspecialchars(t('watchtower.settings.cards_intro')); ?></p>
             <p class="intro"><?php echo htmlspecialchars(t('watchtower.settings.order_intro')); ?></p>
@@ -143,7 +143,7 @@ $translationNamespaces = ['common', 'watchtower'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'counts')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'counts' ? ' active' : ''; ?>" id="counts-tab" data-capability="<?php echo Cap::WATCHTOWER_COUNTS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'counts' ? ' active' : ''; ?>" id="counts-tab" data-capability="<?php echo capKey(Cap::WATCHTOWER_COUNTS); ?>">
             <div class="section-header"><h2><?php echo htmlspecialchars(t('watchtower.settings.counts_heading')); ?></h2></div>
             <p class="intro"><?php echo htmlspecialchars(t('watchtower.settings.counts_intro')); ?></p>
             <div id="countsList"><?php echo htmlspecialchars(t('watchtower.settings.loading')); ?></div>

@@ -35,7 +35,7 @@ return [
     // One tick that satisfies every capability below — the ordinary "Asset
     // Administrator" role. Sensitive, because it implies vCenter and Intune.
     'umbrella' => [
-        'cap'       => Cap::ASSETS_MANAGE->value,
+        'cap'       => capKey(Cap::ASSETS_MANAGE),
         'grant'     => 'Manage everything in Asset management settings',
         'sensitive' => true,
     ],
@@ -43,7 +43,7 @@ return [
     'tabs' => [
         [
             'id'        => 'asset-types',
-            'cap'       => Cap::ASSETS_TYPES->value,
+            'cap'       => capKey(Cap::ASSETS_TYPES),
             'label_key' => 'asset-management.settings.tab_asset_types',
             'grant'     => 'Manage asset types',
             // GH #200: how an asset says it has details its type's layout hides.
@@ -55,7 +55,7 @@ return [
             // exactly as designing the handover document is gated but printing
             // one is not.
             'id'        => 'custom-fields',
-            'cap'       => Cap::ASSETS_FIELDS->value,
+            'cap'       => capKey(Cap::ASSETS_FIELDS),
             'label_key' => 'asset-management.settings.tab_custom_fields',
             'grant'     => 'Design custom asset fields and field sets',
         ],
@@ -64,32 +64,32 @@ return [
             // can create or overwrite thousands of records in one go, which is
             // a very different thing from editing one asset.
             'id'        => 'import',
-            'cap'       => Cap::ASSETS_IMPORT->value,
+            'cap'       => capKey(Cap::ASSETS_IMPORT),
             'label_key' => 'asset-management.settings.tab_import',
             'grant'     => 'Import assets in bulk from a file',
             'sensitive' => true,
         ],
         [
             'id'        => 'asset-statuses',
-            'cap'       => Cap::ASSETS_STATUSES->value,
+            'cap'       => capKey(Cap::ASSETS_STATUSES),
             'label_key' => 'asset-management.settings.tab_asset_statuses',
             'grant'     => 'Manage asset statuses',
         ],
         [
             'id'        => 'locations',
-            'cap'       => Cap::ASSETS_LOCATIONS->value,
+            'cap'       => capKey(Cap::ASSETS_LOCATIONS),
             'label_key' => 'asset-management.settings.tab_locations',
             'grant'     => 'Manage locations',
         ],
         [
             'id'        => 'suppliers',
-            'cap'       => Cap::ASSETS_SUPPLIERS->value,
+            'cap'       => capKey(Cap::ASSETS_SUPPLIERS),
             'label_key' => 'asset-management.settings.tab_suppliers',
             'grant'     => 'Manage suppliers',
         ],
         [
             'id'           => 'warranty',
-            'cap'          => Cap::ASSETS_WARRANTY->value,
+            'cap'          => capKey(Cap::ASSETS_WARRANTY),
             'label_key'    => 'asset-management.settings.tab_warranty',
             'grant'        => 'Configure warranty and lease expiry surfacing',
             // The id stays 'warranty' because it is the tab's stable address -
@@ -101,7 +101,7 @@ return [
         [
             // Assets -> Leases (3.5.0): what can become of a leased asset.
             'id'        => 'leasing',
-            'cap'       => Cap::ASSETS_LEASING->value,
+            'cap'       => capKey(Cap::ASSETS_LEASING),
             'label_key' => 'asset-management.leases.settings_tab',
             'grant'     => 'Manage lease outcomes',
         ],
@@ -110,13 +110,13 @@ return [
             // DESIGNING it, not producing one — printing a handover for somebody
             // is plain module access, the same as viewing their equipment.
             'id'        => 'handover',
-            'cap'       => Cap::ASSETS_HANDOVER->value,
+            'cap'       => capKey(Cap::ASSETS_HANDOVER),
             'label_key' => 'asset-management.settings.tab_handover',
             'grant'     => 'Design the equipment handover document',
         ],
         [
             'id'           => 'vcenter',
-            'cap'          => Cap::ASSETS_VCENTER->value,
+            'cap'          => capKey(Cap::ASSETS_VCENTER),
             'label_key'    => 'asset-management.settings.tab_vcenter',
             'grant'        => 'Configure the vCenter connection, including its credentials',
             'sensitive'    => true,
@@ -124,14 +124,14 @@ return [
         ],
         [
             'id'           => 'asset-tags',
-            'cap'          => Cap::ASSETS_TAGS->value,
+            'cap'          => capKey(Cap::ASSETS_TAGS),
             'label_key'    => 'asset-management.settings.tab_asset_tags',
             'grant'        => 'Configure asset tag auto-generation and numbering sequence',
             'setting_keys' => ['asset_tag_autogen_enabled', 'asset_tag_format', 'asset_tag_start', 'asset_tag_scope'],
         ],
         [
             'id'           => 'reconciliation',
-            'cap'          => Cap::ASSETS_RECONCILIATION->value,
+            'cap'          => capKey(Cap::ASSETS_RECONCILIATION),
             'label_key'    => 'asset-management.settings.tab_reconciliation',
             'grant'        => 'Configure asset discovery, identity reconciliation and ignored serials',
             // GH #200 Part B: when an inventory list counts as stale on the asset.
@@ -142,13 +142,13 @@ return [
             // including MERGING two assets, which is why it shares the reconciliation
             // capability rather than plain module access.
             'id'           => 'review',
-            'cap'          => Cap::ASSETS_RECONCILIATION->value,
+            'cap'          => capKey(Cap::ASSETS_RECONCILIATION),
             'label_key'    => 'asset-management.settings.tab_review',
             'grant'        => 'Configure asset discovery, identity reconciliation and ignored serials',
         ],
         [
             'id'           => 'asset-labels',
-            'cap'          => Cap::ASSETS_LABELS->value,
+            'cap'          => capKey(Cap::ASSETS_LABELS),
             'label_key'    => 'asset-management.settings.tab_asset_labels',
             'grant'        => 'Configure physical asset labels, layout and QR code branding',
             'setting_keys' => ['asset_label_title', 'asset_label_fields', 'asset_label_footer',
@@ -157,7 +157,7 @@ return [
         ],
         [
             'id'           => 'intune',
-            'cap'          => Cap::ASSETS_INTUNE->value,
+            'cap'          => capKey(Cap::ASSETS_INTUNE),
             'label_key'    => 'asset-management.settings.tab_intune',
             'grant'        => 'Configure the Intune connection and run syncs, including its credentials',
             'sensitive'    => true,
@@ -167,7 +167,7 @@ return [
             // Several Proxmox VE servers. Their credentials live in proxmox_connections,
             // not system_settings, so there are no setting_keys for this tab.
             'id'           => 'proxmox',
-            'cap'          => Cap::ASSETS_PROXMOX->value,
+            'cap'          => capKey(Cap::ASSETS_PROXMOX),
             'label_key'    => 'asset-management.settings.tab_proxmox',
             'grant'        => 'Configure Proxmox VE servers, including their credentials, and run syncs',
             'sensitive'    => true,
@@ -176,7 +176,7 @@ return [
         [
             // Several VMware Cloud Director servers. Credentials live in vcloud_connections.
             'id'           => 'vcloud',
-            'cap'          => Cap::ASSETS_VCLOUD->value,
+            'cap'          => capKey(Cap::ASSETS_VCLOUD),
             'label_key'    => 'asset-management.settings.tab_vcloud',
             'grant'        => 'Configure VMware Cloud Director servers, including their credentials, and run syncs',
             'sensitive'    => true,

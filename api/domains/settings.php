@@ -16,10 +16,10 @@ require_once __DIR__ . '/../../includes/domains/api_bootstrap.php';
 require_once __DIR__ . '/../../includes/domains/scheduler.php';
 
 $tabCaps = [
-    'alerts'     => Cap::DOMAINS_ALERTS->value,
-    'monitoring' => Cap::DOMAINS_MONITORING->value,
-    'auth-codes' => Cap::DOMAINS_AUTH_CODES->value,
-    'service-status' => Cap::DOMAINS_SERVICE_STATUS->value,
+    'alerts'     => capKey(Cap::DOMAINS_ALERTS),
+    'monitoring' => capKey(Cap::DOMAINS_MONITORING),
+    'auth-codes' => capKey(Cap::DOMAINS_AUTH_CODES),
+    'service-status' => capKey(Cap::DOMAINS_SERVICE_STATUS),
 ];
 
 domainApiRun(function () use ($conn, $analystId, $tabCaps) {

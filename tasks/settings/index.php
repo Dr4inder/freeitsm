@@ -138,7 +138,7 @@ $translationNamespaces = ['common', 'tasks'];
 
         <!-- Statuses Tab -->
         <?php if (settingsTabVisible($visibleTabs, 'statuses')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="statuses-tab" data-capability="<?php echo Cap::TASKS_STATUSES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="statuses-tab" data-capability="<?php echo capKey(Cap::TASKS_STATUSES); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tasks.settings.statuses_heading')); ?></h2>
                 <button class="add-btn" onclick="openLookupModal('status')"><?php echo htmlspecialchars(t('tasks.settings.add')); ?></button>
@@ -162,7 +162,7 @@ $translationNamespaces = ['common', 'tasks'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'priorities')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'priorities' ? ' active' : ''; ?>" id="priorities-tab" data-capability="<?php echo Cap::TASKS_PRIORITIES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'priorities' ? ' active' : ''; ?>" id="priorities-tab" data-capability="<?php echo capKey(Cap::TASKS_PRIORITIES); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tasks.settings.priorities_heading')); ?></h2>
                 <button class="add-btn" onclick="openLookupModal('priority')"><?php echo htmlspecialchars(t('tasks.settings.add')); ?></button>
@@ -185,7 +185,7 @@ $translationNamespaces = ['common', 'tasks'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'calendar')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'calendar' ? ' active' : ''; ?>" id="calendar-tab" data-capability="<?php echo Cap::TASKS_CALENDAR->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'calendar' ? ' active' : ''; ?>" id="calendar-tab" data-capability="<?php echo capKey(Cap::TASKS_CALENDAR); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tasks.settings.calendar_heading')); ?></h2>
             </div>
@@ -219,7 +219,7 @@ $translationNamespaces = ['common', 'tasks'];
 
         <!-- Time Tab (GH #112) -->
         <?php if (settingsTabVisible($visibleTabs, 'time')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'time' ? ' active' : ''; ?>" id="time-tab" data-capability="<?php echo Cap::TASKS_TIME->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'time' ? ' active' : ''; ?>" id="time-tab" data-capability="<?php echo capKey(Cap::TASKS_TIME); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tasks.settings.time_heading')); ?></h2>
             </div>
@@ -247,7 +247,7 @@ $translationNamespaces = ['common', 'tasks'];
 
         <!-- Involved Tab — who else is on a task (GH #89) -->
         <?php if (settingsTabVisible($visibleTabs, 'involved')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'involved' ? ' active' : ''; ?>" id="involved-tab" data-capability="<?php echo Cap::TASKS_INVOLVED->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'involved' ? ' active' : ''; ?>" id="involved-tab" data-capability="<?php echo capKey(Cap::TASKS_INVOLVED); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tasks.settings.involved_heading')); ?></h2>
             </div>
@@ -267,7 +267,7 @@ $translationNamespaces = ['common', 'tasks'];
 
         <!-- Checklists Tab — checklists on tasks (discussion #138) -->
         <?php if (settingsTabVisible($visibleTabs, 'checklists')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'checklists' ? ' active' : ''; ?>" id="checklists-tab" data-capability="<?php echo Cap::TASKS_CHECKLISTS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'checklists' ? ' active' : ''; ?>" id="checklists-tab" data-capability="<?php echo capKey(Cap::TASKS_CHECKLISTS); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tasks.settings.checklists_heading')); ?></h2>
             </div>
@@ -304,7 +304,7 @@ $translationNamespaces = ['common', 'tasks'];
 
         <!-- Evidence Tab — repeating task evidence (#181) -->
         <?php if (settingsTabVisible($visibleTabs, 'evidence')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'evidence' ? ' active' : ''; ?>" id="evidence-tab" data-capability="<?php echo Cap::TASKS_EVIDENCE->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'evidence' ? ' active' : ''; ?>" id="evidence-tab" data-capability="<?php echo capKey(Cap::TASKS_EVIDENCE); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tasks.settings.evidence_heading')); ?></h2>
             </div>
@@ -336,7 +336,7 @@ $translationNamespaces = ['common', 'tasks'];
 
         <!-- Card Tab -->
         <?php if (settingsTabVisible($visibleTabs, 'card')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'card' ? ' active' : ''; ?>" id="card-tab" data-capability="<?php echo Cap::TASKS_CARD->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'card' ? ' active' : ''; ?>" id="card-tab" data-capability="<?php echo capKey(Cap::TASKS_CARD); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tasks.settings.card_heading')); ?></h2>
             </div>
@@ -422,7 +422,7 @@ $translationNamespaces = ['common', 'tasks'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'tags')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'tags' ? ' active' : ''; ?>" id="tags-tab" data-capability="<?php echo Cap::TASKS_TAGS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'tags' ? ' active' : ''; ?>" id="tags-tab" data-capability="<?php echo capKey(Cap::TASKS_TAGS); ?>">
             <div class="settings-group">
                 <div class="section-header">
                     <h3><?php echo htmlspecialchars(t('tasks.settings.tags_heading')); ?></h3>

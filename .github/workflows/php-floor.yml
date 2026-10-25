@@ -15,6 +15,9 @@
 #
 # tests/php-version-guard.php checks the guard itself on real PHP 7.4 (Docker).
 # Parse checks only: no database, no extensions.
+#
+# TRAP: each `php -l` runs through `sh -c ... || true`. Bare `xargs php -l` STOPS at the
+# first file PHP exits 255 on, so the job reported 2 failing files of 46 (2026-10-25).
 
 name: PHP floor
 
@@ -36,7 +39,7 @@ jobs:
         run: |
           set -o pipefail
           find . -name '*.php' -not -path './vendor/*' -not -path './node_modules/*' -not -path './local/*' -print0 \
-            | xargs -0 -n1 -P4 php -l > lint.txt 2>&1 || true
+            | xargs -0 -n1 -P4 sh -c 'php -l "$0" 2>&1 || true' > lint.txt
           if grep -E 'Parse error|Fatal error' lint.txt; then exit 1; fi
           echo "$(grep -c 'No syntax errors' lint.txt) files parse on PHP 8.1"
 
@@ -56,7 +59,7 @@ jobs:
           php -l includes/functions.php
           php -l includes/ssl.php
           find . -name '*.php' -not -path '*/includes/*' -not -path './tests/*' -not -path './vendor/*' -not -path './node_modules/*' -not -path './local/*' -print0 \
-            | xargs -0 -n1 -P4 php -l > lint.txt 2>&1 || true
+            | xargs -0 -n1 -P4 sh -c 'php -l "$0" 2>&1 || true' > lint.txt
           if grep -E 'Parse error|Fatal error' lint.txt; then
             echo "::error::A file the web server runs directly uses PHP 8 syntax. Move that code into an includes/ file, or write it the old way - see includes/php_version_guard.php."
             exit 1

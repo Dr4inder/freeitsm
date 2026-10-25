@@ -31,15 +31,15 @@
  * the one thing the old class constants could not do.
  *
  * ---------------------------------------------------------------------------
- * TRAP: BARE Cap::X ONLY AS A GUARD'S ARGUMENT. EVERYWHERE ELSE, Cap::X->value.
+ * TRAP: BARE Cap::X ONLY AS A GUARD'S ARGUMENT. EVERYWHERE ELSE, capKey(Cap::X).
  * ---------------------------------------------------------------------------
  * An enum is not a string. Echoed, or used as an array key, it errors loudly - fine.
  * But COMPARED with a string (===, in_array, a switch) it is silently false: a check
  * quietly denies, or quietly skips a safeguard. So the rule is mechanical:
  *
  *     requireCapabilityJson(Cap::TICKETS_SLA);              // a guard takes the enum
- *     'cap' => Cap::TICKETS_SLA->value,                      // data holds the string
- *     data-capability="<?= Cap::TICKETS_SLA->value ?>"      // so does HTML
+ *     'cap' => capKey(Cap::TICKETS_SLA),                      // data holds the string
+ *     data-capability="<?= capKey(Cap::TICKETS_SLA) ?>"      // so does HTML
  *     requireCapabilityJson(Cap::from($tab['cap']));         // string back to enum: loud on a bad key
  *
  * Manifests, registries and the database all hold strings; Cap::fromKey() is the
@@ -382,6 +382,22 @@ enum Cap: string
 }
 
 /**
+ * A capability's stored key - 'tickets.sla' for Cap::TICKETS_SLA.
+ *
+ * TRAP: write capKey(Cap::X), never Cap::X->value. Reading a property straight off a
+ * class constant is PHP 8.0 syntax, so on an older PHP every settings page and
+ * manifest holding it fails to PARSE - and a file that cannot be parsed never reaches
+ * includes/php_version_guard.php to say "this needs PHP 8.1". capKey(Cap::X) parses
+ * on any PHP 7, and does exactly the same on 8.1. The PHP floor CI job checks it.
+ *
+ * @param Cap $cap  the capability
+ */
+function capKey(Cap $cap): string
+{
+    return $cap->value;
+}
+
+/**
  * Every module's settings manifest, loaded once.
  *
  * ---------------------------------------------------------------------------
@@ -519,7 +535,7 @@ function capRegistry(): array
 function capAliases(): array
 {
     return [
-        // 'assets.vcentre' => Cap::ASSETS_VCENTER->value,   // a string: aliases are data
+        // 'assets.vcentre' => capKey(Cap::ASSETS_VCENTER),   // a string: aliases are data
     ];
 }
 

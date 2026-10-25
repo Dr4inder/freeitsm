@@ -14,7 +14,9 @@ if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
  * is mechanical, so this checks it mechanically, with PHP's own tokenizer:
  *
  *   1. A bare Cap::X only as the direct argument of a guard. Anywhere else it
- *      must be Cap::X->value (or ->name).
+ *      must be capKey(Cap::X) - never Cap::X->value, which is PHP 8 syntax: a
+ *      settings page holding it would not even parse on an old PHP, so the
+ *      version guard could never say "this needs PHP 8.1".
  *   2. A guard's capability argument is Cap::X, Cap::from(...), or - inside the
  *      guard wrappers themselves - their own Cap-typed parameter. Never a raw
  *      string or array element, which would be a TypeError at run time.
@@ -77,7 +79,10 @@ function scanCapUsage(string $src): array
         if (is_array($t[$i]) && $t[$i][1] === 'Cap' && $text($i + 1) === '::'
             && isset($t[$i + 2]) && is_array($t[$i + 2]) && preg_match('/^[A-Z0-9_]+$/', $t[$i + 2][1])) {
             $after = $sig($i + 3, 1);
-            if ($text($after) === '->') continue;                 // ->value / ->name
+            if ($text($after) === '->') {                         // PHP 8 syntax in a page
+                $bare[] = $t[$i][2] . ': Cap::' . $t[$i + 2][1] . '-> (write capKey(Cap::' . $t[$i + 2][1] . '))';
+                continue;
+            }
             // enclosing call at depth 0
             $depth = 0; $call = null;
             for ($k = $i - 1; $k >= 0; $k--) {
@@ -88,7 +93,7 @@ function scanCapUsage(string $src): array
                     $depth--;
                 } elseif (in_array($tk, [';', '{', '}'], true) && $depth === 0) break;
             }
-            if ($call === null || !in_array($call, $guardNames, true)) $bare[] = $t[$i][2] . ': Cap::' . $t[$i + 2][1];
+            if ($call === null || ($call !== 'capKey' && !in_array($call, $guardNames, true))) $bare[] = $t[$i][2] . ': Cap::' . $t[$i + 2][1];
             continue;
         }
         // ---- rule 2: guard calls
@@ -121,10 +126,11 @@ echo str_repeat('=', 72) . "\n";
 
 // ---------------------------------------------------------------- the scanner
 echo "\nThe scanner\n";
-$s = scanCapUsage("<?php\nrequireCapabilityJson(Cap::A);\n\$x = ['cap' => Cap::B];\n\$y = Cap::C->value;\nif (\$k === Cap::D) {}\nanalystHasCapability(\$conn, \$id, Cap::E);\nrequireCapabilityJson(\$tab['cap']);\nrequireCapabilityJson(Cap::from(\$s));\n");
-check('CONTROL: an array value without ->value is flagged', in_array('3: Cap::B', $s['bare'], true), json_encode($s['bare']));
-check('CONTROL: a comparison without ->value is flagged', in_array('5: Cap::D', $s['bare'], true), json_encode($s['bare']));
-check('guard arguments and ->value are not flagged', count($s['bare']) === 2, json_encode($s['bare']));
+$s = scanCapUsage("<?php\nrequireCapabilityJson(Cap::A);\n\$x = ['cap' => Cap::B];\n\$y = capKey(Cap::C);\nif (\$k === Cap::D) {}\nanalystHasCapability(\$conn, \$id, Cap::E);\nrequireCapabilityJson(\$tab['cap']);\nrequireCapabilityJson(Cap::from(\$s));\n\$z = Cap::F->value;\n");
+check('CONTROL: an array value without capKey() is flagged', in_array('3: Cap::B', $s['bare'], true), json_encode($s['bare']));
+check('CONTROL: a comparison without capKey() is flagged', in_array('5: Cap::D', $s['bare'], true), json_encode($s['bare']));
+check('CONTROL: Cap::X->value is flagged (PHP 8 syntax in a page)', (bool)preg_grep('/^9: Cap::F->/', $s['bare']), json_encode($s['bare']));
+check('guard arguments and capKey() are not flagged', count($s['bare']) === 3, json_encode($s['bare']));
 $args = array_column($s['guardArgs'], 2);
 check('guard arguments are read', $args === ['Cap::A', 'Cap::E', "\$tab['cap']", 'Cap::from($s)'], json_encode($args));
 
@@ -152,7 +158,7 @@ foreach ($it as $f) {
     }
 }
 check("CONTROL: scanned real code ($files files, $guardCalls guard calls - more than 250)", $guardCalls > 250);
-check('rule 1: no bare Cap::X outside a guard argument', !$bad, implode("\n", $bad));
+check('rule 1: no bare Cap::X outside a guard or capKey(), and no Cap::X->value', !$bad, implode("\n", $bad));
 check('rule 2: every guard is handed Cap::X, Cap::from(), or its own Cap parameter', !$badArgs, implode("\n", $badArgs));
 
 // ---------------------------------------------------------------- rule 3

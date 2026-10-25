@@ -34,9 +34,9 @@ try {
 
     // key => the capability that may write it.
     $allowed = [
-        'logo_alignment'          => Cap::FORMS_LAYOUT->value,
-        'collection_close_effect' => Cap::FORMS_COLLECTIONS->value,
-        'design_restricted'       => Cap::FORMS_ACCESS->value,   // who may design forms (#180)
+        'logo_alignment'          => capKey(Cap::FORMS_LAYOUT),
+        'collection_close_effect' => capKey(Cap::FORMS_COLLECTIONS),
+        'design_restricted'       => capKey(Cap::FORMS_ACCESS),   // who may design forms (#180)
     ];
     $validAlignments = ['left', 'center', 'right'];
 

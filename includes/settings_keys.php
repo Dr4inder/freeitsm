@@ -130,8 +130,8 @@ function settingKeyOwners(): array
         // --- Tickets: time tracking (discussion #72) ---
         // The INSTALL-WIDE defaults. A company may override either of them —
         // see includes/tenant_settings.php and the Time tracking tab.
-        'time_tracking_enabled'     => ['module' => 'tickets', 'cap' => Cap::TICKETS_MANAGE->value, 'tab' => 'time-tracking'],
-        'time_tracking_api_enabled' => ['module' => 'tickets', 'cap' => Cap::TICKETS_MANAGE->value, 'tab' => 'time-tracking'],
+        'time_tracking_enabled'     => ['module' => 'tickets', 'cap' => capKey(Cap::TICKETS_MANAGE), 'tab' => 'time-tracking'],
+        'time_tracking_api_enabled' => ['module' => 'tickets', 'cap' => capKey(Cap::TICKETS_MANAGE), 'tab' => 'time-tracking'],
 
         // --- Tickets: classification fields (#1540) ---
         // The INSTALL-WIDE defaults for whether each of the three fields appears on

@@ -90,7 +90,7 @@ $tt = fn(string $k) => htmlspecialchars(t('files.settings.' . $k));
         <?php else: renderSettingsTabBar($visibleTabs, $activeTabId); endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'folders')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'folders' ? ' active' : ''; ?>" id="folders-tab" data-capability="<?php echo Cap::FILES_FOLDERS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'folders' ? ' active' : ''; ?>" id="folders-tab" data-capability="<?php echo capKey(Cap::FILES_FOLDERS); ?>">
             <h2 style="margin:0 0 4px;font-size:18px"><?php echo $tt('folders_title'); ?></h2>
             <div class="set-box"><?php echo $tt('folders_intro'); ?></div>
             <input type="search" class="fil-filter" id="folFilter" placeholder="<?php echo $tt('folders_filter'); ?>">
@@ -102,7 +102,7 @@ $tt = fn(string $k) => htmlspecialchars(t('files.settings.' . $k));
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'storage')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'storage' ? ' active' : ''; ?>" id="storage-tab" data-capability="<?php echo Cap::FILES_STORAGE->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'storage' ? ' active' : ''; ?>" id="storage-tab" data-capability="<?php echo capKey(Cap::FILES_STORAGE); ?>">
             <h2 style="margin:0 0 4px;font-size:18px"><?php echo $tt('storage_title'); ?></h2>
             <div class="set-box" id="stoState"></div>
             <div class="set-row"><div><div class="lbl"><?php echo $tt('storage_root'); ?></div><div class="desc"><?php echo $tt('storage_root_desc'); ?></div></div>

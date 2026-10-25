@@ -63,7 +63,7 @@ $row = function (string $label, string $desc, string $control) {
         <?php else: renderSettingsTabBar($visibleTabs, $activeTabId); endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'general')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'general' ? ' active' : ''; ?>" id="general-tab" data-capability="<?php echo Cap::PROJECTS_GENERAL->value; ?>" data-settings-tab="general">
+        <div class="tab-content<?php echo $activeTabId === 'general' ? ' active' : ''; ?>" id="general-tab" data-capability="<?php echo capKey(Cap::PROJECTS_GENERAL); ?>" data-settings-tab="general">
             <h2><?php echo $tt('general_title'); ?></h2>
             <p class="prj-muted"><?php echo $tt('general_intro'); ?></p>
             <?php
@@ -113,7 +113,7 @@ $row = function (string $label, string $desc, string $control) {
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'health')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'health' ? ' active' : ''; ?>" id="health-tab" data-capability="<?php echo Cap::PROJECTS_HEALTH->value; ?>" data-settings-tab="health">
+        <div class="tab-content<?php echo $activeTabId === 'health' ? ' active' : ''; ?>" id="health-tab" data-capability="<?php echo capKey(Cap::PROJECTS_HEALTH); ?>" data-settings-tab="health">
             <h2><?php echo $tt('health_title'); ?></h2>
             <p class="prj-muted"><?php echo $tt('health_intro'); ?></p>
             <?php
@@ -140,7 +140,7 @@ $row = function (string $label, string $desc, string $control) {
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'roles')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'roles' ? ' active' : ''; ?>" id="roles-tab" data-capability="<?php echo Cap::PROJECTS_ROLES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'roles' ? ' active' : ''; ?>" id="roles-tab" data-capability="<?php echo capKey(Cap::PROJECTS_ROLES); ?>">
             <div class="prj-set-head">
                 <div><h2><?php echo $tt('roles_title'); ?></h2><p class="prj-muted"><?php echo $tt('roles_intro'); ?></p></div>
                 <button type="button" class="btn btn-primary prj-btn" id="roleAdd"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -150,7 +150,7 @@ $row = function (string $label, string $desc, string $control) {
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'raid')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'raid' ? ' active' : ''; ?>" id="raid-tab" data-capability="<?php echo Cap::PROJECTS_RAID->value; ?>" data-settings-tab="raid">
+        <div class="tab-content<?php echo $activeTabId === 'raid' ? ' active' : ''; ?>" id="raid-tab" data-capability="<?php echo capKey(Cap::PROJECTS_RAID); ?>" data-settings-tab="raid">
             <h2><?php echo $tt('raid_title'); ?></h2>
             <p class="prj-muted"><?php echo $tt('raid_intro'); ?></p>
             <?php
@@ -170,7 +170,7 @@ $row = function (string $label, string $desc, string $control) {
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'budget')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'budget' ? ' active' : ''; ?>" id="budget-tab" data-capability="<?php echo Cap::PROJECTS_BUDGET->value; ?>" data-settings-tab="budget">
+        <div class="tab-content<?php echo $activeTabId === 'budget' ? ' active' : ''; ?>" id="budget-tab" data-capability="<?php echo capKey(Cap::PROJECTS_BUDGET); ?>" data-settings-tab="budget">
             <h2><?php echo $tt('budget_title'); ?></h2>
             <p class="prj-muted"><?php echo $tt('budget_intro'); ?></p>
             <?php
@@ -197,7 +197,7 @@ $row = function (string $label, string $desc, string $control) {
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'ai')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::PROJECTS_AI->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo capKey(Cap::PROJECTS_AI); ?>">
             <h2><?php echo $tt('ai_title'); ?></h2>
             <p class="prj-muted"><?php echo $tt('ai_intro'); ?></p>
             <p class="prj-muted" style="margin-bottom:18px"><?php echo $tt('ai_privacy'); ?></p>
@@ -206,7 +206,7 @@ $row = function (string $label, string $desc, string $control) {
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'templates')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'templates' ? ' active' : ''; ?>" id="templates-tab" data-capability="<?php echo Cap::PROJECTS_TEMPLATES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'templates' ? ' active' : ''; ?>" id="templates-tab" data-capability="<?php echo capKey(Cap::PROJECTS_TEMPLATES); ?>">
             <h2><?php echo $tt('templates_title'); ?></h2>
             <p class="prj-muted"><?php echo $tt('templates_intro'); ?></p>
             <h3 class="prj-set-sub"><?php echo $tt('templates_builtin'); ?></h3>

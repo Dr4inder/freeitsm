@@ -614,7 +614,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php if (settingsTabVisible($visibleTabs, 'asset-types')): ?>
         <!-- Asset Types Tab -->
-        <div class="tab-content<?php echo $activeTabId === 'asset-types' ? ' active' : ''; ?>" id="asset-types-tab" data-capability="<?php echo Cap::ASSETS_TYPES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'asset-types' ? ' active' : ''; ?>" id="asset-types-tab" data-capability="<?php echo capKey(Cap::ASSETS_TYPES); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('asset-management.settings.tab_asset_types')); ?></h2>
                 <button class="add-btn" onclick="openAddModal('asset-type')"><?php echo htmlspecialchars(t('asset-management.common.add')); ?></button>
@@ -668,7 +668,7 @@ $translationNamespaces = ['common', 'asset-management'];
             Below the wizard: past runs, and the holding area for rows that could
             not be imported.
         */ ?>
-        <div class="tab-content<?php echo $activeTabId === 'import' ? ' active' : ''; ?>" id="import-tab" data-capability="<?php echo Cap::ASSETS_IMPORT->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'import' ? ' active' : ''; ?>" id="import-tab" data-capability="<?php echo capKey(Cap::ASSETS_IMPORT); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('asset-management.settings.tab_import')); ?></h2>
             </div>
@@ -799,7 +799,7 @@ $translationNamespaces = ['common', 'asset-management'];
                sense once you want to reuse a handful of fields, which is
                exactly when somebody comes looking for them.
         */ ?>
-        <div class="tab-content<?php echo $activeTabId === 'custom-fields' ? ' active' : ''; ?>" id="custom-fields-tab" data-capability="<?php echo Cap::ASSETS_FIELDS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'custom-fields' ? ' active' : ''; ?>" id="custom-fields-tab" data-capability="<?php echo capKey(Cap::ASSETS_FIELDS); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('asset-management.settings.tab_custom_fields')); ?></h2>
             </div>
@@ -893,7 +893,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php if (settingsTabVisible($visibleTabs, 'asset-statuses')): ?>
         <!-- Asset Statuses Tab -->
-        <div class="tab-content<?php echo $activeTabId === 'asset-statuses' ? ' active' : ''; ?>" id="asset-statuses-tab" data-capability="<?php echo Cap::ASSETS_STATUSES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'asset-statuses' ? ' active' : ''; ?>" id="asset-statuses-tab" data-capability="<?php echo capKey(Cap::ASSETS_STATUSES); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('asset-management.settings.tab_asset_statuses')); ?></h2>
                 <button class="add-btn" onclick="openAddModal('asset-status')"><?php echo htmlspecialchars(t('asset-management.common.add')); ?></button>
@@ -921,7 +921,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php if (settingsTabVisible($visibleTabs, 'locations')): ?>
         <!-- Locations Tab -->
-        <div class="tab-content<?php echo $activeTabId === 'locations' ? ' active' : ''; ?>" id="locations-tab" data-capability="<?php echo Cap::ASSETS_LOCATIONS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'locations' ? ' active' : ''; ?>" id="locations-tab" data-capability="<?php echo capKey(Cap::ASSETS_LOCATIONS); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('asset-management.settings.tab_locations')); ?></h2>
                 <button class="add-btn" onclick="openAddLocation(null)"><?php echo htmlspecialchars(t('asset-management.common.add')); ?></button>
@@ -938,7 +938,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php if (settingsTabVisible($visibleTabs, 'suppliers')): ?>
         <!-- Suppliers Tab -->
-        <div class="tab-content<?php echo $activeTabId === 'suppliers' ? ' active' : ''; ?>" id="suppliers-tab" data-capability="<?php echo Cap::ASSETS_SUPPLIERS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'suppliers' ? ' active' : ''; ?>" id="suppliers-tab" data-capability="<?php echo capKey(Cap::ASSETS_SUPPLIERS); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('asset-management.settings.tab_suppliers')); ?></h2>
             </div>
@@ -968,7 +968,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php if (settingsTabVisible($visibleTabs, 'handover')): ?>
         <!-- Handover document designer (discussion #56) -->
-        <div class="tab-content<?php echo $activeTabId === 'handover' ? ' active' : ''; ?>" id="handover-tab" data-capability="<?php echo Cap::ASSETS_HANDOVER->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'handover' ? ' active' : ''; ?>" id="handover-tab" data-capability="<?php echo capKey(Cap::ASSETS_HANDOVER); ?>">
             <div class="settings-section">
                 <div class="settings-section-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1019,7 +1019,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php if (settingsTabVisible($visibleTabs, 'warranty')): ?>
         <!-- Expiry alerts tab: warranty AND lease, two blocks, one tab -->
-        <div class="tab-content<?php echo $activeTabId === 'warranty' ? ' active' : ''; ?>" id="warranty-tab" data-capability="<?php echo Cap::ASSETS_WARRANTY->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'warranty' ? ' active' : ''; ?>" id="warranty-tab" data-capability="<?php echo capKey(Cap::ASSETS_WARRANTY); ?>">
             <div class="settings-section">
                 <div class="settings-section-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1087,7 +1087,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php if (settingsTabVisible($visibleTabs, 'leasing')): ?>
         <!-- Leasing (3.5.0): the outcomes a leased asset can have -->
-        <div class="tab-content<?php echo $activeTabId === 'leasing' ? ' active' : ''; ?>" id="leasing-tab" data-capability="<?php echo Cap::ASSETS_LEASING->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'leasing' ? ' active' : ''; ?>" id="leasing-tab" data-capability="<?php echo capKey(Cap::ASSETS_LEASING); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('asset-management.leases.outcomes_heading')); ?></h2>
                 <button class="add-btn" onclick="openAddModal('lease-outcome')"><?php echo htmlspecialchars(t('asset-management.common.add')); ?></button>
@@ -1112,7 +1112,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php if (settingsTabVisible($visibleTabs, 'vcenter')): ?>
         <!-- vCenter Tab -->
-        <div class="tab-content<?php echo $activeTabId === 'vcenter' ? ' active' : ''; ?>" id="vcenter-tab" data-capability="<?php echo Cap::ASSETS_VCENTER->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'vcenter' ? ' active' : ''; ?>" id="vcenter-tab" data-capability="<?php echo capKey(Cap::ASSETS_VCENTER); ?>">
             <div class="settings-section">
                 <div class="settings-section-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1157,7 +1157,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php if (settingsTabVisible($visibleTabs, 'asset-tags')): ?>
         <!-- Asset Tags Tab -->
-        <div class="tab-content<?php echo $activeTabId === 'asset-tags' ? ' active' : ''; ?>" id="asset-tags-tab" data-capability="<?php echo Cap::ASSETS_TAGS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'asset-tags' ? ' active' : ''; ?>" id="asset-tags-tab" data-capability="<?php echo capKey(Cap::ASSETS_TAGS); ?>">
             <div class="settings-section">
                 <div class="settings-section-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1222,7 +1222,7 @@ $translationNamespaces = ['common', 'asset-management'];
         <?php endif; ?>
         <?php if (settingsTabVisible($visibleTabs, 'asset-labels')): ?>
         <!-- Asset Labels & QR Tab -->
-        <div class="tab-content<?php echo $activeTabId === 'asset-labels' ? ' active' : ''; ?>" id="asset-labels-tab" data-capability="<?php echo Cap::ASSETS_LABELS->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'asset-labels' ? ' active' : ''; ?>" id="asset-labels-tab" data-capability="<?php echo capKey(Cap::ASSETS_LABELS); ?>">
             <div class="settings-section">
                 <div class="settings-section-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1409,7 +1409,7 @@ $translationNamespaces = ['common', 'asset-management'];
         <?php endif; ?>
         <?php if (settingsTabVisible($visibleTabs, 'reconciliation')): ?>
         <!-- Discovery & Reconciliation Tab -->
-        <div class="tab-content<?php echo $activeTabId === 'reconciliation' ? ' active' : ''; ?>" id="reconciliation-tab" data-capability="<?php echo Cap::ASSETS_RECONCILIATION->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'reconciliation' ? ' active' : ''; ?>" id="reconciliation-tab" data-capability="<?php echo capKey(Cap::ASSETS_RECONCILIATION); ?>">
             <div class="settings-section">
                 <div class="settings-section-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1473,7 +1473,7 @@ $translationNamespaces = ['common', 'asset-management'];
         <?php endif; ?>
         <?php if (settingsTabVisible($visibleTabs, 'review')): ?>
         <?php /* GH #200 part D: the cases matching refuses to guess about. */ ?>
-        <div class="tab-content<?php echo $activeTabId === 'review' ? ' active' : ''; ?>" id="review-tab" data-capability="<?php echo Cap::ASSETS_RECONCILIATION->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'review' ? ' active' : ''; ?>" id="review-tab" data-capability="<?php echo capKey(Cap::ASSETS_RECONCILIATION); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('asset-management.review.heading')); ?></h2>
                 <select class="form-input" id="reviewWhich" style="max-width: 200px;" onchange="loadReviewList()">
@@ -1488,7 +1488,7 @@ $translationNamespaces = ['common', 'asset-management'];
         <?php endif; ?>
         <?php if (settingsTabVisible($visibleTabs, 'intune')): ?>
         <!-- InTune Tab -->
-        <div class="tab-content<?php echo $activeTabId === 'proxmox' ? ' active' : ''; ?>" id="proxmox-tab" data-capability="<?php echo Cap::ASSETS_PROXMOX->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'proxmox' ? ' active' : ''; ?>" id="proxmox-tab" data-capability="<?php echo capKey(Cap::ASSETS_PROXMOX); ?>">
             <div class="settings-section">
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
                     <div>
@@ -1578,7 +1578,7 @@ $translationNamespaces = ['common', 'asset-management'];
             </div>
         </div>
 
-        <div class="tab-content<?php echo $activeTabId === 'vcloud' ? ' active' : ''; ?>" id="vcloud-tab" data-capability="<?php echo Cap::ASSETS_VCLOUD->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'vcloud' ? ' active' : ''; ?>" id="vcloud-tab" data-capability="<?php echo capKey(Cap::ASSETS_VCLOUD); ?>">
             <div class="settings-section">
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
                     <div>
@@ -1689,7 +1689,7 @@ $translationNamespaces = ['common', 'asset-management'];
             </div>
         </div>
 
-        <div class="tab-content<?php echo $activeTabId === 'intune' ? ' active' : ''; ?>" id="intune-tab" data-capability="<?php echo Cap::ASSETS_INTUNE->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'intune' ? ' active' : ''; ?>" id="intune-tab" data-capability="<?php echo capKey(Cap::ASSETS_INTUNE); ?>">
             <div class="settings-section">
                 <div class="settings-section-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

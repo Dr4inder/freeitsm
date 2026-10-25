@@ -164,7 +164,7 @@ $shapes = include '../includes/shapes.php';
 
         <!-- Step types tab (existing content) -->
         <?php if (settingsTabVisible($visibleTabs, 'step-types')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'step-types' ? ' active' : ''; ?>" id="step-types-tab" data-capability="<?php echo Cap::PROCESS_MAPPER_STEP_TYPES->value; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'step-types' ? ' active' : ''; ?>" id="step-types-tab" data-capability="<?php echo capKey(Cap::PROCESS_MAPPER_STEP_TYPES); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('process-mapper.settings.title')); ?></h2>
                 <button class="add-btn" onclick="PMS.openAdd()"><?php echo htmlspecialchars(t('common.add')); ?></button>
