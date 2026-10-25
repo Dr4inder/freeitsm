@@ -943,42 +943,58 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
         'available'       => false,
     ];
     try {
-        $wfFailed = $conn->query(
-            "SELECT COUNT(*) FROM workflow_executions
-              WHERE status = 'failed' AND is_dry_run = 0
-                AND started_datetime >= UTC_TIMESTAMP() - INTERVAL 24 HOUR"
-        )->fetchColumn();
-        $wfAborted = $conn->query(
-            "SELECT COUNT(*) FROM workflow_executions
-              WHERE status = 'aborted' AND is_dry_run = 0
-                AND started_datetime >= UTC_TIMESTAMP() - INTERVAL 24 HOUR"
-        )->fetchColumn();
+        // GH #209: only the runs for companies this analyst can see - a failed
+        // run's error and its workflow's name are another company's business.
+        require_once __DIR__ . '/workflow_tenancy.php';
+        [$weSql, $weArgs] = workflowExecutionFilter($conn, (int)$analystId, 'e.tenant_id');
+        $q = $conn->prepare(
+            "SELECT COUNT(*) FROM workflow_executions e
+              WHERE e.status = 'failed' AND e.is_dry_run = 0
+                AND e.started_datetime >= UTC_TIMESTAMP() - INTERVAL 24 HOUR$weSql"
+        );
+        $q->execute($weArgs);
+        $wfFailed = $q->fetchColumn();
+        $q = $conn->prepare(
+            "SELECT COUNT(*) FROM workflow_executions e
+              WHERE e.status = 'aborted' AND e.is_dry_run = 0
+                AND e.started_datetime >= UTC_TIMESTAMP() - INTERVAL 24 HOUR$weSql"
+        );
+        $q->execute($weArgs);
+        $wfAborted = $q->fetchColumn();
 
         // Which workflows, and what they're actually saying — an error message is
         // far more useful on the dashboard than a bare count.
-        $wfWorst = $conn->query(
+        $q = $conn->prepare(
             "SELECT COALESCE(w.name, e.workflow_name, '(deleted workflow)') AS name,
                     COUNT(*) AS failures,
                     SUBSTRING_INDEX(GROUP_CONCAT(e.error_message ORDER BY e.id DESC SEPARATOR '||'), '||', 1) AS last_error
                FROM workflow_executions e
                LEFT JOIN workflows w ON w.id = e.workflow_id
               WHERE e.status IN ('failed','aborted') AND e.is_dry_run = 0
-                AND e.started_datetime >= UTC_TIMESTAMP() - INTERVAL 24 HOUR
+                AND e.started_datetime >= UTC_TIMESTAMP() - INTERVAL 24 HOUR$weSql
               GROUP BY name
               ORDER BY failures DESC
               LIMIT 3"
-        )->fetchAll(PDO::FETCH_ASSOC);
+        );
+        $q->execute($weArgs);
+        $wfWorst = $q->fetchAll(PDO::FETCH_ASSOC);
 
         // Dead-lettered webhooks belong here too: the workflow itself "succeeded"
         // (it queued the send), so nothing else would ever surface the fact that
         // the message never arrived.
         $wfDead = 0;
         try {
-            $wfDead = (int)$conn->query(
-                "SELECT COUNT(*) FROM webhook_deliveries
-                  WHERE status = 'dead'
-                    AND updated_datetime >= UTC_TIMESTAMP() - INTERVAL 24 HOUR"
-            )->fetchColumn();
+            // Through the run that queued it, for the same company rule.
+            $q = $conn->prepare(
+                "SELECT COUNT(*) FROM webhook_deliveries d
+"
+                . ($weSql !== '' ? "                  LEFT JOIN workflow_executions e ON e.id = d.execution_id
+" : '')
+                . "                  WHERE d.status = 'dead'
+                    AND d.updated_datetime >= UTC_TIMESTAMP() - INTERVAL 24 HOUR$weSql"
+            );
+            $q->execute($weArgs);
+            $wfDead = (int)$q->fetchColumn();
         } catch (Exception) { /* table may not exist yet */ }
 
         $wf = [

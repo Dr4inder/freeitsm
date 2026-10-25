@@ -121,6 +121,41 @@ const WFE = (() => {
     }
 
     /**
+     * GH #209. Put the workflow's company in the Runs for picker. A shared
+     * workflow opened by someone who cannot see every company has no "All
+     * companies" option to select, so one is added for it - read-only, as
+     * setReadOnly() makes the whole editor.
+     *
+     * @param {?{id:number, name:string}} company  null = shared
+     */
+    function showCompany(company) {
+        const sel = document.getElementById('wfCompany');
+        if (!sel) return;
+        const v = company ? String(company.id) : '';
+        if (![...sel.options].some(o => o.value === v)) {
+            const o = document.createElement('option');
+            o.value = v;
+            o.textContent = company ? company.name : window.t('workflow.editor.company_shared');
+            sel.appendChild(o);
+        }
+        sel.value = v;
+    }
+
+    /**
+     * GH #209. A shared workflow runs for every company, so someone who cannot
+     * see them all may look but not change, test or fire it. The server refuses
+     * anyway; this says so before they try.
+     */
+    function setReadOnly() {
+        const note = document.getElementById('wfReadOnly');
+        if (note) { note.textContent = window.t('workflow.editor.read_only_shared'); note.style.display = 'block'; }
+        ['wfSaveBtn', 'testFireBtn', 'dryRunBtn', 'wfCompany'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.disabled = true;
+        });
+    }
+
+    /**
      * Loads a saved workflow from get.php and rebuilds the canvas - trigger, conditions and actions at their stored positions (or stacked when they have none) - plus the detail panel and the run history.
      */
     async function loadWorkflow(id) {
@@ -169,11 +204,13 @@ const WFE = (() => {
             document.getElementById('wfName').value = workflow.name;
             document.getElementById('wfDescription').value = workflow.description;
             document.getElementById('wfActive').checked = workflow.isActive;
+            showCompany(w.company);
 
             renderAll();
             selectWorkflow();
             renderExecutions(d.executions || []);
             setRunButtonsEnabled(true);
+            if (w.can_edit === false) setReadOnly();
             setStatus('saved');
             showTemplateGaps(workflow.id);
         } catch (e) {
@@ -1080,7 +1117,9 @@ const WFE = (() => {
                 body: JSON.stringify({
                     url: a.url || '', preset: a.preset || 'custom',
                     message: a.message || '', body: a.body || '', secret: a.secret || '',
-                    trigger_event: (typeof triggerEvent !== 'undefined') ? (triggerEvent || '') : ''
+                    trigger_event: (typeof triggerEvent !== 'undefined') ? (triggerEvent || '') : '',
+                    // GH #209: sample a ticket from the workflow's own company.
+                    company_id: (document.getElementById('wfCompany') || {}).value || ''
                 })
             });
             const d = await r.json();
@@ -1375,6 +1414,12 @@ const WFE = (() => {
             workflow.isActive = document.getElementById('wfActive').checked;
             markDirty();
         });
+        // GH #209. A new workflow starts in the default the page worked out.
+        const company = document.getElementById('wfCompany');
+        if (company) {
+            if (!window.WF_ID) company.value = company.dataset.default || '';
+            company.addEventListener('change', markDirty);
+        }
     }
 
     // Detail-panel handlers exposed via WFE.* for inline onchange / oninput.
@@ -1494,6 +1539,9 @@ const WFE = (() => {
             conditions, actions,
             is_active: workflow.isActive ? 1 : 0,
         };
+        // GH #209. Only on an install with companies; '' = shared.
+        const company = document.getElementById('wfCompany');
+        if (company) payload.company_id = company.value === '' ? null : +company.value;
         try {
             const r = await fetch(window.WF_API + 'save.php', {
                 method: 'POST',

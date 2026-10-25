@@ -11576,6 +11576,19 @@ return array (
         array (
           'type' => 'string',
         ),
+        'company' => 
+        array (
+          'type' => 'object',
+          'description' => 'The company this workflow runs for. Null = shared: it runs for every company (and on a single-company install, always).',
+          'allOf' => 
+          array (
+            0 => 
+            array (
+              '$ref' => '#/components/schemas/NamedRef',
+            ),
+          ),
+          'nullable' => true,
+        ),
         'is_active' => 
         array (
           'type' => 'boolean',
@@ -11832,6 +11845,19 @@ return array (
         array (
           'type' => 'string',
         ),
+        'company' => 
+        array (
+          'type' => 'object',
+          'description' => 'The company the triggering event belonged to. Null = none known (a settings event, or a run from before companies were recorded on runs).',
+          'allOf' => 
+          array (
+            0 => 
+            array (
+              '$ref' => '#/components/schemas/NamedRef',
+            ),
+          ),
+          'nullable' => true,
+        ),
         'status' => 
         array (
           'type' => 'string',
@@ -12011,6 +12037,19 @@ return array (
         array (
           'type' => 'string',
         ),
+        'company' => 
+        array (
+          'type' => 'object',
+          'description' => 'The company the triggering event belonged to. Null = none known (a settings event, or a run from before companies were recorded on runs).',
+          'allOf' => 
+          array (
+            0 => 
+            array (
+              '$ref' => '#/components/schemas/NamedRef',
+            ),
+          ),
+          'nullable' => true,
+        ),
         'status' => 
         array (
           'type' => 'string',
@@ -12113,6 +12152,19 @@ return array (
         'trigger_event' => 
         array (
           'type' => 'string',
+        ),
+        'company' => 
+        array (
+          'type' => 'object',
+          'description' => 'The company this workflow runs for. Null = shared: it runs for every company (and on a single-company install, always).',
+          'allOf' => 
+          array (
+            0 => 
+            array (
+              '$ref' => '#/components/schemas/NamedRef',
+            ),
+          ),
+          'nullable' => true,
         ),
         'is_active' => 
         array (

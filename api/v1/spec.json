@@ -11060,7 +11060,7 @@
                     "p": "\/workflows",
                     "perm": "workflows.read",
                     "s": "List workflows",
-                    "d": "All automation rules, most recently updated first, with run stats and condition\/action counts (full rule bodies on GET one). Install-wide.",
+                    "d": "All automation rules, most recently updated first, with run stats and condition\/action counts (full rule bodies on GET one). Each has a company: null = shared, it runs for every company; otherwise only that company's events run it. A key sees the shared workflows and those of the companies it can reach.",
                     "params": [
                         {
                             "name": "trigger_event",
@@ -11078,6 +11078,12 @@
                             "name": "q",
                             "in": "query",
                             "desc": "Search names and descriptions",
+                            "req": false
+                        },
+                        {
+                            "name": "company",
+                            "in": "query",
+                            "desc": "A company id for that company's own workflows, or \"shared\" for the ones that run for every company. 403 for a company the key cannot reach.",
                             "req": false
                         }
                     ],
@@ -11112,7 +11118,7 @@
                     "p": "\/workflows",
                     "perm": "workflows.create",
                     "s": "Create a workflow",
-                    "d": "trigger_event, condition operators and action types are validated against the engine's catalogues (see GET \/workflow-triggers and \/workflow-actions) so nothing unexecutable can be stored — unknown operators are a 422, stricter than the UI. Zero actions is allowed (draft-friendly, like the editor). Action args support {{dot.path}} template variables resolved from the event payload. NOTE: actions run with engine privileges (create tickets, send email) — grant create\/fire to trusted keys only.",
+                    "d": "trigger_event, condition operators and action types are validated against the engine's catalogues (see GET \/workflow-triggers and \/workflow-actions) so nothing unexecutable can be stored — unknown operators are a 422, stricter than the UI. Zero actions is allowed (draft-friendly, like the editor). Action args support {{dot.path}} template variables resolved from the event payload. NOTE: actions run with engine privileges (create tickets, send email) — grant create\/fire to trusted keys only. company_id picks the company it runs for; omit it for a shared workflow (a key that reaches every company) or the key's default company (any other key). A company's own workflow acts only on that company's records: an action that names another company's ticket fails, and says so in the run.",
                     "params": [
                         {
                             "name": "name",
@@ -11148,6 +11154,12 @@
                             "name": "is_active",
                             "in": "body",
                             "desc": "Default true",
+                            "req": false
+                        },
+                        {
+                            "name": "company_id",
+                            "in": "body",
+                            "desc": "The company it runs for, or null for shared (every company). Shared needs a key that reaches every company.",
                             "req": false
                         }
                     ],
@@ -11286,7 +11298,7 @@
                     "p": "\/workflows\/{id}",
                     "perm": "workflows.update",
                     "s": "Update a workflow",
-                    "d": "Partial update; sent fields are validated like create. Toggle is_active to pause\/resume a rule without losing it.",
+                    "d": "Partial update; sent fields are validated like create. Toggle is_active to pause\/resume a rule without losing it. Send company_id to move it to another company, or null to share it. A shared workflow can only be changed by a key that reaches every company (403 otherwise).",
                     "params": [
                         {
                             "name": "id",
@@ -11295,7 +11307,7 @@
                             "req": true
                         },
                         {
-                            "name": "name \/ description \/ trigger_event \/ conditions \/ actions \/ is_active",
+                            "name": "name \/ description \/ trigger_event \/ conditions \/ actions \/ is_active \/ company_id",
                             "in": "body",
                             "desc": "What to change",
                             "req": false
@@ -11363,7 +11375,7 @@
                     "p": "\/workflows\/{id}",
                     "perm": "workflows.delete",
                     "s": "Delete a workflow",
-                    "d": "Hard delete. Execution history survives as the audit trail — runs are detached (workflow_id null) but stay attributable via their workflow_name snapshot.",
+                    "d": "Hard delete. Execution history survives as the audit trail — runs are detached (workflow_id null) but stay attributable via their workflow_name snapshot. A shared workflow needs a key that reaches every company.",
                     "params": [
                         {
                             "name": "id",
@@ -11391,7 +11403,7 @@
                     "p": "\/workflows\/{id}\/fire",
                     "perm": "workflows.fire",
                     "s": "Test-fire a workflow",
-                    "d": "Runs the workflow immediately with a synthetic payload — the editor's \"Test fire\" button. Executes real actions but does not bump run_count \/ last-run stats. Returns the execution result including the per-step log.",
+                    "d": "Runs the workflow immediately with a synthetic payload — the editor's \"Test fire\" button. Executes real actions but does not bump run_count \/ last-run stats. Returns the execution result including the per-step log. A shared workflow's actions can reach every company, so firing one needs a key that reaches every company.",
                     "params": [
                         {
                             "name": "id",
@@ -11547,7 +11559,7 @@
                     "p": "\/workflow-executions",
                     "perm": "workflow_executions.read",
                     "s": "List all runs",
-                    "d": "Install-wide run history, including orphaned runs whose workflow has since been deleted.",
+                    "d": "Run history, including orphaned runs whose workflow has since been deleted. Each run has the company its event belonged to; a key sees the runs for the companies it can reach (a run with no company known needs a key that reaches every company).",
                     "params": [
                         {
                             "name": "workflow_id",
@@ -11617,7 +11629,7 @@
                     "p": "\/workflow-executions\/{id}",
                     "perm": "workflow_executions.read",
                     "s": "Get one run",
-                    "d": "Full detail: the trigger payload snapshot and the per-step log (each condition evaluated, each action's result or error).",
+                    "d": "Full detail: the trigger payload snapshot and the per-step log (each condition evaluated, each action's result or error). 404 for a run of a company the key cannot reach.",
                     "params": [
                         {
                             "name": "id",

@@ -6841,10 +6841,17 @@ CREATE TABLE IF NOT EXISTS `workflows` (
     `last_run_status`   VARCHAR(20) NULL,             -- 'success' | 'failed' | 'skipped' | 'aborted'
     `run_count`         INT NOT NULL DEFAULT 0,
     `is_demo`           TINYINT(1) NOT NULL DEFAULT 0,   -- set by the demo data importer (#1297)
+    -- GH #209. NULL = SHARED: runs for every company's events (and every workflow
+    -- from before companies). Set = runs only for that company's events, and its
+    -- actions may only touch that company's records. CASCADE, never SET NULL: a
+    -- deleted company's workflows must go with it, not become shared ones.
+    `tenant_id`         INT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_workflows_trigger` (`trigger_event`),
     KEY `idx_workflows_active` (`is_active`),
-    CONSTRAINT `fk_workflows_created_by` FOREIGN KEY (`created_by`) REFERENCES `analysts` (`id`) ON DELETE SET NULL
+    KEY `idx_workflows_tenant` (`tenant_id`),
+    CONSTRAINT `fk_workflows_created_by` FOREIGN KEY (`created_by`) REFERENCES `analysts` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_workflows_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Execution rows deliberately SURVIVE workflow deletion (they're the audit
@@ -6862,10 +6869,17 @@ CREATE TABLE IF NOT EXISTS `workflow_executions` (
     `finished_datetime` DATETIME NULL,
     `step_log`          TEXT NULL,                    -- JSON array of per-step results
     `error_message`     TEXT NULL,
+    -- GH #209. The company the EVENT belonged to (the ticket's, the task's...), so
+    -- the run log - which holds the payload - is shown only to people who can see
+    -- that company. NULL = no company known (a settings event, or a run from
+    -- before this column): shown only to people who can see every company.
+    `tenant_id`         INT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_we_workflow` (`workflow_id`),
     KEY `idx_we_started` (`started_datetime`),
-    CONSTRAINT `fk_we_workflow` FOREIGN KEY (`workflow_id`) REFERENCES `workflows` (`id`) ON DELETE SET NULL
+    KEY `idx_we_tenant` (`tenant_id`),
+    CONSTRAINT `fk_we_workflow` FOREIGN KEY (`workflow_id`) REFERENCES `workflows` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_we_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Outbound webhook delivery queue. The `send_webhook` workflow action enqueues

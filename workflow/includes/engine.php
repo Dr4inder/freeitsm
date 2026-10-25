@@ -25,9 +25,14 @@
  *     private methods on this class so each action's contract is in one
  *     place.
  *
- *   - Execution is synchronous in v1. Each event triggers a same-request
- *     pass through the engine. An async queue + retries are planned but
- *     not built — keep actions fast and idempotent.
+ *   - Actions run synchronously, in the request that raised the event - keep
+ *     them fast and idempotent. The exception is send_webhook, which only
+ *     queues: cron/webhook_deliveries.php sends with retries.
+ *
+ *   - Companies (GH #209): a workflow is shared (tenant_id NULL, runs for
+ *     every company) or one company's own (runs for that company's events,
+ *     and its actions may only touch that company's records). See
+ *     includes/workflow_tenancy.php and the "Company boundary" section below.
  *
  * Failures don't propagate. The engine catches per-step exceptions, logs
  * them in the execution row, and continues. The point is that a buggy
@@ -35,6 +40,8 @@
  *
  * @wiki Workflows
  */
+require_once __DIR__ . '/../../includes/workflow_tenancy.php';
+
 class WorkflowEngine
 {
     // -----------------------------------------------------------------
@@ -71,6 +78,14 @@ class WorkflowEngine
     // can stamp their queue rows with the source. Set per run in runInner().
     private static $ctxWorkflowId    = null;
     private static $ctxExecutionId   = null;
+
+    // GH #209. The company the running workflow belongs to (null = shared, or a
+    // form's own action list) and the company its event belonged to. Saved and
+    // restored around every run in run(): an action can dispatch an event whose
+    // workflows run INSIDE this one, and coming back from them with their
+    // company still set would let this workflow act as if it were theirs.
+    private static ?int $ctxWorkflowTenant = null;
+    private static ?int $ctxEventTenant    = null;
 
     // -----------------------------------------------------------------
     //  Catalogue — triggers, actions, operators, fields per trigger
@@ -505,16 +520,37 @@ class WorkflowEngine
             'project.benefit_review_due' => array_merge($projectFields, ['benefit.id', 'benefit.title', 'benefit.measure', 'benefit.unit', 'benefit.review_date', 'benefit.baseline_value', 'benefit.target_value', 'benefit.owner_analyst_id']),
         ];
         if (isset($byTrigger[$trigger])) {
-            return $byTrigger[$trigger];
+            return self::withCompanyField($byTrigger[$trigger]);
         }
         // CRUD / settings entity fallback: <entity>.created|updated|deleted.
         if (preg_match('/^(.+)\.(created|updated|deleted)$/', $trigger, $m)) {
             $crud = self::crudEntities();
             if (isset($crud[$m[1]])) {
-                return $crud[$m[1]][1];
+                return self::withCompanyField($crud[$m[1]][1]);
             }
         }
         return [];
+    }
+
+    /**
+     * GH #209. Every trigger offers `company.id` once an install has companies:
+     * runInner() puts the event's company on the payload, so a SHARED workflow
+     * can still say "only for Acme" or name the client in a message. Hidden on a
+     * single-company install, where it could only ever be the one company.
+     *
+     * ⚠️ A condition is not the company boundary - anyone who can edit the
+     * workflow can change it. The boundary is the workflow's own company.
+     *
+     * @param array $fields  the trigger's condition fields
+     */
+    private static function withCompanyField(array $fields): array
+    {
+        static $on = null;
+        if ($on === null) {
+            try { $on = workflowTenancyActive(connectToDatabase()); } catch (Throwable) { $on = false; }
+        }
+        if ($on && !in_array('company.id', $fields, true)) $fields[] = 'company.id';
+        return $fields;
     }
 
     /**
@@ -1152,6 +1188,12 @@ class WorkflowEngine
         'problem.assigned_analyst_id' => ['table' => 'analysts',         'label_col' => 'full_name', 'where' => 'is_active = 1', 'order' => 'full_name'],
         'object.class_id'            => ['table' => 'cmdb_classes',      'label_col' => 'name',      'where' => 'is_active = 1', 'order' => 'name'],
         'checklist.template_id'      => ['table' => 'checklist_templates', 'label_col' => 'title', 'extra_cols' => ['category', 'keywords', 'description'], 'where' => 'is_active = 1', 'order' => 'category, title'],
+        // GH #209. The event's company, for conditions and {{company.name}}.
+        'company.id'                 => ['table' => 'tenants',           'label_col' => 'name',      'order' => 'name'],
+        // GH #209, for the Set category action. Labelled with the full path by
+        // availableValuesForField(), because "Printer" alone is ambiguous the
+        // moment two roots have one.
+        'ticket.category_id'         => ['table' => 'ticket_categories', 'label_col' => 'name',      'where' => 'is_active = 1', 'order' => 'display_order, name'],
     ];
 
     /**
@@ -1251,6 +1293,7 @@ class WorkflowEngine
     {
         if (!isset(self::FIELD_LOOKUP_TABLES[$fieldPath])) return null;
         $spec = self::FIELD_LOOKUP_TABLES[$fieldPath];
+        if ($fieldPath === 'ticket.category_id') return self::categoryLookupValues();
         try {
             $conn = connectToDatabase();
             $where = isset($spec['where']) ? ' WHERE ' . $spec['where'] : '';
@@ -1271,6 +1314,30 @@ class WorkflowEngine
                 $rows
             );
         } catch (Exception) {
+            return null;
+        }
+    }
+
+    /**
+     * Every active ticket category as {id, label}, labelled with its full path and,
+     * for a company's own category, that company's name - so a shared workflow's
+     * author can tell Acme's "Hardware → Printer" from Globex's.
+     */
+    private static function categoryLookupValues(): ?array
+    {
+        try {
+            $conn = connectToDatabase();
+            require_once dirname(__DIR__, 2) . '/includes/ticket_categories.php';
+            $multi = isMultiTenant($conn);
+            $out = [];
+            foreach (ticketCategoriesResolved($conn, null, ['activeOnly' => true]) as $c) {
+                $label = $c['path_label'];
+                if ($multi && $c['tenant_id'] !== null) $label .= ' (' . workflowCompanyName($conn, (int)$c['tenant_id']) . ')';
+                $out[] = ['id' => (string)$c['id'], 'label' => $label];
+            }
+            usort($out, fn($a, $b) => strcasecmp($a['label'], $b['label']));
+            return $out;
+        } catch (Throwable) {
             return null;
         }
     }
@@ -1347,6 +1414,34 @@ class WorkflowEngine
                 'args'        => [
                     'ticket_id'  => $ticketIdArg,
                     'analyst_id' => ['type' => 'lookup', 'label' => 'Assign to', 'lookup' => 'analyst', 'required' => true],
+                ],
+            ],
+            // GH #209. The queue, the department and the category - the three a
+            // triage rule most often sets. All three go through
+            // TicketsService::updateTicket(), so they are audited, fire the same
+            // events, and keep the same rules as a change made on screen.
+            'assign_ticket_team' => [
+                'label'       => 'Assign ticket to team',
+                'description' => 'Put the ticket in a team\'s queue. The person it is assigned to stays as it is.',
+                'args'        => [
+                    'ticket_id' => $ticketIdArg,
+                    'team_id'   => ['type' => 'lookup', 'label' => 'Team', 'lookup' => 'team', 'required' => true],
+                ],
+            ],
+            'set_ticket_department' => [
+                'label'       => 'Set ticket department',
+                'description' => 'Change the ticket\'s department. A confidential department makes the ticket confidential, as it does on screen.',
+                'args'        => [
+                    'ticket_id'     => $ticketIdArg,
+                    'department_id' => ['type' => 'lookup', 'label' => 'Department', 'lookup' => 'department', 'required' => true],
+                ],
+            ],
+            'set_ticket_category' => [
+                'label'       => 'Set ticket category',
+                'description' => 'Change the ticket\'s category. It must be one the ticket\'s company uses and, when the category belongs to a ticket type, the ticket must be that type - otherwise the step fails and says why.',
+                'args'        => [
+                    'ticket_id'   => $ticketIdArg,
+                    'category_id' => ['type' => 'lookup', 'label' => 'Category', 'lookup' => 'ticket_category', 'required' => true],
                 ],
             ],
             'add_ticket_note' => [
@@ -1517,6 +1612,7 @@ class WorkflowEngine
         'team'            => 'ticket.assigned_team_id',
         'department'      => 'ticket.department_id',
         'ticket_type'     => 'ticket.type_id',
+        'ticket_category' => 'ticket.category_id',   // GH #209
         'task_status'     => 'task.status_id',
         'task_priority'   => 'task.priority_id',
         // External issue trackers (#949). availableValuesForField() returns null
@@ -1587,10 +1683,23 @@ class WorkflowEngine
 
         try {
             $conn = connectToDatabase();
-            $stmt = $conn->prepare(
-                "SELECT * FROM workflows WHERE trigger_event = ? AND is_active = 1"
-            );
-            $stmt->execute([$event]);
+            // GH #209. Shared workflows run for every event; a company's own only
+            // for that company's. An event that belongs to no company (a supplier
+            // saved, a status renamed) runs the shared ones only. Nothing to work
+            // out on a single-company install or before Database Verification.
+            $sql  = "SELECT * FROM workflows WHERE trigger_event = ? AND is_active = 1";
+            $args = [$event];
+            if (workflowTenancyActive($conn)) {
+                $eventTenant = workflowEventTenantId($conn, $payload);
+                if ($eventTenant === null) {
+                    $sql .= " AND tenant_id IS NULL";
+                } else {
+                    $sql .= " AND (tenant_id IS NULL OR tenant_id = ?)";
+                    $args[] = $eventTenant;
+                }
+            }
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($args);
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($rows as $wf) {
                 self::run($wf, $event, $payload, /*isManual*/ false);
@@ -1661,9 +1770,11 @@ class WorkflowEngine
         self::$activeWorkflowIds[] = $wfId;
         self::$chainDepth++;
         self::$runsThisRequest++;
+        $saved = [self::$ctxWorkflowId, self::$ctxExecutionId, self::$ctxWorkflowTenant, self::$ctxEventTenant];
         try {
             return self::runInner($wf, $event, $payload, $isManual, $dryRun);
         } finally {
+            [self::$ctxWorkflowId, self::$ctxExecutionId, self::$ctxWorkflowTenant, self::$ctxEventTenant] = $saved;
             // Pop this workflow off the active stack and unwind the depth even
             // if runInner threw, so one bad run can't wedge the counters for
             // the rest of the request.
@@ -1692,14 +1803,16 @@ class WorkflowEngine
         $stepLog = [['kind' => 'loop_protection', 'error' => $message]];
         try {
             $conn = connectToDatabase();
+            $tCol = workflowTenancyReady($conn) ? ', tenant_id' : '';
+            $tVal = $tCol ? ', ?' : '';
             $stmt = $conn->prepare(
                 "INSERT INTO workflow_executions
-                 (workflow_id, workflow_name, trigger_event, trigger_payload, status, is_dry_run, started_datetime, finished_datetime, step_log, error_message)
-                 VALUES (?, ?, ?, ?, 'aborted', ?, UTC_TIMESTAMP(), UTC_TIMESTAMP(), ?, ?)"
+                 (workflow_id, workflow_name, trigger_event, trigger_payload, status, is_dry_run, started_datetime, finished_datetime, step_log, error_message$tCol)
+                 VALUES (?, ?, ?, ?, 'aborted', ?, UTC_TIMESTAMP(), UTC_TIMESTAMP(), ?, ?$tVal)"
             );
-            $stmt->execute([
-                $wfId, $wf['name'] ?? null, $event, json_encode($payload), $dryRun ? 1 : 0, json_encode($stepLog), $message,
-            ]);
+            $vals = [$wfId, $wf['name'] ?? null, $event, json_encode($payload), $dryRun ? 1 : 0, json_encode($stepLog), $message];
+            if ($tCol) $vals[] = self::runTenantFor($conn, $wf, $payload);
+            $stmt->execute($vals);
             $execId = (int)$conn->lastInsertId();
             // Reflect the block in the parent workflow's last-run state, but
             // don't bump run_count — nothing actually executed.
@@ -1761,23 +1874,36 @@ class WorkflowEngine
         // and human-facing references ({{ticket.number}} → "ETC-623-64409", not
         // the row id). Done here, once, before conditions and actions — so the
         // step log, the dry-run preview and every action see the same payload.
+        // GH #209. Which company this run is for: the event's, or for a company's
+        // own workflow fired by hand with a made-up payload, the workflow's. On the
+        // payload as {{company.id}} / {{company.name}} unless the host set one.
+        $runTenant = self::runTenantFor($conn, $wf, $payload);
+        self::$ctxWorkflowTenant = (workflowTenancyReady($conn) && isset($wf['tenant_id']) && $wf['tenant_id'] !== null) ? (int)$wf['tenant_id'] : null;
+        self::$ctxEventTenant    = $runTenant;
+        if ($runTenant !== null && !isset($payload['company'])) {
+            $payload['company'] = ['id' => $runTenant, 'name' => workflowCompanyName($conn, $runTenant)];
+        }
+
         $payload = self::enrichPayloadForTemplates($conn, $payload);
 
         // Insert a "running" execution row so we have an id to update. The
         // workflow name is snapshotted so the run stays attributable after
         // its parent workflow is deleted (workflow_id goes NULL then).
+        $tCol = workflowTenancyReady($conn) ? ', tenant_id' : '';
         $insert = $conn->prepare(
             "INSERT INTO workflow_executions
-             (workflow_id, workflow_name, trigger_event, trigger_payload, status, is_dry_run, started_datetime)
-             VALUES (?, ?, ?, ?, 'running', ?, UTC_TIMESTAMP())"
+             (workflow_id, workflow_name, trigger_event, trigger_payload, status, is_dry_run, started_datetime$tCol)
+             VALUES (?, ?, ?, ?, 'running', ?, UTC_TIMESTAMP()" . ($tCol ? ', ?' : '') . ")"
         );
-        $insert->execute([
+        $vals = [
             (int)$wf['id'],
             $wf['name'] ?? null,
             $event,
             json_encode($payload),
             $dryRun ? 1 : 0,
-        ]);
+        ];
+        if ($tCol) $vals[] = $runTenant;
+        $insert->execute($vals);
         $execId = (int)$conn->lastInsertId();
         self::$ctxWorkflowId  = (int)$wf['id'];
         self::$ctxExecutionId = $execId;
@@ -1997,6 +2123,9 @@ class WorkflowEngine
             case 'escalate_to_tracker':  return self::action_escalate_to_tracker($args, $payload);
             case 'send_note_to_tracker': return self::action_send_note_to_tracker($args, $payload);
             case 'attach_checklist':    return self::action_attach_checklist($args, $payload);
+            case 'assign_ticket_team':    return self::action_ticket_field($args, $payload, 'team_id', 'assigned_team_id', 'team');
+            case 'set_ticket_department': return self::action_ticket_field($args, $payload, 'department_id', 'department_id', 'department');
+            case 'set_ticket_category':   return self::action_ticket_field($args, $payload, 'category_id', 'category_id', 'category');
             default:
                 throw new Exception("Unknown action type: {$type}");
         }
@@ -2116,14 +2245,26 @@ class WorkflowEngine
         try {
             $conn = connectToDatabase();
             if (!array_key_exists('event', $payload)) $payload['event'] = $event;
+            // GH #209. A form's own list belongs to no company's workflow, so no
+            // company guard - but its run holds the submission, so it is filed
+            // under the event's company like any other.
+            $savedCtx = [self::$ctxWorkflowTenant, self::$ctxEventTenant];
+            self::$ctxWorkflowTenant = null;
+            self::$ctxEventTenant    = workflowTenancyActive($conn) ? workflowEventTenantId($conn, $payload) : null;
+            if (self::$ctxEventTenant !== null && !isset($payload['company'])) {
+                $payload['company'] = ['id' => self::$ctxEventTenant, 'name' => workflowCompanyName($conn, self::$ctxEventTenant)];
+            }
             $payload = self::enrichPayloadForTemplates($conn, $payload);
 
+            $tCol = workflowTenancyReady($conn) ? ', tenant_id' : '';
             $insert = $conn->prepare(
                 "INSERT INTO workflow_executions
-                 (workflow_id, workflow_name, trigger_event, trigger_payload, status, is_dry_run, started_datetime)
-                 VALUES (NULL, ?, ?, ?, 'running', 0, UTC_TIMESTAMP())"
+                 (workflow_id, workflow_name, trigger_event, trigger_payload, status, is_dry_run, started_datetime$tCol)
+                 VALUES (NULL, ?, ?, ?, 'running', 0, UTC_TIMESTAMP()" . ($tCol ? ', ?' : '') . ")"
             );
-            $insert->execute([$label, $event, json_encode($payload)]);
+            $vals = [$label, $event, json_encode($payload)];
+            if ($tCol) $vals[] = self::$ctxEventTenant;
+            $insert->execute($vals);
             $execId = (int)$conn->lastInsertId();
             self::$ctxExecutionId = $execId;
 
@@ -2141,6 +2282,7 @@ class WorkflowEngine
             $status = 'failed';
         } finally {
             self::$ctxExecutionId = null;
+            if (isset($savedCtx)) [self::$ctxWorkflowTenant, self::$ctxEventTenant] = $savedCtx;
         }
 
         return ['status' => $status, 'execution_id' => $execId, 'steps' => $stepLog];
@@ -2246,6 +2388,169 @@ class WorkflowEngine
         return !in_array($s, ['0', 'false', 'no', 'off'], true);
     }
 
+    // -----------------------------------------------------------------
+    //  Company boundary (GH #209)
+    // -----------------------------------------------------------------
+    //
+    // 🔴 A company's own workflow acts only on that company's records. Enforced
+    // here, in the handlers, and never left to a condition: anyone who can edit
+    // a workflow can edit its conditions, and an action's ticket id is often a
+    // number typed in or a merge code from an earlier step. Same rule as the
+    // tracker connection check (integrationsCompaniesCompatible()) - hardcoded,
+    // and before anything is written.
+    //
+    // A SHARED workflow is untouched: it runs for every company by design, and
+    // only someone who can see every company may write one.
+
+    /**
+     * The company a run is filed under: the event's, else - for a company's own
+     * workflow - the workflow's. Null when neither is known.
+     *
+     * @param array $wf  the workflows row
+     * @param array $payload  the event payload
+     */
+    private static function runTenantFor(PDO $conn, array $wf, array $payload): ?int
+    {
+        if (!workflowTenancyActive($conn)) return null;
+        $t = workflowEventTenantId($conn, $payload);
+        if ($t === null && isset($wf['tenant_id']) && $wf['tenant_id'] !== null) $t = (int)$wf['tenant_id'];
+        return $t;
+    }
+
+    /** Is this run a company's own workflow, on an install where that means something? */
+    private static function companyGuardOn(PDO $conn): bool
+    {
+        return self::$ctxWorkflowTenant !== null && workflowTenancyActive($conn);
+    }
+
+    /**
+     * Refuse a record that belongs to another company. For scoped data, where
+     * NULL is the Default company's (tickets, tasks, form submissions).
+     *
+     * @param string $table  a developer literal, never user input
+     * @param int $id  the record's id
+     * @param string $what  what to call it in the message, e.g. 'ticket'
+     */
+    private static function assertRecordInRunCompany(PDO $conn, string $table, int $id, string $what): void
+    {
+        if (!self::companyGuardOn($conn)) return;
+        $stmt = $conn->prepare("SELECT tenant_id FROM `$table` WHERE id = ?");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) throw new Exception("Unknown {$what}: {$id}");
+        $tid = $row['tenant_id'] === null ? getDefaultTenantId($conn) : (int)$row['tenant_id'];
+        if ($tid !== self::$ctxWorkflowTenant) throw new Exception(self::otherCompanyMessage($conn, ucfirst($what) . " {$id}"));
+    }
+
+    /**
+     * Refuse a setting row that is another company's own. For rows where NULL is
+     * SHARED (a shared mailbox, a shared checklist template), which every
+     * company may use.
+     *
+     * @param string $table  a developer literal, never user input
+     * @param int $id  the row's id
+     * @param string $what  what to call it in the message, e.g. 'mailbox'
+     */
+    private static function assertSharedOrRunCompany(PDO $conn, string $table, int $id, string $what): void
+    {
+        if (!self::companyGuardOn($conn) || !tenancyColumnExists($conn, $table, 'tenant_id')) return;
+        $stmt = $conn->prepare("SELECT tenant_id FROM `$table` WHERE id = ?");
+        $stmt->execute([$id]);
+        $v = $stmt->fetchColumn();
+        if ($v === false || $v === null) return;   // unknown: the handler says so; NULL: shared
+        if ((int)$v !== self::$ctxWorkflowTenant) throw new Exception(self::otherCompanyMessage($conn, "The {$what} {$id}"));
+    }
+
+    /**
+     * Refuse an analyst who cannot see the workflow's company - a ticket or task
+     * handed to somebody who cannot open it.
+     *
+     * @param int $analystId  the analyst being assigned
+     */
+    private static function assertAnalystReachesRunCompany(PDO $conn, int $analystId): void
+    {
+        if (!self::companyGuardOn($conn)) return;
+        if (!analystCanAccessTenant($conn, $analystId, self::$ctxWorkflowTenant)) {
+            throw new Exception("Analyst {$analystId} cannot see " . workflowCompanyName($conn, self::$ctxWorkflowTenant)
+                . ', the company this workflow is for, so cannot be given its work.');
+        }
+    }
+
+    /**
+     * The message when a company's workflow reaches for another company's record.
+     *
+     * @param string $subject  the start of the sentence, e.g. 'Ticket 42'
+     */
+    private static function otherCompanyMessage(PDO $conn, string $subject): string
+    {
+        return $subject . ' belongs to another company. This workflow is for '
+             . workflowCompanyName($conn, self::$ctxWorkflowTenant) . ' and only acts on its records.';
+    }
+
+    /**
+     * assign_ticket_team, set_ticket_department, set_ticket_category (GH #209):
+     * one ticket field, through TicketsService::updateTicket() so the change is
+     * audited and fires the same events as one made on screen. A category is
+     * checked against the ticket's own company and type first - the service
+     * only checks that it exists.
+     *
+     * @param array $args  the action's args: ticket_id and the value arg
+     * @param array $payload  the run's payload, for the {{merge codes}}
+     * @param string $arg  the value's arg name, e.g. 'team_id'
+     * @param string $column  the tickets column updateTicket() takes, e.g. 'assigned_team_id'
+     * @param string $what  'team', 'department' or 'category', for messages
+     * @writes tickets, ticket_audit
+     */
+    private static function action_ticket_field(array $args, array $payload, string $arg, string $column, string $what): array
+    {
+        $ticketId = self::argInt($args, 'ticket_id', $payload);
+        $valueId  = self::argInt($args, $arg, $payload);
+        if (!$ticketId) throw new Exception('ticket_id is required');
+        if (!$valueId)  throw new Exception("{$arg} is required");
+        $conn = connectToDatabase();
+        self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
+
+        $t = $conn->prepare('SELECT tenant_id, ticket_type_id FROM tickets WHERE id = ?');
+        $t->execute([$ticketId]);
+        $ticket = $t->fetch(PDO::FETCH_ASSOC);
+        if (!$ticket) throw new Exception("Unknown ticket_id: {$ticketId}");
+
+        $tables = ['team' => ['teams', 'name'], 'department' => ['departments', 'name'], 'category' => ['ticket_categories', 'name']];
+        [$table, $labelCol] = $tables[$what];
+        $n = $conn->prepare("SELECT `$labelCol` FROM `$table` WHERE id = ?");
+        $n->execute([$valueId]);
+        $name = $n->fetchColumn();
+        if ($name === false) throw new Exception("Unknown {$arg}: {$valueId}");
+
+        if ($what === 'category') {
+            // The same list the ticket's own Category picker offers: shared plus
+            // the ticket's company's own, not hidden, active, and for its type.
+            require_once dirname(__DIR__, 2) . '/includes/ticket_categories.php';
+            $tenant = $ticket['tenant_id'] !== null ? (int)$ticket['tenant_id'] : (isMultiTenant($conn) ? getDefaultTenantId($conn) : null);
+            $typeId = $ticket['ticket_type_id'] !== null ? (int)$ticket['ticket_type_id'] : null;
+            $offered = ticketCategoriesResolved($conn, $tenant, ['activeOnly' => true, 'typeId' => $typeId]);
+            if (!isset($offered[$valueId])) {
+                throw new Exception("Category {$valueId} is not one this ticket can have - it belongs to another company, is retired, or is for a different ticket type.");
+            }
+            $name = $offered[$valueId]['path_label'];
+        }
+
+        require_once dirname(__DIR__, 2) . '/includes/service_context.php';
+        require_once dirname(__DIR__, 2) . '/includes/services/tickets.php';
+        // No analyst is acting: actor 0, recorded with no analyst on the trail.
+        // The scope is the workflow's company, so the service refuses another's too.
+        $scope = self::companyGuardOn($conn) ? [self::$ctxWorkflowTenant] : null;
+        $ctx = new ActorContext(0, $scope, 'workflow', 'en', 'Workflow');
+        try {
+            TicketsService::updateTicket($conn, $ctx, $ticketId, [$column => $valueId], true);
+        } catch (ServiceError $e) {
+            // 'No fields to update' never happens (one is always sent); anything
+            // else is the service's own reason, which is the useful message.
+            throw new Exception($e->getMessage());
+        }
+        return ['ticket_id' => $ticketId, $arg => $valueId, $what . '_name' => $name];
+    }
+
     /**
      * attach_checklist: copies each chosen checklist template, with its items,
      * onto the ticket, skipping templates already attached. No templates chosen
@@ -2269,11 +2574,13 @@ class WorkflowEngine
         }
 
         $conn = connectToDatabase();
+        self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
         $attached = [];
 
         foreach ($templateIds as $tplIdRaw) {
             $tplId = (int)$tplIdRaw;
             if ($tplId <= 0) continue;
+            self::assertSharedOrRunCompany($conn, 'checklist_templates', $tplId, 'checklist template');
 
             // Check if already attached to this ticket
             $existsStmt = $conn->prepare("SELECT id FROM ticket_checklists WHERE ticket_id = ? AND template_id = ? LIMIT 1");
@@ -2353,6 +2660,7 @@ class WorkflowEngine
         if (!$ticketId) throw new Exception('ticket_id is required');
         if (!$statusId) throw new Exception('status_id is required');
         $conn = connectToDatabase();
+        self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
         $sLookup = $conn->prepare("SELECT name, is_closed FROM ticket_statuses WHERE id = ? LIMIT 1");
         $sLookup->execute([$statusId]);
         $sRow = $sLookup->fetch(PDO::FETCH_ASSOC);
@@ -2420,6 +2728,7 @@ class WorkflowEngine
         if (!$ticketId)   throw new Exception('ticket_id is required');
         if (!$priorityId) throw new Exception('priority_id is required');
         $conn = connectToDatabase();
+        self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
         $pLookup = $conn->prepare('SELECT name FROM ticket_priorities WHERE id = ? LIMIT 1');
         $pLookup->execute([$priorityId]);
         $pRow = $pLookup->fetch(PDO::FETCH_ASSOC);
@@ -2442,6 +2751,8 @@ class WorkflowEngine
         if (!$ticketId)  throw new Exception('ticket_id is required');
         if (!$analystId) throw new Exception('analyst_id is required');
         $conn = connectToDatabase();
+        self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
+        self::assertAnalystReachesRunCompany($conn, $analystId);
         $aLookup = $conn->prepare('SELECT full_name FROM analysts WHERE id = ? LIMIT 1');
         $aLookup->execute([$analystId]);
         $aRow = $aLookup->fetch(PDO::FETCH_ASSOC);
@@ -2469,6 +2780,7 @@ class WorkflowEngine
         if (!$ticketId) throw new Exception('ticket_id is required');
         if ($note === '') throw new Exception('note is required');
         $conn = connectToDatabase();
+        self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
         // Use the same `ticket_audit` table the rest of the app writes to
         // for analyst-visible activity. analyst_id is null to flag this as
         // a workflow-engine-driven note (so the UI can render it differently
@@ -2522,6 +2834,8 @@ class WorkflowEngine
         // The ticket is now optional, so everything derived from it is too.
         $merge = null;
         $ticketRef = '';
+        if ($ticketId) self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
+        if ($mailboxId) self::assertSharedOrRunCompany($conn, 'target_mailboxes', $mailboxId, 'mailbox');
         if ($ticketId) {
             $merge = buildTicketMergeData($conn, $ticketId);
             if (!$merge) throw new Exception("Ticket not found: {$ticketId}");
@@ -2679,6 +2993,23 @@ class WorkflowEngine
         if ($title === '') throw new Exception('title is required');
 
         $conn = connectToDatabase();
+        if ($ticketId) self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
+        if ($assigneeId) self::assertAnalystReachesRunCompany($conn, $assigneeId);
+        // GH #209. The task's company. It stored none, so every workflow task
+        // landed in the Default company whoever it was for. Now: a company's own
+        // workflow's company, else the linked ticket's, else the event's.
+        $taskTenant = null;
+        if (self::companyGuardOn($conn)) {
+            $taskTenant = self::$ctxWorkflowTenant;
+        } elseif (isMultiTenant($conn)) {
+            if ($ticketId) {
+                $tt = $conn->prepare('SELECT tenant_id FROM tickets WHERE id = ?');
+                $tt->execute([$ticketId]);
+                $v = $tt->fetchColumn();
+                if ($v !== false && $v !== null) $taskTenant = (int)$v;
+            }
+            if ($taskTenant === null) $taskTenant = self::$ctxEventTenant;
+        }
         // Fill in default status / priority when the user didn't pick one,
         // so the resulting task lands somewhere sensible on the board.
         if (!$statusId) {
@@ -2698,11 +3029,26 @@ class WorkflowEngine
             $posStmt->execute([$statusId]);
             $boardPos = (int)$posStmt->fetchColumn();
         }
+        // tasks.created_by_id is NOT NULL, and has been since Tasks shipped: this
+        // INSERT stored NULL, so "Create a task" failed on every install with
+        // "Column 'created_by_id' cannot be null". Nobody is acting, so the task is
+        // credited to whoever made the workflow - or, for a form's own actions or a
+        // workflow whose author has gone, the first active administrator.
+        $createdBy = null;
+        if (self::$ctxWorkflowId) {
+            $cb = $conn->prepare('SELECT w.created_by FROM workflows w JOIN analysts a ON a.id = w.created_by WHERE w.id = ?');
+            $cb->execute([(int)self::$ctxWorkflowId]);
+            $createdBy = $cb->fetchColumn() ?: null;
+        }
+        if (!$createdBy) {
+            $createdBy = $conn->query('SELECT id FROM analysts WHERE is_admin = 1 AND COALESCE(is_active, 1) = 1 ORDER BY id LIMIT 1')->fetchColumn() ?: null;
+        }
+        if (!$createdBy) throw new Exception('There is no active administrator to credit the task to');
         $conn->prepare(
             "INSERT INTO tasks (title, description, status_id, priority_id,
                                 assigned_analyst_id, ticket_id, board_position, created_by_id,
-                                created_datetime, updated_datetime)
-             VALUES (?, ?, ?, ?, ?, ?, ?, NULL, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
+                                created_datetime, updated_datetime, tenant_id)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP(), ?)"
         )->execute([
             $title,
             $description !== '' ? $description : null,
@@ -2711,6 +3057,8 @@ class WorkflowEngine
             $assigneeId,
             $ticketId,
             $boardPos,
+            (int)$createdBy,
+            $taskTenant,
         ]);
         $newId = (int)$conn->lastInsertId();
         return [
@@ -2737,7 +3085,10 @@ class WorkflowEngine
         foreach (['methodology', 'priority'] as $k) $a[$k] = (string)($args[$k] ?? '');
         $a['owner_analyst_id'] = self::argInt($args, 'owner_analyst_id', $payload);
         require_once __DIR__ . '/../../includes/projects/intake.php';
-        return projectCreateFromAction(connectToDatabase(), $a, $payload);
+        $conn = connectToDatabase();
+        if (!empty($a['owner_analyst_id'])) self::assertAnalystReachesRunCompany($conn, (int)$a['owner_analyst_id']);
+        // GH #209: a company's own workflow proposes the project in that company.
+        return projectCreateFromAction($conn, $a, $payload, self::companyGuardOn($conn) ? self::$ctxWorkflowTenant : null);
     }
 
     /**
@@ -2781,6 +3132,8 @@ class WorkflowEngine
         if ($submissionId > 0) {
             require_once __DIR__ . '/../../includes/catalogue_approvals.php';
             $conn = connectToDatabase();
+            self::assertRecordInRunCompany($conn, 'form_submissions', $submissionId, 'form submission');
+            if ($assignedAnalystId) self::assertAnalystReachesRunCompany($conn, $assignedAnalystId);
             return catalogueRaiseTicketFromSubmissionId($conn, $submissionId, [
                 // Blank means "not configured", so it must not reach the shared
                 // path as an override — that is what lets the submission supply
@@ -2801,6 +3154,7 @@ class WorkflowEngine
         if ($subject === '') throw new Exception('subject is required');
 
         $conn = connectToDatabase();
+        if ($assignedAnalystId) self::assertAnalystReachesRunCompany($conn, $assignedAnalystId);
         $conn->beginTransaction();
         try {
             // Resolve / upsert the user row by email so the ticket has a
@@ -2813,10 +3167,18 @@ class WorkflowEngine
                 $uLookup = $conn->prepare('SELECT id, tenant_id FROM users WHERE email = ? LIMIT 1');
                 $uLookup->execute([$fromEmail]);
                 $found = $uLookup->fetch(PDO::FETCH_ASSOC);
+                if ($found && self::companyGuardOn($conn)) {
+                    // GH #209: a company's workflow raises tickets for its own people.
+                    $ft = $found['tenant_id'] !== null ? (int)$found['tenant_id'] : null;
+                    if ($ft !== null && $ft !== self::$ctxWorkflowTenant) {
+                        throw new Exception(self::otherCompanyMessage($conn, "The requester {$fromEmail}"));
+                    }
+                }
                 if (!$found) {
                     // A new requester gets the company their domain maps to, as on
-                    // every other path that creates one (null = triage).
-                    $userTenant = resolveTenantForNewUser($conn, $fromEmail);
+                    // every other path that creates one (null = triage) - or, from a
+                    // company's own workflow (GH #209), that company.
+                    $userTenant = self::companyGuardOn($conn) ? self::$ctxWorkflowTenant : resolveTenantForNewUser($conn, $fromEmail);
                     $conn->prepare('INSERT INTO users (email, display_name, tenant_id, created_at) VALUES (?, ?, ?, UTC_TIMESTAMP())')
                          ->execute([$fromEmail, $fromName !== '' ? $fromName : $fromEmail, $userTenant]);
                     $userId = (int)$conn->lastInsertId();
@@ -2841,6 +3203,8 @@ class WorkflowEngine
                 $ticketTenant = ($v !== false && $v !== null) ? (int)$v : null;
             }
             if ($ticketTenant === null) $ticketTenant = $userTenant;
+            // GH #209: a company's own workflow always raises in its own company.
+            if (self::companyGuardOn($conn)) $ticketTenant = self::$ctxWorkflowTenant;
             if ($ticketTenant === null && !isMultiTenant($conn)) $ticketTenant = getDefaultTenantId($conn);
 
             // Default status = the CONFIGURED default, not the literal name 'Open',
@@ -3027,6 +3391,7 @@ class WorkflowEngine
 
         require_once __DIR__ . '/../../includes/integrations/integrations.php';
         $conn = connectToDatabase();
+        self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
 
         // The description: what the admin typed, or a sensible default built from
         // the ticket. Either way it becomes an IssueDoc, so the connector decides
@@ -3103,6 +3468,7 @@ class WorkflowEngine
 
         require_once __DIR__ . '/../../includes/integrations/integrations.php';
         $conn  = connectToDatabase();
+        self::assertRecordInRunCompany($conn, 'tickets', $ticketId, 'ticket');
         $links = integrationsLinksFor($conn, 'ticket', $ticketId);
         if (!$links) {
             return ['skipped' => true, 'reason' => 'no_linked_issue', 'ticket_id' => $ticketId];

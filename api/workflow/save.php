@@ -64,6 +64,42 @@ foreach ($actions as $a) {
 try {
     $conn = connectToDatabase();
 
+    // GH #209. Which company the workflow is for. A shared one (null) runs for
+    // every company, so only someone who can see them all may write one; a
+    // company's own, anyone who can see that company - both for the workflow as
+    // stored and for where it is being moved. Not sent: an existing workflow
+    // keeps its company, a new one is shared for an every-company analyst and
+    // the switched-to company for anyone else.
+    require_once __DIR__ . '/../../includes/workflow_tenancy.php';
+    $analystId = (int)$_SESSION['analyst_id'];
+    $tenancyOn = workflowTenancyActive($conn);
+    $existing  = $id ? workflowRowTenant($conn, $id) : null;
+    if ($id && (!$existing || !analystCanReadWorkflow($conn, $analystId, $existing))) {
+        echo json_encode(['success' => false, 'error' => 'Workflow not found']);
+        exit;
+    }
+    $newTenant = null;
+    if ($tenancyOn) {
+        if ($existing && !analystCanWriteWorkflowFor($conn, $analystId, $existing['tenant_id'])) {
+            echo json_encode(['success' => false, 'error' => 'This workflow runs for every company, so only someone who can see every company can change it.']);
+            exit;
+        }
+        if (array_key_exists('company_id', $in)) {
+            [$ok, $newTenant, $err] = workflowParseCompany($conn, $in['company_id']);
+            if (!$ok) { echo json_encode(['success' => false, 'error' => $err]); exit; }
+        } elseif ($existing) {
+            $newTenant = $existing['tenant_id'];
+        } else {
+            $newTenant = analystHasAllTenantAccess($conn, $analystId) ? null : getActiveTenantId($conn, $analystId);
+        }
+        if (!analystCanWriteWorkflowFor($conn, $analystId, $newTenant)) {
+            echo json_encode(['success' => false, 'error' => $newTenant === null
+                ? 'Only someone who can see every company can make a workflow that runs for all of them.'
+                : 'You cannot see that company.']);
+            exit;
+        }
+    }
+
     // Webhook credentials are encrypted at rest (see includes/webhook_delivery.php).
     // The URL is a bearer credential (anyone holding a Slack/Discord URL can post
     // to that channel) and the signing secret is a true secret — a reader of the
@@ -90,22 +126,29 @@ try {
     $condJson = json_encode($conditions);
     $actJson  = json_encode($actions);
     if ($id) {
+        $tSet = $tenancyOn ? ', tenant_id = ?' : '';
         $stmt = $conn->prepare(
             "UPDATE workflows
-             SET name = ?, description = ?, trigger_event = ?, conditions = ?, actions = ?, is_active = ?
+             SET name = ?, description = ?, trigger_event = ?, conditions = ?, actions = ?, is_active = ?$tSet
              WHERE id = ?"
         );
-        $stmt->execute([$name, $description, $triggerEvent, $condJson, $actJson, $isActive, $id]);
+        $vals = [$name, $description, $triggerEvent, $condJson, $actJson, $isActive];
+        if ($tenancyOn) $vals[] = $newTenant;
+        $vals[] = $id;
+        $stmt->execute($vals);
     } else {
+        $tCol = $tenancyOn ? ', tenant_id' : '';
         $stmt = $conn->prepare(
             "INSERT INTO workflows
-             (name, description, trigger_event, conditions, actions, is_active, created_by, created_datetime, updated_datetime)
-             VALUES (?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
+             (name, description, trigger_event, conditions, actions, is_active, created_by, created_datetime, updated_datetime$tCol)
+             VALUES (?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP()" . ($tenancyOn ? ', ?' : '') . ")"
         );
-        $stmt->execute([
+        $vals = [
             $name, $description, $triggerEvent, $condJson, $actJson, $isActive,
             (int)$_SESSION['analyst_id'],
-        ]);
+        ];
+        if ($tenancyOn) $vals[] = $newTenant;
+        $stmt->execute($vals);
         $id = (int)$conn->lastInsertId();
     }
     echo json_encode(['success' => true, 'id' => $id]);

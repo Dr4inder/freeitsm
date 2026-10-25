@@ -28,6 +28,19 @@ if (!$id) {
 
 try {
     $conn = connectToDatabase();
+    // GH #209: another company's workflow is not found; a shared one needs
+    // someone who can see every company.
+    require_once __DIR__ . '/../../includes/workflow_tenancy.php';
+    $analystId = (int)$_SESSION['analyst_id'];
+    $wf = workflowRowTenant($conn, $id);
+    if (!$wf || !analystCanReadWorkflow($conn, $analystId, $wf)) {
+        echo json_encode(['success' => false, 'error' => 'Workflow not found']);
+        exit;
+    }
+    if (!analystCanWriteWorkflowFor($conn, $analystId, $wf['tenant_id'])) {
+        echo json_encode(['success' => false, 'error' => 'This workflow runs for every company, so only someone who can see every company can delete it.']);
+        exit;
+    }
     $stmt = $conn->prepare("DELETE FROM workflows WHERE id = ?");
     $stmt->execute([$id]);
     echo json_encode(['success' => true]);

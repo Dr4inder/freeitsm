@@ -3573,6 +3573,7 @@ return [
         'last_run_status'   => 'VARCHAR(20) NULL',
         'run_count'         => 'INT NOT NULL DEFAULT 0',
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
+        'tenant_id'         => 'INT NULL',   // GH #209: NULL = shared (every company); set = that company only
     ],
 
     'webhook_deliveries' => [
@@ -3631,6 +3632,7 @@ return [
         'finished_datetime' => 'DATETIME NULL',
         'step_log'          => 'TEXT NULL',
         'error_message'     => 'TEXT NULL',
+        'tenant_id'         => 'INT NULL',   // GH #209: the EVENT's company; NULL = unknown, every-company viewers only
     ],
 
     'knowledge_articles' => [

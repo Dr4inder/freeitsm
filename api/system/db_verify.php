@@ -3391,6 +3391,11 @@ try {
         ['workflows',           'fk_workflows_created_by', "ALTER TABLE workflows ADD CONSTRAINT fk_workflows_created_by FOREIGN KEY (created_by) REFERENCES analysts (id) ON DELETE SET NULL"],
         ['workflow_executions', 'fk_we_workflow',          "ALTER TABLE workflow_executions ADD CONSTRAINT fk_we_workflow FOREIGN KEY (workflow_id) REFERENCES workflows (id) ON DELETE SET NULL"],
         ['webhook_deliveries',  'fk_wd_workflow',          "ALTER TABLE webhook_deliveries ADD CONSTRAINT fk_wd_workflow FOREIGN KEY (workflow_id) REFERENCES workflows (id) ON DELETE SET NULL"],
+        // GH #209. CASCADE on workflows: SET NULL would turn a deleted company's
+        // workflows into SHARED ones that run for every company. SET NULL on runs
+        // is safe - a run with no company is shown only to every-company viewers.
+        ['workflows',           'fk_workflows_tenant',     "ALTER TABLE workflows ADD CONSTRAINT fk_workflows_tenant FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE CASCADE"],
+        ['workflow_executions', 'fk_we_tenant',            "ALTER TABLE workflow_executions ADD CONSTRAINT fk_we_tenant FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE SET NULL"],
     ];
     foreach ($workflowFks as [$tbl, $name, $sql]) {
         if (!$tableExists($tbl) || $fkExists($tbl, $name)) continue;

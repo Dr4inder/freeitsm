@@ -148,16 +148,20 @@ $translationNamespaces = ['common', 'workflow'];
                     tb.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-faint, #999);">' + esc(window.t('workflow.list.no_workflows')) + '</td></tr>';
                     return;
                 }
+                // GH #209. Which company each runs for, once there are companies.
+                const companyLine = w => !d.multi_company ? ''
+                    : '<br><span style="color:var(--text-dim, #777); font-size: 12px;">'
+                      + esc(w.company ? w.company.name : window.t('workflow.list.all_companies')) + '</span>';
                 tb.innerHTML = d.workflows.map(w => `
                     <tr>
-                        <td><strong><a href="editor.php?id=${w.id}" style="color: var(--text, #333); text-decoration: none;">${esc(w.name)}</a></strong>${w.description ? '<br><span style="color:var(--text-dim, #777); font-size: 12px;">' + esc(w.description) + '</span>' : ''}</td>
+                        <td><strong><a href="editor.php?id=${w.id}" style="color: var(--text, #333); text-decoration: none;">${esc(w.name)}</a></strong>${w.description ? '<br><span style="color:var(--text-dim, #777); font-size: 12px;">' + esc(w.description) + '</span>' : ''}${companyLine(w)}</td>
                         <td><code style="font-size:12px;">${esc(w.trigger_event)}</code></td>
                         <td style="color:var(--text-muted, #666);">${w.run_count} run${w.run_count == 1 ? '' : 's'}</td>
                         <td>${fmtDate(w.last_run_datetime)}</td>
                         <td>${statusPill(+w.is_active)}</td>
                         <td>
                             <a class="table-action-btn" href="editor.php?id=${w.id}" title="${esc(window.t('common.edit'))}">${ICON_EDIT}</a>
-                            <button class="table-action-btn delete" onclick="WF.del(${w.id})" title="${esc(window.t('common.delete'))}">${ICON_DELETE}</button>
+                            ${w.can_edit === false ? '' : `<button class="table-action-btn delete" onclick="WF.del(${w.id})" title="${esc(window.t('common.delete'))}">${ICON_DELETE}</button>`}
                         </td>
                     </tr>
                 `).join('');

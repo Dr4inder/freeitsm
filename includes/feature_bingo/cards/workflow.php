@@ -36,6 +36,19 @@ return [
         'check'    => ['rows', 'workflows', $live],
     ],
     [
+        // GH #209.
+        'id'       => 'workflow.company_workflows',
+        'module'   => 'workflow',
+        'tier'     => 'extra',
+        'category' => 'organisation',
+        'title'    => 'Company-specific workflows',
+        'what'     => 'A workflow that runs for one company only, set under Runs for in the editor. It only acts on that company\'s records; a shared workflow still runs for everyone.',
+        'why'      => 'If you support several organisations, one client\'s automation should never touch another client\'s tickets - and each client\'s own people can look after their own rules.',
+        'done'     => 'At least one active workflow belongs to a specific company.',
+        'link'     => 'workflow/',
+        'check'    => ['rows', 'workflows', "$live AND tenant_id IS NOT NULL"],
+    ],
+    [
         'id'       => 'workflow.conditions',
         'module'   => 'workflow',
         'tier'     => 'extra',

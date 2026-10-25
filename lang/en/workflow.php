@@ -120,6 +120,7 @@ return [
         'col_status'      => 'Status',
         'col_row_actions' => 'Actions',
         'never_run'       => 'Never',
+        'all_companies'   => 'All companies',
         'active'          => 'Active',
         'inactive'        => 'Inactive',
     ],
@@ -138,6 +139,10 @@ return [
         'actions_label'   => 'Actions',
         'actions_hint'    => 'Run these in order, top to bottom. At least one action is required.',
         'active_label'    => 'Active — run when the trigger fires',
+        'company_label'   => 'Runs for',
+        'company_shared'  => 'All companies (shared)',
+        'company_help'    => 'A company\'s own workflow runs only for that company\'s tickets, tasks and other records, and its actions can only change that company\'s records. A shared one runs for every company.',
+        'read_only_shared' => 'This workflow runs for every company, so only someone who can see every company can change it, test it or fire it.',
         'add_condition'   => 'Add condition',
         'add_action'      => 'Add action',
         'remove'          => 'Remove',
@@ -269,6 +274,7 @@ return [
         'nav_webhooks_deepdive' => 'Webhooks guide',
         'nav_failures'   => 'Engine failures are isolated',
         'nav_ahead'      => 'What\'s still ahead',
+        'nav_companies'  => 'Companies',
 
         // 1. Anatomy
         'anatomy_heading' => 'Anatomy of a workflow',
@@ -321,6 +327,12 @@ return [
         'actions_row8_args' => 'subject, body, priority_id, department_id, type_id, assigned_analyst_id, from_email, from_name',
         'actions_row9_does' => 'POSTs a message to an external URL &mdash; push events into Slack, Teams, Discord, PagerDuty, Zapier/Make or any system that accepts an incoming webhook. Pick a chat preset, send the Full record (the whole object as JSON, same as the REST API), or template your own custom JSON body. Supports an optional HMAC signing secret, and a Send test button that shows the endpoint&rsquo;s real response before you save.',
         'actions_row9_args' => 'preset, url, message (presets), body (custom JSON), secret (optional)',
+        'actions_row10_does' => 'Puts the ticket in a team\'s queue. The person it is assigned to stays as it is.',
+        'actions_row10_args' => 'ticket_id, team_id',
+        'actions_row11_does' => 'Changes the ticket\'s department. A confidential department makes the ticket confidential, as it does on screen.',
+        'actions_row11_args' => 'ticket_id, department_id',
+        'actions_row12_does' => 'Changes the ticket\'s category. It has to be one the ticket\'s company uses and, when the category belongs to a ticket type, one for the ticket\'s type - otherwise the step fails and says why.',
+        'actions_row12_args' => 'ticket_id, category_id',
         'actions_note'    => 'Each action\'s required args are marked with a <code>*</code> in the form. Missing required args cause the action to fail at execution time &mdash; the engine logs the failure to the execution row and stops the rest of the chain.',
         'actions_webhook_callout' => '<strong>The <code>send_webhook</code> action is a big topic of its own</strong> &mdash; chat presets, whole-object &ldquo;Full record&rdquo; payloads, HMAC signing, a Send-test button, background delivery with retries, and a health dashboard. It has a dedicated guide: <a href="help-webhooks.php"><strong>Webhooks guide &rarr;</strong></a>',
 
@@ -392,6 +404,13 @@ return [
 
         // 9. Failures
         'failures_heading' => 'Engine failures are isolated',
+        'companies_heading' => 'Workflows and companies',
+        'companies_intro'   => 'Each workflow runs either for every company or for one. Choose which under <strong>Runs for</strong> in the editor.',
+        'companies_shared'  => '<strong>All companies (shared)</strong> - it runs for every company\'s events, as every workflow did before companies. Only someone who can see every company can create, change, test or delete a shared workflow, because it acts on all of them. Anyone else can open it to read it.',
+        'companies_own'     => '<strong>One company</strong> - it runs only when the ticket, task, change or other record the event is about belongs to that company, and its actions can only change that company\'s records. An action that names another company\'s ticket, or hands work to somebody who cannot see the company, fails and the run log says why.',
+        'companies_who'     => 'You see the shared workflows and those of the company you have switched to in the header. You can manage the workflows of any company you can see.',
+        'companies_runs'    => 'The run log shows each run under the company its event belonged to, and only to people who can see that company. Runs for events that belong to no company - a supplier being saved, say - are shown to people who can see every company.',
+        'companies_note'    => 'A shared workflow can still treat companies differently: use the <strong>Company</strong> condition, and <code>{{company.name}}</code> in a message. A condition is not a boundary, though - anyone who can edit the workflow can change it. To keep a workflow to one company, set <strong>Runs for</strong>.',
         'failures_callout' => '<strong>A buggy workflow cannot break the host module\'s request.</strong> Every dispatch is wrapped in a try/catch and every action\'s failure is logged to the execution row without aborting the chain. If a workflow stops doing what you expect, check the workflow\'s <em>Recent runs</em> panel &mdash; failures show up there with the underlying error, not as a 500 on the page that triggered them.',
 
         // 10. What's still ahead

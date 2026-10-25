@@ -85,7 +85,19 @@ try {
     // whatever channel is being set up (discussion #62).
     require_once __DIR__ . '/../../includes/ticket_sensitivity.php';
     $notConf = ticketSensitivityReady($conn) ? " AND sensitivity <> 'confidential'" : '';
-    $realId = (int)($conn->query("SELECT id FROM tickets WHERE deleted_datetime IS NULL$notConf ORDER BY id DESC LIMIT 1")->fetchColumn() ?: 0);
+    // GH #209. The newest ticket the analyst could open anyway - in the
+    // workflow's company when the editor names one they can see, otherwise the
+    // company they have switched to. It was the newest on the whole install, so
+    // a test could send another company's ticket to the endpoint being set up.
+    require_once __DIR__ . '/../../includes/workflow_tenancy.php';
+    $aid = (int)$_SESSION['analyst_id'];
+    $forCompany = (int)($in['company_id'] ?? 0);
+    [$tSql, $tArgs] = ($forCompany > 0 && analystCanAccessTenant($conn, $aid, $forCompany))
+        ? tenantScopeSqlFor($conn, $forCompany, 'tenant_id')
+        : activeTenantFilter($conn, $aid, '');
+    $pick = $conn->prepare("SELECT id FROM tickets WHERE deleted_datetime IS NULL$notConf$tSql ORDER BY id DESC LIMIT 1");
+    $pick->execute($tArgs);
+    $realId = (int)($pick->fetchColumn() ?: 0);
     if ($realId) {
         $stmt = $conn->prepare(apiTicketSelect() . ' WHERE t.id = ? LIMIT 1');
         $stmt->execute([$realId]);
