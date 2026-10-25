@@ -103,12 +103,12 @@ function renderAppSidebar(array $modules, $current_module): void
     // repeat the word beside it.
     $tip = fn($s) => $names === 'icons' ? ' title="' . $h($s) . '"' : '';
     ?>
-    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=7">
+    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=9">
     <nav class="app-sidebar app-sidebar--<?php echo $h($names); ?><?php echo appSidebarPrefs()['waffle'] ? '' : ' app-sidebar--nowaffle'; ?>" id="appSidebar" aria-label="<?php echo $h(t('common.sidebar.label')); ?>">
-        <?php /* The list scrolls when the modules do not all fit. Only then do the
-                 arrows get a row each, above and below it, so they never cover
-                 a module; each shows while there is more that way. A short
-                 list that fits has neither. Pointer only: a
+        <?php /* The list scrolls when the modules do not all fit. The arrows have a
+                 row each, above and below it, so they never cover a module; a
+                 row only opens while there is more that way, so there is no
+                 empty gap. A short list that fits has neither. Pointer only: a
                  keyboard tabbing down the links scrolls the list by itself. */ ?>
         <div class="app-sidebar-scroll">
         <button type="button" class="app-sidebar-arrow app-sidebar-arrow--up" tabindex="-1" aria-hidden="true" title="<?php echo $h(t('common.sidebar.scroll_top')); ?>" onclick="appSidebarScroll(-1)">
@@ -166,15 +166,29 @@ function renderAppSidebar(array $modules, $current_module): void
     }
 
     /**
-     * The scroll arrows: their rows exist only while the list does not fit,
-     * and each arrow shows only while there is more of the list that way -
-     * re-checked on scroll and whenever the sidebar or window changes size.
+     * The scroll arrows: each arrow, and its row, shows only while there is
+     * more of the list that way - re-checked on scroll and whenever the
+     * sidebar or window changes size. A row opening or shutting changes the
+     * list's height; that only ever clamps scrollTop, so it cannot flip-flop.
      * A click glides to that end (instantly for anyone who asked for less motion).
      */
     function appSidebarScroll(dir) {
         const list = document.getElementById('appSidebarList');
         if (!list) return;
         const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // TRAP: open the far end's arrow row FIRST, at once, and hold it open
+        // until the list gets there (list.heading, read by the check below).
+        // Going down, the up row would otherwise open once the list moved and
+        // take 24px off it, after the browser had fixed "the bottom" - so the
+        // scroll stopped 24px short.
+        list.heading = dir;
+        const far = document.querySelector(dir > 0 ? '.app-sidebar-arrow--up' : '.app-sidebar-arrow--down');
+        if (far && !far.classList.contains('show')) {
+            far.style.transition = 'none';
+            far.classList.add('show');
+            void far.offsetHeight;   // apply it now, before the scroll is measured
+            far.style.transition = '';
+        }
         list.scrollTo({ top: dir > 0 ? list.scrollHeight : 0, behavior: still ? 'auto' : 'smooth' });
     }
     (function () {
@@ -182,20 +196,31 @@ function renderAppSidebar(array $modules, $current_module): void
         if (!list) return;
         const nav = document.getElementById('appSidebar');
         const up = nav.querySelector('.app-sidebar-arrow--up'), down = nav.querySelector('.app-sidebar-arrow--down');
-        const wrap = list.parentElement;
         const check = () => {
-            // Measured against the WRAPPER, which holds the arrow rows too: the
-            // list's own height shrinks when the rows appear, and measuring
-            // that would let them flicker on and off at the boundary.
-            wrap.classList.toggle('overflows', list.scrollHeight > wrap.clientHeight + 1);
             // 2px slack: zoomed screens can stop a fraction short of the end.
-            up.classList.toggle('show', list.scrollTop > 2);
-            down.classList.toggle('show', list.scrollTop + list.clientHeight < list.scrollHeight - 2);
+            const atTop = list.scrollTop <= 2;
+            const atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 2;
+            if ((list.heading > 0 && atBottom) || (list.heading < 0 && atTop)) list.heading = 0;
+            up.classList.toggle('show', !atTop || list.heading > 0);
+            down.classList.toggle('show', !atBottom || list.heading < 0);
         };
+        // Your own wheel or swipe takes over from an arrow's glide.
+        list.addEventListener('wheel', () => { list.heading = 0; }, { passive: true });
+        list.addEventListener('touchstart', () => { list.heading = 0; }, { passive: true });
         list.addEventListener('scroll', check, { passive: true });
-        if (window.ResizeObserver) { const ro = new ResizeObserver(check); ro.observe(wrap); ro.observe(list); }
+        if (window.ResizeObserver) new ResizeObserver(check).observe(list);
         window.addEventListener('resize', check);
+        // The module you are in, when it is below the fold: bring it into the
+        // middle of the list, or every page of it opens with it out of sight.
+        const cur = list.querySelector('.app-sidebar-link.current');
+        if (cur) {
+            const at = cur.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop;
+            if (at + cur.offsetHeight > list.clientHeight) list.scrollTop = at - (list.clientHeight - cur.offsetHeight) / 2;
+        }
         check();
+        // Rows slide only from here on: on page load they are simply in place,
+        // not sliding open every time you change module.
+        requestAnimationFrame(() => requestAnimationFrame(() => list.parentElement.classList.add('ready')));
     })();
 
     /**
