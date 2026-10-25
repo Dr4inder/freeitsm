@@ -254,11 +254,13 @@ try {
 // The masked twins keep the pass/warn/fail verdict, so somebody mid-install still
 // learns their PHP is too old — they just have to sign in to learn which release.
 $phpVersion = phpversion();
-if (PHP_VERSION_ID < 70400) {
+// PHP 8.1 is the floor (2026-10-25). Below it this page never gets this far -
+// includes/php_version_guard.php stops first - so the fail row is for completeness.
+// 8.1 and 8.2 run, but 8.1 has had no upstream security fix since Dec 2025:
+// warn below 8.2 so the recommendation (8.3/8.4) is visible.
+if (PHP_VERSION_ID < 80100) {
     $checks[] = ['name' => t('setup.checks.php_version'), 'status' => 'fail', 'detail' => t('setup.detail.php_version_too_low', ['version' => $phpVersion]), 'safe_detail' => t('setup.detail.php_version_too_low_masked')];
-} elseif (PHP_VERSION_ID < 80100) {
-    // 7.4 and 8.0 still run, but neither has had an upstream security fix since
-    // Nov 2022 / Nov 2023. Warn rather than fail — we still support them.
+} elseif (PHP_VERSION_ID < 80200) {
     $checks[] = ['name' => t('setup.checks.php_version'), 'status' => 'warn', 'detail' => t('setup.detail.php_version_eol', ['version' => $phpVersion]), 'safe_detail' => t('setup.detail.php_version_eol_masked')];
 } else {
     $checks[] = ['name' => t('setup.checks.php_version'), 'status' => 'pass', 'detail' => t('setup.detail.php_version_ok', ['version' => $phpVersion]), 'safe_detail' => t('setup.detail.php_version_ok_masked')];

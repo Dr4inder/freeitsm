@@ -70,7 +70,7 @@ return [
         'display_errors_enabled' => 'চালু — প্রোডাকশনের জন্য বন্ধ করুন (config.php-তে display_errors 0 করুন)',
         'display_errors_disabled' => 'বন্ধ',
         'php_version_ok' => '{version}',
-        'php_version_too_low' => '{version} — PHP 7.4 বা তার পরবর্তী সংস্করণ প্রয়োজন',
+        'php_version_too_low' => '{version} — PHP 8.1 বা তার পরবর্তী সংস্করণ প্রয়োজন',
         'php_version_eol' => '{version} — এখনো সমর্থিত, কিন্তু আয়ুষ্কাল শেষ হওয়ার পর এই রিলিজ কোনো নিরাপত্তা আপডেট পায়নি। PHP 8.3 বা 8.4 সুপারিশ করা হয়।',
         'extension_loaded' => 'লোড হয়েছে',
         'extension_not_loaded' => 'লোড হয়নি — php.ini-তে চালু করুন',
@@ -85,7 +85,7 @@ return [
         'ca_ini_masked_ok' => 'কনফিগার করা আছে',
         'ca_ini_masked_broken' => 'সেট করা আছে, কিন্তু এমন একটি ফাইলের দিকে নির্দেশ করছে যা নেই — পাথ ঠিক করুন অথবা php.ini-তে সেটিংটি মন্তব্য করে বন্ধ করুন।',
         'php_version_ok_masked' => 'প্রয়োজনীয়তা পূরণ করে',
-        'php_version_too_low_masked' => 'খুব পুরোনো — PHP 7.4 বা তার পরবর্তী সংস্করণ প্রয়োজন',
+        'php_version_too_low_masked' => 'খুব পুরোনো — PHP 8.1 বা তার পরবর্তী সংস্করণ প্রয়োজন',
         'php_version_eol_masked' => 'সমর্থিত, কিন্তু এই রিলিজের আয়ুষ্কাল শেষ হয়ে গেছে এবং আর নিরাপত্তা আপডেট পায় না। সংস্করণ দেখতে অ্যাডমিনিস্ট্রেটর হিসেবে সাইন ইন করুন।',
     ],
     'locked' => [

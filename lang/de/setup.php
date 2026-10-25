@@ -70,7 +70,7 @@ return [
         'display_errors_enabled' => 'Aktiviert — für den Produktivbetrieb deaktivieren (display_errors in config.php auf 0 setzen)',
         'display_errors_disabled' => 'Deaktiviert',
         'php_version_ok' => '{version}',
-        'php_version_too_low' => '{version} — PHP 7.4 oder höher ist erforderlich',
+        'php_version_too_low' => '{version} — PHP 8.1 oder höher ist erforderlich',
         'php_version_eol' => '{version} — wird noch unterstützt, diese Version erhält jedoch seit dem Ende ihrer Lebensdauer keine Sicherheitsupdates mehr. Empfohlen wird PHP 8.3 oder 8.4.',
         'extension_loaded' => 'Geladen',
         'extension_not_loaded' => 'Nicht geladen — in der php.ini aktivieren',
@@ -85,7 +85,7 @@ return [
         'ca_ini_masked_ok' => 'Konfiguriert',
         'ca_ini_masked_broken' => 'Gesetzt, verweist jedoch auf eine nicht vorhandene Datei — korrigieren Sie den Pfad oder kommentieren Sie die Einstellung in der php.ini aus.',
         'php_version_ok_masked' => 'Erfüllt die Anforderung',
-        'php_version_too_low_masked' => 'Zu alt — PHP 7.4 oder höher ist erforderlich',
+        'php_version_too_low_masked' => 'Zu alt — PHP 8.1 oder höher ist erforderlich',
         'php_version_eol_masked' => 'Wird noch unterstützt, diese Version hat jedoch seit dem Ende ihrer Lebensdauer keine Sicherheitsupdates mehr erhalten. Melden Sie sich als Administrator an, um die Version zu sehen.',
     ],
     'locked' => [

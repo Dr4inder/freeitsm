@@ -4,7 +4,7 @@
 
 <p align="center">
 <a href="https://github.com/edmozley/freeitsm/blob/main/LICENSE"><img src="https://img.shields.io/github/license/edmozley/freeitsm?style=flat-square&color=blue" alt="MIT License"></a>
-<img src="https://img.shields.io/badge/PHP-7.4--8.4-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP 7.4–8.4">
+<img src="https://img.shields.io/badge/PHP-8.1--8.4-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP 8.1–8.4">
 <img src="https://img.shields.io/badge/MySQL-8.0%2B-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL 8.0+">
 <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker Ready">
 <a href="https://github.com/edmozley/freeitsm/stargazers"><img src="https://img.shields.io/github/stars/edmozley/freeitsm?style=flat-square&color=gold" alt="GitHub stars"></a>
@@ -215,7 +215,7 @@ image: ghcr.io/edmozley/freeitsm:1.0.0
 
 `:1.0` follows the newest 1.0.x, `:1` the newest 1.x, and `:latest` the newest release. Pin the full number in production - rolling back is then a matter of changing it and running `docker compose up -d`. Images are built for both x86-64 and ARM, so a Raspberry Pi or an Apple Silicon Mac works too.
 
-**Technology stack:** PHP 7.4–8.4 · MySQL 8.0+ · vanilla JavaScript (no frameworks) · TinyMCE · Apache, or nginx using the [config it ships with](https://github.com/edmozley/freeitsm/wiki/Running-on-nginx).
+**Technology stack:** PHP 8.1–8.4 (8.3 or 8.4 recommended) · MySQL 8.0+ · vanilla JavaScript (no frameworks) · TinyMCE · Apache, or nginx using the [config it ships with](https://github.com/edmozley/freeitsm/wiki/Running-on-nginx).
 
 ## 👋 From the maintainer
 

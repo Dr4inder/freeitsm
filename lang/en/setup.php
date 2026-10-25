@@ -78,7 +78,7 @@ return [
         'display_errors_enabled'   => 'Enabled — disable for production (set display_errors to 0 in config.php)',
         'display_errors_disabled'  => 'Disabled',
         'php_version_ok'           => '{version}',
-        'php_version_too_low'      => '{version} — PHP 7.4 or higher is required',
+        'php_version_too_low'      => '{version} — PHP 8.1 or higher is required',
         'php_version_eol'          => '{version} — still supported, but this release has had no security updates since it reached end of life. PHP 8.3 or 8.4 recommended.',
         'extension_loaded'         => 'Loaded',
         'extension_not_loaded'     => 'Not loaded — enable in php.ini',
@@ -105,7 +105,7 @@ return [
         // version is fine, old, or too old; they do not learn which release to
         // look up.
         'php_version_ok_masked'          => 'Meets the requirement',
-        'php_version_too_low_masked'     => 'Too old — PHP 7.4 or higher is required',
+        'php_version_too_low_masked'     => 'Too old — PHP 8.1 or higher is required',
         'php_version_eol_masked'         => 'Supported, but this release has reached end of life and no longer receives security updates. Sign in as an administrator to see the version.',
     ],
 

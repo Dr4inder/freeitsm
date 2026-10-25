@@ -7,6 +7,10 @@
  *        require_once 'includes/functions.php'; (from root folder)
  */
 
+// PHP 8.1 or newer, or a plain message instead of a parse error - for anything
+// that loads this before config.php. includes/php_version_guard.php.
+require_once __DIR__ . '/php_version_guard.php';
+
 // Session hardening helpers. Pulled in here rather than added to each of the ten
 // files that establish or change an identity, because every one of them already
 // includes this file — one require instead of ten, and a new sign-in path gets

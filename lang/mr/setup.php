@@ -70,7 +70,7 @@ return [
         'display_errors_enabled' => 'सुरू — प्रोडक्शनसाठी बंद करा (config.php मध्ये display_errors 0 वर सेट करा)',
         'display_errors_disabled' => 'बंद',
         'php_version_ok' => '{version}',
-        'php_version_too_low' => '{version} — PHP 7.4 किंवा नवीन आवश्यक आहे',
+        'php_version_too_low' => '{version} — PHP 8.1 किंवा नवीन आवश्यक आहे',
         'php_version_eol' => '{version} — अजून समर्थित आहे, पण ही आवृत्ती आयुष्यमान संपल्यापासून तिला सुरक्षा अपडेट मिळालेले नाहीत. PHP 8.3 किंवा 8.4 सुचवले जाते.',
         'extension_loaded' => 'लोड केले',
         'extension_not_loaded' => 'लोड केलेले नाही — php.ini मध्ये सुरू करा',
@@ -85,7 +85,7 @@ return [
         'ca_ini_masked_ok' => 'कॉन्फिगर केले',
         'ca_ini_masked_broken' => 'सेट केले आहे, पण अस्तित्वात नसलेल्या फाइलकडे निर्देश करते — पथ दुरुस्त करा किंवा php.ini मधील सेटिंग कमेंट करा.',
         'php_version_ok_masked' => 'आवश्यकता पूर्ण करते',
-        'php_version_too_low_masked' => 'खूप जुनी — PHP 7.4 किंवा नवीन आवश्यक आहे',
+        'php_version_too_low_masked' => 'खूप जुनी — PHP 8.1 किंवा नवीन आवश्यक आहे',
         'php_version_eol_masked' => 'समर्थित आहे, पण या आवृत्तीचे आयुष्यमान संपले आहे आणि तिला आता सुरक्षा अपडेट मिळत नाहीत. आवृत्ती पाहण्यासाठी प्रशासक म्हणून साइन इन करा.',
     ],
     'locked' => [
