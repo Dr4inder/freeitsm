@@ -40,3 +40,11 @@ jobs:
       # refuse a GET (includes/csrf.php, csrfRequireWriteMethod). Same job: files only.
       - name: no endpoint changes data on a GET
         run: php tests/get-must-not-write.php
+
+      # GH #207: the official image installed only pdo_mysql, so LDAP, SCORM
+      # upload and .docx reading could not work in it. Every extension the code
+      # uses must be installed by the Dockerfile or excluded with a reason in
+      # docker/php-extensions.txt. Same job: files only (the image checks itself
+      # at build time).
+      - name: every PHP extension the code uses is in the Docker image
+        run: php tests/docker-php-extensions.php

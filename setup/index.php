@@ -289,6 +289,14 @@ if (extension_loaded('imap')) {
 } else {
     $checks[] = ['name' => t('setup.checks.php_extension_optional', ['ext' => 'imap']), 'status' => 'warn', 'detail' => t('setup.detail.imap_not_loaded')];
 }
+// The others a feature needs (GH #207 - the Docker image had none of them until
+// 3.17.0). docker/php-extensions.txt lists what each one is for.
+foreach (['ldap', 'zip', 'intl'] as $ext) {
+    $loaded = extension_loaded($ext);
+    $checks[] = ['name' => t('setup.checks.php_extension_optional', ['ext' => $ext]),
+                 'status' => $loaded ? 'pass' : 'warn',
+                 'detail' => t($loaded ? 'setup.detail.extension_loaded' : 'setup.detail.' . $ext . '_not_loaded')];
+}
 
 // Apply the redaction decided above. Done as a single pass over the finished list
 // rather than at each call site, because the entitlement isn't known until the
