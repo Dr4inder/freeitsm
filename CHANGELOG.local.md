@@ -18,6 +18,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2572 | System            | Fix         | **Recent on the sidebar was hidden behind the sidebar** with module names set to open on hover: the click left the button focused, which held the rail open over the panel. The rail now lets go of focus and stays narrow while the panel is open. |
 | 2573 | System            | Improvement | **Recent opened from the sidebar sits beside the sidebar**, at the bottom left by its Recent button, instead of up under the waffle button. The waffle button still opens the panel in its usual place. |
 | 2574 | System            | Improvement | **The waffle panel stands out in dark mode**: it had the same background as the page and a black shadow that did not show, so it blended into the screen behind. In dark mode it now has a slightly lighter background, a border edge and a deeper shadow. |
+| 2575 | System            | Improvement | **Scroll arrows on the sidebar** when its modules do not all fit: an up and a down arrow, each on a row of its own so neither covers a module, that glide to the top or bottom of the list (instantly for anyone who has asked their computer for less motion). The rows only exist while the list overflows, and each arrow only shows while there is more that way, so a short sidebar looks exactly as before. |
 
 
 

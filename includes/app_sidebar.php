@@ -103,9 +103,18 @@ function renderAppSidebar(array $modules, $current_module): void
     // repeat the word beside it.
     $tip = fn($s) => $names === 'icons' ? ' title="' . $h($s) . '"' : '';
     ?>
-    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=5">
+    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=7">
     <nav class="app-sidebar app-sidebar--<?php echo $h($names); ?><?php echo appSidebarPrefs()['waffle'] ? '' : ' app-sidebar--nowaffle'; ?>" id="appSidebar" aria-label="<?php echo $h(t('common.sidebar.label')); ?>">
-        <div class="app-sidebar-modules">
+        <?php /* The list scrolls when the modules do not all fit. Only then do the
+                 arrows get a row each, above and below it, so they never cover
+                 a module; each shows while there is more that way. A short
+                 list that fits has neither. Pointer only: a
+                 keyboard tabbing down the links scrolls the list by itself. */ ?>
+        <div class="app-sidebar-scroll">
+        <button type="button" class="app-sidebar-arrow app-sidebar-arrow--up" tabindex="-1" aria-hidden="true" title="<?php echo $h(t('common.sidebar.scroll_top')); ?>" onclick="appSidebarScroll(-1)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>
+        </button>
+        <div class="app-sidebar-modules" id="appSidebarList">
             <?php foreach (appSidebarModules($modules) as $key => $module): ?>
             <a href="<?php echo $h(BASE_URL . $module['path']); ?>" class="app-sidebar-link<?php echo $key === $current_module ? ' current' : ''; ?>"
                <?php echo $tip($module['name']); ?> aria-label="<?php echo $h($module['name']); ?>"<?php echo $key === $current_module ? ' aria-current="page"' : ''; ?>>
@@ -115,6 +124,10 @@ function renderAppSidebar(array $modules, $current_module): void
                 <span class="app-sidebar-name" aria-hidden="true"><?php echo $h($module['name']); ?></span>
             </a>
             <?php endforeach; ?>
+        </div>
+        <button type="button" class="app-sidebar-arrow app-sidebar-arrow--down" tabindex="-1" aria-hidden="true" title="<?php echo $h(t('common.sidebar.scroll_bottom')); ?>" onclick="appSidebarScroll(1)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
         </div>
         <div class="app-sidebar-foot">
             <button type="button" class="app-sidebar-tool" onclick="appSidebarRecent(event)"<?php echo $tip($recent); ?> aria-label="<?php echo $h($recent); ?>">
@@ -151,6 +164,39 @@ function renderAppSidebar(array $modules, $current_module): void
         if (typeof waffleShowTab === 'function') waffleShowTab('recent');
         e.currentTarget.blur();   // or :focus-within holds a hover rail open over the panel
     }
+
+    /**
+     * The scroll arrows: their rows exist only while the list does not fit,
+     * and each arrow shows only while there is more of the list that way -
+     * re-checked on scroll and whenever the sidebar or window changes size.
+     * A click glides to that end (instantly for anyone who asked for less motion).
+     */
+    function appSidebarScroll(dir) {
+        const list = document.getElementById('appSidebarList');
+        if (!list) return;
+        const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        list.scrollTo({ top: dir > 0 ? list.scrollHeight : 0, behavior: still ? 'auto' : 'smooth' });
+    }
+    (function () {
+        const list = document.getElementById('appSidebarList');
+        if (!list) return;
+        const nav = document.getElementById('appSidebar');
+        const up = nav.querySelector('.app-sidebar-arrow--up'), down = nav.querySelector('.app-sidebar-arrow--down');
+        const wrap = list.parentElement;
+        const check = () => {
+            // Measured against the WRAPPER, which holds the arrow rows too: the
+            // list's own height shrinks when the rows appear, and measuring
+            // that would let them flicker on and off at the boundary.
+            wrap.classList.toggle('overflows', list.scrollHeight > wrap.clientHeight + 1);
+            // 2px slack: zoomed screens can stop a fraction short of the end.
+            up.classList.toggle('show', list.scrollTop > 2);
+            down.classList.toggle('show', list.scrollTop + list.clientHeight < list.scrollHeight - 2);
+        };
+        list.addEventListener('scroll', check, { passive: true });
+        if (window.ResizeObserver) { const ro = new ResizeObserver(check); ro.observe(wrap); ro.observe(list); }
+        window.addEventListener('resize', check);
+        check();
+    })();
 
     /**
      * The rail's pin: switch between always open with names ('pinned') and

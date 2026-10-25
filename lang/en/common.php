@@ -55,6 +55,9 @@ return [
         'unpin'     => 'Unpin',
         'pin_tip'   => 'Keep the sidebar open with names',
         'unpin_tip' => 'Open the sidebar only when you point at it',
+        // The arrows that appear when the modules do not all fit (#124).
+        'scroll_top'    => 'Scroll to the top',
+        'scroll_bottom' => 'Scroll to the bottom',
     ],
     'reorder' => [
         'drag'     => 'Drag to move',

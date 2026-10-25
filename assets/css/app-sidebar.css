@@ -59,6 +59,43 @@
     }
     .app-sidebar-modules::-webkit-scrollbar { display: none; }
 
+    /* The scroll arrows (#124): a row each above and below the list, so they
+       never cover a module. Both rows exist only while the list does not fit
+       (.overflows on the wrapper) and stay put while it scrolls, so nothing
+       jumps; each arrow fades in only while there is more that way (.show).
+       The script in app_sidebar.php sets both. The arrow lines up with the
+       module icons: 6px margin + 6px padding + half a 30px tile = 27px. */
+    .app-sidebar-scroll {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+    }
+    .app-sidebar-arrow {
+        display: none;
+        flex: 0 0 24px;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 0 0 19px;
+        border: none;
+        background: none;
+        color: var(--text-muted, #666);
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+    .app-sidebar-scroll.overflows .app-sidebar-arrow { display: flex; }
+    .app-sidebar-arrow.show { opacity: 1; pointer-events: auto; }
+    .app-sidebar-arrow:hover { color: var(--text, #333); }
+    .app-sidebar-arrow svg { width: 16px; height: 16px; }
+    @media (prefers-reduced-motion: reduce) {
+        .app-sidebar-arrow { transition: none; }
+    }
+
     /* Icon and name sit at the same place narrow or wide - the icon never
        moves when the rail opens, the name is simply uncovered. */
     .app-sidebar-link {
