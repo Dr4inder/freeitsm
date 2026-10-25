@@ -173,6 +173,7 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
                 <div><select data-k="domain_dns_resolver">
                     <option value="auto"><?php echo $tt('rs_auto'); ?></option>
                     <option value="system"><?php echo $tt('rs_system'); ?></option>
+                    <option value="system_only"><?php echo $tt('rs_system_only'); ?></option>
                     <option value="google"><?php echo $tt('rs_google'); ?></option>
                     <option value="cloudflare"><?php echo $tt('rs_cloudflare'); ?></option></select><div class="dflt" data-d="domain_dns_resolver"></div></div></div>
             <div class="set-row"><div><div class="lbl"><?php echo $tt('ct'); ?></div><div class="desc"><?php echo $tt('ct_desc'); ?></div></div>

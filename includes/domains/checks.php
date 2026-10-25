@@ -63,9 +63,12 @@ function domainRunChecks(array $d, array $settings): array
     //   its resolver reported every domain as having no SPF and no DMARC
     //   (reported by a user, October 2026: both records were there).
     $failed = [];
-    $ask = function (string $q, string $type) use ($resolver, &$failed): array {
+    $unsupported = [];   // record types this-server-only could not ask (GH #203)
+    $ask = function (string $q, string $type) use ($resolver, &$failed, &$unsupported): array {
         $r = domainDns($q, $type, $resolver);
-        if (!$r['ok']) $failed["$type $q"] = (string)$r['error'];
+        // Unsupported (this-server-only, GH #203) is not a failure: it must not hold back the grade.
+        if (!$r['ok'] && empty($r['unsupported'])) $failed["$type $q"] = (string)$r['error'];
+        if (!empty($r['unsupported'])) $unsupported[$type] = true;
         return $r;
     };
     $txt = function (string $q, string $prefix) use ($ask): ?array {
@@ -146,8 +149,10 @@ function domainRunChecks(array $d, array $settings): array
         else $dsName = $parent;
     }
     if ($dnssec === null) {
+        // 'system' asks Google for DS, as it always has; 'system_only' never leaves this server.
         $ds = domainDns($dsName, 'DS', $resolver === 'system' ? 'google' : $resolver);
         if ($ds['ok']) $dnssec = (bool)$ds['records'];
+        elseif (!empty($ds['unsupported'])) $unsupported['DS'] = true;
     }
     if ($dnssec === true)                         $add('dnssec_on', 'dns', 'pass');
     elseif ($dnssec === false && $isLive)         $add('dnssec_off', 'dns', 'warn', 4);
@@ -324,6 +329,14 @@ function domainRunChecks(array $d, array $settings): array
             $soonest = $c['valid_to'];
             $soonestIssuer = $c['issuer'];
         }
+    }
+
+    // ------------------------------------------------------------------ lookups not made
+    // GH #203: with "this server only", record types that need DNS-over-HTTPS are not
+    // asked at all. Said once, as information - those checks are simply not done here,
+    // which is neither a failure nor a pass, and costs the domain nothing.
+    if ($unsupported) {
+        $add('dns_server_only', 'dns', 'info', 0, ['types' => implode(', ', array_keys($unsupported))]);
     }
 
     // ------------------------------------------------------------------ lookups that failed

@@ -88,5 +88,43 @@ if (in_array('dns_lookup_failed', $k, true)) {
     ok('...and it is graded', $res['grade'] !== null && is_int($res['score']));
 }
 
+// ---------------------------------------------------------------- GH #203
+// "This server only": an internal name must never be sent to a public DNS service -
+// not as the first lookup, not as a fallback when this server cannot answer, and not
+// for the record types (DS, DNSKEY) that otherwise ALWAYS go over DNS-over-HTTPS.
+echo "\nTHIS SERVER ONLY (GH #203) - nothing is sent to Google or Cloudflare\n";
+$public = fn(array $urls) => array_values(array_filter($urls, fn($u) => preg_match('#dns\.google|cloudflare-dns|1\.1\.1\.1|8\.8\.8\.8#', $u)));
+$internal = 'zz-internal-' . bin2hex(random_bytes(4)) . '.corp.invalid';   // cannot exist anywhere
+
+// The control: with 'the server's own resolver', a DS question goes to Google every
+// time - the leak #203 reported, and proof this trace can see one. (Its other route out,
+// the fallback when this server's resolver FAILS, cannot be forced here: a name that does
+// not exist gets a clean NXDOMAIN, which is an answer, not a failure.)
+$GLOBALS['DOMAIN_HTTP_TRACE'] = [];
+domainDns($internal, 'DS', 'system');
+ok("CONTROL: 'the server's own resolver' sends a DS question to Google - the leak #203 reported",
+   (bool)$public($GLOBALS['DOMAIN_HTTP_TRACE']), json_encode($GLOBALS['DOMAIN_HTTP_TRACE']));
+
+$GLOBALS['DOMAIN_HTTP_TRACE'] = [];
+$r = domainDns($internal . '.', 'A', 'system_only');
+ok("'this server only': the same failed lookup is NOT sent anywhere", $GLOBALS['DOMAIN_HTTP_TRACE'] === [], json_encode($GLOBALS['DOMAIN_HTTP_TRACE']));
+ok('...and it stays an honest failure or a no-such-name, never an invented answer', !$r['ok'] || $r['nxdomain'] || $r['records'] === [], json_encode($r));
+
+$GLOBALS['DOMAIN_HTTP_TRACE'] = [];
+$ds = domainDns('google.com', 'DS', 'system_only');
+ok("DS (always DNS-over-HTTPS before) is not asked: unsupported, not failed", !$ds['ok'] && !empty($ds['unsupported']) && $GLOBALS['DOMAIN_HTTP_TRACE'] === [], json_encode($ds));
+
+$GLOBALS['DOMAIN_HTTP_TRACE'] = [];
+$res = domainRunChecks($row('google.com'), ['domain_dns_resolver' => 'system_only', 'domain_ssl_warn_days' => 21]);
+$k = $keys($res);
+ok('a full check run calls no public DNS service', !$public($GLOBALS['DOMAIN_HTTP_TRACE']), json_encode($public($GLOBALS['DOMAIN_HTTP_TRACE'])));
+ok('DNSSEC is reported as not checked, once, as information', in_array('dns_server_only', $k, true), implode(',', $k));
+if (in_array('dns_lookup_failed', $k, true)) {
+    skip('graded despite the types it could not ask', "this machine's own resolver cannot reach DNS just now");
+} else {
+    ok('...and the domain is still graded - "not checked" never withholds the grade', $res['grade'] !== null, implode(',', $k));
+}
+unset($GLOBALS['DOMAIN_HTTP_TRACE']);
+
 echo "\n" . str_repeat('=', 72) . "\n$pass passed, $fail failed" . ($skip ? ", $skip skipped" : '') . "\n";
 exit($fail ? 1 : 0);

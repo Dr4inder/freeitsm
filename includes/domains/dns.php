@@ -30,9 +30,14 @@ require_once __DIR__ . '/lookup.php';   // domainHttpGet()
  *
  * @param string $name      the DNS name to ask about, e.g. 'example.com' or '_dmarc.example.com'
  * @param string $type      record type - A, AAAA, NS, CNAME, MX, TXT, CAA, DS or DNSKEY (any case)
- * @param string $resolver  auto | system | google | cloudflare (the domain_dns_resolver setting); '' means auto
+ * @param string $resolver  auto | system | system_only | google | cloudflare (the domain_dns_resolver setting); '' means auto.
+ *                          system_only (GH #203): this server's resolver and NOTHING else - no DoH, no
+ *                          fallback, so an internal name is never sent to Google or Cloudflare. A record
+ *                          type that needs DoH comes back unsupported (see the return), not failed.
  *
- * @return array{ok:bool, nxdomain:bool, records:array, error:?string}
+ * @return array{ok:bool, nxdomain:bool, records:array, error:?string, unsupported?:bool}
+ *   unsupported: true when system_only cannot ask this type at all - a check to say "not
+ *   checked" about, never a failed lookup (which would hold back the grade) or a missing record.
  *   records: A/AAAA → list of IPs; NS/CNAME → host names; MX → [[pri, host]];
  *   TXT → strings; CAA → [[flags, tag, value]]; DS → [string] (presence is what matters)
  */
@@ -44,12 +49,22 @@ function domainDns(string $name, string $type, string $resolver = 'system'): arr
 
     $type = strtoupper($type);
     $auto = ($resolver === 'auto' || $resolver === '');
+    // GH #203: "this server only" - the system resolver with every public route closed.
+    $serverOnly = $resolver === 'system_only';
+    if ($serverOnly) $resolver = 'system';
     if ($auto) {
         $resolver = (PHP_OS_FAMILY === 'Windows') ? 'google' : 'system';
     }
     $useDoh = $resolver !== 'system'
            || in_array($type, ['DS', 'DNSKEY'], true)
            || ($type === 'CAA' && !defined('DNS_CAA'));
+
+    if ($serverOnly && $useDoh) {
+        // DS, DNSKEY and (where PHP lacks DNS_CAA) CAA can only be asked over DoH. Asked,
+        // they would leave this server - so they are not asked.
+        return $cache[$key] = ['ok' => false, 'nxdomain' => false, 'records' => [], 'unsupported' => true,
+            'error' => "This server's resolver cannot look up $type records, and Domains is set to use only this server."];
+    }
 
     $res = $useDoh
         ? domainDnsDoh($name, $type, $resolver === 'cloudflare' ? 'cloudflare' : 'google')
@@ -61,7 +76,7 @@ function domainDns(string $name, string $type, string $resolver = 'system'): arr
     // then the server's own resolver: a network that blocks one DNS-over-HTTPS
     // service - school and corporate filters often do - must not leave every
     // check answered by a failure. An explicitly chosen DoH service is respected.
-    if (!$res['ok']) {
+    if (!$res['ok'] && !$serverOnly) {   // this-server-only: a failure stays a failure, never asked elsewhere
         $tries = !$useDoh ? ['google'] : ($auto ? ['cloudflare', 'system'] : []);
         foreach ($tries as $alt) {
             $next = $alt === 'system' ? domainDnsSystem($name, $type) : domainDnsDoh($name, $type, $alt);

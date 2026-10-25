@@ -222,7 +222,7 @@ if (!defined('DOMAIN_SETTINGS_LOADED')) {
                 if (!in_array($v, ['always', 'blanks'], true)) throw new InvalidArgumentException('Choose how a lookup treats typed values.');
                 return $v;
             case $rule === 'resolver':
-                if (!in_array($v, ['auto', 'system', 'google', 'cloudflare'], true)) throw new InvalidArgumentException('Choose a DNS resolver.');
+                if (!in_array($v, ['auto', 'system', 'system_only', 'google', 'cloudflare'], true)) throw new InvalidArgumentException('Choose a DNS resolver.');
                 return $v;
             case $rule === 'days':
                 $days = domainParseDays($v);

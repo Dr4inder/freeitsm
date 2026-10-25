@@ -63,6 +63,9 @@ function domainHttpGet(string $url, string $accept = 'application/json', int $ti
         CURLOPT_USERAGENT      => DOMAIN_HTTP_UA,
     ]);
     if (function_exists('sslApplyCurl')) sslApplyCurl($ch);
+    // Tests set this to an array to see every address Domains calls - how
+    // tests/domains-dns-failures.php proves "this server only" calls nothing (GH #203).
+    if (isset($GLOBALS['DOMAIN_HTTP_TRACE']) && is_array($GLOBALS['DOMAIN_HTTP_TRACE'])) $GLOBALS['DOMAIN_HTTP_TRACE'][] = $url;
     $body = curl_exec($ch);
     $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $err  = curl_error($ch);
