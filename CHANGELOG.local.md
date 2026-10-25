@@ -15,6 +15,9 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
 | 2571 | System            | Feature     | **Hide the waffle button when the sidebar is on** (discussion #124, Kraleemil): Preferences -> Display -> Sidebar -> Waffle button, Show (default) / Hide. New `app_sidebar_waffle` preference (`hide`, absent = show), carried by Preference Templates. Only the button is hidden, and only above 768px - the panel stays for the rail's Recent button, and a phone (no rail) always keeps the waffle. |
+| 2572 | System            | Fix         | **Recent on the sidebar was hidden behind the sidebar** with module names set to open on hover: the click left the button focused, which held the rail open over the panel. The rail now lets go of focus and stays narrow while the panel is open. |
+| 2573 | System            | Improvement | **Recent opened from the sidebar sits beside the sidebar**, at the bottom left by its Recent button, instead of up under the waffle button. The waffle button still opens the panel in its usual place. |
+| 2574 | System            | Improvement | **The waffle panel stands out in dark mode**: it had the same background as the page and a black shadow that did not show, so it blended into the screen behind. In dark mode it now has a slightly lighter background, a border edge and a deeper shadow. |
 
 
 

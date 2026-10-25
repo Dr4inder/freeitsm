@@ -103,7 +103,7 @@ function renderAppSidebar(array $modules, $current_module): void
     // repeat the word beside it.
     $tip = fn($s) => $names === 'icons' ? ' title="' . $h($s) . '"' : '';
     ?>
-    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=4">
+    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=5">
     <nav class="app-sidebar app-sidebar--<?php echo $h($names); ?><?php echo appSidebarPrefs()['waffle'] ? '' : ' app-sidebar--nowaffle'; ?>" id="appSidebar" aria-label="<?php echo $h(t('common.sidebar.label')); ?>">
         <div class="app-sidebar-modules">
             <?php foreach (appSidebarModules($modules) as $key => $module): ?>
@@ -143,8 +143,13 @@ function renderAppSidebar(array $modules, $current_module): void
         e.stopPropagation();
         if (typeof toggleWaffleMenu !== 'function') return;
         const panel = document.getElementById('wafflePanel');
-        if (!panel || !panel.classList.contains('active')) toggleWaffleMenu();
+        if (!panel) return;
+        // Opened from the rail it sits by the rail's Recent button, bottom left,
+        // not up under the waffle; closeWaffleMenu() takes the class off again.
+        panel.classList.add('waffle-panel--rail');
+        if (!panel.classList.contains('active')) toggleWaffleMenu();
         if (typeof waffleShowTab === 'function') waffleShowTab('recent');
+        e.currentTarget.blur();   // or :focus-within holds a hover rail open over the panel
     }
 
     /**

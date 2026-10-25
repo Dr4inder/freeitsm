@@ -37,6 +37,14 @@
        opens it at once. */
     .app-sidebar--hover:hover { width: 220px; transition-delay: 0.2s; box-shadow: 4px 0 16px var(--shadow, rgba(0,0,0,0.15)); }
     .app-sidebar--hover:focus-within { width: 220px; box-shadow: 4px 0 16px var(--shadow, rgba(0,0,0,0.15)); }
+    /* TRAP: the rail (z-index 1500) sits above the waffle panel (1000), so a
+       hover rail opened wide would cover the panel's left edge - Recent on the
+       rail opens that panel right beside it. Stay narrow while it is open. */
+    body:has(#wafflePanel.active) .app-sidebar--hover { width: 54px; box-shadow: none; }
+    /* Recent opened from the rail (#124): the waffle panel moves down beside
+       the rail's Recent button instead of hanging under the waffle. */
+    #wafflePanel.waffle-panel--rail { position: fixed; top: auto; bottom: 8px; left: 62px; margin-top: 0; max-height: calc(100vh - 16px); }
+    body:has(.app-sidebar--pinned) #wafflePanel.waffle-panel--rail { left: 228px; }
 
     .app-sidebar-modules {
         display: flex;

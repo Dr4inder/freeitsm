@@ -261,6 +261,13 @@ $modules = [
         display: block;
     }
 
+    /* Dark mode: same colour as the page and a black shadow on a dark page left
+       the panel with no edge - lift it with a lighter surface and a border. */
+    [data-theme="dark"] .waffle-panel {
+        background: var(--surface-2);
+        box-shadow: 0 0 0 1px var(--border), 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+
     .waffle-panel-header {
         font-size: 14px;
         font-weight: 600;
@@ -890,7 +897,8 @@ function renderWaffleMenuJS() {
     }
 
     function closeWaffleMenu() {
-        document.getElementById('wafflePanel').classList.remove('active');
+        // waffle-panel--rail: opened from the sidebar's Recent (#124); the next open may be the waffle's own.
+        document.getElementById('wafflePanel').classList.remove('active', 'waffle-panel--rail');
         document.getElementById('waffleOverlay').classList.remove('active');
     }
 
