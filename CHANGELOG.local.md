@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2593 | Tickets           | Fix         | **"Expand the newest message" expanded the oldest one** on a long ticket: the thread is rendered newest first, but `mcSweep()` treated the LAST message as the newest, so the customer's latest reply was the one collapsed. Now the first. Found while mapping inbox.js for its developer guide; the same newest-first mistake was fixed for message folding on 4 October (#2157). inbox.js v=158. |
 
 
 

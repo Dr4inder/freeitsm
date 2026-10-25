@@ -1040,7 +1040,7 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../checklists/search_scoring.js?v=1"></script>
     <script src="../checklists/ticket_view.js?v=10"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
-    <script src="../assets/js/inbox.js?v=157"></script>
+    <script src="../assets/js/inbox.js?v=158"></script>
     <script src="../assets/js/mobile.js?v=82"></script>
     <script>
     // Auto-check mailboxes every 60 seconds - and refresh the inbox whenever

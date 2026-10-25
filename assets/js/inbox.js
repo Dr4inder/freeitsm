@@ -315,13 +315,18 @@ function tgGroupOlder(container) {
             : t('tickets.reading.hide_older');
     });
 }
-/* Sweep a freshly rendered thread. The LAST message host is the newest —
-   the thread renders oldest-first — and is the one that stays open. */
+/* Sweep a freshly rendered thread. The FIRST message host is the newest and is
+   the one "Expand the newest message" keeps open.
+   TRAP: the thread renders NEWEST FIRST (loadCorrespondenceThread reverses it -
+   see the TRAP in tgGroupOlder). This said "the LAST host is the newest" until
+   4.0.1, so with that setting on, a long ticket opened with its OLDEST message
+   expanded and the customer's latest reply collapsed. The single-email view has
+   one host, which is index 0 either way. */
 function mcSweep(root) {
     if (!MC.collapse_enabled || !root || !root.querySelectorAll) return;
     const hosts = root.querySelectorAll('.thread-message-body, .email-body-content');
     hosts.forEach((h, i) => mcApply(h, {
-        newest: i === hosts.length - 1,
+        newest: i === 0,
         id: h.closest('[data-email-id]') ? h.closest('[data-email-id]').getAttribute('data-email-id') : ''
     }));
 }
