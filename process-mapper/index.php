@@ -507,9 +507,9 @@ try {
     <!-- Vendored locally so PNG/PDF export works offline and doesn't depend on a
          CDN at print time. Same versions used by Network Mapper (#257). -->
     <script src="../assets/js/vendor/html2canvas.min.js"></script>
-    <script src="../assets/js/vendor/jspdf.umd.min.js"></script>
+    <script src="../assets/js/vendor/jspdf.umd.min.js?v=4.2.1"></script>
     <script src="../assets/js/hover-preview.js?v=1"></script>
     <script src="../assets/js/process-mapper.js?v=20"></script>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

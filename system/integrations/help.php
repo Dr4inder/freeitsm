@@ -499,6 +499,6 @@ $sections = $isMsteams ? [
             });
         });
     </script>
-    <script src="<?php echo $assetBase; ?>assets/js/mobile.js?v=82"></script>
+    <script src="<?php echo $assetBase; ?>assets/js/mobile.js?v=83"></script>
 </body>
 </html>

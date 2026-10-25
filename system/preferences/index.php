@@ -1115,7 +1115,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
     <script src="../../assets/js/reorder-list.js?v=1"></script>
     <script src="../../assets/js/qrcode.min.js"></script>
     <script src="../../assets/js/subscribe.js?v=1"></script>
-    <script src="../../assets/js/tinymce/tinymce.min.js"></script>
+    <script src="../../assets/js/tinymce/tinymce.min.js?v=8.10.0"></script>
     <script>
         // Initial preference values pre-fetched server-side. The page
         // hydrates UI controls from these instead of localStorage.
@@ -1822,6 +1822,9 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             if (sigEditor || typeof tinymce === 'undefined') return Promise.resolve();
             const isDark = (document.documentElement.getAttribute('data-theme-mode') || 'light') === 'dark';
             return tinymce.init({
+                // Plugins and skins load without the page's ?v=, so a browser could pair a new
+                // editor with old cached plugins after an update. TinyMCE's own version stamps them.
+                cache_suffix: '?v=' + tinymce.majorVersion + '.' + tinymce.minorVersion,
                 selector: '#sigBody',
                 license_key: 'gpl',
                 height: 220,
@@ -2378,6 +2381,6 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
 
         document.addEventListener('DOMContentLoaded', loadSignatures);
     </script>
-    <script src="../../assets/js/mobile.js?v=82"></script>
+    <script src="../../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

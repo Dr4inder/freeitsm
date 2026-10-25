@@ -123,7 +123,7 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="../assets/css/record-preview.css?v=1">
     <script src="../assets/js/record-preview.js?v=1"></script>
-    <script src="../assets/js/tinymce/tinymce.min.js"></script>
+    <script src="../assets/js/tinymce/tinymce.min.js?v=8.10.0"></script>
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
 </head>
 <body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>"<?php echo $tasksReadOnly ? ' class="module-read-only"' : ''; ?>>
@@ -417,7 +417,7 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../assets/js/tasks-ctx-menu.js?v=5"></script>
     <!-- The one cleaner for HTML from elsewhere: Knowledge procedure bodies and task instructions in the Work view (GH #190). -->
     <script src="../assets/js/safe-html.js?v=4"></script>
-    <script src="../assets/js/tasks.js?v=68"></script>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/tasks.js?v=69"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

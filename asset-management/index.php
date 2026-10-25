@@ -5342,6 +5342,6 @@ $translationNamespaces = ['common', 'asset-management'];
     <script>window.ASSET_LAYOUT_NOTICE = <?php echo json_encode(AssetTypeLayout::noticeMode(connectToDatabase())); ?>;</script>
     <script>window.ASSET_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.APP_BASE = window.APP_BASE || <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="../assets/js/project-links.js?v=1"></script>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

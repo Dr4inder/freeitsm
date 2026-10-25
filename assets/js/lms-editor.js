@@ -54,6 +54,9 @@ const LMSEditor = (() => {
         // at init; an editor is not rebuilt on resize.
         const isPhone = window.matchMedia('(max-width: 768px)').matches;
         tinymce.init({
+            // Plugins and skins load without the page's ?v=, so a browser could pair a new
+            // editor with old cached plugins after an update. TinyMCE's own version stamps them.
+            cache_suffix: '?v=' + tinymce.majorVersion + '.' + tinymce.minorVersion,
             selector: '#lessonBody',
             license_key: 'gpl',
             height: 420,

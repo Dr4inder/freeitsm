@@ -142,6 +142,6 @@ $translationNamespaces = ['common', 'workflow'];
     </div>
 
     <script src="../assets/js/workflow-executions.js?v=3"></script>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

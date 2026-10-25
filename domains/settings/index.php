@@ -441,6 +441,6 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
         document.addEventListener('DOMContentLoaded', () => { loadSettings().catch(e => showToast(e.message, 'error')); loadStatuses().catch(() => {}); loadCertTypes().catch(() => {}); });
     })();
     </script>
-    <script src="../../assets/js/mobile.js?v=82"></script>
+    <script src="../../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

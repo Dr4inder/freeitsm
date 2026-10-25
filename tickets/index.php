@@ -52,7 +52,7 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="../assets/css/record-preview.css?v=1">
     <script src="../assets/js/record-preview.js?v=1"></script>
-    <script src="../assets/js/tinymce/tinymce.min.js"></script>
+    <script src="../assets/js/tinymce/tinymce.min.js?v=8.10.0"></script>
 </head>
 <body class="inbox-page">
     <?php include 'includes/header.php'; ?>
@@ -1040,8 +1040,8 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../checklists/search_scoring.js?v=1"></script>
     <script src="../checklists/ticket_view.js?v=10"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
-    <script src="../assets/js/inbox.js?v=158"></script>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/inbox.js?v=159"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
     <script>
     // Auto-check mailboxes every 60 seconds - and refresh the inbox whenever
     // ANYTHING new has arrived, however it came in.

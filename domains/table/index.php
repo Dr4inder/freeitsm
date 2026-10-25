@@ -54,6 +54,6 @@ $dtSearchPlaceholder = t('domains.table.search');
     <script src="../../assets/js/domains.js?v=2"></script>
     <script src="../../assets/js/data-table.js?v=6"></script>
     <script src="../../assets/js/domains-table.js?v=3"></script>
-    <script src="../../assets/js/mobile.js?v=82"></script>
+    <script src="../../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

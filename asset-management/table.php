@@ -80,8 +80,8 @@ try {
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
     <!-- jsPDF + autotable (same versions as morning-checks) for PDF export -->
-    <script src="../assets/js/vendor/jspdf.umd.min.js"></script>
-    <script src="../assets/js/vendor/jspdf.plugin.autotable.min.js"></script>
+    <script src="../assets/js/vendor/jspdf.umd.min.js?v=4.2.1"></script>
+    <script src="../assets/js/vendor/jspdf.plugin.autotable.min.js?v=5.0.9"></script>
     <?php /* Mobile-friendly opt-in (#937). Last stylesheet so its @media rules
              win on ties. Every rule inside is gated at 768px. */ ?>
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
@@ -134,6 +134,6 @@ try {
     <script src="../assets/js/data-table.js?v=6"></script>
     <script src="../assets/js/asset-table.js?v=11"></script>
     <?php /* Loaded last so it can wrap this page's globals; inert on desktop. */ ?>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

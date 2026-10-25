@@ -786,6 +786,9 @@
                 if (!liveEditor(area.id) && window.tinymce) {
                     var dark = (document.documentElement.getAttribute('data-theme-mode') || 'light') === 'dark';
                     window.tinymce.init({
+                        // Plugins and skins load without the page's ?v=, so a browser could pair a new
+                        // editor with old cached plugins after an update. TinyMCE's own version stamps them.
+                        cache_suffix: '?v=' + window.tinymce.majorVersion + '.' + window.tinymce.minorVersion,
                         selector: '#' + area.id,
                         license_key: 'gpl',
                         menubar: false,

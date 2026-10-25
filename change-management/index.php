@@ -33,7 +33,7 @@ $translationNamespaces = ['common', 'change-management'];
     <script src="<?php echo BASE_URL; ?>assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/record-preview.css?v=1">
     <script src="<?php echo BASE_URL; ?>assets/js/record-preview.js?v=1"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/tinymce/tinymce.min.js"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/tinymce/tinymce.min.js?v=8.10.0"></script>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/project-links.css?v=1">
 </head>
 <?php $cmLevel = analystModuleLevel(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0), 'changes'); /* #180: 'full' or 'read' */ ?>
@@ -566,8 +566,11 @@ $translationNamespaces = ['common', 'change-management'];
         </div>
     </div>
 
-    <!-- html2pdf for PDF generation -->
-    <script src="../assets/js/vendor/html2pdf.bundle.min.js"></script>
+    <!-- PDF of a change: html2canvas draws it, jsPDF pages it (changePdfDocument() in
+         change-management.js). html2pdf did this until 4.1.0, carrying its own older
+         copy of jsPDF; now there is one jsPDF on the install, and it is current. -->
+    <script src="../assets/js/vendor/html2canvas.min.js"></script>
+    <script src="../assets/js/vendor/jspdf.umd.min.js?v=4.2.1"></script>
     <script>
         window.API_BASE = '<?php echo BASE_URL; ?>api/change-management/';
         <?php if (!empty($openCreateOnLoad)): ?>
@@ -584,7 +587,7 @@ $translationNamespaces = ['common', 'change-management'];
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/safe-html.js?v=4"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/change-revisions.js?v=3"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=32"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=82"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=34"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=83"></script>
 </body>
 </html>

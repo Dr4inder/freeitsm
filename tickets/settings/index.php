@@ -141,7 +141,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
     <!-- Reply templates are rich text, so this page needs the same editor the reply
          box uses. Loaded for every tab because the tab bar is server-rendered and
          there is no navigation event to lazy-load on. -->
-    <script src="../../assets/js/tinymce/tinymce.min.js"></script>
+    <script src="../../assets/js/tinymce/tinymce.min.js?v=8.10.0"></script>
     <style>
         /* Page-specific overrides for settings page */
 
@@ -7574,6 +7574,9 @@ function renderOversizeFields(string $px, bool $withLimits): void
             if (templateBodyEditor || !document.getElementById('templateBody')) return;
             const isDark = (document.documentElement.getAttribute('data-theme-mode') || 'light') === 'dark';
             tinymce.init({
+                // Plugins and skins load without the page's ?v=, so a browser could pair a new
+                // editor with old cached plugins after an update. TinyMCE's own version stamps them.
+                cache_suffix: '?v=' + tinymce.majorVersion + '.' + tinymce.minorVersion,
                 selector: '#templateBody',
                 license_key: 'gpl',
                 height: 300,
@@ -7731,6 +7734,9 @@ function renderOversizeFields(string $px, bool $withLimits): void
             if (replyTemplateEditor || !document.getElementById('replyTemplateBody')) return;
             const isDark = (document.documentElement.getAttribute('data-theme-mode') || 'light') === 'dark';
             tinymce.init({
+                // Plugins and skins load without the page's ?v=, so a browser could pair a new
+                // editor with old cached plugins after an update. TinyMCE's own version stamps them.
+                cache_suffix: '?v=' + tinymce.majorVersion + '.' + tinymce.minorVersion,
                 selector: '#replyTemplateBody',
                 license_key: 'gpl',
                 height: 300,
@@ -9451,6 +9457,6 @@ function renderOversizeFields(string $px, bool $withLimits): void
     </script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
-    <script src="../../assets/js/mobile.js?v=82"></script>
+    <script src="../../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

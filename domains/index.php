@@ -204,6 +204,6 @@ $translationNamespaces = ['common', 'domains'];
 
     <script src="../assets/js/domains.js?v=2"></script>
     <script src="../assets/js/domains-register.js?v=3"></script>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

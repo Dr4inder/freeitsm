@@ -2128,6 +2128,9 @@ function renderDetailPanel(task) {
     // palette works with no change here.
     const tinyDark = (document.documentElement.getAttribute('data-theme-mode') || 'light') === 'dark';
     tinymce.init({
+        // Plugins and skins load without the page's ?v=, so a browser could pair a new
+        // editor with old cached plugins after an update. TinyMCE's own version stamps them.
+        cache_suffix: '?v=' + tinymce.majorVersion + '.' + tinymce.minorVersion,
         target: document.getElementById('descriptionEditor'),
         license_key: 'gpl',
         menubar: false,

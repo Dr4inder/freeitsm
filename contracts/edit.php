@@ -34,7 +34,7 @@ $contract_id = $_GET['id'] ?? null;
     <script src="../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <script src="../assets/js/tinymce/tinymce.min.js"></script>
+    <script src="../assets/js/tinymce/tinymce.min.js?v=8.10.0"></script>
     <style>
         /* Full-screen layout with sidebar - matches contracts dashboard */
         body { --accent: var(--con-accent, #f59e0b); }
@@ -899,6 +899,9 @@ $contract_id = $_GET['id'] ?? null;
             const tinyIsPhone = window.matchMedia('(max-width: 768px)').matches;
             termEditorIds.forEach(id => {
                 tinymce.init({
+                    // Plugins and skins load without the page's ?v=, so a browser could pair a new
+                    // editor with old cached plugins after an update. TinyMCE's own version stamps them.
+                    cache_suffix: '?v=' + tinymce.majorVersion + '.' + tinymce.minorVersion,
                     selector: '#' + id,
                     license_key: 'gpl',
                     height: 300,
@@ -967,6 +970,6 @@ $contract_id = $_GET['id'] ?? null;
         }
 
     </script>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

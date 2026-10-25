@@ -834,6 +834,9 @@ function initTinyMCE() {
     const isDark = (document.documentElement.getAttribute('data-theme-mode') || 'light') === 'dark';
 
     tinymce.init({
+        // Plugins and skins load without the page's ?v=, so a browser could pair a new
+        // editor with old cached plugins after an update. TinyMCE's own version stamps them.
+        cache_suffix: '?v=' + tinymce.majorVersion + '.' + tinymce.minorVersion,
         selector: '#emailBody',
         license_key: 'gpl',
         height: 440,   // was 350: the Message label row and the To/Cc label rows were removed to give it this room (2.10.0)

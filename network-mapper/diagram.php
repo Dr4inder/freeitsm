@@ -1657,7 +1657,7 @@ $translationNamespaces = ['common', 'network-mapper'];
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
     <script src="../assets/js/vendor/html2canvas.min.js"></script>
-    <script src="../assets/js/vendor/jspdf.umd.min.js"></script>
+    <script src="../assets/js/vendor/jspdf.umd.min.js?v=4.2.1"></script>
     <script src="../assets/js/network-mapper-icons.js"></script>
     <script src="../assets/js/network-mapper.js?v=5"></script>
     <script>
@@ -1711,6 +1711,6 @@ $translationNamespaces = ['common', 'network-mapper'];
     </script>
     <!-- After network-mapper.js, so mobile.js can read/wrap the globals it
          exposes rather than edit it (Techniques §1). -->
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

@@ -324,7 +324,22 @@ if (!is_string($tiny) || !preg_match('/majorVersion:"(\d+)",minorVersion:"([\d.]
     $version = $m[1] . '.' . $m[2];
     check("bundled TinyMCE is 8.5.1 or later (CVE-2026-47759/60/61/62 fixed in 8.5.1)",
           version_compare($version, '8.5.1', '>='), "found $version");
+    // 8.9.3 fixed a stored XSS in the media plugin, which the Inbox and Knowledge
+    // editors switch on.
+    check("bundled TinyMCE is 8.9.3 or later (media plugin stored XSS fixed in 8.9.3)",
+          version_compare($version, '8.9.3', '>='), "found $version");
 }
+
+// The other bundled libraries with published fixes FreeITSM depends on (4.1.0).
+$jspdf = @file_get_contents("$APP/assets/js/vendor/jspdf.umd.min.js");
+$jv = (is_string($jspdf) && preg_match('/Version (\d+\.\d+\.\d+)/', $jspdf, $m)) ? $m[1] : '0';
+check("bundled jsPDF is 4.2.1 or later (CVE-2025-68428, CVE-2026-24737, CVE-2026-25940, CVE-2026-31938)",
+      version_compare($jv, '4.2.1', '>='), "found $jv");
+$prism = @file_get_contents("$APP/assets/js/vendor/prism.min.js");
+check("bundled Prism has the CVE-2024-53382 fix (1.30.0: currentScript must be a SCRIPT)",
+      is_string($prism) && str_contains($prism, '"SCRIPT"===document.currentScript.tagName'));
+check("no second copy of jsPDF is bundled (html2pdf carried its own until 4.1.0)",
+      !is_file("$APP/assets/js/vendor/html2pdf.bundle.min.js"));
 check("VENDOR.md exists so a scanner-invisible dependency is at least written down",
       is_file("$APP/VENDOR.md"));
 $vendor = (string)@file_get_contents("$APP/VENDOR.md");

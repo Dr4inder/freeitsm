@@ -444,8 +444,8 @@ $translationNamespaces = ['common', 'morning-checks'];
     </div>
 
     <script src="../assets/js/vendor/chart.umd.min.js"></script>
-    <script src="../assets/js/vendor/jspdf.umd.min.js"></script>
-    <script src="../assets/js/vendor/jspdf.plugin.autotable.min.js"></script>
+    <script src="../assets/js/vendor/jspdf.umd.min.js?v=4.2.1"></script>
+    <script src="../assets/js/vendor/jspdf.plugin.autotable.min.js?v=5.0.9"></script>
     <script>
         const API_BASE = '../api/morning-checks/';
         const TICKETS_API = '../api/tickets/';
@@ -1462,6 +1462,6 @@ $translationNamespaces = ['common', 'morning-checks'];
     <!-- The mobile layer's JS: gives this page the views hamburger (top right)
          and moves the page controls into that drawer on a phone. Loaded last so
          it can wrap the page's own globals rather than edit them. -->
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

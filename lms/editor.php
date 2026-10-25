@@ -56,7 +56,7 @@ $translationNamespaces = ['common', 'lms'];
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
-    <script src="../assets/js/tinymce/tinymce.min.js"></script>
+    <script src="../assets/js/tinymce/tinymce.min.js?v=8.10.0"></script>
 </head>
 <body data-mobile-module="lms">
     <?php include 'includes/header.php'; ?>
@@ -250,7 +250,7 @@ $translationNamespaces = ['common', 'lms'];
             'pass_mark'   => $course['pass_mark'] === null ? null : (int)$course['pass_mark'],
         ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;
     </script>
-    <script src="../assets/js/lms-editor.js?v=5"></script>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/lms-editor.js?v=6"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

@@ -1175,6 +1175,6 @@ $translationNamespaces = ['common', 'asset-management'];
         });
     </script>
     <?php /* Loaded last so it can wrap this page's globals; inert on desktop. */ ?>
-    <script src="../../assets/js/mobile.js?v=82"></script>
+    <script src="../../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

@@ -341,6 +341,6 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
     })();
     </script>
     <script src="../../assets/js/tz.js?v=5"></script>
-    <script src="../../assets/js/mobile.js?v=82"></script>
+    <script src="../../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

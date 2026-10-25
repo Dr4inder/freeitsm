@@ -426,6 +426,6 @@ if ($wfCompanyPicker) {
     </script>
     <script src="../checklists/search_scoring.js?v=1"></script>
     <script src="../assets/js/workflow-editor.js?v=22"></script>
-    <script src="../assets/js/mobile.js?v=82"></script>
+    <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>
