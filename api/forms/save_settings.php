@@ -34,9 +34,9 @@ try {
 
     // key => the capability that may write it.
     $allowed = [
-        'logo_alignment'          => Cap::FORMS_LAYOUT,
-        'collection_close_effect' => Cap::FORMS_COLLECTIONS,
-        'design_restricted'       => Cap::FORMS_ACCESS,   // who may design forms (#180)
+        'logo_alignment'          => Cap::FORMS_LAYOUT->value,
+        'collection_close_effect' => Cap::FORMS_COLLECTIONS->value,
+        'design_restricted'       => Cap::FORMS_ACCESS->value,   // who may design forms (#180)
     ];
     $validAlignments = ['left', 'center', 'right'];
 
@@ -44,7 +44,7 @@ try {
         if (!isset($settings[$key])) continue;
         // A caller without the capability for THIS key is refused this key,
         // rather than the whole request - the tabs are separately granted.
-        requireCapabilityJson($cap);
+        requireCapabilityJson(Cap::from($cap));
 
         $value = $settings[$key];
         if ($key === 'logo_alignment' && !in_array($value, $validAlignments)) {

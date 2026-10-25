@@ -339,7 +339,7 @@ function warbotTools(): array
  */
 function warbotToolAllowed(PDO $conn, int $analystId, array $t): bool
 {
-    if ($t['capability'] !== null && !analystHasCapability($conn, $analystId, $t['capability'])) return false;
+    if ($t['capability'] !== null && !analystHasCapability($conn, $analystId, Cap::from($t['capability']))) return false;
     if (!empty($t['module']) && !analystCanAccessModule($conn, $analystId, $t['module'])) return false;
     return true;
 }

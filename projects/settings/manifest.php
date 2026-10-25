@@ -19,7 +19,7 @@ return [
     'label'  => 'Projects',
 
     'umbrella' => [
-        'cap'       => Cap::PROJECTS_MANAGE,
+        'cap'       => Cap::PROJECTS_MANAGE->value,
         'grant'     => 'Manage everything in Projects settings, and change or delete any project',
         'sensitive' => true,
     ],
@@ -27,45 +27,45 @@ return [
     'tabs' => [
         [
             'id'        => 'general',
-            'cap'       => Cap::PROJECTS_GENERAL,
+            'cap'       => Cap::PROJECTS_GENERAL->value,
             'label_key' => 'projects.settings.tab_general',
             'grant'     => 'Decide who may create and change projects, and the default way of running one',
             'sensitive' => true,   // these ARE the module's permission rules
         ],
         [
             'id'        => 'health',
-            'cap'       => Cap::PROJECTS_HEALTH,
+            'cap'       => Cap::PROJECTS_HEALTH->value,
             'label_key' => 'projects.settings.tab_health',
             'grant'     => 'Tune when a project shows as at risk or off track',
         ],
         [
             'id'        => 'roles',
-            'cap'       => Cap::PROJECTS_ROLES,
+            'cap'       => Cap::PROJECTS_ROLES->value,
             'label_key' => 'projects.settings.tab_roles',
             'grant'     => 'Maintain the list of project roles',
         ],
         [
             'id'        => 'raid',
-            'cap'       => Cap::PROJECTS_RAID,
+            'cap'       => Cap::PROJECTS_RAID->value,
             'label_key' => 'projects.settings.tab_raid',
             'grant'     => 'Maintain the risk scales used in the RAID log',
         ],
         [
             'id'        => 'templates',
-            'cap'       => Cap::PROJECTS_TEMPLATES,
+            'cap'       => Cap::PROJECTS_TEMPLATES->value,
             'label_key' => 'projects.settings.tab_templates',
             'grant'     => 'Save projects as templates, and choose which templates are offered for new projects',
         ],
         [
             'id'        => 'budget',
-            'cap'       => Cap::PROJECTS_BUDGET,
+            'cap'       => Cap::PROJECTS_BUDGET->value,
             'label_key' => 'projects.settings.tab_budget',
             'grant'     => 'Set the budget currency, how labour is costed, and the hourly rates - including each analyst\'s',
             'sensitive' => true,   // per-analyst rates are close to pay
         ],
         [
             'id'        => 'ai',
-            'cap'       => Cap::PROJECTS_AI,
+            'cap'       => Cap::PROJECTS_AI->value,
             'label_key' => 'projects.settings.tab_ai',
             'grant'     => 'Choose the AI provider, model and key the AI project manager uses',
             'sensitive' => true,   // an API key that spends the organisation's money

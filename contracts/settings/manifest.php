@@ -20,7 +20,7 @@ return [
     'label'  => 'Contracts',
 
     'umbrella' => [
-        'cap'       => Cap::CONTRACTS_MANAGE,
+        'cap'       => Cap::CONTRACTS_MANAGE->value,
         'grant'     => 'Manage everything in Contracts settings',
         'sensitive' => true,   // implies the RFP AI key
     ],
@@ -28,25 +28,25 @@ return [
     'tabs' => [
         [
             'id'        => 'supplier-types',
-            'cap'       => Cap::CONTRACTS_SUPPLIER_TYPES,
+            'cap'       => Cap::CONTRACTS_SUPPLIER_TYPES->value,
             'label_key' => 'contracts.settings.tab_supplier_types',
             'grant'     => 'Manage supplier types',
         ],
         [
             'id'        => 'supplier-statuses',
-            'cap'       => Cap::CONTRACTS_SUPPLIER_STATUSES,
+            'cap'       => Cap::CONTRACTS_SUPPLIER_STATUSES->value,
             'label_key' => 'contracts.settings.tab_supplier_statuses',
             'grant'     => 'Manage supplier statuses',
         ],
         [
             'id'        => 'contract-statuses',
-            'cap'       => Cap::CONTRACTS_CONTRACT_STATUSES,
+            'cap'       => Cap::CONTRACTS_CONTRACT_STATUSES->value,
             'label_key' => 'contracts.settings.tab_contract_statuses',
             'grant'     => 'Manage contract statuses',
         ],
         [
             'id'        => 'payment-schedules',
-            'cap'       => Cap::CONTRACTS_PAYMENT_SCHEDULES,
+            'cap'       => Cap::CONTRACTS_PAYMENT_SCHEDULES->value,
             'label_key' => 'contracts.settings.tab_payment_schedules',
             'grant'     => 'Manage payment schedules',
         ],
@@ -55,13 +55,13 @@ return [
             // terms themselves. Editing a contract's actual terms is everyday work and
             // stays on plain module access (api/contracts/save_contract_terms.php).
             'id'        => 'contract-term-tabs',
-            'cap'       => Cap::CONTRACTS_CONTRACT_TERMS,
+            'cap'       => Cap::CONTRACTS_CONTRACT_TERMS->value,
             'label_key' => 'contracts.settings.tab_contract_terms',
             'grant'     => 'Manage the tabs that contract terms are organised into',
         ],
         [
             'id'        => 'rfp-departments',
-            'cap'       => Cap::CONTRACTS_RFP_DEPARTMENTS,
+            'cap'       => Cap::CONTRACTS_RFP_DEPARTMENTS->value,
             'label_key' => 'contracts.settings.tab_rfp_departments',
             'grant'     => 'Manage the departments an RFP can be scored against',
         ],
@@ -69,7 +69,7 @@ return [
             // Reaches an AI provider's API key: it spends money, and a key pointed at an
             // attacker's proxy would leak every RFP that gets drafted through it.
             'id'        => 'rfp-ai',
-            'cap'       => Cap::CONTRACTS_RFP_AI,
+            'cap'       => Cap::CONTRACTS_RFP_AI->value,
             'label_key' => 'contracts.settings.tab_rfp_ai',
             'grant'     => 'Configure the RFP Builder\'s AI provider, including its API key',
             'sensitive' => true,

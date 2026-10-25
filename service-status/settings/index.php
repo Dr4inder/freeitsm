@@ -97,7 +97,7 @@ $translationNamespaces = ['common', 'service-status'];
         <?php renderSettingsTabBar($visibleTabs, $activeTabId); ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'services')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'services' ? ' active' : ''; ?>" id="services-tab" data-capability="<?php echo Cap::SERVICE_STATUS_SERVICES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'services' ? ' active' : ''; ?>" id="services-tab" data-capability="<?php echo Cap::SERVICE_STATUS_SERVICES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('service-status.settings.services_heading')); ?></h2>
                 <button class="add-btn" onclick="openAddModal()"><?php echo htmlspecialchars(t('service-status.settings.add')); ?></button>
@@ -122,7 +122,7 @@ $translationNamespaces = ['common', 'service-status'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'statuses')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="statuses-tab" data-capability="<?php echo Cap::SERVICE_STATUS_STATUSES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="statuses-tab" data-capability="<?php echo Cap::SERVICE_STATUS_STATUSES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('service-status.settings.statuses_heading')); ?></h2>
                 <button class="add-btn" onclick="openLookupModal('status')"><?php echo htmlspecialchars(t('service-status.settings.add')); ?></button>
@@ -138,7 +138,7 @@ $translationNamespaces = ['common', 'service-status'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'impacts')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'impacts' ? ' active' : ''; ?>" id="impacts-tab" data-capability="<?php echo Cap::SERVICE_STATUS_IMPACTS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'impacts' ? ' active' : ''; ?>" id="impacts-tab" data-capability="<?php echo Cap::SERVICE_STATUS_IMPACTS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('service-status.settings.impacts_heading')); ?></h2>
                 <button class="add-btn" onclick="openLookupModal('impact')"><?php echo htmlspecialchars(t('service-status.settings.add')); ?></button>
@@ -152,7 +152,7 @@ $translationNamespaces = ['common', 'service-status'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'uptime')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'uptime' ? ' active' : ''; ?>" id="uptime-tab" data-capability="<?php echo Cap::SERVICE_STATUS_UPTIME; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'uptime' ? ' active' : ''; ?>" id="uptime-tab" data-capability="<?php echo Cap::SERVICE_STATUS_UPTIME->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('service-status.settings.uptime_heading')); ?></h2>
             </div>

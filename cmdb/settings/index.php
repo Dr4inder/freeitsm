@@ -225,7 +225,7 @@ $translationNamespaces = ['common', 'cmdb'];
 
         <!-- Classes Tab -->
         <?php if (settingsTabVisible($visibleTabs, 'classes')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'classes' ? ' active' : ''; ?>" id="classes-tab" data-capability="<?php echo Cap::CMDB_CLASSES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'classes' ? ' active' : ''; ?>" id="classes-tab" data-capability="<?php echo Cap::CMDB_CLASSES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('cmdb.settings.classes_heading')); ?></h2>
                 <button class="add-btn" onclick="openClassModal()"><?php echo htmlspecialchars(t('cmdb.settings.add')); ?></button>
@@ -255,7 +255,7 @@ $translationNamespaces = ['common', 'cmdb'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'relationship-types')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'relationship-types' ? ' active' : ''; ?>" id="relationship-types-tab" data-capability="<?php echo Cap::CMDB_RELATIONSHIP_TYPES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'relationship-types' ? ' active' : ''; ?>" id="relationship-types-tab" data-capability="<?php echo Cap::CMDB_RELATIONSHIP_TYPES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('cmdb.settings.rel_types_heading')); ?></h2>
                 <button class="add-btn" onclick="openRelTypeModal()"><?php echo htmlspecialchars(t('cmdb.settings.add')); ?></button>
@@ -285,7 +285,7 @@ $translationNamespaces = ['common', 'cmdb'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'ai')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::CMDB_AI; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::CMDB_AI->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('cmdb.settings.ai_heading')); ?></h2>
             </div>

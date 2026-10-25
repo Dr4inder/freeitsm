@@ -384,7 +384,7 @@ $translationNamespaces = ['common', 'forms'];
 
         <!-- Layout Tab -->
         <?php if (settingsTabVisible($visibleTabs, 'layout')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'layout' ? ' active' : ''; ?>" id="layout-tab" data-capability="<?php echo Cap::FORMS_LAYOUT; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'layout' ? ' active' : ''; ?>" id="layout-tab" data-capability="<?php echo Cap::FORMS_LAYOUT->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('forms.settings.layout_heading')); ?></h2>
             </div>
@@ -427,7 +427,7 @@ $translationNamespaces = ['common', 'forms'];
              with one happens on the FORM, in the forms list, beside portal
              visibility and approval. -->
         <?php if (settingsTabVisible($visibleTabs, 'collections')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'collections' ? ' active' : ''; ?>" id="collections-tab" data-capability="<?php echo Cap::FORMS_COLLECTIONS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'collections' ? ' active' : ''; ?>" id="collections-tab" data-capability="<?php echo Cap::FORMS_COLLECTIONS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('forms.collections.heading')); ?></h2>
             </div>
@@ -545,7 +545,7 @@ $translationNamespaces = ['common', 'forms'];
                 if (analystHasCapability($accConn, (int)$an['id'], Cap::FORMS_DESIGN)) $designers[] = $an['full_name'];
             }
         ?>
-        <div class="tab-content<?php echo $activeTabId === 'access' ? ' active' : ''; ?>" id="access-tab" data-capability="<?php echo Cap::FORMS_ACCESS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'access' ? ' active' : ''; ?>" id="access-tab" data-capability="<?php echo Cap::FORMS_ACCESS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('forms.settings.access_heading')); ?></h2>
             </div>
@@ -569,7 +569,7 @@ $translationNamespaces = ['common', 'forms'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'ai')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::FORMS_AI; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::FORMS_AI->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('forms.settings.ai_heading')); ?></h2>
             </div>

@@ -65,7 +65,7 @@ $path_prefix = '../../';
         <?php renderSettingsTabBar($visibleTabs, $activeTabId, 'pmsTab'); ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'statuses')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="tab-statuses" data-capability="<?php echo Cap::PROBLEMS_STATUSES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="tab-statuses" data-capability="<?php echo Cap::PROBLEMS_STATUSES->value; ?>">
             <div class="section-header"><h2>Statuses</h2><button class="add-btn" onclick="pmsOpen('status')">Add</button></div>
             <table><thead><tr><th>Name</th><th>Closed?</th><th>Default</th><th>Active</th><th>Actions</th></tr></thead>
             <tbody id="pmsStatusRows"><tr><td colspan="5">Loading…</td></tr></tbody></table>
@@ -74,7 +74,7 @@ $path_prefix = '../../';
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'priorities')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'priorities' ? ' active' : ''; ?>" id="tab-priorities" data-capability="<?php echo Cap::PROBLEMS_PRIORITIES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'priorities' ? ' active' : ''; ?>" id="tab-priorities" data-capability="<?php echo Cap::PROBLEMS_PRIORITIES->value; ?>">
             <div class="section-header"><h2>Priorities</h2><button class="add-btn" onclick="pmsOpen('priority')">Add</button></div>
             <table><thead><tr><th>Name</th><th>Default</th><th>Active</th><th>Actions</th></tr></thead>
             <tbody id="pmsPriorityRows"><tr><td colspan="4">Loading…</td></tr></tbody></table>
@@ -83,7 +83,7 @@ $path_prefix = '../../';
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'ai')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="tab-ai" data-capability="<?php echo Cap::PROBLEMS_AI; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="tab-ai" data-capability="<?php echo Cap::PROBLEMS_AI->value; ?>">
             <h2 style="margin-top:0;">Problem AI</h2>
             <p style="color:var(--text-muted, #555);">Used by “Draft root cause” and “Detect problems”. Bring your own provider and key.</p>
             <?php renderAiSettingsPanel('problem_ai'); ?>

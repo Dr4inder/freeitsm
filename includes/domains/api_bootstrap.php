@@ -67,9 +67,9 @@ function domainApiFail(string $message, int $status = 200): void
 /**
  * Stops the request with a JSON refusal unless the signed-in analyst holds the capability.
  *
- * @param string $cap  a capability key, normally a Cap::DOMAINS_* constant
+ * @param Cap $cap  a capability, normally Cap::DOMAINS_*
  */
-function domainRequireCap(PDO $conn, string $cap): void
+function domainRequireCap(PDO $conn, Cap $cap): void
 {
     requireCapabilityJson($cap, $conn);
 }
@@ -77,9 +77,9 @@ function domainRequireCap(PDO $conn, string $cap): void
 /**
  * True when the analyst holds the capability; false on any error.
  *
- * @param string $cap  a capability key, normally a Cap::DOMAINS_* constant
+ * @param Cap $cap  a capability, normally Cap::DOMAINS_*
  */
-function domainHasCap(PDO $conn, int $analystId, string $cap): bool
+function domainHasCap(PDO $conn, int $analystId, Cap $cap): bool
 {
     try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable $e) { return false; }
 }

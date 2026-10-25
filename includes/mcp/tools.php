@@ -171,7 +171,7 @@ function mcpToolAllowed(PDO $conn, array $apiKey, array $t): bool
 {
     $analystId = (int)$apiKey['analyst_id'];
     if (!analystCanAccessModule($conn, $analystId, $t['module'])) return false;
-    if ($t['capability'] !== null && !analystHasCapability($conn, $analystId, $t['capability'])) return false;
+    if ($t['capability'] !== null && !analystHasCapability($conn, $analystId, Cap::from($t['capability']))) return false;
     if (!$t['company_safe'] && isMultiTenant($conn) && $apiKey['company_scope'] !== null) return false;
     return true;
 }

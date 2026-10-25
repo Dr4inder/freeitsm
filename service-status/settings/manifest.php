@@ -12,25 +12,25 @@ return [
     'module' => 'service-status',
     'label'  => 'Service status',
     'umbrella' => [
-        'cap'   => Cap::SERVICE_STATUS_MANAGE,
+        'cap'   => Cap::SERVICE_STATUS_MANAGE->value,
         'grant' => 'Manage everything in Service status settings',
     ],
     'tabs' => [
         [
             'id'        => 'services',
-            'cap'       => Cap::SERVICE_STATUS_SERVICES,
+            'cap'       => Cap::SERVICE_STATUS_SERVICES->value,
             'label_key' => 'service-status.settings.tab_services',
             'grant'     => 'Manage the services whose status is tracked',
         ],
         [
             'id'        => 'statuses',
-            'cap'       => Cap::SERVICE_STATUS_STATUSES,
+            'cap'       => Cap::SERVICE_STATUS_STATUSES->value,
             'label_key' => 'service-status.settings.tab_statuses',
             'grant'     => 'Manage incident statuses',
         ],
         [
             'id'        => 'impacts',
-            'cap'       => Cap::SERVICE_STATUS_IMPACTS,
+            'cap'       => Cap::SERVICE_STATUS_IMPACTS->value,
             'label_key' => 'service-status.settings.tab_impacts',
             'grant'     => 'Manage impact levels',
         ],
@@ -42,7 +42,7 @@ return [
             // be remembered. This tab holds only the two things that are nobody
             // else's property — the window, and whether customers see it.
             'id'           => 'uptime',   // see includes/services/service_uptime.php
-            'cap'          => Cap::SERVICE_STATUS_UPTIME,
+            'cap'          => Cap::SERVICE_STATUS_UPTIME->value,
             'label_key'    => 'service-status.settings.tab_uptime',
             'grant'        => 'Configure uptime reporting and whether customers see it',
             'setting_keys' => ['status_uptime_window_days', 'status_uptime_show_portal'],

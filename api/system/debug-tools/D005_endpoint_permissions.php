@@ -436,8 +436,9 @@ $enforced = [];
 foreach ($rows as $r) {
     if ($r['level'] === 'capability' || $r['level'] === 'capability_string') {
         if (preg_match('/Cap::([A-Z0-9_]+)/', $r['detail'], $m)) {
-            $const = 'Cap::' . $m[1];
-            if (defined($const)) $enforced[constant($const)] = true;
+            // Cap is an enum (4.0): find the case by its name; its ->value is the key.
+            $case = Cap::tryFromName($m[1]);
+            if ($case !== null) $enforced[$case->value] = true;
         } elseif (preg_match("/'([a-z0-9_.]+)'/", $r['detail'], $m)) {
             $enforced[$m[1]] = true;
         }

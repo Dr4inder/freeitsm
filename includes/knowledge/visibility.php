@@ -502,7 +502,7 @@ function knowledgeViewerHasAdminFloor(PDO $conn, KnowledgeViewer $viewer): bool
 function knowledgeAuditAdminOverride(PDO $conn, KnowledgeViewer $viewer, int $articleId): void
 {
     knowledgeAuditLog($conn, 'article', $articleId, 'admin_override',
-                      $viewer->analystId(), ['capability' => Cap::KNOWLEDGE_MANAGE]);
+                      $viewer->analystId(), ['capability' => Cap::KNOWLEDGE_MANAGE->value]);
 }
 
 /**

@@ -675,7 +675,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
 
         <!-- Departments Tab -->
         <?php if (settingsTabVisible($visibleTabs, 'departments')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'departments' ? ' active' : ''; ?>" id="departments-tab" data-capability="<?php echo Cap::TICKETS_DEPARTMENTS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'departments' ? ' active' : ''; ?>" id="departments-tab" data-capability="<?php echo Cap::TICKETS_DEPARTMENTS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.departments')); ?></h2>
                 <button class="add-btn" onclick="openAddModal('department')"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -702,7 +702,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'ticket-types')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'ticket-types' ? ' active' : ''; ?>" id="ticket-types-tab" data-capability="<?php echo Cap::TICKETS_TICKET_TYPES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'ticket-types' ? ' active' : ''; ?>" id="ticket-types-tab" data-capability="<?php echo Cap::TICKETS_TICKET_TYPES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.ticket_types')); ?></h2>
                 <button class="add-btn" onclick="openAddModal('ticket-type')"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -728,7 +728,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'ticket-origins')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'ticket-origins' ? ' active' : ''; ?>" id="ticket-origins-tab" data-capability="<?php echo Cap::TICKETS_TICKET_ORIGINS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'ticket-origins' ? ' active' : ''; ?>" id="ticket-origins-tab" data-capability="<?php echo Cap::TICKETS_TICKET_ORIGINS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.ticket_origins')); ?></h2>
                 <button class="add-btn" onclick="openAddModal('ticket-origin')"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -754,7 +754,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'categories')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'categories' ? ' active' : ''; ?>" id="categories-tab" data-capability="<?php echo Cap::TICKETS_CATEGORIES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'categories' ? ' active' : ''; ?>" id="categories-tab" data-capability="<?php echo Cap::TICKETS_CATEGORIES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.categories')); ?></h2>
             </div>
@@ -875,7 +875,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
              SOP steps is closed (PR #141). Had been inside the Statuses tab's
              visibility check, so a role granted Checklists but not Statuses got
              the tab button and an empty panel. -->
-        <div class="tab-content<?php echo $activeTabId === 'checklists' ? ' active' : ''; ?>" id="checklists-tab" data-capability="<?php echo Cap::TICKETS_CHECKLISTS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'checklists' ? ' active' : ''; ?>" id="checklists-tab" data-capability="<?php echo Cap::TICKETS_CHECKLISTS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.checklists')); ?></h2>
             </div>
@@ -942,7 +942,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <!-- Mandatory fields: which ticket properties must be filled before a
              ticket may close, and what happens when they are not. Rendered from
              the stored values, so there is nothing to load - only to save. -->
-        <div class="tab-content<?php echo $activeTabId === 'mandatory-fields' ? ' active' : ''; ?>" id="mandatory-fields-tab" data-capability="<?php echo Cap::TICKETS_MANDATORY_FIELDS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'mandatory-fields' ? ' active' : ''; ?>" id="mandatory-fields-tab" data-capability="<?php echo Cap::TICKETS_MANDATORY_FIELDS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.mandatory_fields')); ?></h2>
             </div>
@@ -995,7 +995,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
 
         <?php if (settingsTabVisible($visibleTabs, 'custom-fields')): ?>
         <!-- Custom fields (#179): the extra details each ticket type asks for. -->
-        <div class="tab-content<?php echo $activeTabId === 'custom-fields' ? ' active' : ''; ?>" id="custom-fields-tab" data-capability="<?php echo Cap::TICKETS_CUSTOM_FIELDS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'custom-fields' ? ' active' : ''; ?>" id="custom-fields-tab" data-capability="<?php echo Cap::TICKETS_CUSTOM_FIELDS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.custom_fields')); ?></h2>
                 <button class="add-btn" onclick="tfOpen(null)"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -1031,7 +1031,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'statuses')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="statuses-tab" data-capability="<?php echo Cap::TICKETS_STATUSES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'statuses' ? ' active' : ''; ?>" id="statuses-tab" data-capability="<?php echo Cap::TICKETS_STATUSES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.statuses')); ?></h2>
                 <button class="add-btn" onclick="openAddModal('status')"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -1060,7 +1060,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'priorities')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'priorities' ? ' active' : ''; ?>" id="priorities-tab" data-capability="<?php echo Cap::TICKETS_PRIORITIES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'priorities' ? ' active' : ''; ?>" id="priorities-tab" data-capability="<?php echo Cap::TICKETS_PRIORITIES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.priorities')); ?></h2>
                 <button class="add-btn" onclick="openAddModal('priority')"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -1087,7 +1087,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'sla')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'sla' ? ' active' : ''; ?>" id="sla-tab" data-capability="<?php echo Cap::TICKETS_SLA; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'sla' ? ' active' : ''; ?>" id="sla-tab" data-capability="<?php echo Cap::TICKETS_SLA->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.sla.heading')); ?></h2>
             </div>
@@ -1345,7 +1345,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'rota-locations')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'rota-locations' ? ' active' : ''; ?>" id="rota-locations-tab" data-capability="<?php echo Cap::TICKETS_ROTA_LOCATIONS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'rota-locations' ? ' active' : ''; ?>" id="rota-locations-tab" data-capability="<?php echo Cap::TICKETS_ROTA_LOCATIONS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.rota_locations')); ?></h2>
                 <button class="add-btn" onclick="openAddModal('rota-location')"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -1372,7 +1372,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'mailboxes')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'mailboxes' ? ' active' : ''; ?>" id="mailboxes-tab" data-capability="<?php echo Cap::TICKETS_MAILBOXES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'mailboxes' ? ' active' : ''; ?>" id="mailboxes-tab" data-capability="<?php echo Cap::TICKETS_MAILBOXES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.mailboxes')); ?></h2>
                 <div>
@@ -1434,7 +1434,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'messaging')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'messaging' ? ' active' : ''; ?>" id="messaging-tab" data-capability="<?php echo Cap::TICKETS_MESSAGING; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'messaging' ? ' active' : ''; ?>" id="messaging-tab" data-capability="<?php echo Cap::TICKETS_MESSAGING->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.messaging.channels_heading')); ?></h2>
                 <button class="add-btn" onclick="openChannelModal()"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -1495,7 +1495,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'webchat')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'webchat' ? ' active' : ''; ?>" id="webchat-tab" data-capability="<?php echo Cap::TICKETS_WEBCHAT; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'webchat' ? ' active' : ''; ?>" id="webchat-tab" data-capability="<?php echo Cap::TICKETS_WEBCHAT->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.webchat.heading')); ?></h2>
                 <button class="add-btn" onclick="openWidgetModal()"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -1524,7 +1524,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'email-templates')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'email-templates' ? ' active' : ''; ?>" id="email-templates-tab" data-capability="<?php echo Cap::TICKETS_EMAIL_TEMPLATES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'email-templates' ? ' active' : ''; ?>" id="email-templates-tab" data-capability="<?php echo Cap::TICKETS_EMAIL_TEMPLATES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.email_templates')); ?></h2>
                 <button class="add-btn" onclick="openTemplateModal()"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -1603,7 +1603,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'indexing')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'indexing' ? ' active' : ''; ?>" id="indexing-tab" data-capability="<?php echo Cap::TICKETS_INDEXING; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'indexing' ? ' active' : ''; ?>" id="indexing-tab" data-capability="<?php echo Cap::TICKETS_INDEXING->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.indexing')); ?></h2>
             </div>
@@ -1640,7 +1640,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'merge-behaviour')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'merge-behaviour' ? ' active' : ''; ?>" id="merge-behaviour-tab" data-capability="<?php echo Cap::TICKETS_MERGE; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'merge-behaviour' ? ' active' : ''; ?>" id="merge-behaviour-tab" data-capability="<?php echo Cap::TICKETS_MERGE->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.merge_behaviour')); ?></h2>
             </div>
@@ -1707,7 +1707,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'reply-templates')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'reply-templates' ? ' active' : ''; ?>" id="reply-templates-tab" data-capability="<?php echo Cap::TICKETS_REPLY_TEMPLATES; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'reply-templates' ? ' active' : ''; ?>" id="reply-templates-tab" data-capability="<?php echo Cap::TICKETS_REPLY_TEMPLATES->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.reply_templates')); ?></h2>
                 <button class="add-btn" onclick="openReplyTemplateModal()"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -1733,7 +1733,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'rota')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'rota' ? ' active' : ''; ?>" id="rota-tab" data-capability="<?php echo Cap::TICKETS_ROTA; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'rota' ? ' active' : ''; ?>" id="rota-tab" data-capability="<?php echo Cap::TICKETS_ROTA->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.rota_shifts')); ?></h2>
                 <button class="add-btn" onclick="openRotaShiftModal()"><?php echo htmlspecialchars(t('common.add')); ?></button>
@@ -1772,7 +1772,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
                  number LOOKS like, then what each counter counts, then the
                  renumbering tool last and clearly separated — it rewrites the
                  reference on every existing ticket. */ ?>
-        <div class="tab-content<?php echo $activeTabId === 'numbering' ? ' active' : ''; ?>" id="numbering-tab" data-capability="<?php echo Cap::TICKETS_NUMBERING; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'numbering' ? ' active' : ''; ?>" id="numbering-tab" data-capability="<?php echo Cap::TICKETS_NUMBERING->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.numbering.heading')); ?></h2>
             </div>
@@ -1866,7 +1866,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             <div id="numRenumberOut" style="margin-top:16px;max-width:700px;"></div>
         </div>
 
-        <div class="tab-content<?php echo $activeTabId === 'general' ? ' active' : ''; ?>" id="general-tab" data-capability="<?php echo Cap::TICKETS_GENERAL; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'general' ? ' active' : ''; ?>" id="general-tab" data-capability="<?php echo Cap::TICKETS_GENERAL->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.general_settings')); ?></h2>
             </div>
@@ -2041,7 +2041,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
 
         <!-- Privacy Tab -->
         <?php if (settingsTabVisible($visibleTabs, 'privacy')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'privacy' ? ' active' : ''; ?>" id="privacy-tab" data-capability="<?php echo Cap::TICKETS_PRIVACY; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'privacy' ? ' active' : ''; ?>" id="privacy-tab" data-capability="<?php echo Cap::TICKETS_PRIVACY->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.privacy')); ?></h2>
             </div>
@@ -2084,7 +2084,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
 
         <!-- Reply Cleanup Tab -->
         <?php if (settingsTabVisible($visibleTabs, 'reply-cleanup')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'reply-cleanup' ? ' active' : ''; ?>" id="reply-cleanup-tab" data-capability="<?php echo Cap::TICKETS_REPLY_CLEANUP; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'reply-cleanup' ? ' active' : ''; ?>" id="reply-cleanup-tab" data-capability="<?php echo Cap::TICKETS_REPLY_CLEANUP->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.reply_cleanup_ai')); ?></h2>
             </div>
@@ -2146,7 +2146,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'csat')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'csat' ? ' active' : ''; ?>" id="csat-tab" data-capability="<?php echo Cap::TICKETS_CSAT; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'csat' ? ' active' : ''; ?>" id="csat-tab" data-capability="<?php echo Cap::TICKETS_CSAT->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.csat')); ?></h2>
             </div>
@@ -2226,7 +2226,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <!-- Time tracking (discussion #72). Two switches, because hiding the panel
              and closing the API are different decisions: an install can tidy its
              screens without breaking a billing export that nobody told it about. -->
-        <div class="tab-content<?php echo $activeTabId === 'time-tracking' ? ' active' : ''; ?>" id="time-tracking-tab" data-capability="<?php echo Cap::TICKETS_MANAGE; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'time-tracking' ? ' active' : ''; ?>" id="time-tracking-tab" data-capability="<?php echo Cap::TICKETS_MANAGE->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.time_tracking')); ?></h2>
             </div>

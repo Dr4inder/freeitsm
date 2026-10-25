@@ -91,12 +91,15 @@ function getAnalystCapabilities(PDO $conn, int $analystId): array {
  * Does this analyst hold a capability? Authoritative (DB-checked). is_admin is
  * always true. Use this for server-side enforcement.
  *
- * @param string $capability  the capability key, a Cap:: constant such as Cap::PROJECTS_MANAGE
+ * TRAP: typed Cap, not string. The held list is strings, and in_array() of an enum
+ * against strings is silently false - the type makes passing the wrong thing loud.
+ *
+ * @param Cap $capability  the capability, e.g. Cap::PROJECTS_MANAGE
  */
-function analystHasCapability(PDO $conn, int $analystId, string $capability): bool {
+function analystHasCapability(PDO $conn, int $analystId, Cap $capability): bool {
     if ($analystId <= 0) return false;
     if (analystIsAdmin($conn, $analystId)) return true;
-    return in_array($capability, getAnalystCapabilities($conn, $analystId), true);
+    return in_array($capability->value, getAnalystCapabilities($conn, $analystId), true);
 }
 
 /**
@@ -104,13 +107,13 @@ function analystHasCapability(PDO $conn, int $analystId, string $capability): bo
  * is enough, exactly as before - the permission exists, can be granted in Roles, and
  * bites only once the administrator has built the role and turned the restriction on.
  *
- * @param string $capability  an everyday-work Cap:: constant (a manifest 'action')
+ * @param Cap $capability  an everyday-work capability (a manifest 'action')
  */
-function capActionRestricted(PDO $conn, string $capability): bool {
-    if (!capIsEveryday($capability)) {
-        throw new LogicException("'{$capability}' is not an everyday-work capability");
+function capActionRestricted(PDO $conn, Cap $capability): bool {
+    if (!$capability->isEveryday()) {
+        throw new LogicException("'{$capability->value}' is not an everyday-work capability");
     }
-    $r = capActionRestriction($capability);
+    $r = capActionRestriction($capability->value);
     if ($r === null) return true;
     try {
         $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
@@ -130,9 +133,9 @@ function capActionRestricted(PDO $conn, string $capability): bool {
  * power and must not go through here, or is_admin would bypass it.
  *
  * @param int $analystId  the analyst; 0 (a system or portal actor) has no capabilities
- * @param string $capability  an everyday-work Cap:: constant
+ * @param Cap $capability  an everyday-work capability
  */
-function analystMayAct(PDO $conn, int $analystId, string $capability): bool {
+function analystMayAct(PDO $conn, int $analystId, Cap $capability): bool {
     if (!capActionRestricted($conn, $capability)) return true;
     return analystHasCapability($conn, $analystId, $capability);
 }
@@ -140,9 +143,9 @@ function analystMayAct(PDO $conn, int $analystId, string $capability): bool {
 /**
  * JSON gate for an everyday-work action: 403 unless analystMayAct().
  *
- * @param string $capability  an everyday-work Cap:: constant
+ * @param Cap $capability  an everyday-work capability
  */
-function requireActionJson(string $capability, ?PDO $conn = null): void {
+function requireActionJson(Cap $capability, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
         http_response_code(401);
         header('Content-Type: application/json');
@@ -170,9 +173,9 @@ function requireActionJson(string $capability, ?PDO $conn = null): void {
  * after) requireModuleAccess() — Layer 1 gets you into the module, this decides
  * whether you may configure it.
  *
- * @param string $capability  the capability key the page needs, a Cap:: constant
+ * @param Cap $capability  the capability the page needs
  */
-function requireCapability(string $capability, ?PDO $conn = null): void {
+function requireCapability(Cap $capability, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
         header('Location: ' . BASE_URL . 'auth/login.php');
         exit;
@@ -184,7 +187,7 @@ function requireCapability(string $capability, ?PDO $conn = null): void {
         $ok = false;
     }
     if (!$ok) {
-        header('Location: ' . BASE_URL . '?denied=' . urlencode($capability));
+        header('Location: ' . BASE_URL . '?denied=' . urlencode($capability->value));
         exit;
     }
 }
@@ -193,9 +196,9 @@ function requireCapability(string $capability, ?PDO $conn = null): void {
  * Hard gate for a settings JSON write API: refuse a lacking analyst with 403.
  * The API twin of requireCapability(). Call right after connecting.
  *
- * @param string $capability  the capability key the endpoint needs, a Cap:: constant
+ * @param Cap $capability  the capability the endpoint needs
  */
-function requireCapabilityJson(string $capability, ?PDO $conn = null): void {
+function requireCapabilityJson(Cap $capability, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
         http_response_code(401);
         header('Content-Type: application/json');

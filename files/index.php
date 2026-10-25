@@ -33,7 +33,7 @@ $conn = connectToDatabase();
 $me   = (int)$_SESSION['analyst_id'];
 $prefs = filesGetPrefs($conn, $me);
 $logo  = filesDesktopLogo($conn, $me);
-$hasCap = function (string $cap) use ($conn, $me): bool {
+$hasCap = function (Cap $cap) use ($conn, $me): bool {
     try { return analystHasCapability($conn, $me, $cap); } catch (Throwable $e) { return false; }
 };
 $capFolders = $hasCap(Cap::FILES_FOLDERS);

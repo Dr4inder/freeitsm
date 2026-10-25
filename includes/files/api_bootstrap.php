@@ -70,9 +70,9 @@ function filesApiFail(string $message, int $status = 200, array $extra = []): vo
 /**
  * True when the analyst holds the capability; a failed lookup counts as no.
  *
- * @param string $cap  the capability key, normally a Cap:: constant such as Cap::FILES_FOLDERS
+ * @param Cap $cap  the capability, such as Cap::FILES_FOLDERS
  */
-function filesHasCap(PDO $conn, int $analystId, string $cap): bool
+function filesHasCap(PDO $conn, int $analystId, Cap $cap): bool
 {
     try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable $e) { return false; }
 }

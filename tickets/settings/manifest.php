@@ -42,7 +42,7 @@ return [
     'label'  => 'Tickets',
 
     'umbrella' => [
-        'cap'       => Cap::TICKETS_MANAGE,
+        'cap'       => Cap::TICKETS_MANAGE->value,
         'grant'     => 'Manage everything in Tickets settings',
         'sensitive' => true,   // implies the mailbox, messaging and AI credentials
     ],
@@ -50,19 +50,19 @@ return [
     'tabs' => [
         [
             'id'        => 'departments',
-            'cap'       => Cap::TICKETS_DEPARTMENTS,
+            'cap'       => Cap::TICKETS_DEPARTMENTS->value,
             'label_key' => 'tickets.settings.tabs.departments',
             'grant'     => 'Manage departments, and which teams see them',
         ],
         [
             'id'        => 'ticket-types',
-            'cap'       => Cap::TICKETS_TICKET_TYPES,
+            'cap'       => Cap::TICKETS_TICKET_TYPES->value,
             'label_key' => 'tickets.settings.tabs.ticket_types',
             'grant'     => 'Manage ticket types',
         ],
         [
             'id'        => 'ticket-origins',
-            'cap'       => Cap::TICKETS_TICKET_ORIGINS,
+            'cap'       => Cap::TICKETS_TICKET_ORIGINS->value,
             'label_key' => 'tickets.settings.tabs.ticket_origins',
             'grant'     => 'Manage ticket origins',
         ],
@@ -76,7 +76,7 @@ return [
             // thing as each other, so splitting them would add tabs without adding
             // any decision an administrator would actually make differently.
             'id'        => 'categories',
-            'cap'       => Cap::TICKETS_CATEGORIES,
+            'cap'       => Cap::TICKETS_CATEGORIES->value,
             'label_key' => 'tickets.settings.tabs.categories',
             'grant'     => 'Manage ticket categories and resolution codes, and whether those fields appear on a ticket',
             // The install-wide defaults behind the three switches. Declared HERE
@@ -93,7 +93,7 @@ return [
             // Sits next to categories because it is the other half of "what a
             // ticket must have on it before it is allowed to finish".
             'id'        => 'checklists',
-            'cap'       => Cap::TICKETS_CHECKLISTS,
+            'cap'       => Cap::TICKETS_CHECKLISTS->value,
             'label_key' => 'tickets.settings.tabs.checklists',
             'grant'     => 'Choose whether outstanding mandatory SOP steps block a ticket from closing',
             'setting_keys' => [
@@ -107,7 +107,7 @@ return [
             // Saved by its own endpoint; the keys are declared here so the
             // setting-key map and this tab cannot disagree about who owns them.
             'id'        => 'mandatory-fields',
-            'cap'       => Cap::TICKETS_MANDATORY_FIELDS,
+            'cap'       => Cap::TICKETS_MANDATORY_FIELDS->value,
             'label_key' => 'tickets.settings.tabs.mandatory_fields',
             'grant'     => 'Choose which fields must be filled before a ticket can close, and who is emailed when they are not',
             // It sends ticket details to any address typed into it, and decides
@@ -125,7 +125,7 @@ return [
             // Its own capability: it decides what requesters are asked on the
             // portal and can stop tickets being logged or closed.
             'id'        => 'custom-fields',
-            'cap'       => Cap::TICKETS_CUSTOM_FIELDS,
+            'cap'       => Cap::TICKETS_CUSTOM_FIELDS->value,
             'label_key' => 'tickets.settings.tabs.custom_fields',
             'grant'     => 'Design the custom fields each ticket type carries, and when they must be filled in',
             // Where the portal shows a requester the answers they gave (discussion #193).
@@ -133,13 +133,13 @@ return [
         ],
         [
             'id'        => 'statuses',
-            'cap'       => Cap::TICKETS_STATUSES,
+            'cap'       => Cap::TICKETS_STATUSES->value,
             'label_key' => 'tickets.settings.tabs.statuses',
             'grant'     => 'Manage ticket statuses',
         ],
         [
             'id'        => 'priorities',
-            'cap'       => Cap::TICKETS_PRIORITIES,
+            'cap'       => Cap::TICKETS_PRIORITIES->value,
             'label_key' => 'tickets.settings.tabs.priorities',
             'grant'     => 'Manage ticket priorities',
         ],
@@ -147,13 +147,13 @@ return [
             // The targets the whole service desk is measured against, plus the calendars
             // and the breach/warning notifications.
             'id'        => 'sla',
-            'cap'       => Cap::TICKETS_SLA,
+            'cap'       => Cap::TICKETS_SLA->value,
             'label_key' => 'tickets.settings.tabs.sla',
             'grant'     => 'Manage SLA targets, calendars and breach notifications',
         ],
         [
             'id'        => 'rota-locations',
-            'cap'       => Cap::TICKETS_ROTA_LOCATIONS,
+            'cap'       => Cap::TICKETS_ROTA_LOCATIONS->value,
             'label_key' => 'tickets.settings.tabs.rota_locations',
             'grant'     => 'Manage rota locations',
         ],
@@ -161,7 +161,7 @@ return [
             // OAuth credentials and inbound mail routing. The most dangerous tab in the
             // product: whoever holds this can redirect or read the company's email.
             'id'        => 'mailboxes',
-            'cap'       => Cap::TICKETS_MAILBOXES,
+            'cap'       => Cap::TICKETS_MAILBOXES->value,
             'label_key' => 'tickets.settings.tabs.mailboxes',
             'grant'     => 'Manage the mailboxes tickets are raised from, including their credentials and mail routing',
             'sensitive' => true,
@@ -169,7 +169,7 @@ return [
         [
             // The WhatsApp channel's Twilio / Meta credentials.
             'id'        => 'messaging',
-            'cap'       => Cap::TICKETS_MESSAGING,
+            'cap'       => Cap::TICKETS_MESSAGING->value,
             'label_key' => 'tickets.settings.tab_messaging',
             'grant'     => 'Manage messaging channels and templates, including their credentials',
             'sensitive' => true,
@@ -179,13 +179,13 @@ return [
             // (it ships in the customer's page source) and there are no stored secrets —
             // abuse is contained by each widget's origin allowlist + rate limiting.
             'id'        => 'webchat',
-            'cap'       => Cap::TICKETS_WEBCHAT,
+            'cap'       => Cap::TICKETS_WEBCHAT->value,
             'label_key' => 'tickets.settings.tab_webchat',
             'grant'     => 'Manage the website chat widgets that raise tickets',
         ],
         [
             'id'        => 'email-templates',
-            'cap'       => Cap::TICKETS_EMAIL_TEMPLATES,
+            'cap'       => Cap::TICKETS_EMAIL_TEMPLATES->value,
             'label_key' => 'tickets.settings.tabs.email_templates',
             'grant'     => 'Manage the email templates sent to requesters',
         ],
@@ -196,7 +196,7 @@ return [
             // those here would have meant only settings administrators could have a
             // personal template, which is most of the feature gone.
             'id'        => 'reply-templates',
-            'cap'       => Cap::TICKETS_REPLY_TEMPLATES,
+            'cap'       => Cap::TICKETS_REPLY_TEMPLATES->value,
             'label_key' => 'tickets.settings.tabs.reply_templates',
             'grant'     => 'Manage the shared reply templates the whole team can insert',
         ],
@@ -209,7 +209,7 @@ return [
             // menu and no dashboard widget, so nothing about it is install-wide
             // in character.
             'id'        => 'time-tracking',
-            'cap'       => Cap::TICKETS_MANAGE,
+            'cap'       => Cap::TICKETS_MANAGE->value,
             'label_key' => 'tickets.settings.tabs.time_tracking',
             'grant'     => 'Turn time recording on or off, per company',
         ],
@@ -220,7 +220,7 @@ return [
             // analysts answering the same mailbox must not be able to disagree
             // about it.
             'id'           => 'merge-behaviour',
-            'cap'          => Cap::TICKETS_MERGE,
+            'cap'          => Cap::TICKETS_MERGE->value,
             'label_key'    => 'tickets.settings.tabs.merge_behaviour',
             'grant'        => 'Decide what happens to ticket references and conversations when tickets are merged',
             'setting_keys' => ['merge_reference_mode', 'merge_originals_mode', 'merge_ai_summary'],
@@ -233,14 +233,14 @@ return [
             // setting. Install-wide, not per-analyst: two analysts cannot
             // usefully disagree about whether a queue is being worked.
             'id'           => 'indexing',
-            'cap'          => Cap::TICKETS_INDEXING,
+            'cap'          => Cap::TICKETS_INDEXING->value,
             'label_key'    => 'tickets.settings.tabs.indexing',
             'grant'        => 'Decide how the text inside attachments gets read for searching',
             'setting_keys' => ['attachment_extract_cron', 'attachment_extract_opportunistic'],
         ],
         [
             'id'        => 'rota',
-            'cap'       => Cap::TICKETS_ROTA,
+            'cap'       => Cap::TICKETS_ROTA->value,
             'label_key' => 'tickets.settings.tabs.rota',
             'grant'     => 'Manage the on-call rota',
         ],
@@ -248,7 +248,7 @@ return [
             // Configurable ticket numbering (GH #71). Sensitive: renumbering
             // rewrites the reference on every existing ticket.
             'id'           => 'numbering',
-            'cap'          => Cap::TICKETS_NUMBERING,
+            'cap'          => Cap::TICKETS_NUMBERING->value,
             'label_key'    => 'tickets.settings.tabs.numbering',
             'grant'        => 'Choose how ticket numbers are made, and renumber existing tickets',
             'sensitive'    => true,
@@ -256,7 +256,7 @@ return [
         ],
         [
             'id'           => 'general',
-            'cap'          => Cap::TICKETS_GENERAL,
+            'cap'          => Cap::TICKETS_GENERAL->value,
             'label_key'    => 'tickets.settings.tabs.general',
             'grant'        => 'Manage general ticket settings',
             'setting_keys' => ['reopen_on_customer_reply', 'snooze_wake_hour',
@@ -278,7 +278,7 @@ return [
         ],
         [
             'id'           => 'privacy',
-            'cap'          => Cap::TICKETS_PRIVACY,
+            'cap'          => Cap::TICKETS_PRIVACY->value,
             'label_key'    => 'tickets.settings.tabs.privacy',
             'grant'        => 'Control what requesters see of their own ticket in the self-service portal',
             'setting_keys' => ['portal_third_party_visibility'],
@@ -286,7 +286,7 @@ return [
         [
             // The shared AI settings panel, namespace tickets_reply_cleanup.
             'id'           => 'reply-cleanup',
-            'cap'          => Cap::TICKETS_REPLY_CLEANUP,
+            'cap'          => Cap::TICKETS_REPLY_CLEANUP->value,
             'label_key'    => 'tickets.settings.tabs.reply_cleanup',
             'grant'        => 'Configure the reply-cleanup AI provider, including its API key',
             'sensitive'    => true,
@@ -298,7 +298,7 @@ return [
         ],
         [
             'id'        => 'csat',
-            'cap'       => Cap::TICKETS_CSAT,
+            'cap'       => Cap::TICKETS_CSAT->value,
             'label_key' => 'tickets.settings.tabs.csat',
             'grant'     => 'Configure the customer satisfaction survey',
         ],

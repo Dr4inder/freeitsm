@@ -17,11 +17,11 @@ require_once __DIR__ . '/../../includes/i18n.php';
 I18n::initFromSession();
 
 $tabCaps = [
-    'general' => Cap::PROJECTS_GENERAL,
-    'health'  => Cap::PROJECTS_HEALTH,
-    'roles'   => Cap::PROJECTS_ROLES,
-    'raid'    => Cap::PROJECTS_RAID,
-    'budget'  => Cap::PROJECTS_BUDGET,
+    'general' => Cap::PROJECTS_GENERAL->value,
+    'health'  => Cap::PROJECTS_HEALTH->value,
+    'roles'   => Cap::PROJECTS_ROLES->value,
+    'raid'    => Cap::PROJECTS_RAID->value,
+    'budget'  => Cap::PROJECTS_BUDGET->value,
 ];
 
 /** The roles list with how many members hold each - for the Roles tab. */
@@ -60,7 +60,7 @@ function projectSettingsForScreen(PDO $conn): array
 projectApiRun(function () use ($conn, $analystId, $tabCaps) {
     $canWrite = [];
     foreach ($tabCaps as $tab => $cap) {
-        try { $canWrite[$tab] = analystHasCapability($conn, $analystId, $cap); } catch (Throwable $e) { $canWrite[$tab] = false; }
+        try { $canWrite[$tab] = analystHasCapability($conn, $analystId, Cap::from($cap)); } catch (Throwable $e) { $canWrite[$tab] = false; }
     }
 
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {

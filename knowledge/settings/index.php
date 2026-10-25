@@ -273,7 +273,7 @@ $translationNamespaces = ['common', 'knowledge'];
 
         <!-- Email Tab -->
         <?php if (settingsTabVisible($visibleTabs, 'email')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'email' ? ' active' : ''; ?>" id="email-tab" data-capability="<?php echo Cap::KNOWLEDGE_EMAIL; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'email' ? ' active' : ''; ?>" id="email-tab" data-capability="<?php echo Cap::KNOWLEDGE_EMAIL->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('knowledge.settings.email_heading')); ?></h2>
             </div>
@@ -392,7 +392,7 @@ $translationNamespaces = ['common', 'knowledge'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'ai')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::KNOWLEDGE_AI; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::KNOWLEDGE_AI->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('knowledge.settings.ai_heading')); ?></h2>
             </div>
@@ -459,7 +459,7 @@ $translationNamespaces = ['common', 'knowledge'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'embeddings')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'embeddings' ? ' active' : ''; ?>" id="embeddings-tab" data-capability="<?php echo Cap::KNOWLEDGE_EMBEDDINGS; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'embeddings' ? ' active' : ''; ?>" id="embeddings-tab" data-capability="<?php echo Cap::KNOWLEDGE_EMBEDDINGS->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('knowledge.settings.embeddings_heading')); ?></h2>
             </div>
@@ -491,7 +491,7 @@ $translationNamespaces = ['common', 'knowledge'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'recycle-bin')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'recycle-bin' ? ' active' : ''; ?>" id="recycle-bin-tab" data-capability="<?php echo Cap::KNOWLEDGE_RECYCLE_BIN; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'recycle-bin' ? ' active' : ''; ?>" id="recycle-bin-tab" data-capability="<?php echo Cap::KNOWLEDGE_RECYCLE_BIN->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('knowledge.settings.recycle_heading')); ?></h2>
             </div>
@@ -512,7 +512,7 @@ $translationNamespaces = ['common', 'knowledge'];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'permissions')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'permissions' ? ' active' : ''; ?>" id="permissions-tab" data-capability="<?php echo Cap::KNOWLEDGE_MANAGE; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'permissions' ? ' active' : ''; ?>" id="permissions-tab" data-capability="<?php echo Cap::KNOWLEDGE_MANAGE->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('knowledge.settings.perm_model_heading')); ?></h2>
             </div>

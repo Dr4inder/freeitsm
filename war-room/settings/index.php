@@ -86,7 +86,7 @@ $choices = [0, 7, 30, 90, 180, 365];
         <?php renderSettingsTabBar($visibleTabs, $activeTabId); ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'retention')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'retention' ? ' active' : ''; ?>" id="retention-tab" data-capability="<?php echo Cap::WAR_ROOM_MANAGE; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'retention' ? ' active' : ''; ?>" id="retention-tab" data-capability="<?php echo Cap::WAR_ROOM_MANAGE->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('war-room.settings.heading')); ?></h2>
             </div>
@@ -112,7 +112,7 @@ $choices = [0, 7, 30, 90, 180, 365];
         <?php endif; ?>
 
         <?php if (settingsTabVisible($visibleTabs, 'ai')): ?>
-        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::WAR_ROOM_MANAGE; ?>">
+        <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::WAR_ROOM_MANAGE->value; ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('war-room.settings.ai_heading')); ?></h2>
             </div>

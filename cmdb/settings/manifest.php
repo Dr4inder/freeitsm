@@ -24,7 +24,7 @@ return [
     'label'  => 'CMDB',
 
     'umbrella' => [
-        'cap'       => Cap::CMDB_MANAGE,
+        'cap'       => Cap::CMDB_MANAGE->value,
         'grant'     => 'Manage everything in CMDB settings',
         'sensitive' => true,   // implies the AI credentials
     ],
@@ -34,19 +34,19 @@ return [
             // The CI schema: classes and their properties. Also governs adding a property
             // option inline from the object page — the same change, reached another way.
             'id'        => 'classes',
-            'cap'       => Cap::CMDB_CLASSES,
+            'cap'       => Cap::CMDB_CLASSES->value,
             'label_key' => 'cmdb.settings.tab_classes',
             'grant'     => 'Manage CI classes and their properties (this is the CMDB\'s schema)',
         ],
         [
             'id'        => 'relationship-types',
-            'cap'       => Cap::CMDB_RELATIONSHIP_TYPES,
+            'cap'       => Cap::CMDB_RELATIONSHIP_TYPES->value,
             'label_key' => 'cmdb.settings.tab_rel_types',
             'grant'     => 'Manage relationship types',
         ],
         [
             'id'           => 'ai',
-            'cap'          => Cap::CMDB_AI,
+            'cap'          => Cap::CMDB_AI->value,
             'label_key'    => 'cmdb.settings.tab_ai',
             'grant'        => 'Configure the CMDB AI provider, including its API key',
             'sensitive'    => true,
