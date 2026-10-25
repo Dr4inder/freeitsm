@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2594 | Workflow          | Fix         | **Test fire skipped every workflow that had a condition**: `buildTestFirePayload()` read `field` / `op` / `value` from `node.data`, but a condition node keeps them on the node itself, so the test payload was always empty and an `equals` / `in` condition never matched. Found while writing the workflow engine developer guide. workflow-editor.js v=21. |
 | 2593 | Tickets           | Fix         | **"Expand the newest message" expanded the oldest one** on a long ticket: the thread is rendered newest first, but `mcSweep()` treated the LAST message as the newest, so the customer's latest reply was the one collapsed. Now the first. Found while mapping inbox.js for its developer guide; the same newest-first mistake was fixed for message folding on 4 October (#2157). inbox.js v=158. |
 
 

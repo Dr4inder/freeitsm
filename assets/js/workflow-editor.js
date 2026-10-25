@@ -1550,9 +1550,12 @@ const WFE = (() => {
             cur[parts[parts.length - 1]] = value;
         };
         for (const c of conditions) {
-            const field = c.data && c.data.field;
-            const op = (c.data && c.data.op) || 'equals';
-            const val = c.data ? c.data.value : null;
+            // TRAP: a condition node keeps field / op / value on ITSELF (addConditionNode),
+            // not under .data. This read c.data.field until 4.0.1, so the payload was always
+            // {} and every workflow with a condition came back "skipped" on Test fire.
+            const field = c.field;
+            const op = c.op || 'equals';
+            const val = c.value === undefined ? null : c.value;
             if (!field) continue;
             switch (op) {
                 case 'equals':
