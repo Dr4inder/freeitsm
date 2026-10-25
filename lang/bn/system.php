@@ -1685,7 +1685,6 @@ return [
         'step3' => '<strong>এই পৃষ্ঠা লক্ষ্য রাখুন।</strong> ওয়ার্কার চলা শুরু করলে উপরের স্ট্যাটাস সবুজ হবে এবং ডেলিভারিগুলো নিচে দেখা যাবে। সম্পূর্ণ সেটআপ নোট (Windows &amp; Linux, সিগনেচার যাচাই) <a href="https://github.com/edmozley/freeitsm/wiki/Workflows" target="_blank" rel="noopener">ওয়ার্কফ্লো উইকি</a>-তে আছে।',
         'fact_worker' => 'ওয়ার্কার স্ক্রিপ্ট',
         'fact_retry' => 'পুনরায় চেষ্টার সময়সূচি',
-        'fact_retry_val' => '1m &middot; 5m &middot; 15m &middot; 1h &middot; 6h, তারপর ব্যর্থ',
         'fact_retention' => 'লগ সংরক্ষণকাল',
         'fact_queued' => 'এখন কিউতে',
         'days' => '{n} দিন',

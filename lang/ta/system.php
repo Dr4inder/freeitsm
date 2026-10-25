@@ -1685,7 +1685,6 @@ return [
         'step3' => '<strong>இந்தப் பக்கத்தைக் கவனியுங்கள்.</strong> Worker இயங்கியதும், மேலே உள்ள நிலை பச்சையாக மாறி, அனுப்புதல்கள் கீழே தோன்றும். முழு அமைப்புக் குறிப்புகள் (Windows &amp; Linux, கையொப்பச் சரிபார்ப்பு) <a href="https://github.com/edmozley/freeitsm/wiki/Workflows" target="_blank" rel="noopener">Workflows wiki-யில்</a> உள்ளன.',
         'fact_worker' => 'Worker ஸ்கிரிப்ட்',
         'fact_retry' => 'மறுமுயற்சி அட்டவணை',
-        'fact_retry_val' => '1m &middot; 5m &middot; 15m &middot; 1h &middot; 6h, பின்னர் தோல்வி',
         'fact_retention' => 'பதிவு வைத்திருப்பு',
         'fact_queued' => 'இப்போது வரிசையில்',
         'days' => '{n} நாட்கள்',

@@ -1685,7 +1685,6 @@ return [
         'step3' => '<strong>Vigile esta página.</strong> En cuanto el worker se ejecute, el estado de arriba se pone en verde y las entregas aparecen debajo. Las notas completas de configuración (Windows &amp; Linux, verificación de firmas) están en <a href="https://github.com/edmozley/freeitsm/wiki/Workflows" target="_blank" rel="noopener">el wiki de Flujos de trabajo</a>.',
         'fact_worker' => 'Script del worker',
         'fact_retry' => 'Programa de reintentos',
-        'fact_retry_val' => '1m &middot; 5m &middot; 15m &middot; 1h &middot; 6h, después fallido',
         'fact_retention' => 'Retención del registro',
         'fact_queued' => 'En cola ahora',
         'days' => '{n} días',

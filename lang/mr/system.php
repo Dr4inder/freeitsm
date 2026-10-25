@@ -1685,7 +1685,6 @@ return [
         'step3' => '<strong>हे पृष्ठ पाहत रहा.</strong> वर्कर चालू झाल्यावर वरील स्थिती हिरवी होते आणि डिलिव्हरी खाली दिसतात. संपूर्ण सेटअप टिपा (Windows &amp; Linux, सिग्नेचर पडताळणी) <a href="https://github.com/edmozley/freeitsm/wiki/Workflows" target="_blank" rel="noopener">वर्कफ्लो विकी</a> मध्ये आहेत.',
         'fact_worker' => 'वर्कर स्क्रिप्ट',
         'fact_retry' => 'पुन्हा प्रयत्न वेळापत्रक',
-        'fact_retry_val' => '1m &middot; 5m &middot; 15m &middot; 1h &middot; 6h, मग अयशस्वी',
         'fact_retention' => 'नोंद ठेवण्याचा कालावधी',
         'fact_queued' => 'आता रांगेत',
         'days' => '{n} दिवस',

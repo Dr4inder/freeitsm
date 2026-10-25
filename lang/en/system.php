@@ -2185,11 +2185,27 @@ return [
 
         'fact_worker'     => 'Worker script',
         'fact_retry'      => 'Retry schedule',
-        'fact_retry_val'  => '1m &middot; 5m &middot; 15m &middot; 1h &middot; 6h, then failed',
+        'fact_retry_sched' => '{schedule} &middot; dead after {n} tries',
+        'fact_retry_once' => 'No retries &middot; dead after 1 try',
         'fact_retention'  => 'Log retention',
         'fact_queued'     => 'Queued now',
         'days'            => '{n} days',
 
+        // Delivery
+        'del_title'          => 'Delivery',
+        'del_desc'           => 'How hard FreeITSM tries to get each webhook through.',
+        'opt_default'        => '{label} (default)',
+        'del_attempts_label' => 'Tries before giving up',
+        'del_attempts_one'   => '1 try (no retries)',
+        'del_attempts_opt'   => '{n} tries',
+        'del_attempts_help'  => 'A failed try is retried after 1 minute, then 5 minutes, 15 minutes, 1 hour and 6 hours, then every 6 hours. After the last try the delivery is marked <strong>Dead</strong> and waits for <em>Replay</em>. A change applies to webhooks queued from now on - ones already in the queue keep the number they started with.',
+        'del_timeout_label'  => 'Wait for the endpoint to answer',
+        'del_timeout_opt'    => '{n} seconds',
+        'del_timeout_help'   => 'How long each try waits before it counts as failed. Raise it only for an endpoint that is known to be slow: the worker sends one webhook at a time, so a long wait holds up the rest of the queue. <em>Send test</em> in the workflow editor waits at most 25 seconds.',
+        'del_int_label'      => 'If a send was cut off part-way',
+        'del_int_retry'      => 'Try again - the endpoint may receive it twice',
+        'del_int_stop'       => 'Stop, and leave it for Replay',
+        'del_int_help'       => 'If the worker is stopped in the middle of a send - a server restart, or the scheduled task being killed - nobody knows whether the endpoint got it. After 10 minutes FreeITSM settles it: <strong>Try again</strong> counts it as a failed try and retries on the schedule above; <strong>Stop</strong> marks it Dead straight away, so you can check the endpoint and Replay it yourself. Every send carries an <code>X-FreeITSM-Delivery</code> header with the same number on every try and on a Replay, so a receiver you run yourself can ignore a repeat. Chat tools such as Slack and Teams cannot, and would show the message twice.',
         // Data protection
         'dp_title'        => 'Data protection',
         'dp_desc'         => 'What FreeITSM keeps on disk about your webhooks, and for how long.',

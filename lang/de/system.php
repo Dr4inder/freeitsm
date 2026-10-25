@@ -1685,7 +1685,6 @@ return [
         'step3' => '<strong>Beobachten Sie diese Seite.</strong> Sobald der Worker läuft, wird der Status oben grün und die Zustellungen erscheinen unten. Vollständige Einrichtungshinweise (Windows &amp; Linux, Signaturprüfung) stehen im <a href="https://github.com/edmozley/freeitsm/wiki/Workflows" target="_blank" rel="noopener">Workflows-Wiki</a>.',
         'fact_worker' => 'Worker-Skript',
         'fact_retry' => 'Wiederholungsplan',
-        'fact_retry_val' => '1m &middot; 5m &middot; 15m &middot; 1h &middot; 6h, dann fehlgeschlagen',
         'fact_retention' => 'Protokollaufbewahrung',
         'fact_queued' => 'Jetzt eingereiht',
         'days' => '{n} Tage',

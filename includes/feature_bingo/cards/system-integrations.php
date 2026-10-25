@@ -100,6 +100,18 @@ return [
         'link'     => 'system/webhooks/',
         'check'    => ['setting', 'webhook_payload_retention_days', 'nonempty'],
     ],
+    [
+        'id'       => 'system.webhook_delivery_settings',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'integrations',
+        'title'    => 'Webhook tries and timeout',
+        'what'     => 'How many times a webhook is tried before it is given up, how long each try waits for the endpoint, and whether a send cut off part-way is retried or left for Replay.',
+        'why'      => 'A slow endpoint needs a longer wait; a chat channel that must never see a message twice wants interrupted sends left for a person to check.',
+        'done'     => 'An administrator has saved one of the Delivery settings on System > Webhooks (6 tries, 15 seconds and retry until then).',
+        'link'     => 'system/webhooks/#delivery',
+        'check'    => ['sql', "SELECT COUNT(*) FROM system_settings WHERE setting_key IN ('webhook_max_attempts', 'webhook_timeout_seconds', 'webhook_interrupted_action') AND setting_value <> ''"],
+    ],
 
     // ── Calendar sync ───────────────────────────────────────────────────────
     [

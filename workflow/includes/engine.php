@@ -2918,10 +2918,10 @@ class WorkflowEngine
      *
      * If a signing `secret` is set, the raw body is HMAC-SHA256 signed and the
      * hex digest sent as X-FreeITSM-Signature so the receiver can verify the
-     * call really came from this install. Delivery is synchronous with a short
-     * timeout (a dead URL fails fast rather than hanging the host request); a
-     * non-2xx response or transport error marks the step failed and is visible
-     * in the execution log. An async delivery queue with retries is planned.
+     * call really came from this install. The step only queues the delivery
+     * (webhookEnqueue); the worker in cron/webhook_deliveries.php sends it, with
+     * the tries, timeout and interrupted-send handling set on System > Webhooks,
+     * so a slow or dead URL never holds up the host request.
      *
      * @param array $args  the action's args: preset, url and secret (stored encrypted), message, body
      * @param array $payload  the run's payload; cut down first for a confidential ticket

@@ -131,8 +131,11 @@ try {
     exit;
 }
 
-// 2) Send it synchronously over the identical transport used by the worker.
-$res = webhookHttpSend($req['url'], $req['headers'], $req['body'], 'POST');
+// 2) Send it synchronously over the identical transport used by the worker, with
+//    the same timeout - capped at 25s, as this one is a web request inside PHP's
+//    usual 30s limit.
+$res = webhookHttpSend($req['url'], $req['headers'], $req['body'], 'POST',
+    min(25, webhookDeliverySettings($conn)['timeout']));
 $delivered = ($res['body'] !== false && $res['error'] === '' && $res['status'] >= 200 && $res['status'] < 300);
 
 echo json_encode([
