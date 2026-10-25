@@ -1767,7 +1767,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         <!-- General Tab -->
         <?php endif; ?>
 
-        <?php if (settingsTabVisible($visibleTabs, 'general')): ?>
+        <?php if (settingsTabVisible($visibleTabs, 'numbering')): ?>
         <?php /* Ticket numbering (GH #71).
                  Ordered so the consequential decisions come first: what the
                  number LOOKS like, then what each counter counts, then the
@@ -1866,7 +1866,9 @@ function renderOversizeFields(string $px, bool $withLimits): void
             </div>
             <div id="numRenumberOut" style="margin-top:16px;max-width:700px;"></div>
         </div>
+        <?php endif; ?>
 
+        <?php if (settingsTabVisible($visibleTabs, 'general')): ?>
         <div class="tab-content<?php echo $activeTabId === 'general' ? ' active' : ''; ?>" id="general-tab" data-capability="<?php echo capKey(Cap::TICKETS_GENERAL); ?>">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('tickets.settings.headings.general_settings')); ?></h2>
@@ -3613,24 +3615,28 @@ function renderOversizeFields(string $px, bool $withLimits): void
             // loadTeams still runs — it populates the `teams` global the
             // Departments tab's team-assignment picker reads. Team and analyst
             // management moved to System → Teams / System → Analysts.
+            // A delegated settings role only gets the tabs it holds, so a
+            // loader whose tab is not on the page must not run - it would
+            // write into a missing element and throw.
+            const hasTab = id => !!document.getElementById(id + '-tab');
             loadTeams().then(() => {
-                loadDepartments();
+                if (hasTab('departments')) loadDepartments();
             });
-            loadTicketTypes();
-            loadTicketOrigins();
-            loadCustomFields();
-            loadTicketStatuses();
-            loadTicketPriorities();
-            loadRotaLocations();
-            loadMailboxes();
-            loadChannels();
-            loadWidgets();
-            loadMsgTemplates();
-            loadEmailTemplates();
-            loadReplyTemplates();
-            loadRotaShifts();
-            loadRotaWeekendSetting();
-            loadSlaTab();
+            if (hasTab('ticket-types')) loadTicketTypes();
+            if (hasTab('ticket-origins')) loadTicketOrigins();
+            if (hasTab('custom-fields')) loadCustomFields();
+            if (hasTab('statuses')) loadTicketStatuses();
+            if (hasTab('priorities')) loadTicketPriorities();
+            if (hasTab('rota-locations')) loadRotaLocations();
+            if (hasTab('mailboxes')) loadMailboxes();
+            if (hasTab('messaging')) loadChannels();
+            if (hasTab('webchat')) loadWidgets();
+            if (hasTab('messaging')) loadMsgTemplates();
+            if (hasTab('email-templates')) loadEmailTemplates();
+            if (hasTab('reply-templates')) loadReplyTemplates();
+            if (hasTab('rota')) loadRotaShifts();
+            if (hasTab('rota')) loadRotaWeekendSetting();
+            if (hasTab('sla')) loadSlaTab();
 
             // Auto-switch to mailboxes tab if OAuth success
             <?php if ($oauthSuccess && $oauthMailboxId): ?>
@@ -4602,7 +4608,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         }
 
         // Team assignment form submission
-        document.getElementById('teamAssignmentForm').addEventListener('submit', async function(e) {
+        document.getElementById('teamAssignmentForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const entityType = document.getElementById('assignmentEntityType').value;
@@ -4647,7 +4653,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         });
 
         // Handle form submission
-        document.getElementById('editForm').addEventListener('submit', async function(e) {
+        document.getElementById('editForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const type = document.getElementById('itemType').value;
@@ -5062,7 +5068,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             } catch (e) { showToast('Failed to delete channel', 'error'); }
         }
 
-        document.getElementById('channelForm').addEventListener('submit', async function(e) {
+        document.getElementById('channelForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const selectedProvider = document.getElementById('channelProvider').value;
             const payload = {
@@ -5277,7 +5283,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             } catch (e) { showToast('Failed to delete widget', 'error'); }
         }
 
-        document.getElementById('widgetForm').addEventListener('submit', async function(e) {
+        document.getElementById('widgetForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const payload = {
                 id: document.getElementById('widgetId').value || null,
@@ -5418,7 +5424,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             } catch (e) { showToast('Failed to delete template', 'error'); }
         }
 
-        document.getElementById('msgTemplateForm').addEventListener('submit', async function(e) {
+        document.getElementById('msgTemplateForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const payload = {
                 id: document.getElementById('msgTemplateId').value || null,
@@ -6241,7 +6247,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         }
 
         // Mailbox form submission
-        document.getElementById('mailboxForm').addEventListener('submit', async function(e) {
+        document.getElementById('mailboxForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const formData = {
@@ -6666,11 +6672,11 @@ function renderOversizeFields(string $px, bool $withLimits): void
         // Load remaining settings on page load (analyst management moved to
         // System → Analysts).
         document.addEventListener('DOMContentLoaded', function() {
-            loadGeneralSettings();
+            if (document.getElementById('general-tab')) loadGeneralSettings();
             loadPrivacySettings();
             loadMergeSettings();
-            loadReplyCleanupSettings();
-            loadCsatSettings();
+            if (document.getElementById('reply-cleanup-tab')) loadReplyCleanupSettings();
+            if (document.getElementById('csat-tab')) loadCsatSettings();
         });
 
         // ============================
@@ -6716,7 +6722,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             }
         }
 
-        document.getElementById('csatSettingsForm').addEventListener('submit', async function(e) {
+        document.getElementById('csatSettingsForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const payload = {
                 mode:           document.querySelector('input[name="csatMode"]:checked')?.value || 'off',
@@ -6751,7 +6757,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             }
         });
 
-        document.getElementById('replyCleanupForm').addEventListener('submit', async function(e) {
+        document.getElementById('replyCleanupForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const payload = {
                 tone:                document.getElementById('rcTone').value,
@@ -7161,7 +7167,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             }
         }
 
-        document.getElementById('generalSettingsForm').addEventListener('submit', async function(e) {
+        document.getElementById('generalSettingsForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const settings = {
@@ -7912,7 +7918,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             });
         }
 
-        document.getElementById('templateForm').addEventListener('submit', async function(e) {
+        document.getElementById('templateForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const templateData = {
@@ -8049,7 +8055,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             document.getElementById('rotaShiftModal').classList.remove('active');
         }
 
-        document.getElementById('rotaShiftForm').addEventListener('submit', async function(e) {
+        document.getElementById('rotaShiftForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const shiftData = {

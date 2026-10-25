@@ -239,10 +239,11 @@ return [
             'setting_keys' => ['attachment_extract_cron', 'attachment_extract_opportunistic'],
         ],
         [
-            'id'        => 'rota',
-            'cap'       => capKey(Cap::TICKETS_ROTA),
-            'label_key' => 'tickets.settings.tabs.rota',
-            'grant'     => 'Manage the on-call rota',
+            'id'           => 'rota',
+            'cap'          => capKey(Cap::TICKETS_ROTA),
+            'label_key'    => 'tickets.settings.tabs.rota',
+            'grant'        => 'Manage the on-call rota',
+            'setting_keys' => ['rota_include_weekends'],
         ],
         [
             // Configurable ticket numbering (GH #71). Sensitive: renumbering
