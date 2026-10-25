@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2611 | Core              | Improvement | **The "show PHP errors" switch is documented and works in Docker** (asked by chris18890 on the #2550 commit): `FREEITSM_DISPLAY_ERRORS` was only explained in a `config.php` comment - it is now a commented line in `db_config.sample.php` with why it lives there (config.php is replaced on upgrade), and a wiki section in Installation. `docker/config.php` had errors off with no switch; it now honours `FREEITSM_DISPLAY_ERRORS=1` from the environment (commented in `docker-compose.yml`) and logs errors explicitly, matching `config.php`. |
 
 
 
