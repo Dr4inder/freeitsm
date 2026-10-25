@@ -1561,7 +1561,7 @@ $translationNamespaces = ['common', 'asset-management'];
              from the wiki's Mobile-Friendly-Techniques. Every rule inside it is
              gated at 768px, so the desktop layout is untouched. */ ?>
     <link rel="stylesheet" href="../assets/css/project-links.css?v=1">
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=195">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
 </head>
 <body>
     <?php include 'includes/header.php'; ?>

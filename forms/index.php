@@ -271,7 +271,7 @@ $translationNamespaces = ['common', 'forms'];
     <!-- Mobile layer. Linked AFTER this page's inline <style> on purpose: the
          mobile rules must win on equal specificity, and a link placed above it
          would silently lose to the desktop block below (the load-order trap). -->
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=195">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=196">
 </head>
 <body class="<?php echo trim(($formsLevel === 'read' ? 'module-read-only ' : '') . ($formsMayDesign ? '' : 'forms-no-design')); ?>">    <?php include 'includes/header.php'; ?>
     <?php /* The action row (#185) is what was the list's toolbar: title, search,

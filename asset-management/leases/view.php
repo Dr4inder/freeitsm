@@ -41,7 +41,7 @@ $translationNamespaces = ['common', 'asset-management'];
     <script src="../../assets/js/i18n.js?v=3"></script>
     <?php echo Money::scriptTag(); ?>
     <script src="../../assets/js/money.js?v=1"></script>
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=195">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=196">
 </head>
 <body>
     <?php include '../includes/header.php'; ?>

@@ -93,7 +93,7 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
         .zbx-act-error { color:var(--danger-text,#991b1b); }
     </style>
     <!-- Mobile layer LAST, after this page's own <style> (Techniques §9). -->
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=195">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=196">
     <?php echo Tz::scriptTag(); ?>
 </head>
 <body data-mobile-module="system" data-mobile-page="integrations-zabbix">

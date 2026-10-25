@@ -47,7 +47,7 @@ $projectId = (int)($_GET['id'] ?? 0);
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/projects.css?v=48">
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=195">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
 </head>
 <body data-mobile-module="projects" data-mobile-page="projects-view">
     <?php $prjAskAi = true; include 'includes/header.php'; ?>

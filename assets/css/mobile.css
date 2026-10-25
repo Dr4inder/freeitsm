@@ -16371,3 +16371,43 @@
     body[data-mobile-page="files-desktop"] .fdm-viewer .fdv-paperstage { padding: 8px; }
     body[data-mobile-page="files-desktop"] .fdm-viewer .fdv-pdf { padding: 8px; }
 }
+
+@media (max-width: 768px) {
+    /* ====================================================================
+       LAYER 46 - Grouped lists (GH #208)
+       --------------------------------------------------------------------
+       assets/js/grouped-list.js, first used by System -> Analysts. Its tree
+       and tabs already fit a phone: the tab bar is the shared settings
+       `.tabs`, which the settings rule `body[data-mobile-page="settings"] .tabs`
+       already scrolls sideways, and each
+       group's table scrolls like every settings table. Two things do not:
+
+         jump nav   a 220px sticky side list beside the content. On a phone
+                    it becomes the dropdown the script always renders
+                    (.gl-jump-select), sticky at the top of the scroller.
+         toolbar    the search box takes the whole first line, so the
+                    dropdowns wrap under it instead of beside a squashed box.
+
+       46a jump nav   46b toolbar
+       ==================================================================== */
+
+    /* 46a - one column; the side list becomes a dropdown. */
+    .gl-jump { flex-direction: column; gap: 12px; }
+    .gl-jump-nav { display: none; }
+    .gl-jump-select {
+        display: block; position: sticky; top: 0; z-index: 5; width: 100%; min-height: 42px;
+        padding: 8px; font-size: 16px; border: 1px solid var(--border); border-radius: 6px;
+        background: var(--surface); color: var(--text);
+    }
+    .gl-jump-section.gl-depth-2 { margin-left: 0; }
+    .gl-node .gl-node { margin-left: 4px; }
+    .gl-body { padding: 0 6px 8px; }
+    .gl-head { min-height: 44px; }
+    .gl-mini { min-height: 40px; }
+
+    /* 46b - the Analysts toolbar: search on its own line, fields at 16px (§3). */
+    body[data-mobile-page="settings"] .av-search { flex: 1 1 100%; min-width: 0; }
+    body[data-mobile-page="settings"] .av-search,
+    body[data-mobile-page="settings"] .av-field select { font-size: 16px; min-height: 42px; }
+    body[data-mobile-page="settings"] .av-menu { min-width: 0; width: calc(100vw - 48px); }
+}

@@ -100,7 +100,7 @@ function evExplain(?array $e): string {
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
     <script src="../../assets/js/i18n.js?v=3"></script>
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=195">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=196">
 </head>
 <body data-analyst-id="<?php echo $analystId; ?>" class="ev-report-body">
     <?php include '../includes/header.php'; ?>

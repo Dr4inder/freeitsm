@@ -84,7 +84,7 @@ $t = fn(string $k) => htmlspecialchars(t('system.integrations.' . $k));
         @media (max-width: 700px) { .mst-row2 { grid-template-columns:1fr; } }
     </style>
     <!-- Mobile layer LAST, after this page's own <style> (Techniques §9). -->
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=195">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=196">
 </head>
 <body data-mobile-module="system" data-mobile-page="integrations-msteams">
     <?php include '../includes/header.php'; ?>
