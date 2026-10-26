@@ -100,6 +100,10 @@ $primaryKeys = [
     'project_task_flow'         => ['project_id', 'day', 'status_id'],
     // Microsoft Teams alerts: one workflow per channel and alert.
     'msteams_channel_workflows' => ['channel_id', 'alert_key'],
+    // GH #199 Part B: one mapping per connection, one sync-owned row per relationship, one decision per object.
+    'virt_cmdb_mappings'        => 'connection_id',
+    'cmdb_relationship_sources' => 'relationship_id',
+    'virt_cmdb_decisions'       => ['object_kind', 'virt_object_id'],
     // 🔴 GH #123. Both of these were missed, and the warning above is the one
     // they were missed in spite of. A table is only safe to leave out of this
     // map if its PK is literally `id`; neither of these has an `id` column at

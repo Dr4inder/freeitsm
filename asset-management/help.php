@@ -859,6 +859,7 @@ $translationNamespaces = ['common', 'asset-management'];
                         <div class="help-card row"><div><strong>Nothing disappears on a bad read</strong><p>A host the collector could not read keeps its VMs, marked <em>Not confirmed since</em>. A VM missing from a complete report is <em>Not seen since</em>, never deleted - unless you set <em>Remove VMs not seen for</em> on the connection.</p></div></div>
                         <div class="help-card row"><div><strong>Identity changes</strong><p>A renamed, migrated or failed-over VM stays the same record. One imported as a copy comes back with a new identity: FreeITSM asks you on the connection whether it is the <em>same machine</em> - it never decides by name.</p></div></div>
                         <div class="help-card row"><div><strong>Background jobs</strong><p>Each connection appears on System &rarr; Background jobs as <em>Hyper-V reports</em>, overdue when the collector stops.</p></div></div>
+                        <div class="help-card row"><div><strong>Into the CMDB</strong><p><strong>CMDB</strong> on a connection maps the estate onto your own CMDB classes and relationship types, shows what it would do, and - once switched on - keeps CIs and the relationships it made in step after every report. A same-name CI is never bound without you; owners, properties and relationships people drew are never touched.</p></div></div>
                     </div>
                 </div>
 

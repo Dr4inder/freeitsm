@@ -199,6 +199,31 @@ return [
         'error_prefix'   => 'Error: {message}',
     ],
 
+    // GH #199 Part B: the From discovery card on a source-bound CI.
+    'discovery' => [
+        'title'          => 'Discovered',
+        'from_discovery' => 'Read live from discovery - edit nothing here; it follows the source.',
+        'restricted'     => 'Discovered - restricted. You cannot open Assets, where discovered estates are kept.',
+        'ended'          => 'This item was discovered once, but is not bound to a discovered object any more.',
+        'kind'           => 'Discovered as',
+        'kind_cluster'   => 'Failover Cluster',
+        'kind_host'      => 'Hyper-V host',
+        'kind_vm'        => 'Virtual machine',
+        'kind_role'      => 'Cluster role',
+        'source'         => 'Source',
+        'state'          => 'State',
+        'host'           => 'Host',
+        'cluster'        => 'Cluster',
+        'ha'             => 'Highly available',
+        'yes'            => 'Yes',
+        'no'             => 'No',
+        'cpu'            => 'CPUs',
+        'memory'         => 'Memory',
+        'last_seen'      => 'Last seen',
+        'not_seen'       => 'Not seen since {when}',
+        'not_confirmed'  => 'Not confirmed since {when} - its host could not be read',
+    ],
+
     'impact' => [
         // GH #199 Part C: redundancy-aware grades.
         'grade_affected'           => 'Affected',

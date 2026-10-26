@@ -256,6 +256,8 @@ function render() {
             '<div class="o2-sec">' + propsHtml() + '</div>' +
             // GH #201: the asset this CI is the same equipment as, read live from the asset.
             '<div class="o2-sec"><div id="cmdbAssetLink"></div></div>' +
+            // GH #199 Part B: the discovered object this CI is bound to - drawn only when it has one.
+            '<div class="o2-sec"><div id="cmdbDiscovery"></div></div>' +
             // Attached documents (discussion #76) — the diagram, the licence, the
             // rack photo. Before activity and danger, which both read as endings.
             '<div class="o2-sec"><div id="cmdbDocuments"></div></div>' +
@@ -283,6 +285,8 @@ function render() {
         });
     }
 
+    if (obj && obj.id) loadDiscovery(obj.id);
+
     if (window.SHOW_DOMAINS && window.DomainLinks && obj && obj.id) {
         DomainLinks.mount(document.getElementById('cmdbDomains'), {
             kind: 'cmdb', id: obj.id, base: window.APP_BASE,
@@ -304,6 +308,39 @@ function render() {
     wireProps();
     animateStats();
     animateMeter();
+}
+
+/* GH #199 Part B: "From discovery" - what a source-bound CI is, read live from the virtual
+   estate and never copied into its properties, in the same way the Asset card reads the
+   asset (GH #201). Nothing is drawn for a CI that was never discovered. */
+async function loadDiscovery(id) {
+    const host = document.getElementById('cmdbDiscovery');
+    if (!host) return;
+    let d;
+    try { d = await (await fetch(API + 'discovery_source.php?cmdb_object_id=' + id)).json(); } catch (e) { return; }
+    if (!d || !d.success || (!d.current && !(d.history || []).length)) { host.closest('.o2-sec').style.display = 'none'; return; }
+    const T = (k, p) => window.t('cmdb.discovery.' + k, p);
+    const c = d.current;
+    let body;
+    if (!c) {
+        body = '<div class="o2-empty">' + esc(T('ended')) + '</div>';
+    } else if (c.restricted) {
+        body = '<div class="o2-empty">' + esc(T('restricted')) + '</div>';
+    } else {
+        const facts = [
+            [T('kind'), T('kind_' + c.kind)], [T('source'), c.connection], [T('state'), c.state],
+            [T('host'), c.host], [T('cluster'), c.cluster],
+            [T('ha'), c.highly_available === null || c.highly_available === undefined ? null : (c.highly_available ? T('yes') : T('no'))],
+            [T('cpu'), c.cpu_count], [T('memory'), c.memory_bytes ? Math.round(c.memory_bytes / 1073741824) + ' GB' : null],
+            [T('last_seen'), c.last_seen ? fmtWhen(c.last_seen) : null],
+        ].filter(f => f[1] !== null && f[1] !== undefined && f[1] !== '');
+        body = (c.not_seen_since ? '<div class="o2-grade g-affected">' + esc(T('not_seen', { when: fmtWhen(c.not_seen_since) })) + '</div>' : '')
+            + (c.not_confirmed_since ? '<div class="o2-grade g-unknown">' + esc(T('not_confirmed', { when: fmtWhen(c.not_confirmed_since) })) + '</div>' : '')
+            + '<div class="o2-disc">' + facts.map(f => '<div><span>' + esc(f[0]) + '</span><b>' + esc(f[1]) + '</b></div>').join('') + '</div>'
+            + '<div class="o2-via">' + esc(T('from_discovery')) + '</div>';
+    }
+    host.innerHTML = '<div class="o2-card"><div class="o2-card-head"><span class="o2-card-title">' + esc(T('title')) + '</span></div>' +
+        '<div style="padding: 4px 18px 16px;">' + body + '</div></div>';
 }
 
 /** Returns the breadcrumb - Browse, the class, the parent if any, then this object. */

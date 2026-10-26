@@ -2355,6 +2355,74 @@ CREATE TABLE IF NOT EXISTS `virt_identity_reviews` (
     CONSTRAINT `fk_virt_reviews_conn` FOREIGN KEY (`connection_id`) REFERENCES `virt_connections` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- GH #199 Part B: how one connection's estate becomes CIs - which of YOUR classes and relationship
+-- types each kind maps to (NULL = that kind is not mapped), whether CI names follow the source,
+-- and whether the sync is on. Off until an administrator previews and turns it on.
+CREATE TABLE IF NOT EXISTS `virt_cmdb_mappings` (
+    `connection_id`        INT NOT NULL,
+    `enabled`              TINYINT(1) NOT NULL DEFAULT 0,
+    `cluster_class_id`     INT NULL,
+    `host_class_id`        INT NULL,
+    `vm_class_id`          INT NULL,
+    `role_class_id`        INT NULL,
+    `member_type_id`       INT NULL,
+    `runs_on_ha_type_id`   INT NULL,
+    `runs_on_type_id`      INT NULL,
+    `role_in_type_id`      INT NULL,
+    `sync_names`           TINYINT(1) NOT NULL DEFAULT 1,
+    `last_sync_at`         DATETIME NULL,
+    `last_sync_summary`    VARCHAR(500) NULL,
+    `updated_by_id`        INT NULL,
+    `updated_at`           DATETIME NULL,
+    PRIMARY KEY (`connection_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- GH #199 Part B: a CI bound to ONE discovered object - "this CI is that VM". One row per PERIOD,
+-- closed never deleted (the same shape as asset_ci_links, GH #201): one live binding per CI and per
+-- object. virt_object_id is the virt_* row id, which a reviewed rebinding keeps.
+CREATE TABLE IF NOT EXISTS `cmdb_object_sources` (
+    `id`                   INT NOT NULL AUTO_INCREMENT,
+    `cmdb_object_id`       INT NOT NULL,
+    `connection_id`        INT NOT NULL,
+    `object_kind`          VARCHAR(10) NOT NULL,
+    `virt_object_id`       INT NOT NULL,
+    `started_at`           DATETIME NOT NULL,
+    `started_by_id`        INT NULL,
+    `start_source`         VARCHAR(80) NOT NULL,
+    `ended_at`             DATETIME NULL,
+    `ended_by_id`          INT NULL,
+    `end_source`           VARCHAR(80) NULL,
+    `end_reason`           VARCHAR(20) NULL,
+    `ci_name`              VARCHAR(255) NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_cmdb_object_sources_ci` (`cmdb_object_id`, `ended_at`),
+    KEY `idx_cmdb_object_sources_obj` (`object_kind`, `virt_object_id`, `ended_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- GH #199 Part B: the relationships a discovery sync created, and so may change or remove. Every
+-- other relationship - everything a person drew - is never touched.
+CREATE TABLE IF NOT EXISTS `cmdb_relationship_sources` (
+    `relationship_id`      INT NOT NULL,
+    `connection_id`        INT NOT NULL,
+    `created_at`           DATETIME NOT NULL,
+    PRIMARY KEY (`relationship_id`),
+    KEY `idx_cmdb_relationship_sources_conn` (`connection_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- GH #199 Part B: a person's decision about a discovered object that the sync must not decide
+-- alone: create_new (despite a same-name CI), leave_unbound, or ci_deleted (its CI was deleted by
+-- a person - never recreated until someone says so).
+CREATE TABLE IF NOT EXISTS `virt_cmdb_decisions` (
+    `object_kind`          VARCHAR(10) NOT NULL,
+    `virt_object_id`       INT NOT NULL,
+    `connection_id`        INT NOT NULL,
+    `decision`             VARCHAR(20) NOT NULL,
+    `decided_by_id`        INT NULL,
+    `decided_at`           DATETIME NOT NULL,
+    PRIMARY KEY (`object_kind`, `virt_object_id`),
+    KEY `idx_virt_cmdb_decisions_conn` (`connection_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ----------------------------------------------------------
 -- Web chat widgets (embeddable website chat → tickets)
 -- ----------------------------------------------------------

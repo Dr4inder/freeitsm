@@ -2682,6 +2682,56 @@ return [
         'decided_at'                 => 'DATETIME NULL',
     ],
 
+    // GH #199 Part B: discovered objects as CIs (see database/freeitsm.sql).
+    'virt_cmdb_mappings' => [
+        'connection_id'        => 'INT NOT NULL',
+        'enabled'              => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'cluster_class_id'     => 'INT NULL',
+        'host_class_id'        => 'INT NULL',
+        'vm_class_id'          => 'INT NULL',
+        'role_class_id'        => 'INT NULL',
+        'member_type_id'       => 'INT NULL',
+        'runs_on_ha_type_id'   => 'INT NULL',
+        'runs_on_type_id'      => 'INT NULL',
+        'role_in_type_id'      => 'INT NULL',
+        'sync_names'           => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'last_sync_at'         => 'DATETIME NULL',
+        'last_sync_summary'    => 'VARCHAR(500) NULL',
+        'updated_by_id'        => 'INT NULL',
+        'updated_at'           => 'DATETIME NULL',
+    ],
+
+    'cmdb_object_sources' => [
+        'id'                   => 'INT NOT NULL AUTO_INCREMENT',
+        'cmdb_object_id'       => 'INT NOT NULL',
+        'connection_id'        => 'INT NOT NULL',
+        'object_kind'          => 'VARCHAR(10) NOT NULL',
+        'virt_object_id'       => 'INT NOT NULL',
+        'started_at'           => 'DATETIME NOT NULL',
+        'started_by_id'        => 'INT NULL',
+        'start_source'         => 'VARCHAR(80) NOT NULL',
+        'ended_at'             => 'DATETIME NULL',
+        'ended_by_id'          => 'INT NULL',
+        'end_source'           => 'VARCHAR(80) NULL',
+        'end_reason'           => 'VARCHAR(20) NULL',
+        'ci_name'              => 'VARCHAR(255) NULL',
+    ],
+
+    'cmdb_relationship_sources' => [
+        'relationship_id'      => 'INT NOT NULL',
+        'connection_id'        => 'INT NOT NULL',
+        'created_at'           => 'DATETIME NOT NULL',
+    ],
+
+    'virt_cmdb_decisions' => [
+        'object_kind'          => 'VARCHAR(10) NOT NULL',
+        'virt_object_id'       => 'INT NOT NULL',
+        'connection_id'        => 'INT NOT NULL',
+        'decision'             => 'VARCHAR(20) NOT NULL',
+        'decided_by_id'        => 'INT NULL',
+        'decided_at'           => 'DATETIME NOT NULL',
+    ],
+
     'intune_devices' => [
         'id'                            => 'INT NOT NULL AUTO_INCREMENT',
         'intune_id'                     => 'VARCHAR(64) NOT NULL',

@@ -30,9 +30,9 @@
  * owners) - names are unique within one report, and resolving them per report is what keeps
  * a host rename from breaking the VMs on it.
  *
- * TRAP: Part B will bind CIs to these rows by id. decideReview() therefore keeps the OLD row
- *   (and its id) and gives it the new identity - never the other way round - and the
- *   retention purge must skip a bound object once bindings exist.
+ * TRAP: Part B binds CIs to these rows by id (cmdb_object_sources). decideReview() therefore
+ *   keeps the OLD row (and its id) and gives it the new identity - never the other way round -
+ *   and the retention purge skips a bound object.
  *
  * @wiki Hyper-V-and-Cluster-Discovery-Design
  * @wiki Hyper-V-Discovery-Developer-Guide
@@ -136,6 +136,15 @@ final class VirtualEstateService
         $out = self::record($conn, $c, $scopeKey, $observed, $fingerprint, $outcome, $results, $unreadable, $collector, $apiKeyId,
             $outcome === 'applied' ? 200 : ($outcome === 'partial' ? 207 : 422));
         $out['review_raised'] = $raised;
+        // Part B: keep the CMDB in step, if this connection's mapping is switched on. Its own
+        // transaction, after the report's: a CMDB problem never loses the report.
+        try {
+            require_once __DIR__ . '/virtual_estate_cmdb.php';
+            $out['cmdb'] = VirtualEstateCmdbService::sync($conn, $connectionId);
+        } catch (Throwable $e) {
+            error_log('virtual estate CMDB sync, connection ' . $connectionId . ': ' . $e->getMessage());
+            $out['cmdb'] = ['error' => 'The CMDB could not be updated from this report; see the server log.'];
+        }
         return $out;
     }
 
@@ -501,6 +510,9 @@ final class VirtualEstateService
     private static function rebind(PDO $conn, string $table, array $old, array $new): void
     {
         $oldId = (int)$old['id']; $newId = (int)$new['id'];
+        // Part B: the old row keeps its CI binding; a binding the new row had moves or ends.
+        require_once __DIR__ . '/virtual_estate_cmdb.php';
+        VirtualEstateCmdbService::rebound($conn, $table === 'virt_hosts' ? 'host' : 'vm', $oldId, $newId);
         if ($table === 'virt_vms') {
             $conn->prepare('DELETE FROM virt_vm_disks WHERE vm_id = ?')->execute([$oldId]);
             $conn->prepare('DELETE FROM virt_vm_networks WHERE vm_id = ?')->execute([$oldId]);
@@ -796,10 +808,14 @@ final class VirtualEstateService
         $days = (int)($c['retention_days'] ?? 0);
         if ($days <= 0) { return; }
         $cut = gmdate('Y-m-d H:i:s', time() - $days * 86400);
-        foreach (['virt_vms', 'virt_cluster_roles', 'virt_hosts', 'virt_clusters'] as $t) {
+        require_once __DIR__ . '/virtual_estate_cmdb.php';
+        $bindKind = ['virt_vms' => 'vm', 'virt_cluster_roles' => 'role', 'virt_hosts' => 'host', 'virt_clusters' => 'cluster'];
+        foreach ($bindKind as $t => $bk) {
             $kind = $t === 'virt_vms' ? 'vm' : ($t === 'virt_hosts' ? 'host' : null);
             $openCase = $kind ? " AND id NOT IN (SELECT old_object_id FROM virt_identity_reviews WHERE status = 'open' AND object_kind = '$kind')" : '';
-            $conn->prepare("DELETE FROM $t WHERE connection_id = ? AND not_seen_since IS NOT NULL AND not_seen_since < ?$openCase")->execute([(int)$c['id'], $cut]);
+            // A discovered object with a CI is never purged: the CI, and the binding's history, need it.
+            $bound = VirtualEstateCmdbService::ready($conn) ? ' AND ' . VirtualEstateCmdbService::boundIdsSql($bk) : '';
+            $conn->prepare("DELETE FROM $t WHERE connection_id = ? AND not_seen_since IS NOT NULL AND not_seen_since < ?$openCase$bound")->execute([(int)$c['id'], $cut]);
         }
     }
 

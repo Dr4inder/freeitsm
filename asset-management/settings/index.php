@@ -1621,6 +1621,9 @@ $translationNamespaces = ['common', 'asset-management'];
                 <p class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.command_hint')); ?></p>
             </div>
 
+            <?php /* GH #199 Part B: the connection's estate as CIs - mapping, preview, decisions. */ ?>
+            <div class="settings-section" id="hvCmdbPanel" style="display:none; margin-top:16px;"></div>
+
             <div class="settings-section" id="hvReviewPanel" style="display:none; margin-top:16px;">
                 <h3 id="hvReviewTitle" style="margin-top:0;"></h3>
                 <p class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.reviews_intro')); ?></p>
@@ -5500,6 +5503,6 @@ $translationNamespaces = ['common', 'asset-management'];
     <script src="../../assets/js/reorder-list.js?v=1"></script>
     <script>window.ASSET_LAYOUT = <?php echo json_encode(['defaults' => AssetTypeLayout::defaults(), 'presets' => AssetTypeLayout::PRESETS], JSON_HEX_TAG | JSON_HEX_AMP); ?>;</script>
     <script src="../../assets/js/mobile.js?v=83"></script>
-    <?php if (settingsTabVisible($visibleTabs, 'hyperv')): ?><script src="hyperv.js?v=2"></script><?php endif; ?>
+    <?php if (settingsTabVisible($visibleTabs, 'hyperv')): ?><script src="hyperv.js?v=3"></script><?php endif; ?>
 </body>
 </html>

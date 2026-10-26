@@ -414,7 +414,19 @@ function cmdbImpactGradeRank(): array {
  * records it (a CI drawn by hand). Part B fills this from discovery for source-bound CIs.
  */
 function cmdbMemberState(PDO $conn, int $ciId): ?string {
-    return null;
+    require_once __DIR__ . '/services/virtual_estate_cmdb.php';
+    return VirtualEstateCmdbService::memberState($conn, $ciId);
+}
+
+/**
+ * The CIs a highly available CI may run on, when discovery knows (its possible owners), or
+ * null - then every other member of its host's group counts.
+ *
+ * @return ?int[]
+ */
+function cmdbPossibleOwners(PDO $conn, int $ciId): ?array {
+    require_once __DIR__ . '/services/virtual_estate_cmdb.php';
+    return VirtualEstateCmdbService::possibleOwnerCis($conn, $ciId);
 }
 
 /**
@@ -532,6 +544,9 @@ function cmdbImpactGrade(PDO $conn, int $rootId, array &$nodes, ?int $tenantScop
                     foreach (array_keys($groupsOf[$e['from']] ?? []) as $grp) {
                         foreach (array_keys($membersOf[$grp] ?? []) as $m) { if ($m !== $e['from']) { $others[$m] = true; } }
                     }
+                    // Narrowed to the nodes the cluster may run it on, when discovery knows them.
+                    $owners = cmdbPossibleOwners($conn, $target);
+                    if ($owners !== null) { $others = array_intersect_key($others, array_flip($owners)); }
                     $alt = $alternatives(array_keys($others));
                     if ($alt['up'] || $alt['assumed']) {
                         $got = 'may_be_interrupted';
@@ -575,6 +590,8 @@ function cmdbImpactGrade(PDO $conn, int $rootId, array &$nodes, ?int $tenantScop
     $limits = [];
     if ($used) {
         // What the model does not know - always shown when a redundancy rule was used.
+        // placement_rules: possible owners ARE applied to discovered VMs (cmdbPossibleOwners);
+        // preferred owners, anti-affinity and drawn-by-hand CIs are not.
         $limits = ['quorum', 'storage', 'capacity', 'placement_rules'];
         if ($assumed) { $limits[] = ['code' => 'assumed_available', 'names' => array_values($assumed)]; }
     }

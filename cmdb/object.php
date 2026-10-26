@@ -778,6 +778,11 @@ if ($showDomains) $translationNamespaces[] = 'domains';
             .o2-hero-actions { flex-direction: row; width: 100%; }
         }
 
+        /* GH #199 Part B: the From discovery card. */
+        .o2-disc { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px 16px; margin-top: 6px; }
+        .o2-disc span { display: block; font-size: 11px; color: var(--text-dim, #9ca3af); }
+        .o2-disc b { font-weight: 600; font-size: 13px; color: var(--text, #111827); }
+
         /* GH #199 Part C: impact grades and the limits of the analysis. */
         .o2-grade { display: inline-block; margin-top: 4px; padding: 1px 8px; border-radius: 99px; font-size: 11px; font-weight: 650; }
         .o2-grade.g-affected { background: var(--danger-bg, #fee2e2); color: var(--danger-text, #b91c1c); }
@@ -947,7 +952,7 @@ if ($showDomains) $translationNamespaces[] = 'domains';
     <script src="../assets/js/domain-links.js?v=2"></script>
     <script src="../assets/js/project-links.js?v=1"></script>
     <script src="../assets/js/ci-asset-link.js?v=5"></script>
-    <script src="object.js?v=17"></script>
+    <script src="object.js?v=18"></script>
     <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

@@ -356,6 +356,10 @@ class CmdbService
             // GH #201: a linked asset is kept; its link ends here, with the CI's name kept on
             // the row. Before the deletes below, so the name and class can still be read.
             AssetCiLinkService::ciDeleted($conn, $ctx, $ids);
+            // GH #199 Part B: a discovered object's CI deleted by a person - its binding ends and
+            // the object waits for a decision rather than being recreated on the next report.
+            require_once __DIR__ . '/virtual_estate_cmdb.php';
+            VirtualEstateCmdbService::ciDeleted($conn, $ctx, $ids);
             self::clearAssetRefFields($conn, $ctx, $ids);
             $conn->prepare("UPDATE cmdb_object_properties SET value_object_id = NULL WHERE value_object_id IN ($ph)")->execute($ids);
             $conn->prepare("DELETE FROM cmdb_object_properties WHERE object_id IN ($ph)")->execute($ids);
