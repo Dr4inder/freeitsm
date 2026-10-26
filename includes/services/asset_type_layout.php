@@ -29,7 +29,7 @@ final class AssetTypeLayout
      * asset tag, service tag, type, status, location, company) is not here: it is how an asset is
      * found, scanned and matched, so it is never hidden.
      */
-    public const SECTIONS = ['make_model', 'hardware', 'os', 'reporting', 'storage'];
+    public const SECTIONS = ['make_model', 'hardware', 'os', 'reporting', 'storage', 'cmdb'];   // cmdb: GH #201's link card
 
     /** The tabs after Key info (which is always first and always shown), in their default order. */
     public const TABS = ['financial', 'devices', 'software', 'connected', 'tickets', 'contracts', 'projects', 'documents'];
@@ -44,9 +44,9 @@ final class AssetTypeLayout
      */
     public const PRESETS = [
         'everything' => ['hide_sections' => [], 'hide_tabs' => []],
-        'peripheral' => ['hide_sections' => ['hardware', 'os', 'reporting', 'storage'], 'hide_tabs' => ['devices', 'software']],
+        'peripheral' => ['hide_sections' => ['hardware', 'os', 'reporting', 'storage', 'cmdb'], 'hide_tabs' => ['devices', 'software']],
         'network'    => ['hide_sections' => ['hardware', 'storage'], 'hide_tabs' => ['devices', 'software']],
-        'mobile'     => ['hide_sections' => ['hardware'], 'hide_tabs' => ['devices']],
+        'mobile'     => ['hide_sections' => ['hardware', 'cmdb'], 'hide_tabs' => ['devices']],
     ];
 
     /** Everything shown, in the default order - what a type with no rows gets. */

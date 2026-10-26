@@ -2180,6 +2180,24 @@ return [
         'disconnected_by_id'  => 'INT NULL',
     ],
 
+    // GH #201: the asset <-> CI link, one row per period of being linked (never deleted).
+    'asset_ci_links' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'asset_id'          => 'INT NOT NULL',
+        'original_asset_id' => 'INT NOT NULL',
+        'asset_name'        => 'VARCHAR(255) NULL',
+        'cmdb_object_id'    => 'INT NOT NULL',
+        'linked_at'         => 'DATETIME NOT NULL',
+        'linked_by_id'      => 'INT NULL',
+        'link_source'       => "VARCHAR(80) NOT NULL DEFAULT 'ui'",
+        'unlinked_at'       => 'DATETIME NULL',
+        'unlinked_by_id'    => 'INT NULL',
+        'unlink_source'     => 'VARCHAR(80) NULL',
+        'unlink_reason'     => 'VARCHAR(20) NULL',
+        'ci_name'           => 'VARCHAR(255) NULL',
+        'ci_class_name'     => 'VARCHAR(150) NULL',
+    ],
+
     // GH #200 part D: matching cases kept for a person to decide.
     'asset_review_items' => [
         'id'               => 'INT NOT NULL AUTO_INCREMENT',

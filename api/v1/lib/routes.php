@@ -36,6 +36,11 @@ return [
     ['POST',   '#^/assets/(\d+)/assignments$#',            ['asset_assignments', 'create'],   'apiAssetAssignmentsCreate'],
     ['DELETE', '#^/assets/(\d+)/assignments/(\d+)$#',      ['asset_assignments', 'delete'],   'apiAssetAssignmentsDelete'],
     ['GET',    '#^/assets/(\d+)/history$#',                ['asset_history', 'read'],         'apiAssetHistoryList'],
+    // GH #201: the asset <-> configuration item link.
+    ['GET',    '#^/assets/(\d+)/ci-link$#',                ['asset_ci_links', 'read'],        'apiAssetCiLinkGet'],
+    ['POST',   '#^/assets/(\d+)/ci-link$#',                ['asset_ci_links', 'create'],      'apiAssetCiLinkCreate'],
+    ['DELETE', '#^/assets/(\d+)/ci-link$#',                ['asset_ci_links', 'delete'],      'apiAssetCiLinkDelete'],
+    ['GET',    '#^/cmdb/objects/(\d+)/asset-link$#',       ['asset_ci_links', 'read'],        'apiCmdbObjectAssetLinkGet'],
     ['GET',    '#^/assets/(\d+)/custody$#',                ['asset_history', 'read'],         'apiAssetCustodyList'],
     ['GET',    '#^/assets/(\d+)/disks$#',                  ['asset_inventory', 'read'],       'apiAssetDisksList'],
     ['GET',    '#^/assets/(\d+)/physical-disks$#',         ['asset_inventory', 'read'],       'apiAssetPhysicalDisksList'],

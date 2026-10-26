@@ -281,6 +281,30 @@ $translationNamespaces = ['common', 'cmdb'];
             </table>
         </div>
 
+        <?php endif; ?>
+
+        <?php /* GH #201: which details of a linked asset a CI's Asset card shows. */ ?>
+        <?php if (settingsTabVisible($visibleTabs, 'asset-card')): ?>
+        <div class="tab-content<?php echo $activeTabId === 'asset-card' ? ' active' : ''; ?>" id="asset-card-tab" data-capability="<?php echo capKey(Cap::CMDB_ASSET_CARD); ?>">
+            <div class="section-header">
+                <h2><?php echo htmlspecialchars(t('cmdb.settings.asset_card_heading')); ?></h2>
+            </div>
+            <p style="color: var(--text-muted,#6b7280); font-size: 13px; margin-bottom: 16px; max-width: 720px;">
+                <?php echo htmlspecialchars(t('cmdb.settings.asset_card_intro')); ?>
+            </p>
+            <form id="assetCardForm" onsubmit="saveAssetCard(event)" style="max-width: 640px;">
+                <?php require_once '../../includes/services/asset_ci_links.php'; foreach (AssetCiLinkService::CARD_FIELDS as $cf): ?>
+                <label style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; cursor: pointer;">
+                    <input type="checkbox" name="assetCardField" value="<?php echo htmlspecialchars($cf); ?>" style="margin-top: 3px;">
+                    <span><?php echo htmlspecialchars(t('cmdb.settings.asset_card_' . $cf)); ?></span>
+                </label>
+                <?php endforeach; ?>
+                <div style="margin-top: 12px;">
+                    <button type="submit" class="btn btn-primary"><?php echo htmlspecialchars(t('cmdb.settings.asset_card_save')); ?></button>
+                </div>
+            </form>
+        </div>
+
         <!-- AI Integration Tab -->
         <?php endif; ?>
 
@@ -619,7 +643,7 @@ $translationNamespaces = ['common', 'cmdb'];
 
     <script src="../../assets/js/ai-settings.js?v=4"></script>
     <script src="../options-editor.js?v=3"></script>
-    <script src="settings.js?v=7"></script>
+    <script src="settings.js?v=8"></script>
     <script src="../../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

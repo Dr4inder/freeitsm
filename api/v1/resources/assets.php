@@ -71,6 +71,7 @@ function apiAssetInventoryProvenance(PDO $conn,array $apiKey,array $params,array
 
 require_once dirname(__DIR__, 3) . '/includes/service_context.php';
 require_once dirname(__DIR__, 3) . '/includes/services/assets.php';
+require_once dirname(__DIR__, 3) . '/includes/services/asset_ci_links.php';   // GH #201
 require_once dirname(__DIR__, 3) . '/includes/timezone.php';   // naive_today_sql() — warranty_expiry is a bare date (GH #126)
 
 // ---------------------------------------------------------------------------
@@ -415,6 +416,10 @@ function apiAssetsGet(PDO $conn, array $apiKey, array $params, array $body): voi
         ];
     }, $uStmt->fetchAll(PDO::FETCH_ASSOC));
 
+    // GH #201: the configuration item this asset is linked to - {id, name, class},
+    // {restricted: true} without cmdb_objects.read, or null. Read-only and additive.
+    $asset['linked_ci'] = AssetCiLinkService::restBlock($conn, apiAssetCiAccess($apiKey), 'asset', (int)$params[0]);
+
     apiRespond($asset);
 }
 
@@ -513,12 +518,16 @@ function apiAssetHistoryList(PDO $conn, array $apiKey, array $params, array $bod
          WHERE h.asset_id = ? ORDER BY h.created_datetime DESC, h.id DESC"
     );
     $stmt->execute([$params[0]]);
-    apiRespond(array_map(function ($e) {
+    // GH #201: a configuration item link row holds 'ci:<id>' - 'restricted' for a key without cmdb_objects.read.
+    require_once dirname(__DIR__, 3) . '/includes/services/asset_ci_links.php';
+    $cmdbRead = AssetCiLinkService::accessForApiKey($apiKey)['cmdb_read'];
+    apiRespond(array_map(function ($e) use ($conn, $cmdbRead) {
+        $link = $e['field_name'] === 'cmdb_link';
         return [
             'id'         => (int)$e['id'],
             'field'      => $e['field_name'],
-            'old_value'  => $e['old_value'],
-            'new_value'  => $e['new_value'],
+            'old_value'  => $link ? AssetCiLinkService::historyValue($conn, $e['old_value'], $cmdbRead, false) : $e['old_value'],
+            'new_value'  => $link ? AssetCiLinkService::historyValue($conn, $e['new_value'], $cmdbRead, false) : $e['new_value'],
             'analyst'    => $e['analyst_id'] === null ? null : ['id' => (int)$e['analyst_id'], 'name' => $e['analyst_name']],
             'created_at' => apiIsoDate($e['created_datetime']),
         ];
@@ -746,4 +755,81 @@ function apiSuppliersList(PDO $conn, array $apiKey, array $params, array $body):
     apiRespond(array_map(function ($r) {
         return ['id' => (int)$r['id'], 'name' => $r['name'], 'supplies_assets' => (bool)$r['supplies_assets']];
     }, $rows));
+}
+
+// ---------------------------------------------------------------------------
+// The asset <-> configuration item link (GH #201) - every rule is in
+// AssetCiLinkService, the same one the asset and CI pages use.
+// ---------------------------------------------------------------------------
+
+/** The key's access for the link: read either end only with that side's read permission. */
+function apiAssetCiAccess(array $apiKey, bool $forWrite = false): array {
+    require_once dirname(__DIR__, 3) . '/includes/services/asset_ci_links.php';
+    return AssetCiLinkService::accessForApiKey($apiKey, $forWrite);
+}
+
+/** One period of the link, for REST: ISO dates, and the other end as the key may see it. */
+function apiAssetCiLinkShape(array $view): array {
+    $out = $view;
+    foreach (['linked_at', 'unlinked_at'] as $k) {
+        if (array_key_exists($k, $out)) $out[$k] = apiIsoDate($out[$k]);
+    }
+    if (isset($out['history'])) $out['history'] = array_map('apiAssetCiLinkShape', $out['history']);
+    return $out;
+}
+
+/** GET /assets/{id}/ci-link - the live link (or null) and every earlier period. */
+function apiAssetCiLinkGet(PDO $conn, array $apiKey, array $params, array $body): void {
+    apiLoadAsset($conn, $apiKey, $params[0]);
+    try {
+        $v = AssetCiLinkService::forAsset($conn, ActorContext::fromApiKey($apiKey), apiAssetCiAccess($apiKey), (int)$params[0]);
+    } catch (ServiceError $e) { apiFailFromService($e); }
+    apiRespond(['current' => $v['current'] ? apiAssetCiLinkShape($v['current']) : null,
+        'history' => array_map('apiAssetCiLinkShape', $v['history'])]);
+}
+
+/**
+ * POST /assets/{id}/ci-link {cmdb_object_id, replace?, replaces_link_id? | replaces_link_ids?}
+ * Links; the same pair again is 200 with unchanged:true. A conflict is 409 naming the other
+ * record (or restricted) with the live link ids in details.conflicts; replace:true must name
+ * exactly those links, or it is 409 link_changed.
+ */
+function apiAssetCiLinkCreate(PDO $conn, array $apiKey, array $params, array $body): void {
+    apiLoadAsset($conn, $apiKey, $params[0]);
+    $ciId = (int)($body['cmdb_object_id'] ?? 0);
+    if ($ciId <= 0) apiError(422, 'missing_field', "'cmdb_object_id' is required.");
+    $replaces = [];
+    if (isset($body['replaces_link_ids']) && is_array($body['replaces_link_ids'])) $replaces = $body['replaces_link_ids'];
+    elseif (isset($body['replaces_link_id'])) $replaces = [$body['replaces_link_id']];
+    try {
+        $r = AssetCiLinkService::link($conn, ActorContext::fromApiKey($apiKey), apiAssetCiAccess($apiKey, true),
+            (int)$params[0], $ciId, !empty($body['replace']), $replaces, 'api:' . ($apiKey['name'] ?? 'key'));
+    } catch (ServiceError $e) {
+        if ($e->kind === 'conflict' && in_array($e->errorCode, ['ci_already_linked', 'asset_already_linked'], true)) {
+            apiError(409, $e->errorCode, $e->getMessage(), ['conflicts' => AssetCiLinkService::conflictIds($conn, (int)$params[0], $ciId)]);
+        }
+        apiFailFromService($e);
+    }
+    apiRespond($r);
+}
+
+/** DELETE /assets/{id}/ci-link[?link_id=N] - ends the live link; 404 when there is none. */
+function apiAssetCiLinkDelete(PDO $conn, array $apiKey, array $params, array $body): void {
+    apiLoadAsset($conn, $apiKey, $params[0]);
+    $expected = isset($_GET['link_id']) ? (int)$_GET['link_id'] : (isset($body['link_id']) ? (int)$body['link_id'] : null);
+    try {
+        $r = AssetCiLinkService::unlink($conn, ActorContext::fromApiKey($apiKey), apiAssetCiAccess($apiKey, true),
+            (int)$params[0], null, $expected, 'api:' . ($apiKey['name'] ?? 'key'));
+    } catch (ServiceError $e) { apiFailFromService($e); }
+    apiRespond($r);
+}
+
+/** GET /cmdb/objects/{id}/asset-link - the same link, seen from the CI. */
+function apiCmdbObjectAssetLinkGet(PDO $conn, array $apiKey, array $params, array $body): void {
+    if (!apiKeyCanAccessTenantRow($conn, $apiKey, 'cmdb_objects', (int)$params[0])) apiError(404, 'not_found', 'Object not found.');
+    try {
+        $v = AssetCiLinkService::forCi($conn, ActorContext::fromApiKey($apiKey), apiAssetCiAccess($apiKey), (int)$params[0]);
+    } catch (ServiceError $e) { apiFailFromService($e); }
+    apiRespond(['current' => $v['current'] ? apiAssetCiLinkShape($v['current']) : null,
+        'history' => array_map('apiAssetCiLinkShape', $v['history'])]);
 }

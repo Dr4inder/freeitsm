@@ -206,6 +206,8 @@ return [
     ['asset_type_layout', 'uq_asset_type_layout_item', 'unique', '(`asset_type_id`,`item_kind`,`item_key`)'],
     ['asset_connections', 'idx_asset_connections_asset', 'key', '(`asset_id`,`disconnected_at`)'],
     ['asset_connections', 'idx_asset_connections_other', 'key', '(`connected_asset_id`,`disconnected_at`)'],
+    ['asset_ci_links', 'idx_asset_ci_links_asset', 'key', '(`asset_id`,`unlinked_at`)'],
+    ['asset_ci_links', 'idx_asset_ci_links_ci', 'key', '(`cmdb_object_id`,`unlinked_at`)'],
     ['asset_review_items', 'uq_asset_review_key', 'unique', '(`tenant_id`,`match_key`)'],
     ['asset_review_items', 'idx_asset_review_status', 'key', '(`tenant_id`,`status`)'],
     ['asset_name_mappings', 'uq_asset_name_mapping', 'unique', '(`field`,`from_value`)'],

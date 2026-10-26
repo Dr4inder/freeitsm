@@ -861,6 +861,19 @@ return array (
                 '$ref' => '#/components/schemas/AssetAssignedUser',
               ),
             ),
+            'linked_ci' =>
+            array (
+              'type' => 'object',
+              'nullable' => true,
+              'description' => 'GH #201: the configuration item this asset is linked to; {restricted: true} without cmdb_objects.read; null when not linked.',
+              'properties' =>
+              array (
+                'id' => array ('type' => 'integer'),
+                'name' => array ('type' => 'string', 'nullable' => true),
+                'class' => array ('type' => 'string', 'nullable' => true),
+                'restricted' => array ('type' => 'boolean'),
+              ),
+            ),
             'id' => 
             array (
               'type' => 'integer',
@@ -3422,6 +3435,18 @@ return array (
         'relationships' => 
         array (
           '$ref' => '#/components/schemas/CmdbObjectRelationships',
+        ),
+        'linked_asset' =>
+        array (
+          'type' => 'object',
+          'nullable' => true,
+          'description' => 'GH #201: the asset this configuration item is linked to; {restricted: true} without assets.read; null when not linked.',
+          'properties' =>
+          array (
+            'id' => array ('type' => 'integer'),
+            'name' => array ('type' => 'string', 'nullable' => true),
+            'restricted' => array ('type' => 'boolean'),
+          ),
         ),
       ),
     ),

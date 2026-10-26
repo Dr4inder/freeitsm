@@ -87,6 +87,14 @@ function apiV1PermissionCatalog(): array {
                 'delete' => 'Unlink a source from an asset, removing the rows that source reported there',
             ],
         ],
+        'asset_ci_links' => [
+            'label'   => 'Asset and configuration item links',
+            'actions' => [
+                'read'   => 'See which configuration item an asset is linked to, and the link history (the other end needs its own read permission, or it shows as restricted)',
+                'create' => 'Link an asset to a configuration item, or replace a link - without being able to edit either record',
+                'delete' => 'End the link between an asset and its configuration item (both records are kept)',
+            ],
+        ],
         'problems' => [
             'label'   => 'Problems',
             'actions' => [

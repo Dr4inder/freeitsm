@@ -1473,6 +1473,72 @@
                 },
                 {
                     "m": "GET",
+                    "p": "/assets/{id}/ci-link",
+                    "perm": "asset_ci_links.read",
+                    "s": "The linked configuration item",
+                    "d": "The configuration item this asset is the same equipment as (GH #201), and every earlier period of being linked. current is null when there is no link. Each period says who linked and unlinked it, when and how (ui, api:<key name>), and why it ended: unlinked, replaced, ci_deleted (the CI was deleted - its name and class are kept on the row) or asset_merged. A key without cmdb_objects.read sees the CI end as {\"restricted\": true}, with no id or name - in current and in the history. made_on names the asset a period was made on when that asset has since been merged into this one.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Asset id",
+                            "req": true
+                        }
+                    ],
+                    "section": "Asset assignments, history & inventory",
+                    "slug": "get-assets-id-ci-link"
+                },
+                {
+                    "m": "POST",
+                    "p": "/assets/{id}/ci-link",
+                    "perm": "asset_ci_links.create",
+                    "s": "Link a configuration item",
+                    "d": "Links this asset to a configuration item in the same company: \"these two records are the same piece of equipment\". An identity, not a dependency - nothing is added to the CMDB graph and nothing is copied. Safe to retry: the same pair again answers 200 with unchanged true. One live link per asset and per CI: if either already has one, the answer is 409 ci_already_linked or asset_already_linked, naming the other record (or saying it is one the key cannot see), with the live link ids in error.details.conflicts. To replace on purpose, send replace true and replaces_link_ids with exactly those ids; if the links changed since, the answer is 409 link_changed, so a newer link is never displaced silently. Needs only this permission - not assets.update or cmdb_objects.update - and the key's company scope must reach both records. POST rather than PUT because this API takes only GET, POST, PATCH and DELETE.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Asset id",
+                            "req": true
+                        },
+                        {
+                            "name": "cmdb_object_id / replace / replaces_link_ids",
+                            "in": "body",
+                            "req": true,
+                            "desc": "cmdb_object_id: the CI; replace: true to end the conflicting links; replaces_link_ids (or replaces_link_id): the live link ids from the 409 you are replacing"
+                        }
+                    ],
+                    "body": {
+                        "cmdb_object_id": 88
+                    },
+                    "section": "Asset assignments, history & inventory",
+                    "slug": "post-assets-id-ci-link"
+                },
+                {
+                    "m": "DELETE",
+                    "p": "/assets/{id}/ci-link",
+                    "perm": "asset_ci_links.delete",
+                    "s": "Unlink the configuration item",
+                    "d": "Ends the live link. Both records are kept, and the period stays in the history with who ended it and how. 404 not_linked when there is no link. Pass ?link_id=N to say which link you mean: if it is no longer the live one, the answer is 409 link_changed.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Asset id",
+                            "req": true
+                        },
+                        {
+                            "name": "link_id",
+                            "in": "query",
+                            "req": false,
+                            "desc": "The live link id you expect to end"
+                        }
+                    ],
+                    "section": "Asset assignments, history & inventory",
+                    "slug": "delete-assets-id-ci-link"
+                },
+                {
+                    "m": "GET",
                     "p": "\/assets\/{id}\/custody",
                     "perm": "asset_history.read",
                     "s": "Custody log",
@@ -5156,6 +5222,23 @@
                             }
                         ]
                     }
+                },
+                {
+                    "m": "GET",
+                    "p": "/cmdb/objects/{id}/asset-link",
+                    "perm": "asset_ci_links.read",
+                    "s": "The linked asset",
+                    "d": "The asset this configuration item is the same equipment as (GH #201), seen from the CI, with every earlier period. With assets.read, current carries the asset card's details, read live from the asset and never stored on the CI (which ones is CMDB -> Settings -> Asset card): type, manufacturer, model, serial, asset tag, status, location and inventory freshness. Without it, the asset end is {\"restricted\": true}, with no id or name.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Configuration item id",
+                            "req": true
+                        }
+                    ],
+                    "section": "CMDB",
+                    "slug": "get-cmdb-objects-id-asset-link"
                 },
                 {
                     "m": "POST",

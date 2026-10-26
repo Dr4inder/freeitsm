@@ -3367,6 +3367,33 @@ CREATE TABLE IF NOT EXISTS `asset_connections` (
     CONSTRAINT `fk_asset_connections_other` FOREIGN KEY (`connected_asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- The asset <-> configuration item link (GH #201): "these two records are the same piece of
+-- equipment". One row per PERIOD of being linked, closed (unlinked_at) and never deleted, so
+-- the table is also the history - the CMDB has none of its own. At most one live row per asset
+-- and per CI, enforced by AssetCiLinkService under a lock. asset_id follows a merge;
+-- original_asset_id and asset_name are the record it was made on, and never change. No foreign
+-- key on cmdb_object_id: a deleted CI's row stays, with its name and class kept in ci_name.
+CREATE TABLE IF NOT EXISTS `asset_ci_links` (
+    `id`                 INT NOT NULL AUTO_INCREMENT,
+    `asset_id`           INT NOT NULL,
+    `original_asset_id`  INT NOT NULL,
+    `asset_name`         VARCHAR(255) NULL,
+    `cmdb_object_id`     INT NOT NULL,
+    `linked_at`          DATETIME NOT NULL,
+    `linked_by_id`       INT NULL,
+    `link_source`        VARCHAR(80) NOT NULL DEFAULT 'ui',
+    `unlinked_at`        DATETIME NULL,
+    `unlinked_by_id`     INT NULL,
+    `unlink_source`      VARCHAR(80) NULL,
+    `unlink_reason`      VARCHAR(20) NULL,
+    `ci_name`            VARCHAR(255) NULL,
+    `ci_class_name`      VARCHAR(150) NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_asset_ci_links_asset` (`asset_id`, `unlinked_at`),
+    KEY `idx_asset_ci_links_ci` (`cmdb_object_id`, `unlinked_at`),
+    CONSTRAINT `fk_asset_ci_links_asset` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Reconciliation you can review (GH #200 part D): the cases matching already refuses
 -- to guess about - two assets sharing a serial, a reused hostname, an ambiguous match,
 -- a peripheral a tool reported that matches no asset - kept for a person to decide.

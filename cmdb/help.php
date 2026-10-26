@@ -111,9 +111,12 @@ $translationNamespaces = ['common', 'cmdb'];
             <a href="#dataquality" class="help-nav-link" data-section="dataquality">
                 <span class="help-nav-num">13</span> <?php echo t('cmdb.help.nav_dataquality'); ?>
             </a>
+            <a href="#assets" class="help-nav-link" data-section="assets">
+                <span class="help-nav-num">14</span> <?php echo t('cmdb.help.nav_assets'); ?>
+            </a>
             <?php if ($showTenancyHelp): ?>
             <a href="#companies" class="help-nav-link" data-section="companies">
-                <span class="help-nav-num">14</span> <?php echo t('cmdb.help.nav_companies'); ?>
+                <span class="help-nav-num">15</span> <?php echo t('cmdb.help.nav_companies'); ?>
             </a>
             <?php endif; ?>
 
@@ -573,11 +576,33 @@ $translationNamespaces = ['common', 'cmdb'];
                     <p><?php echo t('cmdb.help.dataquality_advisory'); ?></p>
                 </div>
 
-                <?php if ($showTenancyHelp): ?>
-                <!-- 14. Companies (multi-company installs only) -->
-                <div class="help-section" id="companies">
+                <!-- 14. Linked assets (GH #201) -->
+                <div class="help-section" id="assets">
                     <div class="help-section-header">
                         <span class="help-section-num">14</span>
+                        <div>
+                            <h3><?php echo t('cmdb.help.assets_heading'); ?></h3>
+                            <p><?php echo t('cmdb.help.assets_intro'); ?></p>
+                        </div>
+                    </div>
+
+                    <div class="help-steps">
+                        <div class="help-step"><span class="help-step-num">1</span><div><?php echo t('cmdb.help.assets_step1'); ?></div></div>
+                        <div class="help-step"><span class="help-step-num">2</span><div><?php echo t('cmdb.help.assets_step2'); ?></div></div>
+                        <div class="help-step"><span class="help-step-num">3</span><div><?php echo t('cmdb.help.assets_step3'); ?></div></div>
+                        <div class="help-step"><span class="help-step-num">4</span><div><?php echo t('cmdb.help.assets_step4'); ?></div></div>
+                    </div>
+
+                    <div class="help-note">
+                        <?php echo t('cmdb.help.assets_tip'); ?>
+                    </div>
+                </div>
+
+                <?php if ($showTenancyHelp): ?>
+                <!-- 15. Companies (multi-company installs only) -->
+                <div class="help-section" id="companies">
+                    <div class="help-section-header">
+                        <span class="help-section-num">15</span>
                         <div>
                             <h3><?php echo t('cmdb.help.companies_heading'); ?></h3>
                             <p><?php echo t('cmdb.help.companies_intro'); ?></p>

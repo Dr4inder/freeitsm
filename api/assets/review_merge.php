@@ -1,7 +1,10 @@
 <?php
 /**
  * API: merge two assets from the review list (GH #200 part D).
- * POST JSON {id, keep_asset_id, merge_asset_id}
+ * POST JSON {id, keep_asset_id, merge_asset_id, ci_links_seen?: [link ids], ci_link_keep?: link id}
+ *
+ * GH #201: ci_links_seen is what the merge window showed (ci_link.php?merge_preview=1); if both
+ * assets are linked to a configuration item, ci_link_keep is the link the person chose to keep.
  *
  * Only from a case that names exactly these two assets (same serial, or a reused name),
  * by someone with the reconciliation capability. Everything on the merged asset moves to
@@ -43,10 +46,13 @@ try {
         echo json_encode(['success' => false, 'error' => 'Asset not found']);
         exit;
     }
-    $res = AssetMergeService::merge($conn, ActorContext::fromSession($conn), $keep, $gone, $itemId);
+    $ciLinks = is_array($input['ci_links_seen'] ?? null)
+        ? ['seen' => $input['ci_links_seen'], 'keep_link_id' => isset($input['ci_link_keep']) ? (int)$input['ci_link_keep'] : null]
+        : null;
+    $res = AssetMergeService::merge($conn, ActorContext::fromSession($conn), $keep, $gone, $itemId, $ciLinks);
     echo json_encode(['success' => true] + $res);
 } catch (ServiceError $e) {
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'error' => $e->getMessage(), 'code' => $e->errorCode]);
 } catch (Throwable $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }

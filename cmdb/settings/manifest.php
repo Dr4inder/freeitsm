@@ -45,6 +45,14 @@ return [
             'grant'     => 'Manage relationship types',
         ],
         [
+            // GH #201: which details of a linked asset the CI's Asset card shows.
+            'id'           => 'asset-card',
+            'cap'          => capKey(Cap::CMDB_ASSET_CARD),
+            'label_key'    => 'cmdb.settings.tab_asset_card',
+            'grant'        => 'Choose which details of a linked asset a configuration item shows',
+            'setting_keys' => ['cmdb_asset_card_fields'],
+        ],
+        [
             'id'           => 'ai',
             'cap'          => capKey(Cap::CMDB_AI),
             'label_key'    => 'cmdb.settings.tab_ai',

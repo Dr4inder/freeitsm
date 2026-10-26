@@ -1170,6 +1170,8 @@ try {
         ['asset_connections',      'fk_asset_connections_asset',   'assets',            'asset_id',              'id', 'CASCADE'],
         ['asset_connections',      'fk_asset_connections_other',   'assets',            'connected_asset_id',    'id', 'CASCADE'],
         ['asset_review_items',     'fk_asset_review_asset',        'assets',            'asset_id',              'id', 'CASCADE'],
+        // GH #201: the link history goes only if the asset itself does (a merge moves it first).
+        ['asset_ci_links',         'fk_asset_ci_links_asset',      'assets',            'asset_id',              'id', 'CASCADE'],
         ['asset_review_items',     'fk_asset_review_other',        'assets',            'other_asset_id',        'id', 'CASCADE'],
         ['asset_merges',           'fk_asset_merges_into',         'assets',            'into_asset_id',         'id', 'CASCADE'],
         ['asset_protected_fields', 'fk_asset_protected_asset',     'assets',            'asset_id',              'id', 'CASCADE'],

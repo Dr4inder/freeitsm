@@ -37,6 +37,7 @@
 require_once __DIR__ . '/../service_context.php';
 require_once __DIR__ . '/../tenancy.php';
 require_once __DIR__ . '/../typed_fields.php';
+require_once __DIR__ . '/asset_ci_links.php';
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 
 class CmdbService
@@ -298,6 +299,10 @@ class CmdbService
 
         $conn->beginTransaction();
         try {
+            // GH #201: a linked asset is kept; its link ends here, with the CI's name kept on
+            // the row. Before the deletes below, so the name and class can still be read.
+            AssetCiLinkService::ciDeleted($conn, $ctx, $ids);
+            self::clearAssetRefFields($conn, $ctx, $ids);
             $conn->prepare("UPDATE cmdb_object_properties SET value_object_id = NULL WHERE value_object_id IN ($ph)")->execute($ids);
             $conn->prepare("DELETE FROM cmdb_object_properties WHERE object_id IN ($ph)")->execute($ids);
             // Network Mapper: null connector provenance, then remove diagram nodes/connectors.
@@ -413,6 +418,38 @@ class CmdbService
     // ======================================================================
     //  Internals
     // ======================================================================
+
+    /**
+     * Asset custom fields of type "Link to something else -> configuration item" that point
+     * at CIs being deleted. They used to keep the dead id and show as "#88" (found mapping
+     * GH #201). Cleared in the delete's transaction, with a history line on each asset that
+     * stores the id, not the name - as every other link-field history row does.
+     *
+     * @param int[] $ids  the CIs being deleted
+     */
+    private static function clearAssetRefFields(PDO $conn, ActorContext $ctx, array $ids): void
+    {
+        try {
+            $fields = $conn->query("SELECT id, field_key, config FROM asset_fields WHERE field_type = 'ref'")->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException) {
+            return;   // flexible asset fields not set up on this install
+        }
+        $byId = [];
+        foreach ($fields as $f) {
+            if ((json_decode((string)$f['config'], true)['ref_kind'] ?? '') === 'cmdb_object') { $byId[(int)$f['id']] = $f['field_key']; }
+        }
+        if (!$byId) { return; }
+        $fph = implode(',', array_fill(0, count($byId), '?'));
+        $oph = implode(',', array_fill(0, count($ids), '?'));
+        $args = array_merge(array_keys($byId), array_map('intval', $ids));
+        $st = $conn->prepare("SELECT asset_id, field_id, value_ref_id FROM asset_field_values WHERE field_id IN ($fph) AND value_ref_id IN ($oph)");
+        $st->execute($args);
+        $hist = $conn->prepare('INSERT INTO asset_history (asset_id, analyst_id, field_name, old_value, new_value, created_datetime) VALUES (?, ?, ?, ?, NULL, UTC_TIMESTAMP())');
+        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $v) {
+            $hist->execute([(int)$v['asset_id'], $ctx->actorId > 0 ? $ctx->actorId : null, 'field:' . $byId[(int)$v['field_id']], (string)$v['value_ref_id']]);
+        }
+        $conn->prepare("DELETE FROM asset_field_values WHERE field_id IN ($fph) AND value_ref_id IN ($oph)")->execute($args);
+    }
 
     /**
      * The company id a CI effectively belongs to (NULL stored = Default's).

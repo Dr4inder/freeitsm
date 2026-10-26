@@ -1561,6 +1561,7 @@ $translationNamespaces = ['common', 'asset-management'];
              from the wiki's Mobile-Friendly-Techniques. Every rule inside it is
              gated at 768px, so the desktop layout is untouched. */ ?>
     <link rel="stylesheet" href="../assets/css/project-links.css?v=1">
+    <link rel="stylesheet" href="../assets/css/ci-asset-link.css?v=2">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
 </head>
 <body>
@@ -2499,6 +2500,9 @@ $translationNamespaces = ['common', 'asset-management'];
                         </div>
                         <div id="assetCustomFields"></div>
                     </div>
+                    <?php /* GH #201: the configuration item this asset is the same equipment as. A layout
+                             section, so a type that will never be a CI (a monitor) can hide it. */ ?>
+                    <div class="ci-link-section" data-layout-section="cmdb" id="ciLinkSection"></div>
                     <div class="disks-section" data-layout-section="storage">
                         <div class="section-header">
                             <span class="section-title">${window.t('asset-management.detail.storage')}</span>
@@ -2644,6 +2648,11 @@ $translationNamespaces = ['common', 'asset-management'];
             // Projects (3.2.0): the projects this asset is part of.
             if (window.ASSET_SHOW_PROJECTS && window.ProjectLinks) ProjectLinks.mount(document.getElementById('assetProjects'), { kind: 'asset', id: assetId, base: window.APP_BASE || '../', bare: true });
             loadCustomFields(assetId);
+            if (window.CiAssetLink) CiAssetLink.mount(document.getElementById('ciLinkSection'), {
+                side: 'asset', id: assetId, base: window.APP_BASE || '../',
+                cardClass: 'ci-link-block', headClass: 'section-header', titleClass: 'section-title',
+                onState: s => { if (Number(selectedAssetId) === Number(assetId)) atlSaw('cmdb', s.linked ? 1 : 0); }
+            });
 
             // ⚠️ MOUNTED, not re-pointed. This detail pane rebuilds its whole DOM
             // on every asset you click, so the previous panel's element is already
@@ -5201,7 +5210,7 @@ $translationNamespaces = ['common', 'asset-management'];
             // — those don't match a key, so we show them as-is.
             const FIELD_KEYS = ['type','status','location','supplier','purchase_date',
                 'purchase_cost','order_number','warranty_expiry','lease_start','lease_expiry','cost_centre','assigned_user',
-                'hostname','asset_created','asset_discovered','hostname_reused','connection','review','merged','protected','released'];
+                'hostname','asset_created','asset_discovered','hostname_reused','connection','review','merged','protected','released','cmdb_link'];
 
             history.forEach(entry => {
                 const noneEm = `<em style="color:#999;">${window.t('asset-management.common.none')}</em>`;
@@ -5342,6 +5351,7 @@ $translationNamespaces = ['common', 'asset-management'];
     <script>window.ASSET_LAYOUT_NOTICE = <?php echo json_encode(AssetTypeLayout::noticeMode(connectToDatabase())); ?>;</script>
     <script>window.ASSET_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.APP_BASE = window.APP_BASE || <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="../assets/js/project-links.js?v=1"></script>
+    <script src="../assets/js/ci-asset-link.js?v=3"></script>
     <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

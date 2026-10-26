@@ -127,6 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     Promise.all([loadObject(), loadImpact(), loadActivity(), loadClasses(), loadRelationshipTypes()]).then(() => {
         if (obj) render();
+        // GH #201: the asset card's "Show" links here at #o2Blast, which only exists after render().
+        if (obj && location.hash === '#o2Blast') { const b = document.getElementById('o2Blast'); if (b) b.scrollIntoView({ block: 'start' }); }
     });
     initPropDefModalDrag();
 });
@@ -252,6 +254,8 @@ function render() {
             '<div class="o2-sec">' + blastHtml() + '</div>' +
             '<div class="o2-sec">' + connectionsHtml() + '</div>' +
             '<div class="o2-sec">' + propsHtml() + '</div>' +
+            // GH #201: the asset this CI is the same equipment as, read live from the asset.
+            '<div class="o2-sec"><div id="cmdbAssetLink"></div></div>' +
             // Attached documents (discussion #76) — the diagram, the licence, the
             // rack photo. Before activity and danger, which both read as endings.
             '<div class="o2-sec"><div id="cmdbDocuments"></div></div>' +
@@ -269,6 +273,13 @@ function render() {
             parentId:   obj.id,
             apiBase:    '../api/documents/',
             showHeading: true      // every other section here carries its own title
+        });
+    }
+
+    if (window.CiAssetLink && obj && obj.id) {
+        CiAssetLink.mount(document.getElementById('cmdbAssetLink'), {
+            side: 'cmdb', id: obj.id, base: window.APP_BASE,
+            cardClass: 'o2-card', headClass: 'o2-card-head', titleClass: 'o2-card-title'
         });
     }
 

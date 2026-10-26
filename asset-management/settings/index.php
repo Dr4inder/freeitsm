@@ -563,6 +563,11 @@ $translationNamespaces = ['common', 'asset-management'];
         .merge-card { display: flex; flex-direction: column; gap: 3px; padding: 12px; border: 2px solid var(--border, #ddd); border-radius: 8px; cursor: pointer; font-size: 13px; }
         .merge-card:has(input:checked) { border-color: var(--accent, #0078d4); }
         .merge-card input { align-self: flex-start; margin: 0 0 4px; }
+        .merge-ci:empty { display: none; }
+        .merge-ci { margin: 4px 0 12px; padding: 12px; border: 1px solid var(--border, #ddd); border-radius: 8px; font-size: 13px; }
+        .merge-ci-title { font-weight: 600; margin-bottom: 6px; }
+        .merge-ci label { display: flex; gap: 8px; align-items: flex-start; margin: 6px 0; cursor: pointer; }
+        .merge-ci .merge-ci-ack { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border, #ddd); }
         .merge-card em { font-style: normal; font-size: 12px; color: var(--accent, #0078d4); margin-top: 4px; visibility: hidden; }
         .merge-card:has(input:checked) em { visibility: visible; }
         @media (max-width: 768px) {
@@ -1795,6 +1800,8 @@ $translationNamespaces = ['common', 'asset-management'];
             <div class="modal-body">
                 <p class="settings-description" style="margin-top: 0;"><?php echo htmlspecialchars(t('asset-management.review.merge_intro')); ?></p>
                 <div id="mergeChoice" class="merge-choice"></div>
+                <?php /* GH #201: the configuration item links, and the choice when both assets have one. */ ?>
+                <div id="mergeCiLinks" class="merge-ci"></div>
                 <p class="form-hint"><?php echo htmlspecialchars(t('asset-management.review.merge_hint')); ?></p>
             </div>
             <div class="modal-footer">
@@ -3957,7 +3964,64 @@ $translationNamespaces = ['common', 'asset-management'];
                 <em>${escapeHtml(rvT('keep_this'))}</em>
             </label>`;
             document.getElementById('mergeChoice').innerHTML = card(a, mergeItem.asset_id, !keepOther) + card(o, mergeItem.other_asset_id, keepOther);
+            document.querySelectorAll('input[name="mergeKeep"]').forEach(r => r.addEventListener('change', renderMergeCiLinks));
             document.getElementById('mergeModal').classList.add('active');
+            loadMergeCiLinks();
+        }
+
+        // GH #201: each asset's configuration item link. One linked: it moves to the kept
+        // asset. Both linked: the person chooses which link ends, and must say they understand
+        // before Merge is enabled. The merge request carries what was shown (seen) - if the
+        // links change meanwhile, the server refuses and this reloads.
+        let mergeCi = null;
+        async function loadMergeCiLinks() {
+            mergeCi = null;
+            const box = document.getElementById('mergeCiLinks');
+            box.innerHTML = '';
+            if (!mergeItem) return;
+            const forItem = mergeItem.id;
+            try {
+                const res = await fetch(API_BASE + 'ci_link.php?merge_preview=1&keep=' + Number(mergeItem.asset_id) + '&gone=' + Number(mergeItem.other_asset_id));
+                const data = await res.json();
+                if (!mergeItem || mergeItem.id !== forItem) return;
+                if (data.success) mergeCi = { byAsset: { [mergeItem.asset_id]: data.keep, [mergeItem.other_asset_id]: data.gone }, seen: data.seen || [], both: !!data.choice_needed };
+            } catch (e) { /* the server still refuses a merge that would need a choice */ }
+            renderMergeCiLinks();
+        }
+
+        function mergeCiName(l) {
+            if (!l) return '';
+            if (l.restricted) return rvT('ci_restricted');
+            return (l.name || ('#' + l.id)) + (l.class_name ? ' (' + l.class_name + ')' : '');
+        }
+
+        function renderMergeCiLinks() {
+            const box = document.getElementById('mergeCiLinks');
+            const btn = document.getElementById('mergeConfirmBtn');
+            btn.disabled = false;
+            if (!mergeItem || !mergeCi) { box.innerHTML = ''; return; }
+            const keep = Number((document.querySelector('input[name="mergeKeep"]:checked') || {}).value || 0);
+            const gone = keep === mergeItem.asset_id ? mergeItem.other_asset_id : mergeItem.asset_id;
+            const nameOf = id => ((id === mergeItem.asset_id ? mergeItem.asset : mergeItem.other) || {}).hostname || ('#' + id);
+            const lk = mergeCi.byAsset[keep], lg = mergeCi.byAsset[gone];
+            if (!lk && !lg) { box.innerHTML = ''; return; }
+            if (!mergeCi.both) {
+                const l = lk || lg;
+                box.innerHTML = `<div class="merge-ci-title">${escapeHtml(rvT('ci_heading'))}</div>`
+                    + escapeHtml(rvT(lk ? 'ci_kept_has' : 'ci_moves', { ci: mergeCiName(l), keep: nameOf(keep) }));
+                return;
+            }
+            const opt = (l, assetId, checked) => `<label><input type="radio" name="mergeCiKeep" value="${Number(l.link_id)}" ${checked ? 'checked' : ''}>
+                <span>${escapeHtml(rvT('ci_keep_link', { ci: mergeCiName(l), asset: nameOf(assetId) }))}</span></label>`;
+            box.innerHTML = `<div class="merge-ci-title">${escapeHtml(rvT('ci_both_heading'))}</div>
+                <div>${escapeHtml(rvT('ci_both_intro'))}</div>
+                ${opt(lk, keep, true)}${opt(lg, gone, false)}
+                <label class="merge-ci-ack"><input type="checkbox" id="mergeCiAck"><span>${escapeHtml(rvT('ci_ack'))}</span></label>`;
+            btn.disabled = true;
+            document.getElementById('mergeCiAck').addEventListener('change', e => { btn.disabled = !e.target.checked; });
+            box.querySelectorAll('input[name="mergeCiKeep"]').forEach(r => r.addEventListener('change', () => {
+                document.getElementById('mergeCiAck').checked = false; btn.disabled = true;
+            }));
         }
 
         function closeMergeModal() {
@@ -3972,15 +4036,21 @@ $translationNamespaces = ['common', 'asset-management'];
             const keepName = (keep === mergeItem.asset_id ? mergeItem.asset : mergeItem.other) || {};
             const goneName = (gone === mergeItem.asset_id ? mergeItem.asset : mergeItem.other) || {};
             if (!confirm(rvT('merge_confirm', { gone: goneName.hostname || ('#' + gone), keep: keepName.hostname || ('#' + keep) }))) return;
+            const ciKeep = Number((document.querySelector('input[name="mergeCiKeep"]:checked') || {}).value || 0);
             const btn = document.getElementById('mergeConfirmBtn');
             btn.disabled = true;
             try {
                 const res = await fetch(API_BASE + 'review_merge.php', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: mergeItem.id, keep_asset_id: keep, merge_asset_id: gone })
+                    body: JSON.stringify(Object.assign({ id: mergeItem.id, keep_asset_id: keep, merge_asset_id: gone },
+                        mergeCi ? { ci_links_seen: mergeCi.seen, ci_link_keep: ciKeep || null } : {}))
                 });
                 const data = await res.json();
-                if (!data.success) { showToast(data.error || rvT('load_error'), 'error'); return; }
+                if (!data.success) {
+                    showToast(data.error || rvT('load_error'), 'error');
+                    if (data.code === 'ci_link_changed' || data.code === 'ci_link_choice_required') loadMergeCiLinks();
+                    return;
+                }
                 closeMergeModal();
                 showToast(rvT('done_merged', { keep: keepName.hostname || ('#' + keep) }), 'success');
                 loadReviewList();

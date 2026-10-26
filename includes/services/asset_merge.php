@@ -15,6 +15,8 @@
  *   - asset_merges remembers the removed asset, so its printed QR label and a REST tool
  *     still posting to its id find the kept one (intoForQrToken(), current())
  *   - both histories end up on the kept asset, with one row saying what was merged
+ *   - the configuration item link (GH #201) moves; if BOTH are linked, the person chose
+ *     which link ends (AssetCiLinkService::mergeLinks) and neither CI is touched
  *
  * TRAP: every column that refers to an asset must be in REFERENCES (or POLYMORPHIC).
  *   One left out keeps pointing at a deleted asset - or, behind an ON DELETE CASCADE,
@@ -25,6 +27,7 @@
  */
 require_once __DIR__ . '/assets.php';
 require_once __DIR__ . '/asset_review.php';
+require_once __DIR__ . '/asset_ci_links.php';
 
 final class AssetMergeService
 {
@@ -35,7 +38,7 @@ final class AssetMergeService
      *               columns; those duplicates are removed
      *   agent_only  agent-only tables with no identity: if the kept asset has rows, the
      *               other's are removed (the agent's next report rewrites them), else moved
-     *   sources / connections / review   handled by their own methods below
+     *   sources / connections / review / ci_links   handled by their own methods below
      */
     public const REFERENCES = [
         ['asset_history',              'asset_id',           'move'],
@@ -64,6 +67,7 @@ final class AssetMergeService
         ['asset_review_items',         'other_asset_id',     'review'],
         ['asset_merges',               'into_asset_id',      'move'],
         ['asset_protected_fields',     'asset_id',           'unique', ['field_name']],
+        ['asset_ci_links',             'asset_id',           'ci_links'],
     ];
 
     /** References that are not an asset_id column: handled in polymorphic(). */
@@ -74,7 +78,9 @@ final class AssetMergeService
     ];
 
     /** Columns whose value means the asset itself, not a link to it - never moved. */
-    public const NOT_REFERENCES = ['asset_merges.merged_asset_id'];
+    public const NOT_REFERENCES = ['asset_merges.merged_asset_id',
+        // GH #201: the asset a CI link was MADE on - kept through merges, by design.
+        'asset_ci_links.original_asset_id'];
 
     /** Built-in fields an empty kept value is filled from. Identity (hostname, tenant, qr_token) never is. */
     private const FILL = ['manufacturer', 'model', 'memory', 'service_tag', 'operating_system', 'feature_release', 'build_number',
@@ -86,9 +92,12 @@ final class AssetMergeService
      * Merge $goneId into $keepId. Both must be in one company the caller can reach.
      *
      * @param ?int $reviewItemId the review case this settles, closed as 'merged'
+     * @param ?array $ciLinks  GH #201: what the merge window showed and chose -
+     *        ['seen' => live link ids shown, 'keep_link_id' => the link that survives when both are linked].
+     *        Null from a caller that showed nothing: then two linked assets are refused (ci_link_choice_required).
      * @return array{kept:int, merged:int, moved:array<string,int>, dropped:array<string,int>, filled:string[]}
      */
-    public static function merge(PDO $conn, ActorContext $ctx, int $keepId, int $goneId, ?int $reviewItemId = null): array
+    public static function merge(PDO $conn, ActorContext $ctx, int $keepId, int $goneId, ?int $reviewItemId = null, ?array $ciLinks = null): array
     {
         if ($keepId === $goneId) { throw new ServiceError('validation', 'invalid_field', 'Choose two different assets.'); }
         if ($conn->inTransaction()) { throw new LogicException('A merge must own its transaction.'); }
@@ -144,6 +153,12 @@ final class AssetMergeService
                         if ($col === 'asset_id') {
                             $moved['asset_review_items'] = self::moveReview($conn, $ctx, $keepId, $goneId, $reviewItemId);
                         }
+                        break;
+                    case 'ci_links':
+                        [$m, $d] = AssetCiLinkService::mergeLinks($conn, $ctx, $keepId, $goneId,
+                            isset($ciLinks['keep_link_id']) ? (int)$ciLinks['keep_link_id'] : null,
+                            isset($ciLinks['seen']) && is_array($ciLinks['seen']) ? $ciLinks['seen'] : null);
+                        $moved[$label] = $m; $dropped[$label] = $d;
                         break;
                 }
             }

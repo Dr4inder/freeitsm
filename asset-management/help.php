@@ -126,8 +126,11 @@ $translationNamespaces = ['common', 'asset-management'];
             <a href="#leases" class="help-nav-link" data-section="leases">
                 <span class="help-nav-num">19</span> Leases
             </a>
+            <a href="#cmdb-link" class="help-nav-link" data-section="cmdb-link">
+                <span class="help-nav-num">20</span> Configuration item
+            </a>
             <a href="#tips" class="help-nav-link" data-section="tips">
-                <span class="help-nav-num">20</span>
+                <span class="help-nav-num">21</span>
                 <?php echo htmlspecialchars(t('asset-management.help.nav_tips')); ?>
             </a>
         </div>
@@ -799,9 +802,37 @@ $translationNamespaces = ['common', 'asset-management'];
                     <p class="help-note">On a multi-company install a lease belongs to one company, and only that company's assets, contracts and cost centres can go on it. An asset can be out on one lease at a time, and one that is out on a lease cannot move to another company until it is returned.</p>
                 </div>
 
-<div class="help-section" id="tips">
+                <!-- Section 20: the configuration item this asset is (GH #201) -->
+                <div class="help-section" id="cmdb-link">
                     <div class="help-section-header">
                         <span class="help-section-num">20</span>
+                        <h3>Configuration item</h3>
+                    </div>
+                    <p>A server is often two records: the <strong>asset</strong> says what the box is, and a <strong>configuration item</strong> in the CMDB says what it does - what runs on it and what breaks if it fails. The <strong>Configuration item</strong> card on Key info links the two: <em>these are the same piece of equipment</em>.</p>
+                    <div class="help-steps">
+                        <div class="help-step">
+                            <div class="help-step-num">1</div>
+                            <div><strong>Link</strong> searches the CMDB for configuration items in the asset's company. Pick one and the card shows its name and class, with a link into the CMDB. The configuration item shows this asset the same way, with its details read live from here.</div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-num">2</div>
+                            <div><strong>If this failed</strong> - the card repeats what the configuration item's own impact analysis says: how many things would be affected, with <strong>Show</strong> to see them in the CMDB and <strong>Open as diagram</strong> for Network Mapper users.</div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-num">3</div>
+                            <div>One asset has one configuration item, and one configuration item has one asset. <strong>Replace</strong> swaps it - if someone changed the link while you were looking, you are asked to look again. <strong>Unlink</strong> ends it; neither record is deleted. <strong>Link history</strong> keeps every link, with who and when.</div>
+                        </div>
+                    </div>
+                    <div class="help-cards">
+                        <div class="help-card row"><div><strong>Merging two assets</strong><p>The link moves to the asset you keep. If both were linked, to different configuration items, the merge window shows both and asks which link to keep; <strong>Merge</strong> stays greyed out until you tick that you understand the other one ends. Neither configuration item is changed.</p></div></div>
+                        <div class="help-card row"><div><strong>Not on every type</strong><p>A monitor or a mouse will never be a configuration item. Untick <strong>Configuration item</strong> in the type's layout (<strong>Settings &rarr; Asset types &rarr; Layout</strong>) to hide the card on that type.</p></div></div>
+                        <div class="help-card row"><div><strong>Who can link</strong><p>You need to be able to change both Assets and the CMDB. Someone without the CMDB sees only that the asset is linked to a <em>restricted</em> configuration item - no name. Existing <em>Link to something else</em> custom fields that point at configuration items are separate and stay as they are.</p></div></div>
+                    </div>
+                </div>
+
+<div class="help-section" id="tips">
+                    <div class="help-section-header">
+                        <span class="help-section-num">21</span>
                         <h3><?php echo htmlspecialchars(t('asset-management.help.nav_tips')); ?></h3>
                     </div>
                     <div class="help-cards">

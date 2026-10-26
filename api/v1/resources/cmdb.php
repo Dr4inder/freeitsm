@@ -407,6 +407,11 @@ function apiCmdbObjectsGet(PDO $conn, array $apiKey, array $params, array $body)
         'incoming' => $serializeRel($in->fetchAll(PDO::FETCH_ASSOC)),
     ];
 
+    // GH #201: the asset this CI is linked to - {id, name}, {restricted: true} without
+    // assets.read, or null. Read-only and additive.
+    require_once dirname(__DIR__, 3) . '/includes/services/asset_ci_links.php';
+    $obj['linked_asset'] = AssetCiLinkService::restBlock($conn, AssetCiLinkService::accessForApiKey($apiKey), 'ci', (int)$params[0]);
+
     apiRespond($obj);
 }
 

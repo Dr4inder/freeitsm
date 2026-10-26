@@ -164,6 +164,9 @@ enum Cap: string
     case CMDB_CLASSES            = 'cmdb.classes';             // the CI schema itself
     case CMDB_RELATIONSHIP_TYPES = 'cmdb.relationship_types';
     case CMDB_AI                 = 'cmdb.ai';                  // AI provider + API key
+    // GH #201: which asset details a linked CI's Asset card shows. Narrows a view only -
+    // it can never show an asset to someone who cannot open it. Not sensitive.
+    case CMDB_ASSET_CARD         = 'cmdb.asset_card';
 
     // ---- Morning Checks ----------------------------------------------------
     case MORNING_CHECKS_MANAGE   = 'morning_checks.manage';    // umbrella

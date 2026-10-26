@@ -56,6 +56,7 @@ function switchTab(tab) {
     if (tab === 'classes') loadClasses();
     else if (tab === 'relationship-types') loadRelTypes();
     else if (tab === 'ai') loadCmdbAiExtras();
+    else if (tab === 'asset-card') loadAssetCard();
     else if (tab === 'left-panel') loadSidebarMode();
 }
 
@@ -874,8 +875,31 @@ function renderAiResult(added, created, errors) {
     details.innerHTML = html;
 }
 
+// ---------- Asset card (GH #201) ----------
+// Which details of a linked asset the CI's Asset card shows. A view setting only: the
+// server never sends an asset's details to someone who cannot open Assets, ticked or not.
+
+/** Ticks the asset details the card currently shows. */
+async function loadAssetCard() {
+    try {
+        const data = await (await fetch(API + 'asset_card_settings.php')).json();
+        if (!data.success) { showInlineToast(data.error || '', true); return; }
+        document.querySelectorAll('input[name="assetCardField"]').forEach(cb => { cb.checked = (data.fields || []).includes(cb.value); });
+    } catch (e) { /* the ticks stay as drawn */ }
+}
+
+/** Saves the ticked asset details. */
+async function saveAssetCard(ev) {
+    ev.preventDefault();
+    const fields = Array.from(document.querySelectorAll('input[name="assetCardField"]:checked')).map(cb => cb.value);
+    const data = await postJson(API + 'asset_card_settings.php', { fields: fields });
+    if (!data.success) { showInlineToast(data.error || '', true); return; }
+    showInlineToast(window.t('cmdb.settings.asset_card_saved'));
+}
+
 // ---------- Init ----------
 
 document.addEventListener('DOMContentLoaded', () => {
     loadClasses(); // First tab is Classes — load immediately
+    if (document.getElementById('asset-card-tab') && document.getElementById('asset-card-tab').classList.contains('active')) loadAssetCard();
 });
