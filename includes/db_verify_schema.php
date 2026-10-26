@@ -5176,6 +5176,8 @@ return [
         // relationship and which way. Defaults to 'none' so an upgraded
         // install spreads nothing until someone says it should.
         'impact_direction'  => "VARCHAR(10) NOT NULL DEFAULT 'none'",
+        // GH #199 Part C: none | membership | placement - see database/freeitsm.sql.
+        'redundancy'        => "VARCHAR(20) NOT NULL DEFAULT 'none'",
         'display_order'     => 'INT NULL DEFAULT 0',
         'is_active'         => 'TINYINT(1) NULL DEFAULT 1',
         'created_datetime'  => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',

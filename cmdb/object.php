@@ -778,6 +778,16 @@ if ($showDomains) $translationNamespaces[] = 'domains';
             .o2-hero-actions { flex-direction: row; width: 100%; }
         }
 
+        /* GH #199 Part C: impact grades and the limits of the analysis. */
+        .o2-grade { display: inline-block; margin-top: 4px; padding: 1px 8px; border-radius: 99px; font-size: 11px; font-weight: 650; }
+        .o2-grade.g-affected { background: var(--danger-bg, #fee2e2); color: var(--danger-text, #b91c1c); }
+        .o2-grade.g-may_be_interrupted { background: var(--warning-bg, #fef3c7); color: var(--warning-text, #a16207); }
+        .o2-grade.g-redundancy_reduced { background: var(--info-bg, #e0f2fe); color: var(--info-text, #0369a1); }
+        .o2-grade.g-unknown { background: var(--surface-hover, #f3f4f6); color: var(--text-muted, #6b7280); }
+        .o2-grade-counts { font-size: 12.5px; font-weight: 500; color: var(--text-muted, #6b7280); }
+        .o2-limits { margin: 12px 18px 16px; padding: 10px 12px; border-left: 3px solid var(--warning-text, #a16207); background: var(--surface-hover, #f9fafb); border-radius: 0 6px 6px 0; font-size: 12.5px; color: var(--text-muted, #4b5563); }
+        .o2-limits ul { margin: 4px 0 0; padding-left: 18px; }
+
         /* Reduced motion keeps the fades (they aid comprehension) and drops
            every positional transform. */
         @media (prefers-reduced-motion: reduce) {
@@ -936,8 +946,8 @@ if ($showDomains) $translationNamespaces[] = 'domains';
     <script src="options-editor.js?v=3"></script>
     <script src="../assets/js/domain-links.js?v=2"></script>
     <script src="../assets/js/project-links.js?v=1"></script>
-    <script src="../assets/js/ci-asset-link.js?v=4"></script>
-    <script src="object.js?v=14"></script>
+    <script src="../assets/js/ci-asset-link.js?v=5"></script>
+    <script src="object.js?v=17"></script>
     <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

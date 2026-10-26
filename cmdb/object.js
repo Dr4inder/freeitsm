@@ -368,7 +368,10 @@ function heroHtml(signal) {
  * Returns the four stat tiles - what breaks, open tickets, connections and days since last touched - each jumping to its section.
  */
 function statsHtml() {
-    const blast = (blastRadius && blastRadius.nodes) ? blastRadius.nodes.length : 0;
+    // Graded (GH #199 Part C): only what is AFFECTED breaks - the rest may be interrupted,
+    // has less redundancy, or is unknown, and the panel below says which.
+    const blast = (blastRadius && blastRadius.nodes)
+        ? (blastRadius.grades_used ? ((blastRadius.grade_counts || {}).affected || 0) : blastRadius.nodes.length) : 0;
     const open = (activity && activity.open) ? activity.open.length : 0;
     const conns = connectionTally().total;
     const days = daysSince(obj.updated_datetime);
@@ -455,19 +458,55 @@ function blastHtml() {
                     '<span class="o2-node-sub">' + esc(n.class_name) + '</span></span>' +
                 '</a>' +
                 '<div class="o2-via">' + esc(viaText(n)) + '</div>' +
+                gradeHtml(n) +
                 '</div>'
             ).join('') +
         '</div></div>';
     }
 
+    // Graded (GH #199 Part C): "affected" is now one of the grades, so the headline must not claim it for all.
+    const graded = blastRadius.grades_used ? '_graded' : '';
     const lede = nodes.length === 1
-        ? window.t('cmdb.impact.blast_headline_one')
-        : window.t('cmdb.impact.blast_headline_other', { count: nodes.length, depth: maxDepth });
+        ? window.t('cmdb.impact.blast_headline_one' + graded)
+        : window.t('cmdb.impact.blast_headline_other' + graded, { count: nodes.length, depth: maxDepth });
 
     return '<div class="o2-card" id="o2Blast">' + head +
-        '<div class="o2-lede">' + esc(lede) + '</div>' +
+        '<div class="o2-lede">' + esc(lede) + gradeCountsHtml() + '</div>' +
         '<div class="o2-chain">' + chain + '</div>' +
+        limitsHtml() +
     '</div>';
+}
+
+/* GH #199 Part C: each item's grade, when a relationship type in the path is marked as
+   redundant membership or placement with failover. Without one every item is simply
+   affected, and nothing extra is drawn - the panel reads exactly as it always did. */
+function gradeHtml(n) {
+    if (!blastRadius || !blastRadius.grades_used || !n.grade) return '';
+    let h = '<div class="o2-grade g-' + esc(n.grade) + '">' + esc(window.t('cmdb.impact.grade_' + n.grade)) + '</div>';
+    if (n.unknown_via && n.unknown_via.length && n.grade !== 'unknown') {
+        h += '<div class="o2-via">' + esc(window.t('cmdb.impact.unknown_via', { names: n.unknown_via.join(', ') })) + '</div>';
+    }
+    return h;
+}
+
+/** "3 affected, 2 may be interrupted, 1 redundancy reduced" beside the headline. */
+function gradeCountsHtml() {
+    if (!blastRadius || !blastRadius.grades_used) return '';
+    const c = blastRadius.grade_counts || {};
+    const bits = ['affected', 'may_be_interrupted', 'redundancy_reduced', 'unknown']
+        .filter(g => c[g]).map(g => c[g] + ' ' + window.t('cmdb.impact.grade_' + g).toLowerCase());
+    return bits.length ? ' <span class="o2-grade-counts">' + esc(bits.join(' · ')) + '</span>' : '';
+}
+
+/* What the model does not know - always shown when a redundancy rule was used, never
+   dismissible (agreed on #199): "redundancy reduced" is not a promise it keeps working. */
+function limitsHtml() {
+    if (!blastRadius || !blastRadius.grades_used || !(blastRadius.limits || []).length) return '';
+    const items = blastRadius.limits.map(l => typeof l === 'string'
+        ? window.t('cmdb.impact.limit_' + l)
+        : window.t('cmdb.impact.limit_' + l.code, { names: (l.names || []).join(', ') }));
+    return '<div class="o2-limits"><strong>' + esc(window.t('cmdb.impact.limits_title')) + '</strong><ul>' +
+        items.map(i => '<li>' + esc(i) + '</li>').join('') + '</ul></div>';
 }
 
 /* Every row says how it was reached, so a surprising entry can be traced

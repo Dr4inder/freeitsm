@@ -5330,7 +5330,7 @@
                     "p": "\/cmdb\/objects\/{id}\/impact",
                     "perm": "cmdb_objects.read",
                     "s": "Impact analysis",
-                    "d": "The blast radius: all descendants (with depth), objects referencing this one via object_ref properties, and incoming relationships (things that depend on it).",
+                    "d": "The blast radius: all descendants (with depth), objects referencing this one via object_ref properties, and incoming relationships (things that depend on it). Grades (GH #199): when a relationship type is marked as redundant membership or placement with failover, each blast_radius entry has a grade - affected, may_be_interrupted (a highly available role with another member to restart on), redundancy_reduced (some members of a redundant group lost; not a promise it keeps working) or unknown - with grade_via (the path that gave it) and unknown_via (paths that depend on a missing fact). The most severe established grade wins; a possible failover never softens a hard dependency. blast_radius_grades has used, counts and limits (what the model does not know: quorum, storage, capacity, placement rules, members assumed available). With no such type, every entry is affected, as before.",
                     "params": [
                         {
                             "name": "id",

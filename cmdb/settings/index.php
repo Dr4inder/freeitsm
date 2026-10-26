@@ -283,6 +283,32 @@ $translationNamespaces = ['common', 'cmdb'];
 
         <?php endif; ?>
 
+        <?php /* GH #199 Part C: what impact analysis assumes about members with no recorded state. */ ?>
+        <?php if (settingsTabVisible($visibleTabs, 'impact')): ?>
+        <div class="tab-content<?php echo $activeTabId === 'impact' ? ' active' : ''; ?>" id="impact-tab" data-capability="<?php echo capKey(Cap::CMDB_IMPACT); ?>">
+            <div class="section-header">
+                <h2><?php echo htmlspecialchars(t('cmdb.settings.impact_heading')); ?></h2>
+            </div>
+            <p style="color: var(--text-muted,#6b7280); font-size: 13px; margin-bottom: 16px; max-width: 720px;">
+                <?php echo htmlspecialchars(t('cmdb.settings.impact_intro')); ?>
+            </p>
+            <form id="impactForm" onsubmit="saveImpactSettings(event)" style="max-width: 640px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;"><?php echo htmlspecialchars(t('cmdb.settings.impact_unknown_label')); ?></label>
+                <label style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; cursor: pointer;">
+                    <input type="radio" name="impactUnknown" value="assume" style="margin-top: 3px;">
+                    <span><strong><?php echo htmlspecialchars(t('cmdb.settings.impact_unknown_assume')); ?></strong><br><small style="color: var(--text-muted,#6b7280);"><?php echo htmlspecialchars(t('cmdb.settings.impact_unknown_assume_hint')); ?></small></span>
+                </label>
+                <label style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; cursor: pointer;">
+                    <input type="radio" name="impactUnknown" value="unknown" style="margin-top: 3px;">
+                    <span><strong><?php echo htmlspecialchars(t('cmdb.settings.impact_unknown_unknown')); ?></strong><br><small style="color: var(--text-muted,#6b7280);"><?php echo htmlspecialchars(t('cmdb.settings.impact_unknown_unknown_hint')); ?></small></span>
+                </label>
+                <div style="margin-top: 12px;">
+                    <button type="submit" class="btn btn-primary"><?php echo htmlspecialchars(t('cmdb.settings.asset_card_save')); ?></button>
+                </div>
+            </form>
+        </div>
+        <?php endif; ?>
+
         <?php /* GH #201: which details of a linked asset a CI's Asset card shows. */ ?>
         <?php if (settingsTabVisible($visibleTabs, 'asset-card')): ?>
         <div class="tab-content<?php echo $activeTabId === 'asset-card' ? ' active' : ''; ?>" id="asset-card-tab" data-capability="<?php echo capKey(Cap::CMDB_ASSET_CARD); ?>">
@@ -552,6 +578,16 @@ $translationNamespaces = ['common', 'cmdb'];
                         </select>
                         <small><?php echo htmlspecialchars(t('cmdb.settings.rel_type_impact_hint')); ?></small>
                     </div>
+                    <?php /* GH #199 Part C: what a failure along this relationship means. */ ?>
+                    <div class="form-group">
+                        <label for="relTypeRedundancy"><?php echo htmlspecialchars(t('cmdb.settings.rel_type_redundancy')); ?></label>
+                        <select id="relTypeRedundancy">
+                            <option value="none"><?php echo htmlspecialchars(t('cmdb.settings.rel_type_redundancy_none')); ?></option>
+                            <option value="membership"><?php echo htmlspecialchars(t('cmdb.settings.rel_type_redundancy_membership')); ?></option>
+                            <option value="placement"><?php echo htmlspecialchars(t('cmdb.settings.rel_type_redundancy_placement')); ?></option>
+                        </select>
+                        <small><?php echo htmlspecialchars(t('cmdb.settings.rel_type_redundancy_hint')); ?></small>
+                    </div>
                     <div class="form-group">
                         <label for="relTypeDisplayOrder"><?php echo htmlspecialchars(t('cmdb.settings.rel_type_display_order')); ?></label>
                         <input type="number" id="relTypeDisplayOrder" value="0">
@@ -643,7 +679,7 @@ $translationNamespaces = ['common', 'cmdb'];
 
     <script src="../../assets/js/ai-settings.js?v=4"></script>
     <script src="../options-editor.js?v=3"></script>
-    <script src="settings.js?v=8"></script>
+    <script src="settings.js?v=9"></script>
     <script src="../../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

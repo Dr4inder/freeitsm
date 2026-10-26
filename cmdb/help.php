@@ -370,6 +370,7 @@ $translationNamespaces = ['common', 'cmdb'];
                     </div>
 
                     <p><?php echo t('cmdb.help.relationships_body2'); ?></p>
+                    <p><?php echo t('cmdb.help.relationships_redundancy'); ?></p>
 
                     <div class="help-note">
                         <?php echo t('cmdb.help.relationships_tip'); ?>

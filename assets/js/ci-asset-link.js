@@ -182,8 +182,15 @@
             const byClass = {};
             nodes.forEach(n => { byClass[n.class_name] = (byClass[n.class_name] || 0) + 1; });
             const top = Object.entries(byClass).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([c, n]) => n + ' ' + c).join(', ');
-            text = L(br.truncated ? 'impact_some_more' : 'impact_some', br.truncated ? 'If this failed, affected: at least {n}' : 'If this failed, affected: {n}', { n: nodes.length })
-                + (top ? ' (' + top + ')' : '');
+            if (br.grades_used) {
+                // GH #199 Part C: graded - how many affected, may be interrupted, redundancy reduced, unknown.
+                const c = br.grade_counts || {};
+                const EN = { affected: 'affected', may_be_interrupted: 'may be interrupted', redundancy_reduced: 'redundancy reduced', unknown: 'unknown' };
+                text = L('impact_graded', 'If this failed: {summary}', { summary: Object.keys(EN).filter(g => c[g]).map(g => c[g] + ' ' + L('grade_' + g, EN[g])).join(' · ') });
+            } else {
+                text = L(br.truncated ? 'impact_some_more' : 'impact_some', br.truncated ? 'If this failed, affected: at least {n}' : 'If this failed, affected: {n}', { n: nodes.length })
+                    + (top ? ' (' + top + ')' : '');
+            }
             el.innerHTML = esc(text) + ' ' + show
                 + (state.diagram_access ? ' &middot; <a href="#" data-cil="diagram" data-cil-ci="' + Number(cur.id) + '">' + esc(L('impact_diagram', 'Open as diagram')) + '</a>' : '');
         }

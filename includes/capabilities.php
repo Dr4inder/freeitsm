@@ -169,6 +169,8 @@ enum Cap: string
     // GH #201: which asset details a linked CI's Asset card shows. Narrows a view only -
     // it can never show an asset to someone who cannot open it. Not sensitive.
     case CMDB_ASSET_CARD         = 'cmdb.asset_card';
+    // GH #199 Part C: how "If this failed" treats a member with no recorded state.
+    case CMDB_IMPACT             = 'cmdb.impact';
 
     // ---- Morning Checks ----------------------------------------------------
     case MORNING_CHECKS_MANAGE   = 'morning_checks.manage';    // umbrella

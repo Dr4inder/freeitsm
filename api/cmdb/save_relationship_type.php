@@ -38,6 +38,17 @@ try {
         $impactDirection = CMDB_IMPACT_NONE;
     }
 
+    // GH #199 Part C: none | membership | placement. Only when sent, so an older caller
+    // cannot reset it. A redundancy rule shapes how a failure travels, so it needs one to.
+    $redundancy = null;
+    if (array_key_exists('redundancy', $data)) {
+        $redundancy = (string)$data['redundancy'];
+        if (!in_array($redundancy, ['none', 'membership', 'placement'], true)) $redundancy = 'none';
+        if ($redundancy !== 'none' && $impactDirection === CMDB_IMPACT_NONE) {
+            throw new Exception('A redundancy rule needs the relationship to spread impact - choose which way first.');
+        }
+    }
+
     if ($verb === '') throw new Exception('Verb is required');
     if ($inverse === '') throw new Exception('Inverse verb is required');
     if (mb_strlen($verb) > 100) throw new Exception('Verb too long (max 100 chars)');
@@ -62,6 +73,7 @@ try {
         );
         $stmt->execute([$verb, $inverse, $description ?: null, $impactDirection, $displayOrder, $isActive]);
         $newId = (int)$conn->lastInsertId();
+        if ($redundancy !== null) { $conn->prepare("UPDATE cmdb_relationship_types SET redundancy = ? WHERE id = ?")->execute([$redundancy, $newId]); }
         wf_emit('cmdb_relationship_type', 'created', $newId, $verb);
         echo json_encode(['success' => true, 'id' => $newId]);
     } else {
@@ -71,6 +83,7 @@ try {
               WHERE id = ?"
         );
         $stmt->execute([$verb, $inverse, $description ?: null, $impactDirection, $displayOrder, $isActive, $id]);
+        if ($redundancy !== null) { $conn->prepare("UPDATE cmdb_relationship_types SET redundancy = ? WHERE id = ?")->execute([$redundancy, $id]); }
         wf_emit('cmdb_relationship_type', 'updated', $id, $verb);
         echo json_encode(['success' => true, 'id' => $id]);
     }

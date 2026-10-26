@@ -45,6 +45,15 @@ return [
             'grant'     => 'Manage relationship types',
         ],
         [
+            // GH #199 Part C: what "If this failed" assumes about a redundant group's other
+            // members when nothing records their state. Changes the analysis everyone reads.
+            'id'           => 'impact',
+            'cap'          => capKey(Cap::CMDB_IMPACT),
+            'label_key'    => 'cmdb.settings.tab_impact',
+            'grant'        => 'Choose how impact analysis treats cluster members with no recorded state',
+            'setting_keys' => ['cmdb_impact_unknown_members'],
+        ],
+        [
             // GH #201: which details of a linked asset the CI's Asset card shows.
             'id'           => 'asset-card',
             'cap'          => capKey(Cap::CMDB_ASSET_CARD),

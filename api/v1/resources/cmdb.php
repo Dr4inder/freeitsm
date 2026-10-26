@@ -483,6 +483,9 @@ function apiCmdbObjectImpact(PDO $conn, array $apiKey, array $params, array $bod
         // it was reached.
         'blast_radius' => $blast['nodes'],
         'blast_radius_truncated' => $blast['truncated'],
+        // GH #199 Part C (additive): each blast_radius entry also has grade, grade_via and
+        // unknown_via; this says whether redundancy rules were used and what the model does not know.
+        'blast_radius_grades' => ['used' => $blast['grades_used'], 'counts' => $blast['grade_counts'], 'limits' => $blast['limits']],
     ]);
 }
 

@@ -410,6 +410,11 @@ return [
         'impact_some_more'         => 'If this failed, affected: at least {n}',
         'impact_none'              => 'If this failed: nothing else in the CMDB depends on it.',
         'impact_unconfigured'      => 'If this failed: nothing is set to carry impact in the CMDB yet.',
+        'impact_graded'            => 'If this failed: {summary}',
+        'grade_affected'           => 'affected',
+        'grade_may_be_interrupted' => 'may be interrupted',
+        'grade_redundancy_reduced' => 'redundancy reduced',
+        'grade_unknown'            => 'unknown',
     ],
 
     // The documents panel, shared by every module that attaches files or links

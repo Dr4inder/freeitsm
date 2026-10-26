@@ -7641,6 +7641,16 @@ CREATE TABLE IF NOT EXISTS `cmdb_relationship_types` (
     -- Defaults to 'none' so an upgraded install reports nothing until someone
     -- deliberately says a relationship carries impact.
     `impact_direction`  VARCHAR(10) NOT NULL DEFAULT 'none',
+    -- GH #199 Part C: what a failure travelling along this relationship MEANS.
+    --   'none'       = an ordinary dependency: the object it reaches is affected
+    --   'membership' = membership of a redundant group ("is a member of" a cluster):
+    --                  losing some members reduces the group's redundancy; losing all
+    --                  of them affects it
+    --   'placement'  = placement with failover ("runs on", for a highly available
+    --                  role ONLY): the object may be interrupted while its host's group
+    --                  has another member, and is affected when it has none
+    -- One column, so a type can never be both. 'none' everywhere means today's results.
+    `redundancy`        VARCHAR(20) NOT NULL DEFAULT 'none',
     `display_order`     INT NULL DEFAULT 0,
     `is_active`         TINYINT(1) NULL DEFAULT 1,
     `created_datetime`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
