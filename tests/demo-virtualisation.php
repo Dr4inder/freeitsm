@@ -31,7 +31,7 @@ $q = fn(string $sql) => $conn->query($sql)->fetchColumn();
 $tables = ['assets', 'asset_types', 'asset_ci_links', 'asset_history', 'asset_review_items', 'cmdb_objects', 'cmdb_classes',
     'cmdb_relationship_types', 'cmdb_object_relationships', 'cmdb_object_properties', 'cmdb_object_sources', 'cmdb_relationship_sources',
     'virt_connections', 'virt_vms', 'virt_hosts', 'virt_cmdb_mappings', 'virt_cmdb_decisions', 'virt_identity_reviews',
-    'proxmox_connections', 'proxmox_vms', 'vcloud_connections', 'vcloud_vms', 'servers', 'job_runs'];
+    'proxmox_connections', 'proxmox_nodes', 'proxmox_vms', 'vcloud_connections', 'vcloud_vms', 'servers', 'job_runs'];
 $counts = function () use ($conn, $tables): array {
     $o = [];
     foreach ($tables as $t) { $o[$t] = (int)$conn->query("SELECT COUNT(*) FROM $t")->fetchColumn(); }

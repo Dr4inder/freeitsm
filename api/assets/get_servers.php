@@ -151,26 +151,16 @@ try {
 
     usort($servers, function ($a, $b) { return strcasecmp((string)$a['name'], (string)$b['name']); });
 
-    // Build summary stats - separate ESXi hosts from VMs
-    $esxiHosts = [];
-    $vmServers = [];
-    foreach ($servers as $s) {
-        if ($s['guest_os'] === 'VMware ESXi') {
-            $esxiHosts[] = $s;
-        } else {
-            $vmServers[] = $s;
-        }
-    }
+    $estate = serversEstate($conn, $servers, $hyperv);
 
-    $totalVMs = count($vmServers);
+    $totalVMs = count($servers);
     $activeVMs = 0;
     $offlineVMs = 0;
     $totalMemoryGB = 0;
     $totalCPU = 0;
     $totalDiskGB = 0;
-    $clusters = [];
 
-    foreach ($vmServers as $s) {
+    foreach ($servers as $s) {
         if ($s['power_state'] === 'active') {
             $activeVMs++;
         } else {
@@ -179,9 +169,6 @@ try {
         $totalMemoryGB += (float)$s['memory_gb'];
         $totalCPU += (int)$s['num_cpu'];
         $totalDiskGB += (float)$s['hard_disk_size_gb'];
-        if (!empty($s['cluster']) && !in_array($s['cluster'], $clusters)) {
-            $clusters[] = $s['cluster'];
-        }
     }
 
     $lastSynced = null;
@@ -193,6 +180,7 @@ try {
         'success' => true,
         'servers' => $servers,
         'hyperv' => $hyperv,
+        'estate' => $estate['groups'],
         'summary' => [
             'total_vms' => $totalVMs,
             'active_vms' => $activeVMs,
@@ -200,13 +188,119 @@ try {
             'total_memory_gb' => round($totalMemoryGB, 1),
             'total_cpu' => $totalCPU,
             'total_disk_gb' => round($totalDiskGB, 1),
-            'host_count' => count($esxiHosts),
-            'cluster_count' => count($clusters),
+            'host_count' => $estate['host_count'],
+            'cluster_count' => $estate['cluster_count'],
             'last_synced' => $lastSynced
         ]
     ]);
 
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+}
+
+/**
+ * The physical side of every source, for the Hosts and Clusters tiles and the tree they
+ * open: one group per source connection, its clusters with their hosts, standalone hosts,
+ * and VM counts per host taken from the VM rows above (so a filter by host finds the same
+ * VMs the count says).
+ *
+ * Hyper-V hosts and clusters are its own records (a host or cluster not seen is listed but
+ * not counted); Proxmox nodes are proxmox_nodes; vCenter hosts and clusters are the
+ * distinct names on its VMs, the only place its sync records them. Cloud Director never
+ * shows its hosts to a tenant, so its virtual data centres are listed and nothing counted -
+ * an org VDC is not a cluster.
+ *
+ * @param array $servers  the VM rows built above, every source
+ * @param array $hyperv   the Hyper-V block built above (already scoped to the analyst's companies)
+ * @return array{groups: array, host_count: int, cluster_count: int}
+ */
+function serversEstate(PDO $conn, array $servers, array $hyperv): array
+{
+    // VMs per source group and host (or VDC), counting only VMs still seen.
+    $per = [];
+    foreach ($servers as $s) {
+        if (!empty($s['not_seen_since'])) { continue; }
+        $k = $s['source_name'] . '|' . ($s['source'] === 'vcloud' ? $s['cluster'] : $s['host']);
+        $per[$k] ??= ['vms' => 0, 'running' => 0];
+        $per[$k]['vms']++;
+        if ($s['power_state'] === 'active') { $per[$k]['running']++; }
+    }
+    $host = function (string $group, string $name, array $extra = []) use ($per): array {
+        return ['name' => $name, 'vms' => $per[$group . '|' . $name]['vms'] ?? 0, 'running' => $per[$group . '|' . $name]['running'] ?? 0] + $extra;
+    };
+    $group = function (string $source, string $label, array $byCluster, array $clusterExtra = []): array {
+        $g = ['source' => $source, 'label' => $label, 'clusters' => [], 'standalone' => []];
+        ksort($byCluster, SORT_NATURAL | SORT_FLAG_CASE);
+        foreach ($byCluster as $cl => $hosts) {
+            usort($hosts, fn($a, $b) => strnatcasecmp($a['name'], $b['name']));
+            if ($cl === '') { $g['standalone'] = $hosts; continue; }
+            $g['clusters'][] = ['name' => (string)$cl, 'hosts' => $hosts] + ($clusterExtra[$cl] ?? []);
+        }
+        return $g;
+    };
+    $groups = [];
+
+    // Hyper-V, one group per connection.
+    $hvByConn = [];
+    foreach ($hyperv['hosts'] as $h) {
+        $label = 'Hyper-V · ' . $h['conn_name'];
+        $hvByConn[$label][(string)($h['cluster_name'] ?? '')][] = $host($label, (string)$h['name'], [
+            'state' => $h['node_state'], 'identity_kind' => $h['identity_kind'],
+            'not_seen_since' => $h['not_seen_since'], 'not_confirmed_since' => $h['not_confirmed_since']]);
+    }
+    $hvClusters = [];
+    foreach ($hyperv['clusters'] as $c) {
+        $label = 'Hyper-V · ' . $c['conn_name'];
+        $hvByConn[$label][(string)$c['name']] ??= [];
+        $hvClusters[$label][(string)$c['name']] = ['quorum' => $c['quorum_type'], 'witness' => $c['witness'],
+            'not_seen_since' => $c['not_seen_since'], 'not_confirmed_since' => $c['not_confirmed_since']];
+    }
+    foreach ($hvByConn as $label => $byCluster) { $groups[] = $group('hyperv', $label, $byCluster, $hvClusters[$label] ?? []); }
+
+    // Proxmox, one group per server: its nodes, or the node names on its VMs if it has none recorded.
+    $pxConns = $conn->query('SELECT id, name FROM proxmox_connections ORDER BY name')->fetchAll(PDO::FETCH_KEY_PAIR);
+    $pxNodes = $conn->query('SELECT connection_id, node_name, cluster_name, status FROM proxmox_nodes')->fetchAll(PDO::FETCH_ASSOC);
+    $pxVmNodes = $conn->query('SELECT DISTINCT connection_id, node_name, cluster_name FROM proxmox_vms WHERE node_name IS NOT NULL')->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($pxConns as $id => $name) {
+        $label = 'Proxmox · ' . $name;
+        $rows = array_filter($pxNodes, fn($n) => (int)$n['connection_id'] === (int)$id) ?: array_filter($pxVmNodes, fn($n) => (int)$n['connection_id'] === (int)$id);
+        if (!$rows) { continue; }
+        $byCluster = [];
+        foreach ($rows as $n) { $byCluster[(string)($n['cluster_name'] ?? '')][] = $host($label, (string)$n['node_name'], ['state' => $n['status'] ?? null]); }
+        $groups[] = $group('proxmox', $label, $byCluster);
+    }
+
+    // vCenter: the hosts and clusters named on its VMs.
+    $vcByCluster = [];
+    $seen = [];
+    foreach ($servers as $s) {
+        if ($s['source'] !== 'vcenter' || $s['host'] === '' || $s['host'] === null || isset($seen[$s['host']])) { continue; }
+        $seen[$s['host']] = true;
+        $vcByCluster[(string)$s['cluster']][] = $host('vCenter', (string)$s['host']);
+    }
+    if ($vcByCluster) { $groups[] = $group('vcenter', 'vCenter', $vcByCluster); }
+
+    // Cloud Director: virtual data centres only.
+    $vdcs = [];
+    foreach ($servers as $s) {
+        if ($s['source'] !== 'vcloud') { continue; }
+        $vdcs[$s['source_name']][(string)$s['cluster']] = true;
+    }
+    foreach ($vdcs as $label => $names) {
+        $names = array_keys($names);
+        natcasesort($names);
+        $groups[] = ['source' => 'vcloud', 'label' => $label, 'clusters' => [], 'standalone' => [], 'hosts_hidden' => true,
+            'vdcs' => array_map(fn($n) => $host($label, $n), array_values($names))];
+    }
+
+    $hosts = 0; $clusters = 0;
+    foreach ($groups as $g) {
+        foreach ($g['clusters'] as $c) {
+            if (empty($c['not_seen_since'])) { $clusters++; }
+            foreach ($c['hosts'] as $h) { if (empty($h['not_seen_since'])) { $hosts++; } }
+        }
+        foreach ($g['standalone'] as $h) { if (empty($h['not_seen_since'])) { $hosts++; } }
+    }
+    return ['groups' => $groups, 'host_count' => $hosts, 'cluster_count' => $clusters];
 }
 ?>

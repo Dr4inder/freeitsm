@@ -541,7 +541,13 @@ $translationNamespaces = ['common', 'asset-management'];
                         <div class="help-step">
                             <div class="help-step-num">3</div>
                             <div>
-                                <strong>Browse the results</strong> &mdash; the Servers tab shows summary cards (total VMs, vCPU, memory, storage) and a searchable, sortable table of every VM. Click any row to see the full detail &mdash; disks, NICs, guest OS, VMware Tools, and the raw JSON from vCenter.
+                                <strong>Browse the results</strong> &mdash; the Servers tab shows summary cards (total VMs, vCPU, memory, storage, hosts, clusters) and a searchable, sortable table of every VM. Click any row to see the full detail &mdash; disks, NICs, guest OS, VMware Tools, and the raw JSON from vCenter.
+                            </div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-num">4</div>
+                            <div>
+                                <strong>Hosts and clusters</strong> &mdash; click the <em>Hosts</em> or <em>Clusters</em> card to see every source's clusters and the hosts in them, with the VMs on each. Click a host to list only its VMs (the <em>Host:</em> chip by the filters clears it). Hosts come from Hyper-V, Proxmox nodes and the ESXi hosts named on vCenter VMs. Cloud Director never shows its hosts to a tenant, so only its virtual data centres are listed, and they are not counted.
                             </div>
                         </div>
                     </div>
@@ -852,7 +858,7 @@ $translationNamespaces = ['common', 'asset-management'];
                         </div>
                         <div class="help-step">
                             <div class="help-step-num">3</div>
-                            <div>Schedule it. <strong>Servers</strong> then shows each connection as <em>On time</em>, <em>Late</em> or <em>Overdue</em>, the VMs with their host and cluster, and - under <strong>Hosts and clusters</strong> - every node, its state and how it is identified.</div>
+                            <div>Schedule it. <strong>Servers</strong> then shows each connection as <em>On time</em>, <em>Late</em> or <em>Overdue</em>, the VMs with their host and cluster, and - under <strong>Hosts and clusters</strong> (the <em>Hosts</em> card) - every node, its state and how it is identified.</div>
                         </div>
                     </div>
                     <div class="help-cards">

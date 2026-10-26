@@ -247,6 +247,11 @@ function demoVirtBuild(PDO $conn, ActorContext $ctx): void
     $q("INSERT INTO proxmox_connections (name, host, username, verify_ssl, is_active, sync_interval_minutes, last_sync_datetime, last_sync_status, last_sync_message, is_demo)
         VALUES ('Demo Proxmox cluster', 'pve.demo.invalid', 'demo@pve', 1, 0, 60, UTC_TIMESTAMP() - INTERVAL 20 MINUTE, 'success', 'Demo data - not a real cluster.', 1)");
     $px = (int)$conn->lastInsertId();
+    // Nodes as the sync records them; they go with the connection (ON DELETE CASCADE).
+    foreach (['pve1', 'pve2', 'pve3'] as $node) {
+        $q("INSERT INTO proxmox_nodes (connection_id, node_name, cluster_name, status, cpu_cores, memory_mb, last_seen_datetime)
+            VALUES (?, ?, 'demo-pve', 'online', 32, 262144, UTC_TIMESTAMP() - INTERVAL 20 MINUTE)", [$px, $node]);
+    }
     $pxVms = [
         [101, 'qemu', 'pve1', 'demo-k8s-cp01', 'running', 4, 8192, 64, 'l26', '10.30.0.11'],
         [102, 'qemu', 'pve2', 'demo-k8s-w01', 'running', 8, 16384, 128, 'l26', '10.30.0.21'],

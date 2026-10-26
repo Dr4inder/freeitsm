@@ -253,6 +253,23 @@ $translationNamespaces = ['common', 'asset-management'];
         .hv-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
         .hv-table th, .hv-table td { text-align: left; padding: 5px 8px; border-top: 1px solid var(--border, #eee); font-size: 12.5px; }
         .hv-flag { margin-left: 6px; font-size: 11px; }
+        /* The estate tree (Hosts / Clusters tiles). Rows wrap rather than scroll on a phone. */
+        .summary-card.clickable { cursor: pointer; transition: box-shadow 0.15s, transform 0.15s; }
+        .summary-card.clickable:hover, .summary-card.clickable:focus-visible { box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); transform: translateY(-1px); outline: none; }
+        .summary-card.clickable.open { box-shadow: 0 0 0 2px var(--accent, #0078d4); }
+        .estate-group { padding: 10px 0 4px; border-top: 1px solid var(--border, #eee); }
+        .estate-group:first-child { border-top: none; }
+        .estate-group-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
+        .estate-cluster { margin: 4px 0 6px 6px; padding-left: 10px; border-left: 2px solid var(--border, #e0e0e0); }
+        .estate-cluster-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 3px 0; }
+        .estate-hosts { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0 2px 4px; }
+        .estate-host { display: inline-flex; flex-direction: column; gap: 2px; min-width: 140px; padding: 6px 10px; border: 1px solid var(--border, #e0e0e0); border-radius: 6px; background: var(--surface, #fff); color: var(--text, #333); font: inherit; text-align: left; cursor: pointer; }
+        .estate-host:hover, .estate-host.active { border-color: var(--accent, #0078d4); }
+        .estate-host.gone { opacity: 0.6; }
+        .estate-host strong { font-size: 13px; }
+        .estate-host .hv-pill { align-self: flex-start; }
+        .estate-src { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; background: var(--accent-soft, #e8f1fb); color: var(--accent, #0078d4); }
+        .filter-chip.host-chip { display: inline-flex; gap: 6px; align-items: center; }
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -661,7 +678,7 @@ $translationNamespaces = ['common', 'asset-management'];
                         <span class="summary-label"><?php echo htmlspecialchars(t('asset-management.servers.total_storage')); ?></span>
                     </div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card clickable" role="button" tabindex="0" onclick="toggleEstate()" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggleEstate(); }">
                     <div class="summary-icon hosts">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
@@ -671,10 +688,10 @@ $translationNamespaces = ['common', 'asset-management'];
                     </div>
                     <div class="summary-info">
                         <span class="summary-value" id="hostCount">-</span>
-                        <span class="summary-label"><?php echo htmlspecialchars(t('asset-management.servers.esxi_hosts')); ?></span>
+                        <span class="summary-label"><?php echo htmlspecialchars(t('asset-management.servers.hosts')); ?></span>
                     </div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card clickable" role="button" tabindex="0" onclick="toggleEstate()" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggleEstate(); }">
                     <div class="summary-icon clusters">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="3"></circle>
@@ -694,6 +711,13 @@ $translationNamespaces = ['common', 'asset-management'];
                 </div>
             </div>
 
+            <?php /* Every source's hosts and clusters, opened from the Hosts and Clusters tiles. */ ?>
+            <div class="hv-panel estate-panel" id="estatePanel" style="display:none;">
+                <div class="hv-panel-head"><strong><?php echo htmlspecialchars(t('asset-management.servers.estate_title')); ?></strong>
+                    <span class="hv-sub"><?php echo htmlspecialchars(t('asset-management.servers.estate_hint')); ?></span></div>
+                <div id="estateBody"></div>
+            </div>
+
             <!-- Sync Message -->
             <div class="sync-message" id="syncMessage"></div>
 
@@ -701,9 +725,8 @@ $translationNamespaces = ['common', 'asset-management'];
                      says when each connection last reported, and lists its hosts and clusters. */ ?>
             <div class="hv-panel" id="hvPanel" style="display:none;">
                 <div class="hv-panel-head"><strong><?php echo htmlspecialchars(t('asset-management.hyperv.servers_title')); ?></strong>
-                    <a href="#" id="hvHostsToggle" onclick="hvToggleHosts(event)"><?php echo htmlspecialchars(t('asset-management.hyperv.servers_hosts')); ?></a></div>
+                    <a href="#" id="hvHostsToggle" onclick="event.preventDefault(); toggleEstate(true)"><?php echo htmlspecialchars(t('asset-management.hyperv.servers_hosts')); ?></a></div>
                 <div id="hvConnections"></div>
-                <div id="hvHosts" style="display:none;"></div>
             </div>
 
             <!-- Toolbar -->
@@ -713,6 +736,7 @@ $translationNamespaces = ['common', 'asset-management'];
                     <span class="filter-chip active" data-filter="all" onclick="setFilter('all')"><?php echo htmlspecialchars(t('asset-management.servers.filter_all')); ?></span>
                     <span class="filter-chip" data-filter="active" onclick="setFilter('active')"><?php echo htmlspecialchars(t('asset-management.servers.active')); ?></span>
                     <span class="filter-chip" data-filter="offline" onclick="setFilter('offline')"><?php echo htmlspecialchars(t('asset-management.servers.offline')); ?></span>
+                    <span class="filter-chip active host-chip" id="hostChip" style="display:none;" onclick="setHostFilter(null)"></span>
                 </div>
                 <div class="toolbar-right">
                     <span class="sync-info" id="syncInfo"></span>
@@ -769,6 +793,8 @@ $translationNamespaces = ['common', 'asset-management'];
         let filteredServers = [];
         let currentSort = { column: 'name', direction: 'asc' };
         let currentFilter = 'all';
+        let estateData = [];
+        let hostFilter = null;   // {group, name, vdc} - one host's (or Cloud Director VDC's) VMs
         let searchTimeout = null;
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -789,6 +815,8 @@ $translationNamespaces = ['common', 'asset-management'];
                     allServers = data.servers;
                     updateSummary(data.summary);
                     renderHyperv(data.hyperv || null);
+                    estateData = data.estate || [];
+                    if (document.getElementById('estatePanel').style.display !== 'none') renderEstate();
                     applyFilters();
                 } else {
                     showEmptyState(window.t('asset-management.servers.load_error', { error: data.error }));
@@ -826,6 +854,7 @@ $translationNamespaces = ['common', 'asset-management'];
 
             filteredServers = allServers.filter(s => {
                 if (currentFilter !== 'all' && s.power_state !== currentFilter) return false;
+                if (hostFilter && (s.source_name !== hostFilter.group || (hostFilter.vdc ? s.cluster : s.host) !== hostFilter.name || s.not_seen_since)) return false;
                 if (search) {
                     return (s.name || '').toLowerCase().includes(search) ||
                            (s.ip_address || '').toLowerCase().includes(search) ||
@@ -955,36 +984,72 @@ $translationNamespaces = ['common', 'asset-management'];
                     <span class="hv-sub">${c.last_report_at ? escapeHtml(HV('last_report', { when: hvWhen(c.last_report_at) })) + ' · ' : ''}${escapeHtml(HV('expected', { n: c.interval }))}</span>
                     ${c.last_summary ? `<span class="hv-sub">${escapeHtml(c.last_summary)}</span>` : ''}</div>`;
             }).join('') + `<div class="hv-sub">${escapeHtml(HV('storage_limit'))}</div>`;
-            if (document.getElementById('hvHosts').style.display !== 'none') hvRenderHosts();
         }
 
-        function hvToggleHosts(e) {
-            e.preventDefault();
-            const box = document.getElementById('hvHosts');
-            box.style.display = box.style.display === 'none' ? '' : 'none';
-            if (box.style.display !== 'none') hvRenderHosts();
+        /* The Hosts and Clusters tiles open this: every source's clusters and hosts, with the
+           VMs on each. Clicking a host lists only its VMs in the table. */
+        function toggleEstate(open) {
+            const panel = document.getElementById('estatePanel');
+            const show = open === true || panel.style.display === 'none';
+            panel.style.display = show ? '' : 'none';
+            document.querySelectorAll('.summary-card.clickable').forEach(c => c.classList.toggle('open', show));
+            if (show) { renderEstate(); panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+        }
+
+        function renderEstate() {
+            const S = (k, p) => window.t('asset-management.servers.' + k, p);
+            const N = (k, n) => S(n === 1 ? k + '_one' : k, { n: n });
+            const body = document.getElementById('estateBody');
+            if (!estateData.length) { body.innerHTML = `<div class="hv-sub">${escapeHtml(S('estate_empty'))}</div>`; return; }
+            const hostBtn = (g, x, vdc) => {
+                const on = hostFilter && hostFilter.group === g.label && hostFilter.name === x.name && !!hostFilter.vdc === !!vdc;
+                const gone = !!x.not_seen_since;
+                return `<button type="button" class="estate-host${on ? ' active' : ''}${gone ? ' gone' : ''}" data-group="${escapeHtml(g.label)}" data-name="${escapeHtml(x.name)}" data-vdc="${vdc ? 1 : 0}">
+                    <strong>${escapeHtml(x.name)}</strong>
+                    <span class="hv-sub">${escapeHtml(N('n_vms', x.vms) + ', ' + S('n_running', { n: x.running }))}${x.state ? ' · ' + escapeHtml(x.state) : ''}</span>
+                    ${x.identity_kind === 'name' ? `<span class="hv-pill hv-warn" title="${escapeHtml(window.t('asset-management.hyperv.identity_name_hint'))}">${escapeHtml(window.t('asset-management.hyperv.identity_name'))}</span>` : ''}
+                    ${hvSeen(x)}</button>`;
+            };
+            body.innerHTML = estateData.map(g => {
+                const hostTotal = g.clusters.reduce((n, c) => n + c.hosts.length, 0) + g.standalone.length;
+                const counts = g.hosts_hidden ? N('n_vdcs', g.vdcs.length) : N('n_hosts', hostTotal) + ', ' + N('n_clusters', g.clusters.length);
+                let out = `<div class="estate-group"><div class="estate-group-head"><span class="estate-src">${escapeHtml(g.label)}</span><span class="hv-sub">${escapeHtml(counts)}</span></div>`;
+                out += g.clusters.map(c => {
+                    const vms = c.hosts.reduce((n, x) => n + x.vms, 0);
+                    return `<div class="estate-cluster"><div class="estate-cluster-head"><strong>${escapeHtml(c.name)}</strong>
+                        <span class="hv-sub">${escapeHtml(N('n_hosts', c.hosts.length) + ', ' + N('n_vms', vms))}${c.quorum ? ' · ' + escapeHtml(window.t('asset-management.hyperv.col_quorum')) + ': ' + escapeHtml(c.quorum) : ''}</span>${hvSeen(c)}</div>
+                        <div class="estate-hosts">${c.hosts.map(x => hostBtn(g, x, false)).join('')}</div></div>`;
+                }).join('');
+                if (g.standalone.length) {
+                    out += `<div class="estate-cluster"><div class="estate-cluster-head"><strong>${escapeHtml(S('standalone'))}</strong></div>
+                        <div class="estate-hosts">${g.standalone.map(x => hostBtn(g, x, false)).join('')}</div></div>`;
+                }
+                if (g.hosts_hidden) {
+                    out += `<div class="estate-cluster"><div class="hv-sub">${escapeHtml(S('vcloud_hidden'))}</div>
+                        <div class="estate-hosts">${g.vdcs.map(x => hostBtn(g, x, true)).join('')}</div></div>`;
+                }
+                return out + '</div>';
+            }).join('');
+            body.querySelectorAll('.estate-host').forEach(b => b.addEventListener('click', () => {
+                const f = { group: b.dataset.group, name: b.dataset.name, vdc: b.dataset.vdc === '1' };
+                const same = hostFilter && hostFilter.group === f.group && hostFilter.name === f.name && hostFilter.vdc === f.vdc;
+                setHostFilter(same ? null : f);
+            }));
+        }
+
+        function setHostFilter(f) {
+            hostFilter = f;
+            const chip = document.getElementById('hostChip');
+            chip.style.display = f ? '' : 'none';
+            if (f) chip.innerHTML = escapeHtml(window.t('asset-management.servers.' + (f.vdc ? 'filter_vdc' : 'filter_host'), { name: f.name })) + ' <span aria-hidden="true">&times;</span>';
+            if (document.getElementById('estatePanel').style.display !== 'none') renderEstate();
+            applyFilters();
         }
 
         function hvSeen(r) {
             if (r.not_seen_since) return `<span class="hv-pill hv-bad">${escapeHtml(HV('not_seen', { when: hvWhen(r.not_seen_since) }))}</span>`;
             if (r.not_confirmed_since) return `<span class="hv-pill hv-warn">${escapeHtml(HV('not_confirmed_since', { when: hvWhen(r.not_confirmed_since) }))}</span>`;
             return '';
-        }
-
-        function hvRenderHosts() {
-            const h = hvData;
-            if (!h) return;
-            const clusters = h.clusters.length ? `<table class="hv-table"><thead><tr><th>${escapeHtml(HV('col_cluster'))}</th><th>${escapeHtml(HV('col_nodes'))}</th>
-                <th>${escapeHtml(HV('col_vms'))}</th><th>${escapeHtml(HV('col_quorum'))}</th><th></th></tr></thead><tbody>`
-                + h.clusters.map(c => `<tr><td><strong>${escapeHtml(c.name)}</strong> <span class="hv-sub">${escapeHtml(c.conn_name)}</span></td><td>${Number(c.nodes)}</td>
-                    <td>${Number(c.vms)}</td><td>${escapeHtml(c.quorum_type || '-')}${c.witness ? ' <span class="hv-sub">' + escapeHtml(c.witness) + '</span>' : ''}</td><td>${hvSeen(c)}</td></tr>`).join('')
-                + '</tbody></table>' : '';
-            const hosts = `<table class="hv-table"><thead><tr><th>${escapeHtml(HV('col_host'))}</th><th>${escapeHtml(HV('col_cluster'))}</th><th>${escapeHtml(HV('col_state'))}</th>
-                <th>${escapeHtml(HV('col_vms'))}</th><th>${escapeHtml(HV('col_identity'))}</th><th></th></tr></thead><tbody>`
-                + h.hosts.map(x => `<tr><td><strong>${escapeHtml(x.name)}</strong></td><td>${escapeHtml(x.cluster_name || '-')}</td><td>${escapeHtml(x.node_state || '-')}</td>
-                    <td>${Number(x.vms)}</td><td>${x.identity_kind === 'name' ? `<span class="hv-pill hv-warn" title="${escapeHtml(HV('identity_name_hint'))}">${escapeHtml(HV('identity_name'))}</span>` : escapeHtml(HV('identity_source'))}</td>
-                    <td>${hvSeen(x)}</td></tr>`).join('') + '</tbody></table>';
-            document.getElementById('hvHosts').innerHTML = clusters + hosts;
         }
 
         function showEmptyState(message) {
