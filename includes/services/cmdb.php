@@ -141,12 +141,62 @@ class CmdbService
     }
 
     /**
+     * Create a CI inside a transaction the CALLER owns, without announcing it - for a
+     * caller that must create something else in the same transaction (GH #201: a CI and its
+     * asset link, both or neither). Call announceCreated() after the caller commits, so a
+     * rolled-back create never fires the workflow event for a CI that does not exist.
+     *
+     * @param array $in  as createObject()
+     */
+    public static function createInTransaction(PDO $conn, ActorContext $ctx, array $in): int
+    {
+        if (!$conn->inTransaction()) {
+            throw new LogicException('createInTransaction() needs the caller\'s transaction.');
+        }
+        return self::createObject($conn, $ctx, $in, false);
+    }
+
+    /** Fire cmdb.object.created for a CI made by createInTransaction(), once its transaction has committed. */
+    public static function announceCreated(PDO $conn, int $objectId): void
+    {
+        $row = self::loadObjectRow($conn, $objectId);
+        try {
+            WorkflowEngine::dispatch('cmdb.object.created', [
+                'object' => ['id' => $objectId, 'name' => $row['name'], 'class_id' => (int)$row['class_id'], 'is_planned' => (int)($row['is_planned'] ?? 0)],
+            ]);
+        } catch (Exception $wfEx) {
+            error_log('Workflow dispatch error in cmdb service (object.created): ' . $wfEx->getMessage());
+        }
+    }
+
+    /**
+     * The properties a class requires on create, for a form that has to ask for them
+     * (GH #201's Create linked CI): key, label, type, dropdown options, a reference's class.
+     *
+     * @param int $classId  the cmdb_classes id
+     */
+    public static function requiredProperties(PDO $conn, int $classId): array
+    {
+        $out = [];
+        foreach (self::classDefs($conn, $classId) as $key => $d) {
+            if (!$d['required']) { continue; }
+            $out[] = ['key' => $key, 'label' => $d['label'], 'type' => $d['type'],
+                'options' => $d['type'] === 'dropdown' ? self::propertyOptionValues($conn, $d['id']) : [],
+                'ref_class_id' => $d['ref_target']];
+        }
+        return $out;
+    }
+
+    /**
      * Creates a CI: validates the name, class, parent, company and properties, inserts it
      * with its property values and fires the cmdb.object.created workflow event.
      *
+     * Inside a transaction the caller already holds, it neither begins nor commits one.
+     *
      * @param array $in  name, class_id or class_key, parent_id, is_planned, tenant_id or company_id, properties or property_values
+     * @param bool $announce  false to leave the workflow event to the caller (createInTransaction())
      */
-    private static function createObject(PDO $conn, ActorContext $ctx, array $in): int
+    private static function createObject(PDO $conn, ActorContext $ctx, array $in, bool $announce = true): int
     {
         $name = trim((string)($in['name'] ?? ''));
         if ($name === '') {
@@ -196,7 +246,8 @@ class CmdbService
         self::checkRequired($conn, $classId, $values, true);
         self::assertObjectRefsInCompany($conn, $ctx, $classId, $values, $storeTenant);
 
-        $conn->beginTransaction();
+        $own = !$conn->inTransaction();
+        if ($own) $conn->beginTransaction();
         try {
             $conn->prepare(
                 "INSERT INTO cmdb_objects (class_id, name, parent_id, is_planned, tenant_id, created_datetime, updated_datetime)
@@ -204,12 +255,15 @@ class CmdbService
             )->execute([$classId, $name, $parentId, $isPlanned, $storeTenant]);
             $objectId = (int)$conn->lastInsertId();
             self::writeProperties($conn, $objectId, $classId, $values);
-            $conn->commit();
+            if ($own) $conn->commit();
         } catch (Exception $e) {
-            if ($conn->inTransaction()) $conn->rollBack();
+            if ($own && $conn->inTransaction()) $conn->rollBack();
             throw $e;
         }
 
+        if (!$announce) {
+            return $objectId;
+        }
         try {
             WorkflowEngine::dispatch('cmdb.object.created', [
                 'object' => ['id' => $objectId, 'name' => $name, 'class_id' => $classId, 'is_planned' => $isPlanned],

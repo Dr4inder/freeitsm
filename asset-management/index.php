@@ -1561,7 +1561,7 @@ $translationNamespaces = ['common', 'asset-management'];
              from the wiki's Mobile-Friendly-Techniques. Every rule inside it is
              gated at 768px, so the desktop layout is untouched. */ ?>
     <link rel="stylesheet" href="../assets/css/project-links.css?v=1">
-    <link rel="stylesheet" href="../assets/css/ci-asset-link.css?v=2">
+    <link rel="stylesheet" href="../assets/css/ci-asset-link.css?v=3">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
 </head>
 <body>
@@ -5351,7 +5351,7 @@ $translationNamespaces = ['common', 'asset-management'];
     <script>window.ASSET_LAYOUT_NOTICE = <?php echo json_encode(AssetTypeLayout::noticeMode(connectToDatabase())); ?>;</script>
     <script>window.ASSET_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.APP_BASE = window.APP_BASE || <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="../assets/js/project-links.js?v=1"></script>
-    <script src="../assets/js/ci-asset-link.js?v=3"></script>
+    <script src="../assets/js/ci-asset-link.js?v=4"></script>
     <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

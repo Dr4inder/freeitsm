@@ -813,6 +813,30 @@ function apiAssetCiLinkCreate(PDO $conn, array $apiKey, array $params, array $bo
     apiRespond($r);
 }
 
+/**
+ * POST /assets/{id}/ci-link/create-ci {name?, properties?, ignore_matches?} - Part C: creates a
+ * CI of the class the asset's type is mapped to and links it, in one transaction. Also needs
+ * cmdb_objects.create. 422 no_class_mapped; 409 possible_matches (with the list) unless
+ * ignore_matches; an asset already linked returns its CI with created false (retry-safe).
+ */
+function apiAssetCiLinkCreateCi(PDO $conn, array $apiKey, array $params, array $body): void {
+    apiRequirePermission($apiKey, 'cmdb_objects', 'create');
+    apiLoadAsset($conn, $apiKey, $params[0]);
+    $ctx = ActorContext::fromApiKey($apiKey);
+    try {
+        $r = AssetCiLinkService::createLinkedCi($conn, $ctx, apiAssetCiAccess($apiKey, true), (int)$params[0],
+            ['name' => $body['name'] ?? '', 'properties' => is_array($body['properties'] ?? null) ? $body['properties'] : []],
+            !empty($body['ignore_matches']), 'api:' . ($apiKey['name'] ?? 'key'));
+    } catch (ServiceError $e) {
+        if ($e->errorCode === 'possible_matches') {
+            $p = AssetCiLinkService::createPreview($conn, $ctx, apiAssetCiAccess($apiKey), (int)$params[0]);
+            apiError(409, 'possible_matches', $e->getMessage(), ['matches' => $p['matches']]);
+        }
+        apiFailFromService($e);
+    }
+    apiRespond($r, $r['created'] ? 201 : 200);
+}
+
 /** DELETE /assets/{id}/ci-link[?link_id=N] - ends the live link; 404 when there is none. */
 function apiAssetCiLinkDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     apiLoadAsset($conn, $apiKey, $params[0]);

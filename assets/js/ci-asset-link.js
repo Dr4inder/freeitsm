@@ -62,6 +62,7 @@
         const base = o.base || window.APP_BASE || '/';
         const isAsset = o.side === 'asset';
         let state = null, picking = false, timer = null;
+        let creating = null;   // Part C: the Create linked CI preview while its form is open
 
         const title = isAsset ? L('title_asset', 'Configuration item') : L('title_cmdb', 'Asset');
         const otherModule = isAsset ? L('module_cmdb', 'the CMDB') : L('module_assets', 'Assets');
@@ -138,12 +139,15 @@
             } else {
                 body += '<p class="cil-muted">' + esc(isAsset ? L('none_ci', 'No configuration item.') : L('none_asset', 'No asset.')) + '</p>';
                 if (!otherAccess) body += '<p class="cil-muted">' + esc(L('no_access', 'Linking is not available because you cannot open {module}.', { module: otherModule })) + '</p>';
-                else if (canChange && !picking) body += '<button type="button" class="cil-btn cil-primary" data-cil="link">' + esc(L('link', 'Link')) + '</button>' + (o.extraActions ? o.extraActions(state) : '');
+                else if (canChange && !picking && !creating) body += '<button type="button" class="cil-btn cil-primary" data-cil="link">' + esc(L('link', 'Link')) + '</button>'
+                    + (isAsset && state.create_class ? ' <button type="button" class="cil-btn" data-cil="create">' + esc(L('create', 'Create linked CI')) + '</button>' : '');
+                if (creating) body += createHtml();
             }
             if (picking) body += pickerHtml();
             body += historyHtml();
             host.innerHTML = wrap(body);
             if (picking) { const i = host.querySelector('.cil-pick input'); if (i) { i.focus(); search(i.value); } }
+            if (creating) fillRefSelects();
             if (cur && !cur.restricted && isAsset) loadImpact(cur, host.querySelector('[data-cil-impact]'));
         }
 
@@ -153,6 +157,7 @@
                 state = d.success ? d : { ready: true, current: null, history: [], can_change: false };
             } catch (e) { state = { ready: true, current: null, history: [], can_change: false }; }
             picking = false;
+            creating = null;
             draw();
             if (o.onState) o.onState({ linked: !!(state && state.current) });
         }
@@ -191,6 +196,67 @@
                 if (!d.success) throw new Error(d.error === 'empty_blast_radius' ? L('impact_diagram_empty', 'Nothing would be affected, so there is nothing to draw.') : (d.error || L('failed', 'The link could not be saved.')));
                 window.location.href = base + 'network-mapper/diagram.php?id=' + d.diagram_id + '&fit=1';
             } catch (err) { toast(err.message, 'error'); }
+        }
+
+        /** Part C's form: possible matches first (a name is a suggestion, never proof), then the name and the class's required properties. */
+        function createHtml() {
+            const p = creating;
+            let h = '<div class="cil-create"><div class="cil-create-title">' + esc(L('create_title', 'New {class} linked to this asset', { class: p.class.name })) + '</div>';
+            if (p.matches.length) {
+                h += '<p class="cil-muted">' + esc(L('create_matches', 'These already exist with the same name. A name alone does not prove it is the same equipment - link one if it is.')) + '</p><ul class="cil-matches">'
+                    + p.matches.map(m => '<li><span>' + esc(m.name) + '</span> <button type="button" class="cil-btn" data-cil-pick="' + m.id + '" data-cil-label="' + esc(m.name) + '">' + esc(L('create_link_instead', 'Link this one instead')) + '</button></li>').join('') + '</ul>';
+            }
+            h += '<label class="cil-field"><span>' + esc(L('create_name', 'Name')) + '</span><input type="text" data-cil-name maxlength="255" value="' + esc(p.name || '') + '"></label>';
+            p.required.forEach(r => {
+                let input;
+                if (r.type === 'dropdown') input = '<select data-cil-prop="' + esc(r.key) + '"><option value=""></option>' + r.options.map(v => '<option>' + esc(v) + '</option>').join('') + '</select>';
+                else if (r.type === 'boolean') input = '<input type="checkbox" data-cil-prop="' + esc(r.key) + '" data-cil-bool>';
+                else if (r.type === 'ref') input = '<select data-cil-prop="' + esc(r.key) + '" data-cil-ref="' + Number(r.ref_class_id || 0) + '"><option value="">' + esc(L('loading', 'Loading...')) + '</option></select>';
+                else input = '<input type="' + (r.type === 'number' ? 'number' : r.type === 'date' ? 'date' : 'text') + '" data-cil-prop="' + esc(r.key) + '">';
+                h += '<label class="cil-field"><span>' + esc(r.label) + ' *</span>' + input + '</label>';
+            });
+            return h + '<div class="cil-create-actions"><button type="button" class="cil-btn cil-primary" data-cil="create-go">'
+                + esc(p.matches.length ? L('create_anyway', 'Create a new one') : L('create_go', 'Create')) + '</button>'
+                + '<button type="button" class="cil-btn" data-cil="create-cancel">' + esc(L('cancel', 'Cancel')) + '</button></div></div>';
+        }
+
+        /** A required reference property: the CIs it may point at, in the asset's company. */
+        function fillRefSelects() {
+            host.querySelectorAll('select[data-cil-ref]').forEach(async sel => {
+                const cls = Number(sel.dataset.cilRef);
+                try {
+                    const d = await call(base, '?search=cis&asset_id=' + encodeURIComponent(o.id) + '&q=' + (cls ? '&class_id=' + cls : ''));
+                    sel.innerHTML = '<option value=""></option>' + ((d.results || []).map(r => '<option value="' + r.id + '">' + esc(r.name) + '</option>').join(''));
+                } catch (e) { sel.innerHTML = '<option value=""></option>'; }
+            });
+        }
+
+        async function openCreate() {
+            const d = await call(base, '?create_preview=1&asset_id=' + encodeURIComponent(o.id));
+            if (!d.success || !d.class) { toast(d.error || L('create_unmapped', "This asset's type is not mapped to a CMDB class."), 'error'); return; }
+            if (d.linked) { load(); return; }
+            creating = d; picking = false;
+            draw();
+        }
+
+        /** Create linked CI: one request makes the CI and the link, or neither. */
+        async function createGo(btn) {
+            const props = {};
+            host.querySelectorAll('[data-cil-prop]').forEach(el => {
+                props[el.dataset.cilProp] = el.hasAttribute('data-cil-bool') ? el.checked : (el.value === '' ? null : el.value);
+            });
+            const nameEl = host.querySelector('[data-cil-name]');
+            btn.disabled = true;
+            const d = await call(base, '', { action: 'create_ci', asset_id: Number(o.id), name: nameEl ? nameEl.value.trim() : '', properties: props,
+                ignore_matches: creating.matches.length > 0 });
+            btn.disabled = false;
+            if (!d.success) {
+                toast(d.error || L('failed', 'The link could not be saved.'), 'error');
+                if (d.code === 'possible_matches') openCreate();   // new ones appeared: show them
+                return;
+            }
+            toast(d.created ? L('created', 'Configuration item created and linked') : L('unchanged', 'Already linked'), 'success');
+            load();
         }
 
         function search(q) {
@@ -252,6 +318,9 @@
             else if (what === 'cancel') { picking = false; draw(); }
             else if (what === 'unlink') unlink();
             else if (what === 'diagram') openDiagram(Number(btn.dataset.cilCi));
+            else if (what === 'create') openCreate();
+            else if (what === 'create-cancel') { creating = null; draw(); }
+            else if (what === 'create-go') createGo(btn);
         });
 
         draw();

@@ -40,6 +40,7 @@ return [
     ['GET',    '#^/assets/(\d+)/ci-link$#',                ['asset_ci_links', 'read'],        'apiAssetCiLinkGet'],
     ['POST',   '#^/assets/(\d+)/ci-link$#',                ['asset_ci_links', 'create'],      'apiAssetCiLinkCreate'],
     ['DELETE', '#^/assets/(\d+)/ci-link$#',                ['asset_ci_links', 'delete'],      'apiAssetCiLinkDelete'],
+    ['POST',   '#^/assets/(\d+)/ci-link/create-ci$#',      ['asset_ci_links', 'create'],      'apiAssetCiLinkCreateCi'],
     ['GET',    '#^/cmdb/objects/(\d+)/asset-link$#',       ['asset_ci_links', 'read'],        'apiCmdbObjectAssetLinkGet'],
     ['GET',    '#^/assets/(\d+)/custody$#',                ['asset_history', 'read'],         'apiAssetCustodyList'],
     ['GET',    '#^/assets/(\d+)/disks$#',                  ['asset_inventory', 'read'],       'apiAssetDisksList'],

@@ -1861,6 +1861,13 @@ $translationNamespaces = ['common', 'asset-management'];
                     <div class="ic-grid" id="itemIconGrid"></div>
                     <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.settings.type_icon_hint')); ?></div>
                 </div>
+                <?php /* GH #201: the CMDB class "Create linked CI" makes for this type. Asset TYPES
+                         only. Mapping it never creates a CI by itself. */ ?>
+                <div class="form-group" id="itemCmdbRow" style="display:none;">
+                    <label for="itemCmdbClass"><?php echo htmlspecialchars(t('asset-management.settings.type_cmdb_class')); ?></label>
+                    <select id="itemCmdbClass"></select>
+                    <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.settings.type_cmdb_class_hint')); ?></div>
+                </div>
                 <?php /* Layout (GH #200). Asset TYPES only, like the icon picker. Which
                          built-in Key info sections and tabs the type shows - presentation
                          only, see includes/services/asset_type_layout.php. Saved with the
@@ -2630,6 +2637,7 @@ $translationNamespaces = ['common', 'asset-management'];
                     // Default view that's every row, in a client view it's scoped.own.
                     allItems[type] = (data.scoped && data.scoped.is_default === false)
                         ? data.scoped.own : data[ep.key];
+                    if (type === 'asset-type' && Array.isArray(data.cmdb_classes)) cmdbClassesForTypes = data.cmdb_classes;
                     renderItems(type, data);
                 } else {
                     document.getElementById(ep.listId).innerHTML =
@@ -2745,6 +2753,21 @@ $translationNamespaces = ['common', 'asset-management'];
             }
         }
 
+        // GH #201: the CMDB class dropdown, filled from the active classes get_asset_types.php sent.
+        let cmdbClassesForTypes = [];
+        function cmdbClassSetup(type, classId) {
+            const row = document.getElementById('itemCmdbRow');
+            if (!row) return;
+            row.style.display = type === 'asset-type' ? '' : 'none';
+            if (type !== 'asset-type') return;
+            const sel = document.getElementById('itemCmdbClass');
+            const opts = [{ id: '', name: window.t('asset-management.settings.type_cmdb_class_none') }].concat(cmdbClassesForTypes);
+            // A mapped class since deactivated is still shown, so saving does not silently drop it.
+            if (classId && !cmdbClassesForTypes.some(c => Number(c.id) === Number(classId))) opts.push({ id: classId, name: '#' + classId });
+            sel.innerHTML = opts.map(c => `<option value="${escapeHtml(String(c.id))}">${escapeHtml(c.name)}</option>`).join('');
+            sel.value = classId ? String(classId) : '';
+        }
+
         function openAddModal(type) {
             const ep = endpoints[type];
             document.getElementById('modalTitle').textContent = window.t('asset-management.settings.add_kind', { kind: ep.label });
@@ -2756,6 +2779,7 @@ $translationNamespaces = ['common', 'asset-management'];
             document.getElementById('itemActive').checked = true;
             icSetup(type, null);
             atlSetup(type, null);
+            cmdbClassSetup(type, null);
             leaseKindSetup(type, null);
             document.getElementById('editModal').classList.add('active');
         }
@@ -2774,6 +2798,7 @@ $translationNamespaces = ['common', 'asset-management'];
             document.getElementById('itemActive').checked = item.is_active;
             icSetup(type, item.icon_id || null);
             atlSetup(type, item.layout || null);
+            cmdbClassSetup(type, item.cmdb_class_id || null);
             leaseKindSetup(type, item);
             document.getElementById('editModal').classList.add('active');
         }
@@ -2820,7 +2845,10 @@ $translationNamespaces = ['common', 'asset-management'];
                 // row is hidden and this stays empty.
                 icon_id: document.getElementById('itemIconId').value || null
             };
-            if (type === 'asset-type') payload.layout = atlCollect();
+            if (type === 'asset-type') {
+                payload.layout = atlCollect();
+                payload.cmdb_class_id = document.getElementById('itemCmdbClass').value || null;
+            }
             if (type === 'lease-outcome') {
                 payload.kind = document.getElementById('itemKind').value;
                 payload.is_default = document.getElementById('itemDefault').checked ? 1 : 0;

@@ -2862,6 +2862,10 @@ CREATE TABLE IF NOT EXISTS `asset_types` (
     -- in, and the 66 glyphs already there were paid for and half-unused.
     -- NULL = no icon, which is every type until somebody picks one.
     `icon_id`           INT NULL,
+    -- GH #201: the CMDB class an asset of this type becomes through "Create linked CI".
+    -- NULL = not mapped (no button). It never creates a CI by itself. No foreign key:
+    -- a class deleted or deactivated later simply reads as no mapping.
+    `cmdb_class_id`     INT NULL,
     -- Multi-tenancy: NULL = global default type (shared by every company); set =
     -- a type a company added for itself. Existing rows stay NULL, so a
     -- single-company install is unaffected. (Config meaning of tenant_id: NULL =

@@ -8,6 +8,8 @@
  * GET  ?search=cis&asset_id=N&q=           CIs in the asset's company, for the picker
  * GET  ?search=assets&cmdb_object_id=N&q=  assets in the CI's company, for the picker
  * GET  ?merge_preview=1&keep=N&gone=M      the live links of two assets about to be merged
+ * GET  ?create_preview=1&asset_id=N         Create linked CI: the type's class, its required properties, possible matches
+ * POST {action:'create_ci', asset_id, name, properties, ignore_matches?}  the CI and its link, in one transaction
  * POST {action:'link', asset_id, cmdb_object_id, replace?, replaces?:[link ids]}
  * POST {action:'unlink', asset_id | cmdb_object_id, link_id}
  *
@@ -52,6 +54,13 @@ try {
                     is_array($in['replaces'] ?? null) ? $in['replaces'] : [], 'ui');
                 echo json_encode(['success' => true] + $res);
                 exit;
+            case 'create_ci':
+                if (!$assetId) { ciLinkFail('An asset is required.'); }
+                $res = AssetCiLinkService::createLinkedCi($conn, $ctx, $access, $assetId,
+                    ['name' => $in['name'] ?? '', 'properties' => is_array($in['properties'] ?? null) ? $in['properties'] : []],
+                    !empty($in['ignore_matches']), 'ui');
+                echo json_encode(['success' => true] + $res);
+                exit;
             case 'unlink':
                 if (!$assetId && !$ciId) { ciLinkFail('An asset or a configuration item is required.'); }
                 $res = AssetCiLinkService::unlink($conn, $ctx, $access, $assetId ?: null, $assetId ? null : $ciId,
@@ -60,6 +69,13 @@ try {
                 exit;
         }
         ciLinkFail('Unknown action.');
+    }
+
+    if (!empty($_GET['create_preview'])) {
+        // The matches are CIs, so this needs both modules.
+        if (!$access['assets_read'] || !$access['cmdb_read']) { ciLinkFail('You do not have access to this module', 403); }
+        echo json_encode(['success' => true] + AssetCiLinkService::createPreview($conn, $ctx, $access, (int)($_GET['asset_id'] ?? 0)));
+        exit;
     }
 
     if (!empty($_GET['merge_preview'])) {
@@ -117,8 +133,16 @@ try {
     if (isset($_GET['asset_id'])) {
         if (!$access['assets_read']) { ciLinkFail('You do not have access to this module', 403); }
         // Part D: the asset card's "Open as diagram" is a Network Mapper right, as on the CI page.
-        echo json_encode(['success' => true, 'diagram_access' => $access['cmdb_read'] && analystCanAccessModule($conn, $analyst, 'network-mapper')]
-            + AssetCiLinkService::forAsset($conn, $ctx, $access, (int)$_GET['asset_id']));
+        $view = AssetCiLinkService::forAsset($conn, $ctx, $access, (int)$_GET['asset_id']);
+        // Part C: "Create linked CI" shows only on a type mapped to a CMDB class.
+        $createClass = null;
+        if ($view['current'] === null && $access['cmdb_read']) {
+            $t = $conn->prepare('SELECT asset_type_id FROM assets WHERE id = ?');
+            $t->execute([(int)$_GET['asset_id']]);
+            $createClass = AssetCiLinkService::mappedClass($conn, ($tid = $t->fetchColumn()) ? (int)$tid : null);
+        }
+        echo json_encode(['success' => true, 'diagram_access' => $access['cmdb_read'] && analystCanAccessModule($conn, $analyst, 'network-mapper'),
+            'create_class' => $createClass] + $view);
         exit;
     }
     if (isset($_GET['cmdb_object_id'])) {

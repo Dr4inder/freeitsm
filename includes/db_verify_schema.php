@@ -1914,6 +1914,7 @@ return [
         'is_active'         => 'TINYINT(1) NOT NULL DEFAULT 1',
         'display_order'     => 'INT NOT NULL DEFAULT 0',
         'icon_id'           => 'INT NULL',
+        'cmdb_class_id'     => 'INT NULL',   // GH #201: the class "Create linked CI" makes; NULL = not mapped
         // Multi-tenancy config: NULL = global default type, set = a company's own.
         'tenant_id'         => 'INT NULL',
         'created_datetime'  => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',

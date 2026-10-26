@@ -249,6 +249,58 @@ try {
     ok('the kept asset\'s card shows the whole history, saying where a link was made', count($v['history']) === 2
         && count(array_filter($v['history'], fn($e) => ($e['made_on']['name'] ?? '') === 'ZZCL-MERGE-GONE')) === 1, json_encode($v['history']));
     $assets = array_values(array_diff($assets, [$a4]));
+
+    // ---- Part C: Create linked CI ---------------------------------------------------------------
+    $conn->prepare("INSERT INTO asset_types (name, is_active, display_order, cmdb_class_id) VALUES ('ZZCL type', 1, 0, ?)")->execute([$classId]);
+    $typeId = (int)$conn->lastInsertId();
+    $conn->prepare("INSERT INTO asset_types (name, is_active, display_order) VALUES ('ZZCL unmapped', 1, 0)")->execute();
+    $plainType = (int)$conn->lastInsertId();
+    $a5 = $mkAsset('ZZCL-NEW-01');
+    $conn->prepare('UPDATE assets SET asset_type_id = ? WHERE id = ?')->execute([$typeId, $a5]);
+    $a6 = $mkAsset('ZZCL-NEW-02');
+    $conn->prepare('UPDATE assets SET asset_type_id = ? WHERE id = ?')->execute([$plainType, $a6]);
+    $r = page($base, $sid, $csrf, 'api/assets/ci_link.php?asset_id=' . $a5);
+    ok('an unlinked asset of a mapped type offers Create linked CI, naming the class', ($r['create_class']['id'] ?? 0) === $classId, json_encode($r['create_class'] ?? $r));
+    $r = page($base, $sid, $csrf, 'api/assets/ci_link.php?asset_id=' . $a6);
+    ok('...and an unmapped type does not', array_key_exists('create_class', $r) && $r['create_class'] === null, json_encode($r));
+    $r = page($base, $sid, $csrf, 'api/assets/ci_link.php?create_preview=1&asset_id=' . $a5);
+    ok('the preview lists the class\'s required properties', count($r['required'] ?? []) === count($required), json_encode($r));
+    $same = $mkCi('zzcl-new-01');   // same name as the asset, different case
+    $r = page($base, $sid, $csrf, 'api/assets/ci_link.php?create_preview=1&asset_id=' . $a5);
+    ok('a same-name CI of that class is offered as a possible match, ignoring case', array_column($r['matches'] ?? [], 'id') === [$same], json_encode($r['matches'] ?? $r));
+    $r = page($base, $sid, $csrf, 'api/assets/ci_link.php', ['action' => 'create_ci', 'asset_id' => $a5, 'properties' => $required]);
+    ok('🔴 creating with a possible match unseen is refused - never linked on a name', ($r['code'] ?? '') === 'possible_matches'
+        && AssetCiLinkService::forAsset($conn, $ctx, $full, $a5)['current'] === null, json_encode($r));
+    $before = (int)$q("SELECT COUNT(*) FROM cmdb_objects WHERE name LIKE 'ZZCL%' OR name LIKE 'zzcl%'");
+    $bad = array_map(fn($v) => is_bool($v) ? 'not-a-bool' : (is_int($v) ? 'NaN' : $v), $required);
+    $bad['zzcl_no_such_property'] = 'x';
+    $r = page($base, $sid, $csrf, 'api/assets/ci_link.php', ['action' => 'create_ci', 'asset_id' => $a5, 'properties' => $bad, 'ignore_matches' => true]);
+    ok('🔴 a create the CMDB refuses leaves no CI and no link behind', ($r['success'] ?? true) === false
+        && (int)$q("SELECT COUNT(*) FROM cmdb_objects WHERE name LIKE 'ZZCL%' OR name LIKE 'zzcl%'") === $before
+        && AssetCiLinkService::forAsset($conn, $ctx, $full, $a5)['current'] === null, json_encode($r));
+    $r = page($base, $sid, $csrf, 'api/assets/ci_link.php', ['action' => 'create_ci', 'asset_id' => $a5, 'name' => 'ZZCL created CI', 'properties' => $required, 'ignore_matches' => true]);
+    $made = (int)($r['cmdb_object_id'] ?? 0);
+    if ($made) { $cis[] = $made; }
+    ok('Create linked CI makes the CI and the link together', ($r['success'] ?? false) && $r['created'] === true
+        && (int)$q("SELECT class_id FROM cmdb_objects WHERE id = $made") === $classId
+        && (AssetCiLinkService::forAsset($conn, $ctx, $full, $a5)['current']['id'] ?? 0) === $made, json_encode($r));
+    $r = page($base, $sid, $csrf, 'api/assets/ci_link.php', ['action' => 'create_ci', 'asset_id' => $a5, 'properties' => $required, 'ignore_matches' => true]);
+    ok('🔴 a retry creates nothing and returns the linked CI', ($r['success'] ?? false) && $r['created'] === false && (int)$r['cmdb_object_id'] === $made, json_encode($r));
+    $r = page($base, $sid, $csrf, 'api/assets/ci_link.php', ['action' => 'create_ci', 'asset_id' => $a6, 'properties' => $required]);
+    ok('an unmapped type is refused (no_class_mapped)', ($r['code'] ?? '') === 'no_class_mapped', json_encode($r));
+    ok('the possible match was left alone, unlinked', AssetCiLinkService::forCi($conn, $ctx, $full, $same)['current'] === null);
+    [$code, $res] = rest($base, $kFull, 'POST', "/assets/$a6/ci-link/create-ci", ['properties' => $required]);
+    ok('REST: create-ci also needs cmdb_objects.create', $code === 403, $code . ' ' . json_encode($res));
+    $kCreate = $mkKey(['asset_ci_links' => ['read', 'create'], 'cmdb_objects' => ['read', 'create'], 'assets' => ['read']]);
+    $conn->prepare('UPDATE assets SET asset_type_id = ? WHERE id = ?')->execute([$typeId, $a6]);
+    $same2 = $mkCi('ZZCL-NEW-02');
+    [$code, $res] = rest($base, $kCreate, 'POST', "/assets/$a6/ci-link/create-ci", ['properties' => $required]);
+    ok('REST: with the same name already used, 409 possible_matches lists them', $code === 409 && array_column($res['error']['details']['matches'] ?? [], 'id') === [$same2], $code . ' ' . json_encode($res));
+    $conn->prepare('UPDATE assets SET hostname = ? WHERE id = ?')->execute(['ZZCL-NEW-03', $a6]);
+    [$code, $res] = rest($base, $kCreate, 'POST', "/assets/$a6/ci-link/create-ci", ['properties' => $required]);
+    if (!empty($res['data']['cmdb_object_id'])) { $cis[] = (int)$res['data']['cmdb_object_id']; }
+    ok('REST: create-ci answers 201 with the new CI, linked by the key', $code === 201 && ($res['data']['created'] ?? false) === true
+        && $q("SELECT link_source FROM asset_ci_links WHERE asset_id = $a6 AND unlinked_at IS NULL") === 'api:ZZCL key', $code . ' ' . json_encode($res));
 } catch (Throwable $e) {
     $fail++;
     echo "  FAIL  unexpected: " . $e->getMessage() . ' @ ' . basename($e->getFile()) . ':' . $e->getLine() . "\n";
@@ -266,6 +318,7 @@ try {
         try { CmdbService::deleteObject($conn, $ctx, $ci); } catch (Throwable $e) {}
     }
     try { $conn->exec("DELETE FROM asset_ci_links WHERE asset_name LIKE 'ZZCL-%' OR ci_name LIKE 'ZZCL %'"); } catch (Throwable $e) {}
+    try { $conn->exec("DELETE FROM asset_types WHERE name IN ('ZZCL type', 'ZZCL unmapped')"); } catch (Throwable $e) {}
     if ($fieldId) { try { $conn->prepare('DELETE FROM asset_fields WHERE id = ?')->execute([$fieldId]); } catch (Throwable $e) {} }
     foreach ($keys as $k) {
         try { $conn->prepare('DELETE FROM api_key_rate_limits WHERE api_key_id = ?')->execute([$k]); } catch (Throwable $e) {}

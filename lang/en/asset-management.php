@@ -1037,6 +1037,10 @@ return [
         'type_icon'            => 'Icon',
         'type_icon_none'       => 'No icon',
         'type_icon_hint'       => 'Shown beside every asset of this type, so a list of equipment can be read at a glance. The same set of icons is used for configuration items, so a printer looks like a printer everywhere.',
+        // GH #201: which CMDB class Create linked CI makes for an asset of this type.
+        'type_cmdb_class'      => 'CMDB class',
+        'type_cmdb_class_none' => 'None - no Create linked CI',
+        'type_cmdb_class_hint' => 'Assets of this type offer Create linked CI, which makes a configuration item of this class and links it. Choosing a class never creates anything by itself, and changes nothing on existing assets.',
 
         'tab_locations'        => 'Locations',
         'tab_suppliers'        => 'Suppliers',

@@ -1538,6 +1538,34 @@
                     "slug": "delete-assets-id-ci-link"
                 },
                 {
+                    "m": "POST",
+                    "p": "/assets/{id}/ci-link/create-ci",
+                    "perm": "asset_ci_links.create",
+                    "s": "Create the linked configuration item",
+                    "d": "Creates a configuration item of the class this asset's type is mapped to (Assets -> Settings -> Asset types -> CMDB class) and links it, in one transaction - a linked CI or nothing. Also needs cmdb_objects.create. The name defaults to the asset's; properties must supply the class's required ones, validated as on POST /cmdb/objects. Nothing hardware-shaped is copied: the asset's details are read live through the link. 422 no_class_mapped when the type has no class. 409 possible_matches, with error.details.matches, when unlinked CIs of that class in the company have the asset's name - link one of them instead (POST /assets/{id}/ci-link), or send ignore_matches true to create anyway. Retry-safe: an asset already linked creates nothing and returns its CI with created false (200); a new CI is 201.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Asset id",
+                            "req": true
+                        },
+                        {
+                            "name": "name / properties / ignore_matches",
+                            "in": "body",
+                            "req": false,
+                            "desc": "name: the CI's name (default: the asset's); properties: {property_key: value} for the class's required properties; ignore_matches: true to create despite same-name CIs"
+                        }
+                    ],
+                    "body": {
+                        "properties": {
+                            "environment": "Production"
+                        }
+                    },
+                    "section": "Asset assignments, history & inventory",
+                    "slug": "post-assets-id-ci-link-create-ci"
+                },
+                {
                     "m": "GET",
                     "p": "\/assets\/{id}\/custody",
                     "perm": "asset_history.read",

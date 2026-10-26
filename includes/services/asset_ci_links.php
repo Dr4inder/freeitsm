@@ -401,6 +401,120 @@ final class AssetCiLinkService
         return (string)(self::ciView($conn, (int)$m[1])['name'] ?? ('#' . $m[1]));
     }
 
+    // ======================================================================
+    //  Part C: creating the CI from the asset
+    // ======================================================================
+
+    /**
+     * The active CMDB class an asset type is mapped to (Assets -> Settings -> Asset types),
+     * or null. A mapping to a class since deactivated or deleted reads as none.
+     */
+    public static function mappedClass(PDO $conn, ?int $assetTypeId): ?array
+    {
+        if (!$assetTypeId) { return null; }
+        try {
+            $st = $conn->prepare('SELECT c.id, c.name FROM asset_types t JOIN cmdb_classes c ON c.id = t.cmdb_class_id AND c.is_active = 1 WHERE t.id = ?');
+            $st->execute([$assetTypeId]);
+            $r = $st->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException) {
+            return null;   // before Database Verification adds asset_types.cmdb_class_id
+        }
+        return $r ? ['id' => (int)$r['id'], 'name' => $r['name']] : null;
+    }
+
+    /**
+     * What Create linked CI needs before it can show its form: the type's class (null when
+     * the type is not mapped), the properties that class requires, and the possible
+     * matches - CIs of that class in the asset's company, not already linked, with the
+     * asset's name ignoring case. A match is a suggestion, never proof, and never linked
+     * automatically.
+     */
+    public static function createPreview(PDO $conn, ActorContext $ctx, array $access, int $assetId): array
+    {
+        require_once __DIR__ . '/cmdb.php';
+        $asset = self::assetForCreate($conn, $ctx, $assetId, false);
+        $class = self::mappedClass($conn, $asset['asset_type_id']);
+        $out = ['class' => $class, 'name' => $asset['hostname'], 'required' => [], 'matches' => [],
+            'linked' => self::ready($conn) && self::liveRow($conn, $assetId, null, false) !== null];
+        if (!$class) { return $out; }
+        $out['required'] = CmdbService::requiredProperties($conn, $class['id']);
+        $out['matches'] = self::possibleMatches($conn, $asset, $class['id']);
+        return $out;
+    }
+
+    /**
+     * Create linked CI: the CI and its link in ONE transaction - a linked CI, or nothing.
+     *
+     * Retry-safe: an asset already linked by the time this lands creates nothing and
+     * returns the CI it is linked to (created false). Possible matches are refused as
+     * possible_matches unless $ignoreMatches - the person saw them and chose to create.
+     * The CI's workflow event fires only after the commit.
+     *
+     * @param array $in  name (defaults to the asset's), properties {key: value} for the class's required ones
+     * @return array{cmdb_object_id:int, link_id:int, created:bool}
+     */
+    public static function createLinkedCi(PDO $conn, ActorContext $ctx, array $access, int $assetId, array $in,
+        bool $ignoreMatches = false, string $source = 'ui'): array
+    {
+        require_once __DIR__ . '/cmdb.php';
+        self::requireReady($conn);
+        self::requireChange($access);
+        $own = !$conn->inTransaction();
+        if ($own) { $conn->beginTransaction(); }
+        try {
+            $asset = self::assetForCreate($conn, $ctx, $assetId, true);
+            $live = self::liveRow($conn, $assetId, null, true);
+            if ($live) {
+                if ($own) { $conn->commit(); }
+                return ['cmdb_object_id' => (int)$live['cmdb_object_id'], 'link_id' => (int)$live['id'], 'created' => false];
+            }
+            $class = self::mappedClass($conn, $asset['asset_type_id']);
+            if (!$class) {
+                throw new ServiceError('validation', 'no_class_mapped', 'This asset\'s type is not mapped to a CMDB class (Assets -> Settings -> Asset types).');
+            }
+            if (!$ignoreMatches && self::possibleMatches($conn, $asset, $class['id'])) {
+                throw self::conflict('possible_matches', 'A configuration item with this name already exists. Link it instead, or create a new one anyway.');
+            }
+            $name = trim((string)($in['name'] ?? '')) ?: trim((string)$asset['hostname']);
+            $ciId = CmdbService::createInTransaction($conn, $ctx, [
+                'name' => $name, 'class_id' => $class['id'],
+                'tenant_id' => self::tenantOf($conn, $asset['tenant_id']),
+                'properties' => is_array($in['properties'] ?? null) ? $in['properties'] : [],
+            ]);
+            $link = self::link($conn, $ctx, $access, $assetId, $ciId, false, [], $source);
+            if ($own) { $conn->commit(); }
+        } catch (Throwable $e) {
+            if ($own && $conn->inTransaction()) { $conn->rollBack(); }
+            throw $e;
+        }
+        if ($own) { CmdbService::announceCreated($conn, $ciId); }
+        return ['cmdb_object_id' => $ciId, 'link_id' => (int)$link['link_id'], 'created' => true];
+    }
+
+    /** The asset with its type, for Part C (not found for another company's). */
+    private static function assetForCreate(PDO $conn, ActorContext $ctx, int $id, bool $lock): array
+    {
+        $row = self::asset($conn, $ctx, $id, $lock);
+        $st = $conn->prepare('SELECT asset_type_id FROM assets WHERE id = ?');
+        $st->execute([$id]);
+        $row['asset_type_id'] = ($t = $st->fetchColumn()) ? (int)$t : null;
+        return $row;
+    }
+
+    /** Unlinked CIs of this class in the asset's company with the asset's name, ignoring case. */
+    private static function possibleMatches(PDO $conn, array $asset, int $classId): array
+    {
+        $name = trim((string)$asset['hostname']);
+        if ($name === '') { return []; }
+        $tenant = self::tenantOf($conn, $asset['tenant_id']);
+        $st = $conn->prepare('SELECT o.id, o.name FROM cmdb_objects o
+            WHERE o.class_id = ? AND COALESCE(o.tenant_id, ?) = ? AND LOWER(o.name) = LOWER(?)
+              AND NOT EXISTS (SELECT 1 FROM asset_ci_links l WHERE l.cmdb_object_id = o.id AND l.unlinked_at IS NULL)
+            ORDER BY o.id LIMIT 10');
+        $st->execute([$classId, getDefaultTenantId($conn), $tenant, $name]);
+        return array_map(fn($r) => ['id' => (int)$r['id'], 'name' => $r['name']], $st->fetchAll(PDO::FETCH_ASSOC));
+    }
+
     /** The ticked CARD_FIELDS. A missing or unreadable setting means all of them. */
     public static function cardFields(PDO $conn): array
     {

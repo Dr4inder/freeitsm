@@ -114,6 +114,20 @@ try {
         AssetTypeLayout::save($conn, (int)$id, AssetTypeLayout::normalise($data['layout']));
     }
 
+    // GH #201: the CMDB class "Create linked CI" makes for this type - only when sent, like
+    // the layout. It never creates a CI by itself and never touches existing assets.
+    if (array_key_exists('cmdb_class_id', $data)) {
+        $classId = !empty($data['cmdb_class_id']) ? (int)$data['cmdb_class_id'] : null;
+        if ($classId !== null) {
+            $ok = $conn->prepare('SELECT id FROM cmdb_classes WHERE id = ? AND is_active = 1');
+            $ok->execute([$classId]);
+            if (!$ok->fetchColumn()) {
+                throw new Exception('That CMDB class does not exist or is not active.');
+            }
+        }
+        $conn->prepare('UPDATE asset_types SET cmdb_class_id = ? WHERE id = ?')->execute([$classId, $id]);
+    }
+
     wf_emit('asset_type', empty($created) ? 'updated' : 'created', (int)$id, $name);
     echo json_encode(['success' => true]);
 
