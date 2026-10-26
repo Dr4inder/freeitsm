@@ -95,6 +95,13 @@ function apiV1PermissionCatalog(): array {
                 'delete' => 'End the link between an asset and its configuration item (both records are kept)',
             ],
         ],
+        'virtual_estate' => [
+            'label'   => 'Virtual estate (Hyper-V)',
+            'actions' => [
+                'read'   => 'See whether a Hyper-V connection is reporting on time, and what its estate holds',
+                'create' => 'Send a Hyper-V collector\'s report - accepted only from the key the connection was given',
+            ],
+        ],
         'problems' => [
             'label'   => 'Problems',
             'actions' => [

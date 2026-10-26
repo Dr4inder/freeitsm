@@ -196,7 +196,7 @@ class SyntheticUnavailablePDO extends PDO {
 $res = jobHealthSummary(new SyntheticUnavailablePDO());
 $states = array_count_values(array_column($res['jobs'], 'status'));
 ok('every read failing: NOT healthy (it used to say healthy, 13 not needed)', $res['healthy'] === false, json_encode($states));
-ok('...every job is "unknown", none "not needed"', ($states['unknown'] ?? 0) === count(jobRegistry()) && !isset($states['not_needed']), json_encode($states));
+ok('...every job is "unknown", none "not needed"', ($states['unknown'] ?? 0) === count(jobRegistry()) + 1 /* + the pushed sources (GH #199), unreadable too */ && !isset($states['not_needed']), json_encode($states));
 
 /** The real database, except for queries matching $fail - which throw, as a failed read or (code 42S02) a missing table. */
 class SelectiveFailPDO extends PDO {

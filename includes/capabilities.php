@@ -90,6 +90,8 @@ enum Cap: string
     case ASSETS_INTUNE    = 'assets.intune';      // credentials
     case ASSETS_PROXMOX   = 'assets.proxmox';     // Proxmox VE servers, credentials and syncs
     case ASSETS_VCLOUD    = 'assets.vcloud';      // VMware Cloud Director servers, credentials and syncs
+    // GH #199: Hyper-V connections - mints the collector's API key and decides identity changes.
+    case ASSETS_HYPERV    = 'assets.hyperv';
     // PR #164. Numbering and the label designer are separate grants: whoever
     // designs a sticker is not necessarily allowed to change how every future
     // asset is numbered.

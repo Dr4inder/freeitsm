@@ -174,6 +174,17 @@ return [
             'setting_keys' => [],
         ],
         [
+            // GH #199: Hyper-V estates a collector PUSHES to. Each connection has its own API
+            // key (minted here, shown once) - sensitive for that reason. The estate itself
+            // lives in virt_* tables, so there are no setting_keys.
+            'id'           => 'hyperv',
+            'cap'          => capKey(Cap::ASSETS_HYPERV),
+            'label_key'    => 'asset-management.settings.tab_hyperv',
+            'grant'        => 'Set up Hyper-V connections, including their collector keys, and decide identity changes',
+            'sensitive'    => true,
+            'setting_keys' => [],
+        ],
+        [
             // Several VMware Cloud Director servers. Credentials live in vcloud_connections.
             'id'           => 'vcloud',
             'cap'          => capKey(Cap::ASSETS_VCLOUD),

@@ -80,7 +80,9 @@ final class AssetMergeService
     /** Columns whose value means the asset itself, not a link to it - never moved. */
     public const NOT_REFERENCES = ['asset_merges.merged_asset_id',
         // GH #201: the asset a CI link was MADE on - kept through merges, by design.
-        'asset_ci_links.original_asset_id'];
+        'asset_ci_links.original_asset_id',
+        // GH #199: a HYPER-V host in the virtual estate, not an asset (software_inventory's host_id is one).
+        'virt_vms.host_id', 'virt_placements.host_id'];
 
     /** Built-in fields an empty kept value is filled from. Identity (hostname, tenant, qr_token) never is. */
     private const FILL = ['manufacturer', 'model', 'memory', 'service_tag', 'operating_system', 'feature_release', 'build_number',

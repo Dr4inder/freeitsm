@@ -5,6 +5,8 @@
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';
+require_once '../../includes/tenancy.php';
+require_once '../../includes/services/virtual_estate.php';
 
 header('Content-Type: application/json');
 
@@ -83,6 +85,70 @@ try {
             'source_name'         => 'vCloud · ' . $v['conn_name'],
         ];
     }
+    // Hyper-V (GH #199): pushed by a collector, so no Sync - the panel says when each
+    // connection last reported instead. Unlike the three sources above these belong to a
+    // company, so they are scoped to the analyst's. A VM not seen, or on a host the last
+    // report could not read, is still listed and says so - nothing vanishes for a bad read.
+    $hyperv = ['connections' => [], 'clusters' => [], 'hosts' => []];
+    if (VirtualEstateService::ready($conn)) {
+        $analystId = (int)$_SESSION['analyst_id'];
+        [$tf, $ta] = isMultiTenant($conn) ? allAccessibleTenantsFilter($conn, $analystId, 'c.tenant_id') : ['', []];
+        $cs = $conn->prepare("SELECT c.* FROM virt_connections c WHERE 1 = 1$tf ORDER BY c.name");
+        $cs->execute($ta);
+        $connIds = [];
+        foreach ($cs->fetchAll(PDO::FETCH_ASSOC) as $c) {
+            $connIds[] = (int)$c['id'];
+            $hyperv['connections'][] = ['id' => (int)$c['id'], 'name' => $c['name'], 'active' => (bool)$c['is_active'],
+                'freshness' => VirtualEstateService::freshness($c), 'last_report_at' => $c['last_report_at'], 'last_observed_at' => $c['last_observed_at'],
+                'interval' => (int)$c['expected_interval_minutes'], 'last_outcome' => $c['last_outcome'], 'last_summary' => $c['last_summary']];
+        }
+        if ($connIds) {
+            $in = implode(',', $connIds);
+            $names = [];
+            foreach ($conn->query("SELECT id, name FROM virt_hosts WHERE connection_id IN ($in)")->fetchAll(PDO::FETCH_KEY_PAIR) as $hid => $hn) { $names[(int)$hid] = $hn; }
+            $vms = $conn->query("SELECT v.*, h.name AS host_name, cl.name AS cluster_name, c.name AS conn_name,
+                    (SELECT SUM(d.size_bytes) FROM virt_vm_disks d WHERE d.vm_id = v.id) AS disk_bytes
+                FROM virt_vms v JOIN virt_connections c ON c.id = v.connection_id
+                LEFT JOIN virt_hosts h ON h.id = v.host_id LEFT JOIN virt_clusters cl ON cl.id = v.cluster_id
+                WHERE v.connection_id IN ($in)")->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($vms as $v) {
+                $owners = array_map(fn($id) => $names[(int)$id] ?? ('#' . $id), json_decode((string)$v['possible_owners_json'], true) ?: []);
+                $servers[] = [
+                    'id'                => 'hv-' . $v['id'],
+                    'vm_id'             => 'hyperv-' . $v['connection_id'] . '-' . $v['external_id'],
+                    'name'              => (string)$v['name'],
+                    'power_state'       => $v['not_seen_since'] === null && strtolower((string)$v['state']) === 'running' ? 'active' : 'offline',
+                    'memory_gb'         => $v['memory_bytes'] !== null ? round($v['memory_bytes'] / 1024 ** 3, 2) : 0,
+                    'num_cpu'           => (int)$v['cpu_count'],
+                    'ip_address'        => $v['guest_addresses'] ? explode(', ', $v['guest_addresses'])[0] : '',
+                    'hard_disk_size_gb' => $v['disk_bytes'] !== null ? round($v['disk_bytes'] / 1024 ** 3, 1) : 0,
+                    'host'              => (string)$v['host_name'],
+                    'cluster'           => (string)$v['cluster_name'],
+                    'guest_os'          => (string)($v['os_name'] ?? ''),
+                    'raw_data'          => json_encode(['state' => $v['state'], 'highly_available' => $v['is_clustered'] === null ? null : (bool)$v['is_clustered'],
+                        'possible_owners' => $owners, 'generation' => $v['generation'] !== null ? (int)$v['generation'] : null, 'vm_id' => $v['external_id'],
+                        'first_seen' => $v['first_seen_at'], 'last_observed' => $v['last_seen_observed_at'],
+                        'not_seen_since' => $v['not_seen_since'], 'not_confirmed_since' => $v['not_confirmed_since']]),
+                    'last_synced'       => $v['last_seen_observed_at'],
+                    'source'            => 'hyperv',
+                    'source_name'       => 'Hyper-V · ' . $v['conn_name'],
+                    'highly_available'  => $v['is_clustered'] === null ? null : (bool)$v['is_clustered'],
+                    'not_seen_since'    => $v['not_seen_since'],
+                    'not_confirmed_since' => $v['not_confirmed_since'],
+                ];
+            }
+            $hyperv['clusters'] = $conn->query("SELECT cl.id, cl.name, cl.quorum_type, cl.witness, cl.not_seen_since, cl.not_confirmed_since, c.name AS conn_name,
+                    (SELECT COUNT(*) FROM virt_hosts h WHERE h.cluster_id = cl.id AND h.not_seen_since IS NULL) AS nodes,
+                    (SELECT COUNT(*) FROM virt_vms v WHERE v.cluster_id = cl.id AND v.not_seen_since IS NULL) AS vms
+                FROM virt_clusters cl JOIN virt_connections c ON c.id = cl.connection_id WHERE cl.connection_id IN ($in) ORDER BY cl.name")->fetchAll(PDO::FETCH_ASSOC);
+            $hyperv['hosts'] = $conn->query("SELECT h.id, h.name, h.node_state, h.identity_kind, h.os_version, h.not_seen_since, h.not_confirmed_since,
+                    cl.name AS cluster_name, c.name AS conn_name,
+                    (SELECT COUNT(*) FROM virt_vms v WHERE v.host_id = h.id AND v.not_seen_since IS NULL) AS vms
+                FROM virt_hosts h JOIN virt_connections c ON c.id = h.connection_id LEFT JOIN virt_clusters cl ON cl.id = h.cluster_id
+                WHERE h.connection_id IN ($in) ORDER BY cl.name IS NULL, cl.name, h.name")->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+
     usort($servers, function ($a, $b) { return strcasecmp((string)$a['name'], (string)$b['name']); });
 
     // Build summary stats - separate ESXi hosts from VMs
@@ -126,6 +192,7 @@ try {
     echo json_encode([
         'success' => true,
         'servers' => $servers,
+        'hyperv' => $hyperv,
         'summary' => [
             'total_vms' => $totalVMs,
             'active_vms' => $activeVMs,

@@ -1862,6 +1862,108 @@
             ]
         },
         {
+            "section": "Virtual estate (Hyper-V)",
+            "items": [
+                {
+                    "m": "POST",
+                    "p": "/virtual-estate/{connection}/reports",
+                    "perm": "virtual_estate.create",
+                    "s": "Send a collector report",
+                    "d": "What scripts/Invoke-HyperVInventory.ps1 sends: the Hyper-V hosts, Failover Clusters, cluster roles and VMs it read. Accepted ONLY from the key the connection was given, so a key cannot write another estate (403 otherwise). scope names the clusters and standalone hosts the report covers; a report only ever marks objects in its own scope. Each section - clusters, hosts, cluster_roles, vms, vm_disks, vm_networks - is complete (exactly this list: what is missing is marked not_seen_since, never deleted), partial (added and updated only) or left out (untouched). Hosts are identified by hardware UUID (id); a missing, all-zero, all-F or repeated one falls back to the host's name and is marked name-based. VMs are identified by their Get-VM Id. Inside a report, VMs and roles name their host by host name. unreadable lists hosts or clusters that could not be read: everything on them is kept and marked not confirmed. A report older than the newest for the same scope is stale; the same scope, observed_at and content again is replayed (safe to resend); the same scope and observed_at with different content is 409 observation_conflict. Each section applies in its own savepoint: 207 when some failed (send the same report again to retry them), 422 when all did. A VM or host that comes back with a new identity while one of the same name stops being seen is raised for review in Assets -> Settings -> Hyper-V, never merged automatically.",
+                    "params": [
+                        {
+                            "name": "connection",
+                            "in": "path",
+                            "desc": "The connection id (Assets -> Settings -> Hyper-V)",
+                            "req": true
+                        },
+                        {
+                            "name": "schema_version / observed_at / scope / collector / unreadable / sections",
+                            "in": "body",
+                            "req": true,
+                            "desc": "schema_version 1; observed_at RFC 3339 with timezone; scope [{kind: cluster|host, id, name}]; collector {name, version, powershell, host}; unreadable [{kind, id, name, error}]; sections {name: {complete, items}}"
+                        }
+                    ],
+                    "body": {
+                        "schema_version": 1,
+                        "observed_at": "2026-10-26T09:14:00Z",
+                        "scope": [
+                            {
+                                "kind": "cluster",
+                                "id": "0f1e2d3c-4b5a-6978-8796-a5b4c3d2e1f0",
+                                "name": "CL-PROD"
+                            }
+                        ],
+                        "collector": {
+                            "name": "Invoke-HyperVInventory",
+                            "version": "1.0.0",
+                            "powershell": "5.1",
+                            "host": "MGMT01"
+                        },
+                        "unreadable": [],
+                        "sections": {
+                            "clusters": {
+                                "complete": true,
+                                "items": [
+                                    {
+                                        "id": "0f1e2d3c-4b5a-6978-8796-a5b4c3d2e1f0",
+                                        "name": "CL-PROD",
+                                        "quorum_type": "NodeAndFileShareMajority"
+                                    }
+                                ]
+                            },
+                            "hosts": {
+                                "complete": true,
+                                "items": [
+                                    {
+                                        "id": "4c4c4544-0042-3510-8051-b4c04f4d4e32",
+                                        "name": "HV-NODE-A",
+                                        "cluster_id": "0f1e2d3c-4b5a-6978-8796-a5b4c3d2e1f0",
+                                        "node_state": "Up"
+                                    }
+                                ]
+                            },
+                            "vms": {
+                                "complete": true,
+                                "items": [
+                                    {
+                                        "id": "8a7b6c5d-4e3f-2a1b-0c9d-8e7f6a5b4c3d",
+                                        "name": "PAYROLL-01",
+                                        "host": "HV-NODE-A",
+                                        "state": "Running",
+                                        "is_clustered": true,
+                                        "possible_owners": [
+                                            "HV-NODE-A",
+                                            "HV-NODE-B"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "section": "Virtual estate (Hyper-V)",
+                    "slug": "post-virtual-estate-connection-reports"
+                },
+                {
+                    "m": "GET",
+                    "p": "/virtual-estate/{connection}",
+                    "perm": "virtual_estate.read",
+                    "s": "Is the collector on time?",
+                    "d": "The connection's state, for monitoring: freshness (on_time, late after its expected interval, overdue after the grace as well, never), when the last report arrived and what it was observing, its outcome and summary, the collector that sent it, how many clusters, hosts and VMs are currently seen (and how many VMs are not confirmed because their host could not be read), and how many identity changes wait for review. The key's company scope must cover the connection's company.",
+                    "params": [
+                        {
+                            "name": "connection",
+                            "in": "path",
+                            "desc": "The connection id (Assets -> Settings -> Hyper-V)",
+                            "req": true
+                        }
+                    ],
+                    "section": "Virtual estate (Hyper-V)",
+                    "slug": "get-virtual-estate-connection"
+                }
+            ]
+        },
+        {
             "section": "Problems",
             "items": [
                 {

@@ -1170,6 +1170,16 @@ try {
         ['asset_connections',      'fk_asset_connections_asset',   'assets',            'asset_id',              'id', 'CASCADE'],
         ['asset_connections',      'fk_asset_connections_other',   'assets',            'connected_asset_id',    'id', 'CASCADE'],
         ['asset_review_items',     'fk_asset_review_asset',        'assets',            'asset_id',              'id', 'CASCADE'],
+        // GH #199: a connection's estate goes with it; a VM's disks, adapters and placements with the VM.
+        ['virt_clusters',         'fk_virt_clusters_conn',     'virt_connections', 'connection_id',         'id', 'CASCADE'],
+        ['virt_hosts',            'fk_virt_hosts_conn',        'virt_connections', 'connection_id',         'id', 'CASCADE'],
+        ['virt_cluster_roles',    'fk_virt_roles_conn',        'virt_connections', 'connection_id',         'id', 'CASCADE'],
+        ['virt_vms',              'fk_virt_vms_conn',          'virt_connections', 'connection_id',         'id', 'CASCADE'],
+        ['virt_reports',          'fk_virt_reports_conn',      'virt_connections', 'connection_id',         'id', 'CASCADE'],
+        ['virt_identity_reviews', 'fk_virt_reviews_conn',      'virt_connections', 'connection_id',         'id', 'CASCADE'],
+        ['virt_vm_disks',         'fk_virt_vm_disks_vm',       'virt_vms',         'vm_id',                 'id', 'CASCADE'],
+        ['virt_vm_networks',      'fk_virt_vm_networks_vm',    'virt_vms',         'vm_id',                 'id', 'CASCADE'],
+        ['virt_placements',       'fk_virt_placements_vm',     'virt_vms',         'vm_id',                 'id', 'CASCADE'],
         // GH #201: the link history goes only if the asset itself does (a merge moves it first).
         ['asset_ci_links',         'fk_asset_ci_links_asset',      'assets',            'asset_id',              'id', 'CASCADE'],
         ['asset_review_items',     'fk_asset_review_other',        'assets',            'other_asset_id',        'id', 'CASCADE'],

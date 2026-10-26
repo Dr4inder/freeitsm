@@ -129,8 +129,11 @@ $translationNamespaces = ['common', 'asset-management'];
             <a href="#cmdb-link" class="help-nav-link" data-section="cmdb-link">
                 <span class="help-nav-num">20</span> Configuration item
             </a>
+            <a href="#hyperv" class="help-nav-link" data-section="hyperv">
+                <span class="help-nav-num">21</span> Hyper-V
+            </a>
             <a href="#tips" class="help-nav-link" data-section="tips">
-                <span class="help-nav-num">21</span>
+                <span class="help-nav-num">22</span>
                 <?php echo htmlspecialchars(t('asset-management.help.nav_tips')); ?>
             </a>
         </div>
@@ -831,9 +834,37 @@ $translationNamespaces = ['common', 'asset-management'];
                     </div>
                 </div>
 
-<div class="help-section" id="tips">
+                <!-- Section 21: Hyper-V and Failover Clusters (GH #199) -->
+                <div class="help-section" id="hyperv">
                     <div class="help-section-header">
                         <span class="help-section-num">21</span>
+                        <h3>Hyper-V</h3>
+                    </div>
+                    <p>Your Hyper-V hosts, Failover Clusters and virtual machines can appear in <strong>Servers</strong>. A read-only PowerShell collector, <code>scripts/Invoke-HyperVInventory.ps1</code>, runs as a scheduled task on one of your Windows servers and <em>sends</em> what it reads - FreeITSM never connects to your hosts.</p>
+                    <div class="help-steps">
+                        <div class="help-step">
+                            <div class="help-step-num">1</div>
+                            <div><strong>Settings &rarr; Hyper-V &rarr; Add</strong> a connection: its name, its company, and how often the collector will report. Saving shows the collector's <strong>key once</strong> - copy it - and the command to schedule.</div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-num">2</div>
+                            <div>On the Windows server, run the command with <code>-TestAccess</code> first: it shows which reads the account is allowed and sends nothing. <code>-OutputFile</code> writes a report without sending it.</div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-num">3</div>
+                            <div>Schedule it. <strong>Servers</strong> then shows each connection as <em>On time</em>, <em>Late</em> or <em>Overdue</em>, the VMs with their host and cluster, and - under <strong>Hosts and clusters</strong> - every node, its state and how it is identified.</div>
+                        </div>
+                    </div>
+                    <div class="help-cards">
+                        <div class="help-card row"><div><strong>Nothing disappears on a bad read</strong><p>A host the collector could not read keeps its VMs, marked <em>Not confirmed since</em>. A VM missing from a complete report is <em>Not seen since</em>, never deleted - unless you set <em>Remove VMs not seen for</em> on the connection.</p></div></div>
+                        <div class="help-card row"><div><strong>Identity changes</strong><p>A renamed, migrated or failed-over VM stays the same record. One imported as a copy comes back with a new identity: FreeITSM asks you on the connection whether it is the <em>same machine</em> - it never decides by name.</p></div></div>
+                        <div class="help-card row"><div><strong>Background jobs</strong><p>Each connection appears on System &rarr; Background jobs as <em>Hyper-V reports</em>, overdue when the collector stops.</p></div></div>
+                    </div>
+                </div>
+
+<div class="help-section" id="tips">
+                    <div class="help-section-header">
+                        <span class="help-section-num">22</span>
                         <h3><?php echo htmlspecialchars(t('asset-management.help.nav_tips')); ?></h3>
                     </div>
                     <div class="help-cards">

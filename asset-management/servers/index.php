@@ -240,6 +240,19 @@ $translationNamespaces = ['common', 'asset-management'];
             font-size: 13px;
         }
 
+        /* GH #199: Hyper-V reports and the hosts-and-clusters view. */
+        .hv-panel { margin: 0 0 14px; padding: 12px 14px; border: 1px solid var(--border, #e0e0e0); border-radius: 8px; background: var(--surface, #fff); font-size: 13px; }
+        .hv-panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .hv-conn { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 4px 0; }
+        .hv-pill { display: inline-block; padding: 1px 9px; border-radius: 99px; font-size: 12px; font-weight: 600; }
+        .hv-ok { background: var(--success-bg, #dcfce7); color: var(--success-text, #15803d); }
+        .hv-warn { background: var(--warning-bg, #fef3c7); color: var(--warning-text, #a16207); }
+        .hv-bad { background: var(--danger-bg, #fee2e2); color: var(--danger-text, #b91c1c); }
+        .hv-muted { background: var(--surface-hover, #f3f4f6); color: var(--text-muted, #666); }
+        .hv-sub { color: var(--text-muted, #666); font-size: 12px; }
+        .hv-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        .hv-table th, .hv-table td { text-align: left; padding: 5px 8px; border-top: 1px solid var(--border, #eee); font-size: 12.5px; }
+        .hv-flag { margin-left: 6px; font-size: 11px; }
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -684,6 +697,15 @@ $translationNamespaces = ['common', 'asset-management'];
             <!-- Sync Message -->
             <div class="sync-message" id="syncMessage"></div>
 
+            <?php /* GH #199: Hyper-V is pushed by a collector, so there is no Sync for it - this
+                     says when each connection last reported, and lists its hosts and clusters. */ ?>
+            <div class="hv-panel" id="hvPanel" style="display:none;">
+                <div class="hv-panel-head"><strong><?php echo htmlspecialchars(t('asset-management.hyperv.servers_title')); ?></strong>
+                    <a href="#" id="hvHostsToggle" onclick="hvToggleHosts(event)"><?php echo htmlspecialchars(t('asset-management.hyperv.servers_hosts')); ?></a></div>
+                <div id="hvConnections"></div>
+                <div id="hvHosts" style="display:none;"></div>
+            </div>
+
             <!-- Toolbar -->
             <div class="servers-toolbar">
                 <input type="text" class="search-box" id="searchBox" placeholder="<?php echo htmlspecialchars(t('asset-management.servers.search_placeholder')); ?>">
@@ -766,6 +788,7 @@ $translationNamespaces = ['common', 'asset-management'];
                 if (data.success) {
                     allServers = data.servers;
                     updateSummary(data.summary);
+                    renderHyperv(data.hyperv || null);
                     applyFilters();
                 } else {
                     showEmptyState(window.t('asset-management.servers.load_error', { error: data.error }));
@@ -899,10 +922,69 @@ $translationNamespaces = ['common', 'asset-management'];
                     <td>${s.hard_disk_size_gb ? formatSize(parseFloat(s.hard_disk_size_gb)) : '-'}</td>
                     <td><span class="mono ${s.ip_address ? '' : 'text-muted'}">${escapeHtml(s.ip_address || '-')}</span></td>
                     <td>${escapeHtml(s.host || '-')}</td>
-                    <td>${escapeHtml(s.cluster || '-')}</td>
+                    <td>${escapeHtml(s.cluster || '-')}${hvVmFlags(s)}</td>
                     <td>${formatGuestOS(s.guest_os)}</td>
                 </tr>
             `).join('');
+        }
+
+        // ── Hyper-V (GH #199) ─────────────────────────────────────────────
+        const HV = (k, p) => window.t('asset-management.hyperv.' + k, p);
+        const hvWhen = s => s ? fmtDateTime(parseUTCDate(s)) : '-';
+        let hvData = null;
+
+        /** A VM's flags: highly available, and anything that says the data is not current. */
+        function hvVmFlags(s) {
+            if (s.source !== 'hyperv') return '';
+            let out = '';
+            if (s.highly_available === true) out += `<span class="hv-pill hv-ok hv-flag">${escapeHtml(HV('ha'))}</span>`;
+            if (s.not_seen_since) out += `<div class="hv-sub">${escapeHtml(HV('not_seen', { when: hvWhen(s.not_seen_since) }))}</div>`;
+            else if (s.not_confirmed_since) out += `<div class="hv-sub">${escapeHtml(HV('not_confirmed_since', { when: hvWhen(s.not_confirmed_since) }))}</div>`;
+            return out;
+        }
+
+        function renderHyperv(h) {
+            hvData = h;
+            const panel = document.getElementById('hvPanel');
+            if (!h || !h.connections.length) { panel.style.display = 'none'; return; }
+            panel.style.display = '';
+            document.getElementById('hvConnections').innerHTML = h.connections.map(c => {
+                const cls = !c.active ? 'muted' : (c.freshness === 'on_time' ? 'ok' : (c.freshness === 'late' ? 'warn' : 'bad'));
+                const word = !c.active ? HV('off') : HV(c.freshness);
+                return `<div class="hv-conn"><strong>${escapeHtml(c.name)}</strong><span class="hv-pill hv-${cls}">${escapeHtml(word)}</span>
+                    <span class="hv-sub">${c.last_report_at ? escapeHtml(HV('last_report', { when: hvWhen(c.last_report_at) })) + ' · ' : ''}${escapeHtml(HV('expected', { n: c.interval }))}</span>
+                    ${c.last_summary ? `<span class="hv-sub">${escapeHtml(c.last_summary)}</span>` : ''}</div>`;
+            }).join('') + `<div class="hv-sub">${escapeHtml(HV('storage_limit'))}</div>`;
+            if (document.getElementById('hvHosts').style.display !== 'none') hvRenderHosts();
+        }
+
+        function hvToggleHosts(e) {
+            e.preventDefault();
+            const box = document.getElementById('hvHosts');
+            box.style.display = box.style.display === 'none' ? '' : 'none';
+            if (box.style.display !== 'none') hvRenderHosts();
+        }
+
+        function hvSeen(r) {
+            if (r.not_seen_since) return `<span class="hv-pill hv-bad">${escapeHtml(HV('not_seen', { when: hvWhen(r.not_seen_since) }))}</span>`;
+            if (r.not_confirmed_since) return `<span class="hv-pill hv-warn">${escapeHtml(HV('not_confirmed_since', { when: hvWhen(r.not_confirmed_since) }))}</span>`;
+            return '';
+        }
+
+        function hvRenderHosts() {
+            const h = hvData;
+            if (!h) return;
+            const clusters = h.clusters.length ? `<table class="hv-table"><thead><tr><th>${escapeHtml(HV('col_cluster'))}</th><th>${escapeHtml(HV('col_nodes'))}</th>
+                <th>${escapeHtml(HV('col_vms'))}</th><th>${escapeHtml(HV('col_quorum'))}</th><th></th></tr></thead><tbody>`
+                + h.clusters.map(c => `<tr><td><strong>${escapeHtml(c.name)}</strong> <span class="hv-sub">${escapeHtml(c.conn_name)}</span></td><td>${Number(c.nodes)}</td>
+                    <td>${Number(c.vms)}</td><td>${escapeHtml(c.quorum_type || '-')}${c.witness ? ' <span class="hv-sub">' + escapeHtml(c.witness) + '</span>' : ''}</td><td>${hvSeen(c)}</td></tr>`).join('')
+                + '</tbody></table>' : '';
+            const hosts = `<table class="hv-table"><thead><tr><th>${escapeHtml(HV('col_host'))}</th><th>${escapeHtml(HV('col_cluster'))}</th><th>${escapeHtml(HV('col_state'))}</th>
+                <th>${escapeHtml(HV('col_vms'))}</th><th>${escapeHtml(HV('col_identity'))}</th><th></th></tr></thead><tbody>`
+                + h.hosts.map(x => `<tr><td><strong>${escapeHtml(x.name)}</strong></td><td>${escapeHtml(x.cluster_name || '-')}</td><td>${escapeHtml(x.node_state || '-')}</td>
+                    <td>${Number(x.vms)}</td><td>${x.identity_kind === 'name' ? `<span class="hv-pill hv-warn" title="${escapeHtml(HV('identity_name_hint'))}">${escapeHtml(HV('identity_name'))}</span>` : escapeHtml(HV('identity_source'))}</td>
+                    <td>${hvSeen(x)}</td></tr>`).join('') + '</tbody></table>';
+            document.getElementById('hvHosts').innerHTML = clusters + hosts;
         }
 
         function showEmptyState(message) {

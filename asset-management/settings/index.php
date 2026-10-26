@@ -1583,6 +1583,108 @@ $translationNamespaces = ['common', 'asset-management'];
             </div>
         </div>
 
+        <?php /* GH #199: Hyper-V estates a collector pushes to. Script: hyperv.js. */ ?>
+        <?php if (settingsTabVisible($visibleTabs, 'hyperv')): ?>
+        <div class="tab-content<?php echo $activeTabId === 'hyperv' ? ' active' : ''; ?>" id="hyperv-tab" data-capability="<?php echo capKey(Cap::ASSETS_HYPERV); ?>">
+            <div class="settings-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <div>
+                        <h3 style="margin:0;"><?php echo htmlspecialchars(t('asset-management.hyperv.title')); ?></h3>
+                        <p style="color:var(--text-muted, #666); margin:4px 0 0; max-width:760px;"><?php echo htmlspecialchars(t('asset-management.hyperv.intro')); ?></p>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="hvOpenForm()"><?php echo htmlspecialchars(t('asset-management.hyperv.add')); ?></button>
+                </div>
+                <div class="table-responsive" style="margin-top:12px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><?php echo htmlspecialchars(t('asset-management.hyperv.col_name')); ?></th>
+                                <th class="hv-company-col"><?php echo htmlspecialchars(t('asset-management.hyperv.col_company')); ?></th>
+                                <th><?php echo htmlspecialchars(t('asset-management.hyperv.col_reports')); ?></th>
+                                <th><?php echo htmlspecialchars(t('asset-management.hyperv.col_estate')); ?></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="hvList"><tr><td colspan="5" style="text-align:center;"><?php echo htmlspecialchars(t('common.loading')); ?></td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="settings-section" id="hvKeyPanel" style="display:none; margin-top:16px;">
+                <h3 style="margin-top:0;"><?php echo htmlspecialchars(t('asset-management.hyperv.key_title')); ?></h3>
+                <p class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.key_intro')); ?></p>
+                <div style="display:flex; gap:8px; align-items:center;"><code id="hvKey" style="word-break:break-all;"></code>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="hvCopy('hvKey')"><?php echo htmlspecialchars(t('asset-management.hyperv.key_copy')); ?></button></div>
+                <h4 style="margin:16px 0 6px;"><?php echo htmlspecialchars(t('asset-management.hyperv.command_title')); ?></h4>
+                <pre id="hvCommand" style="white-space:pre-wrap; word-break:break-all; padding:10px; background:var(--surface-hover, #f3f4f6); border-radius:6px; font-size:12px;"></pre>
+                <button type="button" class="btn btn-outline btn-sm" onclick="hvCopy('hvCommand')"><?php echo htmlspecialchars(t('asset-management.hyperv.key_copy')); ?></button>
+                <p class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.command_hint')); ?></p>
+            </div>
+
+            <div class="settings-section" id="hvReviewPanel" style="display:none; margin-top:16px;">
+                <h3 id="hvReviewTitle" style="margin-top:0;"></h3>
+                <p class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.reviews_intro')); ?></p>
+                <div id="hvReviewList"></div>
+            </div>
+
+            <div class="settings-section" style="margin-top:16px;">
+                <h3 style="margin-top:0;"><?php echo htmlspecialchars(t('asset-management.hyperv.setup_title')); ?></h3>
+                <ul style="margin:0; padding-left:20px; line-height:1.6; color:var(--text-muted, #555); font-size:13px;">
+                    <li><?php echo htmlspecialchars(t('asset-management.hyperv.setup_ps')); ?></li>
+                    <li><?php echo htmlspecialchars(t('asset-management.hyperv.setup_modules')); ?></li>
+                    <li><?php echo htmlspecialchars(t('asset-management.hyperv.setup_cluster')); ?></li>
+                    <li><?php echo htmlspecialchars(t('asset-management.hyperv.setup_hosts')); ?></li>
+                </ul>
+                <p style="font-size:13px;"><a href="https://github.com/edmozley/freeitsm/wiki/Hyper-V-Discovery" target="_blank" rel="noopener"><?php echo htmlspecialchars(t('asset-management.hyperv.setup_more')); ?></a></p>
+            </div>
+        </div>
+
+        <div class="modal" id="hvModal">
+            <div class="modal-content" style="max-width: 560px;">
+                <div class="modal-header" id="hvModalTitle"></div>
+                <div class="modal-body">
+                    <form id="hvForm" autocomplete="off" onsubmit="hvSave(event)">
+                        <input type="hidden" id="hvId">
+                        <div class="form-group">
+                            <label for="hvName"><?php echo htmlspecialchars(t('asset-management.hyperv.field_name')); ?> *</label>
+                            <input type="text" id="hvName" maxlength="150" required>
+                            <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.field_name_hint')); ?></div>
+                        </div>
+                        <div class="form-group" id="hvCompanyRow">
+                            <label for="hvCompany"><?php echo htmlspecialchars(t('asset-management.hyperv.field_company')); ?></label>
+                            <select id="hvCompany"></select>
+                            <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.field_company_hint')); ?></div>
+                        </div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                            <div class="form-group">
+                                <label for="hvInterval"><?php echo htmlspecialchars(t('asset-management.hyperv.field_interval')); ?></label>
+                                <input type="number" id="hvInterval" min="1" max="1440" value="15">
+                                <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.field_interval_hint')); ?></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hvGrace"><?php echo htmlspecialchars(t('asset-management.hyperv.field_grace')); ?></label>
+                                <input type="number" id="hvGrace" min="0" max="1440" value="15">
+                                <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.field_grace_hint')); ?></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hvRetention"><?php echo htmlspecialchars(t('asset-management.hyperv.field_retention')); ?></label>
+                            <input type="number" id="hvRetention" min="1" max="3650" placeholder="-">
+                            <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.hyperv.field_retention_hint')); ?></div>
+                        </div>
+                        <div class="form-group">
+                            <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" id="hvActive" checked> <?php echo htmlspecialchars(t('asset-management.hyperv.field_active')); ?></label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="hvCloseForm()"><?php echo htmlspecialchars(t('common.cancel')); ?></button>
+                    <button type="submit" form="hvForm" class="btn btn-primary"><?php echo htmlspecialchars(t('common.save')); ?></button>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <div class="tab-content<?php echo $activeTabId === 'vcloud' ? ' active' : ''; ?>" id="vcloud-tab" data-capability="<?php echo capKey(Cap::ASSETS_VCLOUD); ?>">
             <div class="settings-section">
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
@@ -5398,5 +5500,6 @@ $translationNamespaces = ['common', 'asset-management'];
     <script src="../../assets/js/reorder-list.js?v=1"></script>
     <script>window.ASSET_LAYOUT = <?php echo json_encode(['defaults' => AssetTypeLayout::defaults(), 'presets' => AssetTypeLayout::PRESETS], JSON_HEX_TAG | JSON_HEX_AMP); ?>;</script>
     <script src="../../assets/js/mobile.js?v=83"></script>
+    <?php if (settingsTabVisible($visibleTabs, 'hyperv')): ?><script src="hyperv.js?v=2"></script><?php endif; ?>
 </body>
 </html>

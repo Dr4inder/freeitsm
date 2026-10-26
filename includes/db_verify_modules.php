@@ -87,6 +87,7 @@ $DB_VERIFY_MODULE_PREFIXES = [
     // --- Assets / device sync ---
     'asset'            => 'assets',
     'intune_'          => 'assets',
+    'virt_'            => 'assets',   // GH #199: the virtual estate (Hyper-V first)
     // --- CMDB ---
     'cmdb_'            => 'cmdb',
     // --- Knowledge / Learning / Wiki ---

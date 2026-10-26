@@ -151,6 +151,7 @@ return [
         'trigger_web'    => 'Schedule (web address)',
         'trigger_page'   => 'Page load',
         'trigger_manual' => 'Run now',
+        'trigger_push'   => 'Report received',
 
         'problem_stuck'      => 'A run started {since} and has not finished.',
         'problem_failing'    => 'Its most recent run failed ({since}).',
@@ -168,6 +169,7 @@ return [
         'unknown_sources'       => 'which of its sources are in use',
         'unknown_source_health' => 'how its sources last ran',
         'unknown_history'       => 'its run history',
+        'unknown_pushed_sources' => 'which pushed sources (Hyper-V connections) are switched on',
 
         // The jobs, and what stops without each one.
         'name_sla_breach'            => 'SLA breach check',
@@ -188,6 +190,11 @@ return [
         'affects_domains'            => 'Domain lookups, checks and expiry alerts',
         'name_lms_reminders'         => 'Training reminders',
         'affects_lms_reminders'      => 'LMS reminder emails',
+        // GH #199: a pushed source - healthy when its collector's reports arrive on time.
+        'name_virt_push'             => 'Hyper-V reports: {name}',
+        'affects_virt_push'          => 'What Assets -> Servers shows for this estate goes stale, and nothing marks VMs that have gone',
+        'name_pushed_sources'        => 'Pushed sources',
+        'affects_pushed_sources'     => 'Whether Hyper-V collectors are reporting on time',
         'name_proxmox_sync'          => 'Proxmox sync',
         'affects_proxmox_sync'       => 'Proxmox virtual machines in Assets',
         'name_vcloud_sync'           => 'VMware Cloud Director sync',

@@ -48,6 +48,9 @@ return [
     ['GET',    '#^/assets/(\d+)/network-adapters$#',       ['asset_inventory', 'read'],       'apiAssetNetworkAdaptersList'],
     ['GET',    '#^/assets/(\d+)/devices$#',                ['asset_inventory', 'read'],       'apiAssetDevicesList'],
     ['GET',    '#^/assets/(\d+)/software$#',               ['asset_inventory', 'read'],       'apiAssetSoftwareList'],
+    // GH #199: a pushed virtual estate (Hyper-V). Reports are accepted only from the connection's own key.
+    ['GET',    '#^/virtual-estate/(\d+)$#',                ['virtual_estate', 'read'],        'apiVirtConnectionGet'],
+    ['POST',   '#^/virtual-estate/(\d+)/reports$#',        ['virtual_estate', 'create'],      'apiVirtReportSubmit'],
     ['GET',    '#^/asset-types$#',                         ['reference', 'read'],             'apiAssetTypesList'],
     ['GET',    '#^/asset-statuses$#',                      ['reference', 'read'],             'apiAssetStatusesList'],
     ['GET',    '#^/asset-locations$#',                     ['reference', 'read'],             'apiAssetLocationsList'],

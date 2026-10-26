@@ -37,8 +37,8 @@ require_once __DIR__ . '/job_registry.php';
 
 final class JobRun
 {
-    /** Who started a run. cron = the command line; web = the job's token address. */
-    const TRIGGERS = ['cron', 'web', 'page', 'manual'];
+    /** Who started a run. cron = the command line; web = the job's token address; push = a collector's report arrived. */
+    const TRIGGERS = ['cron', 'web', 'page', 'manual', 'push'];   // push: a report a collector sent (GH #199)
 
     /** Runs started in this request and not yet finished - for the shutdown handler. */
     private static $open = [];

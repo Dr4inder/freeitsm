@@ -2143,6 +2143,219 @@ CREATE TABLE IF NOT EXISTS `vcloud_edge_gateways` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------
+-- The virtual estate (GH #199 Part A): hosts, clusters, roles and VMs reported by a
+-- source. Hyper-V pushes. Removal is never deletion: an object missing from a complete
+-- report is marked not_seen_since; one on an unreadable host, not_confirmed_since.
+-- ----------------------------------------------------------
+
+-- A source that reports a virtual estate. Hyper-V (pushed by scripts/Invoke-HyperVInventory.ps1) first;
+-- vCenter, Proxmox and Cloud Director may move here later. One company per connection: every
+-- object it reports belongs to that company. api_key_id is the ONE key allowed to post its reports.
+CREATE TABLE IF NOT EXISTS `virt_connections` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `name`                      VARCHAR(150) NOT NULL,
+    `source_kind`               VARCHAR(20) NOT NULL DEFAULT 'hyperv',
+    `tenant_id`                 INT NULL,
+    `expected_interval_minutes` INT NOT NULL DEFAULT 15,
+    `grace_minutes`             INT NOT NULL DEFAULT 15,
+    `retention_days`            INT NULL,
+    `api_key_id`                INT NULL,
+    `is_active`                 TINYINT(1) NOT NULL DEFAULT 1,
+    `last_report_at`            DATETIME NULL,
+    `last_observed_at`          DATETIME NULL,
+    `last_outcome`              VARCHAR(20) NULL,
+    `last_summary`              VARCHAR(1000) NULL,
+    `collector_json`            TEXT NULL,
+    `created_by_id`             INT NULL,
+    `created_datetime`          DATETIME NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_virt_connections_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- A Failover Cluster. external_id is Get-Cluster Id (a GUID).
+CREATE TABLE IF NOT EXISTS `virt_clusters` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `connection_id`             INT NOT NULL,
+    `tenant_id`                 INT NULL,
+    `external_id`               VARCHAR(100) NOT NULL,
+    `name`                      VARCHAR(255) NULL,
+    `quorum_type`               VARCHAR(100) NULL,
+    `witness`                   VARCHAR(255) NULL,
+    `first_seen_at`             DATETIME NULL,
+    `last_seen_observed_at`     DATETIME NULL,
+    `not_seen_since`            DATETIME NULL,
+    `not_confirmed_since`       DATETIME NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_virt_clusters_ext` (`connection_id`, `external_id`),
+    CONSTRAINT `fk_virt_clusters_conn` FOREIGN KEY (`connection_id`) REFERENCES `virt_connections` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- A Hyper-V host, standalone or a cluster node. external_id is the hardware UUID
+-- (Win32_ComputerSystemProduct); when that is missing or invalid it is name:<host> and
+-- identity_kind says so, because then a rename cannot be told from a new machine.
+CREATE TABLE IF NOT EXISTS `virt_hosts` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `connection_id`             INT NOT NULL,
+    `tenant_id`                 INT NULL,
+    `external_id`               VARCHAR(100) NOT NULL,
+    `identity_kind`             VARCHAR(10) NOT NULL DEFAULT 'source',
+    `name`                      VARCHAR(255) NULL,
+    `cluster_id`                INT NULL,
+    `node_state`                VARCHAR(30) NULL,
+    `os_version`                VARCHAR(100) NULL,
+    `cpu_count`                 INT NULL,
+    `memory_bytes`              BIGINT NULL,
+    `first_seen_at`             DATETIME NULL,
+    `last_seen_observed_at`     DATETIME NULL,
+    `not_seen_since`            DATETIME NULL,
+    `not_confirmed_since`       DATETIME NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_virt_hosts_ext` (`connection_id`, `external_id`),
+    KEY `idx_virt_hosts_cluster` (`cluster_id`),
+    CONSTRAINT `fk_virt_hosts_conn` FOREIGN KEY (`connection_id`) REFERENCES `virt_connections` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- A cluster role (Get-ClusterGroup). external_id is its Id (a GUID).
+CREATE TABLE IF NOT EXISTS `virt_cluster_roles` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `connection_id`             INT NOT NULL,
+    `tenant_id`                 INT NULL,
+    `external_id`               VARCHAR(100) NOT NULL,
+    `name`                      VARCHAR(255) NULL,
+    `cluster_id`                INT NULL,
+    `role_type`                 VARCHAR(60) NULL,
+    `owner_host_id`             INT NULL,
+    `state`                     VARCHAR(30) NULL,
+    `preferred_owners_json`     TEXT NULL,
+    `first_seen_at`             DATETIME NULL,
+    `last_seen_observed_at`     DATETIME NULL,
+    `not_seen_since`            DATETIME NULL,
+    `not_confirmed_since`       DATETIME NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_virt_roles_ext` (`connection_id`, `external_id`),
+    CONSTRAINT `fk_virt_roles_conn` FOREIGN KEY (`connection_id`) REFERENCES `virt_connections` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- A virtual machine. external_id is Get-VM Id (a GUID): kept by register and restore
+-- imports, NEW after a copy import - which is what virt_identity_reviews is for.
+-- is_clustered NULL = not known. possible_owners_json: the nodes the cluster may run it on.
+CREATE TABLE IF NOT EXISTS `virt_vms` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `connection_id`             INT NOT NULL,
+    `tenant_id`                 INT NULL,
+    `external_id`               VARCHAR(100) NOT NULL,
+    `name`                      VARCHAR(255) NULL,
+    `host_id`                   INT NULL,
+    `cluster_id`                INT NULL,
+    `state`                     VARCHAR(30) NULL,
+    `is_clustered`              TINYINT(1) NULL,
+    `cluster_role_id`           INT NULL,
+    `possible_owners_json`      TEXT NULL,
+    `generation`                INT NULL,
+    `cpu_count`                 INT NULL,
+    `memory_bytes`              BIGINT NULL,
+    `guest_addresses`           VARCHAR(1000) NULL,
+    `os_name`                   VARCHAR(255) NULL,
+    `first_seen_at`             DATETIME NULL,
+    `last_seen_observed_at`     DATETIME NULL,
+    `not_seen_since`            DATETIME NULL,
+    `not_confirmed_since`       DATETIME NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_virt_vms_ext` (`connection_id`, `external_id`),
+    KEY `idx_virt_vms_host` (`host_id`),
+    KEY `idx_virt_vms_name` (`connection_id`, `name`),
+    CONSTRAINT `fk_virt_vms_conn` FOREIGN KEY (`connection_id`) REFERENCES `virt_connections` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- A VM's virtual disks, replaced as a set when its report section is complete.
+CREATE TABLE IF NOT EXISTS `virt_vm_disks` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `vm_id`                     INT NOT NULL,
+    `external_id`               VARCHAR(191) NOT NULL,
+    `path`                      VARCHAR(500) NULL,
+    `size_bytes`                BIGINT NULL,
+    `used_bytes`                BIGINT NULL,
+    `controller`                VARCHAR(60) NULL,
+    `observed_at`               DATETIME NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_virt_vm_disks` (`vm_id`, `external_id`),
+    CONSTRAINT `fk_virt_vm_disks_vm` FOREIGN KEY (`vm_id`) REFERENCES `virt_vms` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- A VM's network adapters.
+CREATE TABLE IF NOT EXISTS `virt_vm_networks` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `vm_id`                     INT NOT NULL,
+    `external_id`               VARCHAR(191) NOT NULL,
+    `name`                      VARCHAR(255) NULL,
+    `switch_name`               VARCHAR(255) NULL,
+    `mac_address`               VARCHAR(20) NULL,
+    `ip_addresses`              VARCHAR(1000) NULL,
+    `vlan_id`                   INT NULL,
+    `observed_at`               DATETIME NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_virt_vm_networks` (`vm_id`, `external_id`),
+    CONSTRAINT `fk_virt_vm_networks_vm` FOREIGN KEY (`vm_id`) REFERENCES `virt_vms` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Where a VM ran, and from when to when (by the reports' observed times): live migration
+-- and failover history. One open row (to_observed_at NULL) per VM.
+CREATE TABLE IF NOT EXISTS `virt_placements` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `vm_id`                     INT NOT NULL,
+    `host_id`                   INT NULL,
+    `cluster_id`                INT NULL,
+    `from_observed_at`          DATETIME NOT NULL,
+    `to_observed_at`            DATETIME NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_virt_placements_vm` (`vm_id`, `to_observed_at`),
+    CONSTRAINT `fk_virt_placements_vm` FOREIGN KEY (`vm_id`) REFERENCES `virt_vms` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Every report received, applied or not, and what each section came to.
+-- scope_key identifies what the report covered (a cluster, the standalone hosts, everything):
+-- the same scope, observed time and content again is a replay.
+CREATE TABLE IF NOT EXISTS `virt_reports` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `connection_id`             INT NOT NULL,
+    `scope_key`                 VARCHAR(191) NOT NULL,
+    `observed_at`               DATETIME NOT NULL,
+    `received_at`               DATETIME NOT NULL,
+    `fingerprint`               CHAR(64) NOT NULL,
+    `outcome`                   VARCHAR(20) NOT NULL,
+    `sections_json`             TEXT NULL,
+    `unreadable_json`           TEXT NULL,
+    `collector_json`            TEXT NULL,
+    `api_key_id`                INT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_virt_reports_scope` (`connection_id`, `scope_key`, `observed_at`),
+    CONSTRAINT `fk_virt_reports_conn` FOREIGN KEY (`connection_id`) REFERENCES `virt_connections` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- An object that came back with a new identity while one with the same name stopped being
+-- seen (a copy-imported VM, a host with a new motherboard). A person decides: same machine
+-- (the old record takes the new identity and keeps its history) or different machines.
+-- Never decided by FreeITSM, never merged by name.
+CREATE TABLE IF NOT EXISTS `virt_identity_reviews` (
+    `id`                        INT NOT NULL AUTO_INCREMENT,
+    `connection_id`             INT NOT NULL,
+    `tenant_id`                 INT NULL,
+    `object_kind`               VARCHAR(10) NOT NULL,
+    `old_object_id`             INT NOT NULL,
+    `new_object_id`             INT NOT NULL,
+    `name`                      VARCHAR(255) NULL,
+    `old_external_id`           VARCHAR(100) NULL,
+    `new_external_id`           VARCHAR(100) NULL,
+    `status`                    VARCHAR(16) NOT NULL DEFAULT 'open',
+    `raised_at`                 DATETIME NOT NULL,
+    `decided_by_id`             INT NULL,
+    `decided_at`                DATETIME NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_virt_reviews_conn` (`connection_id`, `status`),
+    CONSTRAINT `fk_virt_reviews_conn` FOREIGN KEY (`connection_id`) REFERENCES `virt_connections` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------
 -- Web chat widgets (embeddable website chat → tickets)
 -- ----------------------------------------------------------
 
