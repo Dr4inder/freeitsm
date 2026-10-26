@@ -67,6 +67,14 @@ try {
         }
     }
 
+    // Validate the export enum before writing ANY of a combined settings post.
+    if (array_key_exists('ticket_list_export', $settings)
+        && !in_array($settings['ticket_list_export'], ['admins','ticket_users','nobody'], true)) {
+        http_response_code(400);
+        echo json_encode(['success'=>false,'error'=>'Invalid ticket list export policy']);
+        exit;
+    }
+
     foreach ($settings as $key => $value) {
         // For masked secret keys, treat blank or asterisk-prefixed values as
         // "leave existing untouched" so the user can submit the form without

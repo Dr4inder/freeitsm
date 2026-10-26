@@ -17,6 +17,23 @@
  *  - Settings/dashboard/calendar/rota/users/help pages
  */
 return [
+    'queue' => [
+        'export_title'=>'Export all matching tickets as CSV',
+        'export_label'=>'Who can export the ticket list',
+        'export_help'=>'Controls bulk CSV export of the filtered list. Existing ticket access still applies.',
+        'export_admins'=>'Administrators only',
+        'export_ticket_users'=>'Anyone with Tickets',
+        'export_nobody'=>'Nobody',
+        'layout'=>'Ticket list', 'messages'=>'Messages', 'table'=>'Table', 'ticket'=>'ticket',
+        'search'=>'Search ticket number, subject or address…', 'search_content'=>'Search message bodies, notes and documents',
+        'save_failed'=>'The list preference could not be saved.',
+        'columns'=>[
+            'ticket_number'=>'Ticket', 'subject'=>'Subject', 'created_datetime'=>'Created', 'priority_id'=>'Priority',
+            'status_id'=>'Status', 'assignee_id'=>'Assigned analyst', 'department_id'=>'Department', 'team_id'=>'Team',
+            'ticket_type_id'=>'Ticket type', 'work_start_datetime'=>'Work begins', 'work_end_datetime'=>'Work ends',
+            'snoozed_until'=>'Snoozed until', 'company_name'=>'Company',
+        ],
+    ],
     // The AI reading aids (#104, ideas 7 and 12).
     'ai' => [
         'badge' => 'AI summary',

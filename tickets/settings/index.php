@@ -1875,6 +1875,15 @@ function renderOversizeFields(string $px, bool $withLimits): void
             </div>
             <p style="margin-bottom: 20px; color: var(--text-muted, #666);"><?php echo t('tickets.settings.intros.general'); ?></p>
             <form id="generalSettingsForm" style="max-width: 600px;">
+                <div class="form-group">
+                    <label for="ticketListExport"><?php echo htmlspecialchars(t('tickets.queue.export_label')); ?></label>
+                    <select id="ticketListExport">
+                        <?php foreach (['admins','ticket_users','nobody'] as $choice): ?>
+                        <option value="<?php echo $choice; ?>"><?php echo htmlspecialchars(t('tickets.queue.export_'.$choice)); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <small><?php echo htmlspecialchars(t('tickets.queue.export_help')); ?></small>
+                </div>
                 <?php /* The system name moved to System -> Branding: it heads every
                          module's page titles, not just Tickets'. A pointer for anyone
                          who still looks here. */ ?>
@@ -6795,6 +6804,8 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     // matches what customers were already told. Mirrors
                     // customerReplyReopensTickets() in includes/ticket_reply.php.
                     const reopen = data.settings.reopen_on_customer_reply;
+                    const exportPolicy = data.settings.ticket_list_export;
+                    document.getElementById('ticketListExport').value = ['admins','ticket_users','nobody'].includes(exportPolicy) ? exportPolicy : 'admins';
                     document.getElementById('reopenOnCustomerReply').checked =
                         (reopen === null || reopen === undefined || reopen === '') ? true : (reopen === '1');
                     // Snooze wake hour (#933) — 09:00 when never saved, matching
@@ -7171,6 +7182,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             e.preventDefault();
 
             const settings = {
+                ticket_list_export: document.getElementById('ticketListExport').value,
                 reopen_on_customer_reply: document.getElementById('reopenOnCustomerReply').checked ? '1' : '0',
                 snooze_wake_hour: document.getElementById('snoozeWakeHour').value,
                 ticket_collapse_enabled:       document.getElementById('collapseEnabled').checked ? '1' : '0',
