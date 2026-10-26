@@ -1301,6 +1301,7 @@ CREATE TABLE IF NOT EXISTS `tickets` (
     `snooze_reason`         VARCHAR(255) NULL,
     -- 'normal' or 'confidential' (discussion #62); see includes/ticket_sensitivity.php.
     `sensitivity`           VARCHAR(20) NOT NULL DEFAULT 'normal',
+    `is_workspace`          TINYINT NOT NULL DEFAULT 0,
     `is_demo`           TINYINT(1) NOT NULL DEFAULT 0,   -- set by the demo data importer (#1297)
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_tickets_number` (`ticket_number`),

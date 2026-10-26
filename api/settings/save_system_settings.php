@@ -68,6 +68,17 @@ try {
     }
 
     foreach ($settings as $key => $value) {
+        if ($key === 'ticket_workspace_mode') {
+            require_once '../../includes/ticket_workspace.php';
+            if (!is_string($value) || TicketWorkspaceMode::tryFrom($value) === null) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Invalid ticket workspace mode.']);
+                exit;
+            }
+        }
+    }
+
+    foreach ($settings as $key => $value) {
         // For masked secret keys, treat blank or asterisk-prefixed values as
         // "leave existing untouched" so the user can submit the form without
         // re-entering the secret every time.

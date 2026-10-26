@@ -867,6 +867,7 @@ return [
         // 'normal' or 'confidential' (discussion #62). Confidential keeps a ticket
         // from the requester's managers; see includes/ticket_sensitivity.php.
         'sensitivity'           => "VARCHAR(20) NOT NULL DEFAULT 'normal'",
+        'is_workspace'          => 'TINYINT NOT NULL DEFAULT 0',
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
     ],
 

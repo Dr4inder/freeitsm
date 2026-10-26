@@ -414,6 +414,31 @@ function assignableAnalysts(tickets, keepId) {
         || companies.every(c => a.accessible_tenant_ids.includes(c)));
 }
 let currentEmail = null;
+let ticketRenderGeneration = 0;
+let ticketSelectionGeneration = 0;
+let ticketPendingWrites = 0;
+
+/** A delayed response belongs to one rendering, not merely a reusable ticket ID. */
+function ticketReadGuard(ticketId) {
+    const generation = ticketRenderGeneration;
+    return () => generation === ticketRenderGeneration && currentEmail && Number(currentEmail.ticket_id) === Number(ticketId);
+}
+
+function ticketHasUnsavedInput() {
+    if (document.querySelector('#emailModal.active')) return true;
+    if (document.querySelector('#noteModal.active')) return true;
+    return !!document.getElementById('channelComposerText')?.value.trim()
+        || !!document.getElementById('channelAttachFile')?.files.length;
+}
+
+function discardTicketDraft() {
+    if (document.querySelector('#emailModal.active')) closeEmailModal();
+    if (document.querySelector('#noteModal.active')) closeNoteModal();
+    const channel = document.getElementById('channelComposerText');
+    if (channel) channel.value = '';
+    const attachment = document.getElementById('channelAttachFile');
+    if (attachment) attachment.value = '';
+}
 let currentRecordings = [];
 let folderCounts = {};
 // Messaging channels (WhatsApp etc.): set when a ticket's thread loads, so the
@@ -2231,48 +2256,39 @@ function clearMultiSelection({ repaint = true } = {}) {
  * The one entry point for a click on a row. Every modifier combination lands here
  * so the rules live in one readable place rather than spread across handlers.
  */
-function handleEmailRowClick(event, emailId) {
-    const ctrl  = event.ctrlKey || event.metaKey;   // ⌘ on a Mac does the same job
+async function handleEmailRowClick(event, emailId) {
+    const ctrl = event.ctrlKey || event.metaKey;
     const shift = event.shiftKey;
+    let next = new Set(selectedEmailIds);
 
     if (shift) {
-        // Shift, with or without Ctrl: take the block from the anchor to here.
-        // Plain Shift replaces the selection; Ctrl+Shift adds the block to it.
-        const ids   = visibleEmailIds();
-        const from  = ids.indexOf(selectionAnchorId !== null ? selectionAnchorId : emailId);
-        const to    = ids.indexOf(emailId);
+        const ids = visibleEmailIds();
+        const from = ids.indexOf(selectionAnchorId !== null ? selectionAnchorId : emailId);
+        const to = ids.indexOf(emailId);
         if (from === -1 || to === -1) return;
-
-        const block = ids.slice(Math.min(from, to), Math.max(from, to) + 1);
-        if (!ctrl) selectedEmailIds.clear();
-        block.forEach(id => selectedEmailIds.add(id));
-
-        // The anchor deliberately STAYS PUT so a second Shift+click re-measures
-        // from the same origin and can shrink the block as well as grow it.
-        selectionFocusId = emailId;
-        renderSelectionUi();
-        onSelectionChanged({ clickedId: emailId });
-        return;
+        if (!ctrl) next.clear();
+        ids.slice(Math.min(from, to), Math.max(from, to) + 1).forEach(id => next.add(id));
+    } else if (ctrl) {
+        if (next.has(emailId)) next.delete(emailId);
+        else next.add(emailId);
+    } else {
+        next = new Set([emailId]);
     }
 
-    if (ctrl) {
-        // Toggle this one. Ctrl+clicking the only selected row leaves nothing
-        // selected, which is legitimate — the reading pane empties.
-        if (selectedEmailIds.has(emailId)) selectedEmailIds.delete(emailId);
-        else                               selectedEmailIds.add(emailId);
-        selectionAnchorId = emailId;
-        selectionFocusId  = emailId;
-        renderSelectionUi();
-        onSelectionChanged({ clickedId: emailId });
-        return;
-    }
+    // Keep/bar selection does not leave the open editor. A summary, an empty
+    // selection or another single ticket does, and must protect its drafts.
+    const retainsEditor = (next.size === 1 && next.has(selectedEmailId))
+        || (next.size > 1 && multiSelectPaneMode !== 'summary' && currentEmail);
+    if (!retainsEditor && window.TicketWorkspace?.isActive() && !await TicketWorkspace.canLeave()) return;
 
-    // Plain click — collapse to this one and open it, exactly as before.
-    selectedEmailIds = new Set([emailId]);
-    selectionAnchorId = emailId;
-    selectionFocusId  = emailId;
+    selectedEmailIds = next;
+    // Shift keeps the original anchor, so another Shift click can shrink the
+    // range. Plain/Ctrl clicks establish a new anchor as in the native list.
+    if (!shift) selectionAnchorId = emailId;
+    selectionFocusId = emailId;
     renderSelectionUi();
-    selectEmail(emailId);
+    if (shift || ctrl) onSelectionChanged({clickedId: emailId});
+    else return selectEmail(emailId);
 }
 
 // ---------------------------------------------------------------------------
@@ -2308,10 +2324,20 @@ async function loadMultiSelectPanePreference() {
 }
 
 /** Called whenever the selection changes. Routes to whichever surface is chosen. */
-function onSelectionChanged({ clickedId = null } = {}) {
+async function onSelectionChanged({ clickedId = null } = {}) {
     const n = selectionCount();
+    // Keyboard/select-all callers also arrive here. Protect the live editor
+    // before the native empty/summary pane replaces it, just as row clicks do.
+    const replacesEditor = n === 0 || (n > 1 && multiSelectPaneMode === 'summary');
+    if (replacesEditor && window.TicketWorkspace?.isActive() && !await TicketWorkspace.canLeave()) {
+        selectedEmailIds = new Set(selectedEmailId === null ? [] : [selectedEmailId]);
+        selectionAnchorId = selectionFocusId = selectedEmailId;
+        renderSelectionUi();
+        return;
+    }
 
     if (n === 0) {
+        window.TicketWorkspace?.dispose();
         hideSelectionBar();
         hideKeepModeWarning();
         selectedEmailId = null;
@@ -2334,7 +2360,7 @@ function onSelectionChanged({ clickedId = null } = {}) {
     if (multiSelectPaneMode === 'summary') {
         hideSelectionBar();
         hideKeepModeWarning();
-        renderSelectionSummaryPane();
+        return renderSelectionSummaryPane();
     } else if (multiSelectPaneMode === 'bar') {
         hideKeepModeWarning();
         renderSelectionBar();
@@ -2379,9 +2405,11 @@ function selectionActionsHtml(compact) {
 }
 
 /** Replaces the reading pane with a "N tickets selected" summary listing them with the bulk actions. */
-function renderSelectionSummaryPane() {
+async function renderSelectionSummaryPane() {
     const pane = document.getElementById('readingPane');
     if (!pane) return;
+    if (window.TicketWorkspace?.isActive() && !await TicketWorkspace.canLeave()) return;
+    window.TicketWorkspace?.dispose();
     const ids  = visibleEmailIds().filter(id => selectedEmailIds.has(id));   // keep list order
     const rows = ids.map(id => {
         const row = document.querySelector(`#emailList .email-item[data-email-id="${id}"]`);
@@ -2457,7 +2485,9 @@ function hideKeepModeWarning() {
 }
 
 /** Clear right down to nothing selected (the ✕ / Escape route). */
-function clearSelectionToNone() {
+async function clearSelectionToNone() {
+    if (window.TicketWorkspace?.isActive() && !await TicketWorkspace.canLeave()) return;
+    window.TicketWorkspace?.dispose();
     selectedEmailIds.clear();
     selectionAnchorId = null;
     selectionFocusId  = null;
@@ -2817,6 +2847,7 @@ function bulkProgressHtml() {
 
 // Select and display email by email ID
 async function selectEmail(emailId) {
+    if (window.TicketWorkspace?.isActive() && selectedEmailId !== emailId && !await TicketWorkspace.canLeave()) return;
     // 🔑 A NEGATIVE ID IS A TICKET WITH NO EMAIL. get_emails.php sends
     // COALESCE(le.id, -t.id), so the sign says which kind of thing the row is.
     // Selection, drag and the highlight all work off this id unchanged; only
@@ -2829,6 +2860,7 @@ async function selectEmail(emailId) {
         return loadTicketById(-emailId);
     }
     selectedEmailId = emailId;
+    const selectionGeneration = ++ticketSelectionGeneration;
     // Opening a single ticket collapses the selection to it, so the highlight,
     // the reading pane and what an action would hit can never disagree. Callers
     // that want a multi-selection never route through here.
@@ -2852,6 +2884,7 @@ async function selectEmail(emailId) {
         readingPane.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
     } else {
         spinnerTimer = setTimeout(() => {
+            if (selectionGeneration !== ticketSelectionGeneration || (window.TicketWorkspace?.isActive() && Number(currentEmail?.id) === Number(emailId))) return;
             readingPane.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
         }, 250);
     }
@@ -2860,6 +2893,7 @@ async function selectEmail(emailId) {
         const response = await fetch(`${API_BASE}get_email_detail.php?id=${emailId}`);
         const data = await response.json();
         if (spinnerTimer) clearTimeout(spinnerTimer);
+        if (selectionGeneration !== ticketSelectionGeneration) return;
 
         if (data.success) {
             displayEmail(data.email, data.recordings || []);
@@ -2869,6 +2903,7 @@ async function selectEmail(emailId) {
         }
     } catch (error) {
         if (spinnerTimer) clearTimeout(spinnerTimer);
+        if (selectionGeneration !== ticketSelectionGeneration) return;
         console.error('Error:', error);
         readingPane.innerHTML = '<div class="reading-pane-empty">Failed to load email</div>';
         syncPopoutToTicketState(false);
@@ -2877,13 +2912,16 @@ async function selectEmail(emailId) {
 
 // Load and display ticket by ticket ID (from URL parameter)
 async function loadTicketById(ticketId) {
+    if (window.TicketWorkspace?.isActive() && Number(currentEmail?.ticket_id) !== Number(ticketId) && !await TicketWorkspace.canLeave()) return;
+    const selectionGeneration = ++ticketSelectionGeneration;
     const readingPane = document.getElementById('readingPane');
+    if (!(window.TicketWorkspace?.isActive() && Number(currentEmail?.ticket_id) === Number(ticketId)))
     readingPane.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
     try {
         const response = await fetch(`${API_BASE}get_email_detail.php?ticket_id=${ticketId}`);
         const data = await response.json();
-
+        if (selectionGeneration !== ticketSelectionGeneration) return;
         if (data.success) {
             // For a ticket with no email the row id is the negative ticket id,
             // so keep using that or the highlight would clear itself.
@@ -2895,14 +2933,51 @@ async function loadTicketById(ticketId) {
             syncPopoutToTicketState(false);
         }
     } catch (error) {
+        if (selectionGeneration !== ticketSelectionGeneration) return;
         console.error('Error:', error);
         readingPane.innerHTML = '<div class="reading-pane-empty">Failed to load ticket</div>';
         syncPopoutToTicketState(false);
     }
 }
 
+/** The flag belongs to the ticket, even when this analyst chooses the reading pane. */
+function buildWorkspaceBadge(email) {
+    return window.TICKET_WORKSPACE?.mode === 'selected' && Number(email.is_workspace) === 1
+        ? '<span class="tw-workspace-badge">' + escapeHtml(t('tickets.workspace.badge')) + '</span>' : '';
+}
+
+function buildWorkspaceAction(email) {
+    const config = window.TICKET_WORKSPACE;
+    if (!email || email.deleted_datetime || config?.mode !== 'selected' || !config.ready || !config.can_write) return '';
+    const on = Number(email.is_workspace) === 1;
+    return `<button type="button" onclick="setTicketWorkspace(${!on})">${escapeHtml(t('tickets.workspace.' + (on ? 'back_to_pane' : 'make_workspace')))}</button>`;
+}
+
+async function setTicketWorkspace(value) {
+    if (!currentEmail || !await TicketWorkspace.canLeave()) return;
+    const id = Number(currentEmail.ticket_id);
+    ticketPendingWrites++;
+    try {
+        const response = await fetch(API_BASE + 'assign_ticket.php', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ticket_id:id, workspace:value})
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.error || t('tickets.workspace.save_failed'));
+        if (Number(currentEmail?.ticket_id) === id) currentEmail.is_workspace = value ? 1 : 0;
+    } catch (error) {
+        showToast(error.message || t('tickets.workspace.save_failed'), 'error');
+    } finally {
+        ticketPendingWrites--;
+        // Read after the save rather than trusting a poll with the old flag.
+        if (Number(currentEmail?.ticket_id) === id) loadTicketById(id);
+    }
+}
+
 // Display email in reading pane
 function displayEmail(email, recordings) {
+    if (window.TicketWorkspace?.holdRender(email, recordings)) return;
+    ticketRenderGeneration++;
     currentEmail = email;
     currentRecordings = recordings || [];
 
@@ -3072,14 +3147,82 @@ function displayEmail(email, recordings) {
             <button onclick="permanentlyDeleteFromTrash(${email.ticket_id}, '${escapeHtml(email.ticket_number || '')}')" style="font-size:12.5px;padding:6px 14px;border:1px solid #e6c4c4;background:#fff;color:#b71c1c;border-radius:5px;cursor:pointer;font-weight:600;">✕ Delete forever</button>
         </div>` : '';
 
-    readingPane.innerHTML = trashBanner + (isTrashed ? '<div style="pointer-events:none;opacity:0.55;">' : '') + `
-        <div class="ticket-properties-container" id="ticketPropertiesContainer">
-            <div class="ticket-properties-header" onclick="toggleTicketProperties(event)">
-                <div class="ticket-properties-title">
-                    <span class="ticket-properties-chevron">&#9660;</span>
-                    ${escapeHtml(t('tickets.reading_pane.properties_title'))}
-                </div>
-                <div class="ticket-properties-summary">
+    const workspace = !!window.TicketWorkspace?.enabled(email);
+    // TRAP: define controls once and choose their destinations while rendering.
+    // Relocating a rendered classic pane would quietly lose future controls.
+    const propertyFields = {
+        department: `<div class="toolbar-field">
+                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_department'))}</label>
+                        <select class="toolbar-select" id="departmentSelect" onchange="assignDepartment()">
+                            <option value=""></option>
+                            ${departmentOptions}
+                        </select>
+                    </div>`,
+        type: `<div class="toolbar-field">
+                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_type'))}</label>
+                        <select class="toolbar-select" id="ticketTypeSelect" onchange="assignTicketType()">
+                            <option value=""></option>
+                            ${ticketTypeOptions}
+                        </select>
+                    </div>`,
+        classification: `${classificationFields}`,
+        status: `<div class="toolbar-field">
+                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_status'))}</label>
+                        <select class="toolbar-select" id="statusSelect" onchange="assignStatus()">
+                            ${statusOptions}
+                        </select>
+                    </div>`,
+        priority: `<div class="toolbar-field">
+                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_priority'))}</label>
+                        <select class="toolbar-select" id="prioritySelect" onchange="assignPriority()">
+                            <option value=""></option>
+                            ${priorityOptions}
+                        </select>
+                    </div>`,
+        sensitivity: `<div class="toolbar-field" title="${escapeHtml(t('tickets.reading_pane.sensitivity_help'))}">
+                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_sensitivity'))}</label>
+                        <select class="toolbar-select${email.sensitivity === 'confidential' ? ' is-confidential' : ''}" id="sensitivitySelect" onchange="assignSensitivity()">
+                            <option value="normal" ${email.sensitivity !== 'confidential' ? 'selected' : ''}>${escapeHtml(t('tickets.reading_pane.sensitivity_normal'))}</option>
+                            <option value="confidential" ${email.sensitivity === 'confidential' ? 'selected' : ''}>${escapeHtml(t('tickets.reading_pane.sensitivity_confidential'))}</option>
+                        </select>
+                    </div>`,
+        origin: `<div class="toolbar-field">
+                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_origin'))}</label>
+                        <select class="toolbar-select" id="originSelect" onchange="assignOrigin()">
+                            <option value=""></option>
+                            ${originOptions}
+                        </select>
+                    </div>`,
+        firstTimeFix: `<div class="toolbar-field">
+                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_first_time_fix'))}</label>
+                        <select class="toolbar-select" id="firstTimeFixSelect" onchange="assignFirstTimeFix()">
+                            ${firstTimeFixOptions}
+                        </select>
+                    </div>`,
+        training: `<div class="toolbar-field">
+                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_it_training'))}</label>
+                        <select class="toolbar-select" id="itTrainingSelect" onchange="assignItTraining()">
+                            ${itTrainingOptions}
+                        </select>
+                    </div>`,
+        team: `${teamField}`,
+        owner: `<div class="toolbar-field">
+                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_owner'))}</label>
+                        <select class="toolbar-select" id="ownerSelect" onchange="assignOwner()">
+                            <option value=""></option>
+                            ${ownerOptions}
+                        </select>
+                    </div>`,
+        company: `${companyField}`,
+        custom: `<div class="tf-panel-fields" id="ticketCustomFields"></div>`,
+    };
+    const propertyFieldsHtml = workspace
+        ? TicketWorkspace.fieldGroup('classification', [propertyFields.department,propertyFields.type,propertyFields.classification,propertyFields.status,propertyFields.priority].join('')) +
+          TicketWorkspace.fieldGroup('responsibility', [propertyFields.team,propertyFields.owner,propertyFields.company,propertyFields.sensitivity].join('')) +
+          TicketWorkspace.fieldGroup('other', [propertyFields.origin,propertyFields.firstTimeFix,propertyFields.training,propertyFields.custom].join(''))
+        : Object.values(propertyFields).join('');
+    const summaryHtml = `                <div class="ticket-properties-summary">
+                    ${buildWorkspaceBadge(email)}
                     <!-- Discussion #62: shown with the panel collapsed too, so nobody works a
                          confidential ticket without seeing that it is one. -->
                     <span class="summary-confidential" id="summaryConfidential" ${email.sensitivity === 'confidential' ? '' : 'hidden'} title="${escapeHtml(t('tickets.reading_pane.sensitivity_help'))}">${confidentialIcon()}${escapeHtml(t('tickets.reading_pane.sensitivity_confidential'))}</span>
@@ -3096,78 +3239,24 @@ function displayEmail(email, recordings) {
                         <span class="ticket-properties-summary-value" id="summaryOwner">${escapeHtml(summaryOwner)}</span>
                     </span>
                 </div>
+`;
+    const propertiesHtml = `
+        <div class="ticket-properties-container" id="ticketPropertiesContainer">
+            <div class="ticket-properties-header" onclick="toggleTicketProperties(event)">
+                <div class="ticket-properties-title">
+                    <span class="ticket-properties-chevron">&#9660;</span>
+                    ${escapeHtml(t('tickets.reading_pane.properties_title'))}
+                </div>
+                ${workspace ? '' : summaryHtml}
             </div>
             <div class="ticket-properties-panel">
                 <div class="ticket-toolbar">
-                    <div class="toolbar-field">
-                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_department'))}</label>
-                        <select class="toolbar-select" id="departmentSelect" onchange="assignDepartment()">
-                            <option value=""></option>
-                            ${departmentOptions}
-                        </select>
-                    </div>
-                    <div class="toolbar-field">
-                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_type'))}</label>
-                        <select class="toolbar-select" id="ticketTypeSelect" onchange="assignTicketType()">
-                            <option value=""></option>
-                            ${ticketTypeOptions}
-                        </select>
-                    </div>
-${classificationFields}
-                    <div class="toolbar-field">
-                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_status'))}</label>
-                        <select class="toolbar-select" id="statusSelect" onchange="assignStatus()">
-                            ${statusOptions}
-                        </select>
-                    </div>
-                    <div class="toolbar-field">
-                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_priority'))}</label>
-                        <select class="toolbar-select" id="prioritySelect" onchange="assignPriority()">
-                            <option value=""></option>
-                            ${priorityOptions}
-                        </select>
-                    </div>
-                    <div class="toolbar-field" title="${escapeHtml(t('tickets.reading_pane.sensitivity_help'))}">
-                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_sensitivity'))}</label>
-                        <select class="toolbar-select${email.sensitivity === 'confidential' ? ' is-confidential' : ''}" id="sensitivitySelect" onchange="assignSensitivity()">
-                            <option value="normal" ${email.sensitivity !== 'confidential' ? 'selected' : ''}>${escapeHtml(t('tickets.reading_pane.sensitivity_normal'))}</option>
-                            <option value="confidential" ${email.sensitivity === 'confidential' ? 'selected' : ''}>${escapeHtml(t('tickets.reading_pane.sensitivity_confidential'))}</option>
-                        </select>
-                    </div>
-                    <div class="toolbar-field">
-                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_origin'))}</label>
-                        <select class="toolbar-select" id="originSelect" onchange="assignOrigin()">
-                            <option value=""></option>
-                            ${originOptions}
-                        </select>
-                    </div>
-                    <div class="toolbar-field">
-                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_first_time_fix'))}</label>
-                        <select class="toolbar-select" id="firstTimeFixSelect" onchange="assignFirstTimeFix()">
-                            ${firstTimeFixOptions}
-                        </select>
-                    </div>
-                    <div class="toolbar-field">
-                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_it_training'))}</label>
-                        <select class="toolbar-select" id="itTrainingSelect" onchange="assignItTraining()">
-                            ${itTrainingOptions}
-                        </select>
-                    </div>
-                    ${teamField}
-                    <div class="toolbar-field">
-                        <label class="toolbar-label">${escapeHtml(t('tickets.reading_pane.field_owner'))}</label>
-                        <select class="toolbar-select" id="ownerSelect" onchange="assignOwner()">
-                            <option value=""></option>
-                            ${ownerOptions}
-                        </select>
-                    </div>
-                    ${companyField}
-                    <div class="tf-panel-fields" id="ticketCustomFields"></div>
+                    ${propertyFieldsHtml}
                 </div>
             </div>
         </div>
-        ${companyWarningBanner}
-        <div class="email-header">
+`;
+    const headerHtml = `        <div class="email-header">
             <div class="email-subject-line">
                 <span class="email-subject-text">${escapeHtml(t('tickets.reading_pane.ticket_label'))} ${escapeHtml(email.ticket_number || '')} - ${escapeHtml(email.subject)}</span>
                 <button class="icon-btn ticket-popout-toggle" onclick="toggleTicketPopout()" title="${escapeHtml(t('tickets.reading_pane.toggle_fullscreen'))}" aria-label="${escapeHtml(t('tickets.reading_pane.toggle_fullscreen'))}">
@@ -3193,20 +3282,18 @@ ${classificationFields}
                 ` : ''}
             </div>
         </div>
-        <div class="attachment-info-bar" id="attachmentInfoBar" onclick="showAttachmentList()" style="display: none;">
+`;
+    const attachmentHtml = `        <div class="attachment-info-bar" id="attachmentInfoBar" onclick="showAttachmentList()" style="display: none;">
             <span>${escapeHtml(t('tickets.actions.loading_attachments'))}</span>
         </div>
-        ${buildSnoozeBanner(email)}
+`;
+    const bannersHtml = `        ${buildSnoozeBanner(email)}
         ${buildMergeBanner(email)}
         <!-- Collision detection (#934). Left empty by the render and filled by the
              presence poll, so a re-render never flashes a stale set of faces. -->
         <div class="presence-strip" id="presenceStrip" hidden></div>
-        <div class="pane-strips">
-            ${buildLinksSection(email)}
-            ${buildAiSummarySlot()}
-        </div>
-        ${buildRecordingsStrip(currentRecordings)}
-        <div class="action-toolbar">
+`;
+    const actionsHtml = `        <div class="action-toolbar">
             <button class="action-btn" onclick="openNoteModal()">
                 <span class="action-btn-icon">📝</span>
                 <span>${escapeHtml(t('tickets.actions.add_note'))}</span>
@@ -3228,10 +3315,10 @@ ${classificationFields}
                 <span>${escapeHtml(t('tickets.actions.ask_ai'))}</span>
             </button>
             ${buildReadForMeButton()}
-            <button class="action-btn pane-secondary" onclick="showAuditHistory()">
+            ${workspace ? '' : `<button class="action-btn pane-secondary" onclick="showAuditHistory()">
                 <span class="action-btn-icon">📋</span>
                 <span>${escapeHtml(t('tickets.actions.audit'))}</span>
-            </button>
+            </button>`}
             <button class="action-btn pane-secondary" onclick="openCaseReport()" title="${escapeHtml(tf('tickets.actions.export_tip', 'Export this ticket and its tasks as a case report'))}">
                 <span class="action-btn-icon">📄</span>
                 <span>${escapeHtml(tf('tickets.actions.export', 'Export'))}</span>
@@ -3245,6 +3332,7 @@ ${classificationFields}
                 <span class="action-btn-icon">🗑️</span>
                 <span>${escapeHtml(t('tickets.actions.delete'))}</span>
             </button>
+            ${workspace ? buildLinkActions() : ''}
             <div class="pane-more-wrap">
                 <button type="button" class="action-btn pane-more-btn" onclick="togglePaneMoreMenu(event)" aria-haspopup="true">
                     <span class="action-btn-icon">⋯</span>
@@ -3253,17 +3341,28 @@ ${classificationFields}
                 <div class="pane-more-menu" id="paneMoreMenu" hidden></div>
             </div>
         </div>
-        <div class="email-body">
-            <div id="ticketChecklistContainer"></div>
-            <div id="threadContainer">
-                ${emailBodyHost(email.body_content, 'email-body-content', email.body_type)}
-            </div>
-            <div id="slaContainer"></div>
-            <div id="timeEntriesContainer"></div>
-            <div id="notesContainer"></div>
-        </div>
-    ` + (isTrashed ? '</div>' : '');
-
+`;
+    const threadHtml = `<div id="threadContainer">${emailBodyHost(email.body_content, 'email-body-content', email.body_type)}</div>`;
+    const checklistHtml = '<div id="ticketChecklistContainer"></div>';
+    const notesHtml = '<div id="notesContainer"></div>';
+    const timeHtml = '<div id="slaContainer"></div><div id="timeEntriesContainer"></div>';
+    const linksHtml = buildLinksSection(email, workspace);
+    const aiHtml = buildAiSummarySlot();
+    const recordingsHtml = buildRecordingsStrip(currentRecordings);
+    const contentHtml = workspace ? TicketWorkspace.render({
+        header: headerHtml + summaryHtml + companyWarningBanner + bannersHtml + actionsHtml,
+        properties: propertiesHtml,
+        conversation: attachmentHtml + aiHtml + recordingsHtml + threadHtml + notesHtml,
+        work: checklistHtml + '<div class="tw-task-list" id="twTaskList"></div>',
+        links: linksHtml,
+        time: timeHtml,
+    }) : propertiesHtml + companyWarningBanner + headerHtml + attachmentHtml + bannersHtml
+        + '<div class="pane-strips">' + linksHtml + aiHtml + '</div>' + recordingsHtml + actionsHtml
+        + '<div class="email-body">' + checklistHtml + threadHtml + timeHtml + notesHtml + '</div>';
+    // Keep the native trash guard around both layouts, not just individual actions.
+    readingPane.innerHTML = trashBanner + (isTrashed ? '<div inert style="opacity:0.55;">' : '')
+        + contentHtml + (isTrashed ? '</div>' : '');
+    window.TicketWorkspace?.prepare(readingPane, {ticketId: email.ticket_id, enabled: workspace});
     // Isolate the just-rendered email body in a shadow root (see emailBodyHost).
     hydrateEmailBodies(readingPane);
     watchPaneCompact(readingPane);
@@ -3650,7 +3749,7 @@ function rpBadge(type, id) {
  * Equipment, CMDB, domain, project and task pills are not on the ticket record, so the strip draws empty
  * holders for them and their own loaders fill them in afterwards.
  */
-function buildLinksSection(email) {
+function buildLinksSection(email, workspace = false) {
     const pills = [];
 
     // Problems (⚠) — open in the Problem module.
@@ -3725,8 +3824,15 @@ function buildLinksSection(email) {
         <span class="strip-pill-group" id="stripCmdbPills"></span>
         <span class="strip-pill-group" id="stripDomainPills"></span>
         <span class="strip-pill-group" id="stripProjectPills"></span>
-        <span class="strip-pill-group" id="stripTaskPills"></span>
-        <div class="link-add-wrap">
+        ${workspace ? '' : '<span class="strip-pill-group" id="stripTaskPills"></span>'}
+        ${workspace ? '' : buildLinkActions()}
+        <div class="strip-picker-host" id="stripPickerHost" hidden></div>
+    </div>`;
+}
+
+/** Shared by the reading pane's Links strip and the workspace action row. */
+function buildLinkActions() {
+    return `        <div class="link-add-wrap">
             <button class="problem-link-btn" onclick="toggleLinkAddMenu(event)">Link to… ▾</button>
             <div class="link-add-menu" id="linkAddMenu">
                 <button type="button" onclick="linkAddChoose('problem')">Problem</button>
@@ -3740,8 +3846,7 @@ function buildLinksSection(email) {
                 <button type="button" onclick="linkAddChoose('task')">${escapeHtml(t('tickets.tasks.menu_item'))}</button>
             </div>
         </div>
-        <div class="strip-picker-host" id="stripPickerHost" hidden></div>
-    </div>`;
+`;
 }
 
 /**
@@ -3776,6 +3881,7 @@ function syncLinksStripEmpty() {
  * full-width basis on this child.
  */
 function openStripPicker(placeholder) {
+    if (window.TicketWorkspace?.isActive()) TicketWorkspace.activate('links');
     const host = document.getElementById('stripPickerHost');
     if (!host) return null;
     host.hidden = false;
@@ -3843,7 +3949,8 @@ let tasksForTicket = [];
  * behind for the close warning in assignStatus() to count.
  */
 async function loadTicketTasks(ticketId) {
-    const host = document.getElementById('stripTaskPills');
+    const isCurrent = ticketReadGuard(ticketId);
+    const host = document.getElementById('twTaskList') || document.getElementById('stripTaskPills');
     if (!host) return;
     // Clear FIRST. Otherwise a failed fetch leaves the previous ticket's tasks in
     // place, and the close warning then reports a count belonging to a ticket the
@@ -3852,17 +3959,22 @@ async function loadTicketTasks(ticketId) {
     try {
         const res = await fetch('../api/tickets/get_ticket_tasks.php?ticket_id=' + ticketId);
         const data = await res.json();
-        if (!data.success) return;
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Task lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'work', 'ready', null, 'tasks');
         tasksForTicket = data.tasks || [];
         renderTicketTasks(ticketId);
-    } catch (e) { /* silent — the strip simply shows no task pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        window.TicketWorkspace?.setSectionState(ticketId, 'work', 'error', null, 'tasks');
+    }
 }
 
 /**
  * Draws tasksForTicket as task pills (done box, subtask progress, unlink cross) and hides the strip's empty note when there are any.
  */
 function renderTicketTasks(ticketId) {
-    const host = document.getElementById('stripTaskPills');
+    const host = document.getElementById('twTaskList') || document.getElementById('stripTaskPills');
     if (!host) return;
 
     host.innerHTML = (tasksForTicket || []).map(tk => {
@@ -4396,12 +4508,16 @@ function formatRecordingDuration(seconds) {
 // Load and display all correspondence for a ticket. isAuto=true marks a 15s
 // background refresh (channel tickets) so we don't disturb the analyst's draft.
 async function loadCorrespondenceThread(ticketId, isAuto = false) {
+    const isCurrent = ticketReadGuard(ticketId);
     const container = document.getElementById('threadContainer');
     if (!container) { if (isAuto) stopChannelAutoRefresh(); return; }
 
     try {
         const response = await fetch(`${API_BASE}get_ticket_thread.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'conversation', 'ready', null, 'thread');
 
         // Remember the channel so Reply composes over WhatsApp etc. rather than email.
         currentTicketChannel = data.channel || 'email';
@@ -4453,6 +4569,11 @@ async function loadCorrespondenceThread(ticketId, isAuto = false) {
             tgGroupOlder(container);
         }
     } catch (error) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'conversation', 'error', null, 'thread');
+            return;
+        }
         console.error('Error loading thread:', error);
     }
 
@@ -4658,6 +4779,8 @@ async function sendChannelTemplate(ticketId) {
 
 // Send the analyst's reply out over the ticket's channel.
 async function sendChannelMessage(ticketId) {
+    ticketPendingWrites++;
+    try {
     const ta = document.getElementById('channelComposerText');
     const btn = document.getElementById('channelSendBtn');
     if (!ta) return;
@@ -4686,6 +4809,8 @@ async function sendChannelMessage(ticketId) {
     } finally {
         if (btn) { btn.disabled = false; btn.innerHTML = original; }
     }
+    } finally { ticketPendingWrites--;
+        window.TicketWorkspace?.flushRender(); }
 }
 
 // Send a file (image, document, …) picked via the composer's Attach button.
@@ -4697,6 +4822,7 @@ async function sendChannelAttachment(ticketId) {
     const attachBtn = document.getElementById('channelAttachBtn');
     const ta = document.getElementById('channelComposerText');
     if (!input || !input.files || !input.files[0]) return;
+    ticketPendingWrites++;
     const file = input.files[0];
     const caption = ta ? ta.value.trim() : '';
 
@@ -4724,6 +4850,8 @@ async function sendChannelAttachment(ticketId) {
         showToast(Tc('attachment_send_failed'), 'error');
     } finally {
         if (attachBtn) { attachBtn.disabled = false; attachBtn.innerHTML = original; }
+        ticketPendingWrites--;
+        window.TicketWorkspace?.flushRender();
         input.value = ''; // let the same file be picked again if the send failed
     }
 }
@@ -5267,6 +5395,7 @@ async function confirmCloseWithMandatoryFields(ticketIds) {
                 message: t('tickets.mandatory_close.block_message') + '\n\n' + fieldList,
                 okLabel: t('tickets.mandatory_close.block_ok'), okClass: 'primary'
             });
+            window.TicketWorkspace?.revealMissing(tk.ticket_id, tk.missing);
             return false;
         }
         const after = [];
@@ -5590,6 +5719,7 @@ async function restoreTicketFromTrash(ticketId) {
 // Clear the reading pane if it's showing the given ticket (it just left the trash).
 function clearReadingPaneIfTicket(ticketId) {
     if (currentEmail && currentEmail.ticket_id == ticketId) {
+        window.TicketWorkspace?.dispose();
         currentEmail = null;
         selectedEmailId = null;
         document.getElementById('readingPane').innerHTML = '<div class="reading-pane-empty">Select an email to read</div>';
@@ -5638,15 +5768,18 @@ function auditAuthor(entry) {
 }
 
 // Show audit history modal
-async function showAuditHistory() {
+async function showAuditHistory(inline = false) {
     if (!currentEmail || !currentEmail.ticket_id) {
         showToast('No ticket selected', 'error');
         return;
     }
 
+    const ticketId = currentEmail.ticket_id;
+    const isCurrent = ticketReadGuard(ticketId);
     try {
-        const response = await fetch(`${API_BASE}get_ticket_audit.php?ticket_id=${currentEmail.ticket_id}`);
+        const response = await fetch(`${API_BASE}get_ticket_audit.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
 
         if (data.success) {
             const auditHtml = data.audit.length === 0
@@ -5674,6 +5807,12 @@ async function showAuditHistory() {
                     </tbody>
                 </table>`;
 
+            if (inline) {
+                const body = document.getElementById('twAuditBody');
+                if (body) body.innerHTML = auditHtml;
+                window.TicketWorkspace?.setSectionState(ticketId, 'history', 'ready');
+                return;
+            }
             // Create modal
             const modal = document.createElement('div');
             modal.className = 'modal-overlay';
@@ -5692,9 +5831,12 @@ async function showAuditHistory() {
 
             document.body.appendChild(modal);
         } else {
+            if (inline) window.TicketWorkspace?.setSectionState(ticketId, 'history', 'error');
             showToast('Error loading audit history: ' + data.error, 'error');
         }
     } catch (error) {
+        if (!isCurrent()) return;
+        if (inline) window.TicketWorkspace?.setSectionState(ticketId, 'history', 'error');
         console.error('Error:', error);
         showToast('Failed to load audit history', 'error');
     }
@@ -5911,15 +6053,24 @@ let cmdbAcHighlightedIdx = -1;
 
 /** Fetches the CMDB objects linked to a ticket and draws them as pills in the Links strip. */
 async function loadCmdbObjects(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripCmdbPills');
     if (!host) return;
     try {
         const res = await fetch('../api/tickets/get_ticket_cmdb_objects.php?ticket_id=' + ticketId);
         const data = await res.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'cmdb');
         if (!data.success) return;
         cmdbObjectsForTicket = data.links || [];
         renderCmdbObjects(ticketId);
-    } catch (e) { /* silent — the strip simply shows no CI pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'cmdb');
+            return;
+        } /* silent — the strip simply shows no CI pills */ }
 }
 
 /** Draws cmdbObjectsForTicket as CMDB pills, with class and parent in the tooltip and an unlink cross. */
@@ -6029,14 +6180,23 @@ let domainAcTimer = null;
 
 /** Fetches the domains linked to a ticket and draws them as pills, when the analyst may see Domains. */
 async function loadTicketDomains(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripDomainPills');
     if (!host || !window.TICKETS_SHOW_DOMAINS) return;
     domainsForTicket = [];
     try {
         const res = await fetch('../api/domains/links.php?for=ticket&id=' + ticketId);
         const data = await res.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'domains');
         if (data.success) domainsForTicket = data.domains || [];
-    } catch (e) { /* silent - the strip simply shows no domain pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'domains');
+            return;
+        } /* silent - the strip simply shows no domain pills */ }
     renderTicketDomains(ticketId);
 }
 
@@ -6147,14 +6307,23 @@ let projectAcTimer = null;
 
 /** Fetches the projects a ticket is part of and draws them as coloured pills, when the analyst may see Projects. */
 async function loadTicketProjects(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripProjectPills');
     if (!host || !window.TICKETS_SHOW_PROJECTS) return;
     projectsForTicket = [];
     try {
         const res = await fetch('../api/projects/links.php?for=ticket&id=' + ticketId);
         const data = await res.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'projects');
         if (data.success) projectsForTicket = data.projects || [];
-    } catch (e) { /* silent - the strip simply shows no project pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'projects');
+            return;
+        } /* silent - the strip simply shows no project pills */ }
     host.innerHTML = projectsForTicket.map(p => `<a class="pm-ticket-badge" href="../${escapeHtml(p.url)}" title="${escapeHtml(p.code + ' - ' + (p.status || ''))}">
             <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${escapeHtml(p.colour)};margin-right:5px"></span>${escapeHtml(p.name)}
             <span class="pm-ticket-unlink" title="${escapeHtml(t('tickets.projects.unlink_title'))}" onclick="event.preventDefault();event.stopPropagation();removeTicketProject(event, ${p.id}, ${ticketId});">&#10005;</span>
@@ -6270,15 +6439,24 @@ let assetAcHighlightedIdx = -1;
 
 /** Fetches the equipment linked to a ticket and draws it as pills in the Links strip. */
 async function loadTicketAssets(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripAssetPills');
     if (!host) return;
     try {
         const res = await fetch('../api/tickets/get_ticket_assets.php?ticket_id=' + ticketId);
         const data = await res.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'assets');
         if (!data.success) return;
         assetsForTicket = data.links || [];
         renderTicketAssets(ticketId);
-    } catch (e) { /* silent — the strip simply shows no equipment pills */ }
+    } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'assets');
+            return;
+        } /* silent — the strip simply shows no equipment pills */ }
 }
 
 /** The one-line name for an asset: hostname if it has one, else the tag. */
@@ -6445,30 +6623,45 @@ async function removeTicketAsset(ev, linkId, ticketId) {
 
 // Load notes for a ticket
 async function loadNotes(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     try {
         const response = await fetch(`${API_BASE}get_notes.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
 
+        if (!data.success) throw new Error('Note lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'conversation', 'ready', null, 'notes');
         if (data.success) {
             currentNotes = data.notes;
             renderNotes();
         }
     } catch (error) {
+        if (!isCurrent()) return;
         console.error('Error loading notes:', error);
+        window.TicketWorkspace?.setSectionState(ticketId, 'conversation', 'error', null, 'notes');
     }
 }
 
 // Load attachments for a ticket
 async function loadTicketAttachments(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     try {
         const response = await fetch(`${API_BASE}get_ticket_attachments.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'conversation', 'ready', null, 'attachments');
 
         if (data.success) {
             ticketAttachments = data.attachments;
             renderAttachmentInfoBar();
         }
     } catch (error) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'conversation', 'error', null, 'attachments');
+            return;
+        }
         console.error('Error loading attachments:', error);
     }
 }
@@ -6915,6 +7108,8 @@ function closeNoteModal() {
 
 // Save note
 async function saveNote() {
+    ticketPendingWrites++;
+    try {
     const noteText = document.getElementById('noteText').value.trim();
 
     if (!noteText) {
@@ -6991,6 +7186,8 @@ async function saveNote() {
         console.error('Error:', error);
         showToast('Failed to save note', 'error');
     }
+    } finally { ticketPendingWrites--;
+        window.TicketWorkspace?.flushRender(); }
 }
 
 // Open reply modal
@@ -7040,6 +7237,7 @@ function correspondentAddress(email) {
 function openReplyModal() {
     // Channel tickets (WhatsApp etc.) reply via the inline composer, not email.
     if (currentTicketChannel && currentTicketChannel !== 'email') {
+        window.TicketWorkspace?.activate('conversation');
         // Channel ticket: jump to the inline composer (free-text box if the window is
         // open, otherwise the template picker).
         const composer = document.getElementById('channelComposer');
@@ -8231,6 +8429,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Send email via Microsoft Graph API
 async function sendEmail() {
+    ticketPendingWrites++;
+    try {
     // Get values from form
     const to = document.getElementById('emailTo').value.trim();
     const cc = document.getElementById('emailCc').value.trim();
@@ -8301,6 +8501,8 @@ async function sendEmail() {
         sendBtn.disabled = false;
         sendBtn.textContent = originalText;
     }
+    } finally { ticketPendingWrites--;
+        window.TicketWorkspace?.flushRender(); }
 }
 
 // Prepare attachments by converting to base64
@@ -8351,17 +8553,21 @@ function logout() {
  * history row is written by the server, not here.
  */
 async function loadTicketCustomFields(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const box = document.getElementById('ticketCustomFields');
     if (!box || !window.TicketFields) return;
     try {
         const r = await fetch(API_BASE + 'get_ticket_custom_fields.php?ticket_id=' + encodeURIComponent(ticketId));
         const d = await r.json();
+        if (!isCurrent()) return;
         if (!d.success) throw new Error(d.error);
         // Drawn only if the ticket is still the one on screen.
         if (!currentEmail || String(currentEmail.ticket_id) !== String(ticketId)) return;
         box.innerHTML = TicketFields.render(d.fields || [], { variant: 'toolbar', onchange: 'saveTicketCustomField(this)' });
     } catch (e) {
-        box.innerHTML = '';
+        if (!isCurrent()) return;
+        box.innerHTML = window.TicketWorkspace?.isActive()
+            ? '<div role="alert">' + escapeHtml(t('tickets.workspace.unavailable')) + '</div>' : '';
     }
 }
 
@@ -8375,6 +8581,7 @@ async function saveTicketCustomField(el) {
         });
         const d = await r.json();
         if (!d.success) throw new Error(d.error);
+        window.TicketWorkspace?.propertySaved(el);
         showToast(tf('common.ticket_fields.saved', 'Saved'), 'success');
     } catch (e) {
         showToast(e.message || 'Error', 'error');
@@ -8392,6 +8599,7 @@ async function saveTicketCustomField(el) {
  * Desktop only: the phone has its own collapsed header.
  */
 function watchPaneCompact(pane) {
+    if (pane?.classList.contains('ticket-workspace')) return;
     const body = pane && pane.querySelector('.email-body');
     pane && pane.classList.remove('pane-compact');
     if (!body || !window.matchMedia('(min-width: 769px)').matches) return;
@@ -8421,6 +8629,7 @@ function togglePaneMoreMenu(event) {
         item.addEventListener('click', () => { menu.hidden = true; btn.click(); });
         menu.appendChild(item);
     });
+    menu.insertAdjacentHTML('beforeend', buildWorkspaceAction(currentEmail));
     menu.hidden = false;
     const close = e => { if (!menu.contains(e.target)) { menu.hidden = true; document.removeEventListener('click', close); } };
     setTimeout(() => document.addEventListener('click', close), 0);
@@ -9749,9 +9958,13 @@ let currentTimeEntries = [];
  * When time tracking is switched off for the ticket's company the server says so and the section is left empty - nothing is deleted.
  */
 async function loadTimeEntries(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     try {
         const response = await fetch(`${API_BASE}get_time_entries.php?ticket_id=${ticketId}`);
         const data = await response.json();
+        if (!isCurrent()) return;
+        if (!data.success) throw new Error('Ticket section lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'time', 'ready', null, 'entries');
 
         // Time tracking switched off for this ticket's company (discussion #72).
         // The SERVER decides, per ticket, because the answer is per company and a
@@ -9768,6 +9981,11 @@ async function loadTimeEntries(ticketId) {
         currentTimeEntries = data.success ? data.entries : [];
         renderTimeEntries(data.success ? data.total_minutes : 0);
     } catch (e) {
+        if (!isCurrent()) return;
+        if (window.TicketWorkspace?.isActive()) {
+            TicketWorkspace.setSectionState(ticketId, 'time', 'error', null, 'entries');
+            return;
+        }
         console.error('Time entries load failed:', e);
         currentTimeEntries = [];
         renderTimeEntries(0);
@@ -11715,16 +11933,24 @@ async function saveContextTimeEntry() {
  * doesn't bother the analyst with "SLA disabled for this ticket" noise.
  */
 async function loadSlaState(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     const container = document.getElementById('slaContainer');
     if (!container) return;
     container.innerHTML = '';
     try {
         const res = await fetch(API_BASE + 'get_ticket_sla.php?ticket_id=' + ticketId);
         const data = await res.json();
-        if (!data.success || !data.sla || !data.sla.enabled) return; // silent hide
+        if (!isCurrent()) return;
+        if (!data.success || !data.sla) throw new Error('SLA lookup failed');
+        window.TicketWorkspace?.setSectionState(ticketId, 'time', 'ready', null, 'sla');
+        window.TicketWorkspace?.updateSla(ticketId, data.sla);
+        if (!data.sla.enabled) return;
         renderSlaPanel(data.sla);
     } catch (e) {
+        if (!isCurrent()) return;
         console.error('SLA load failed:', e);
+        window.TicketWorkspace?.updateSla(ticketId, null);
+        window.TicketWorkspace?.setSectionState(ticketId, 'time', 'error', null, 'sla');
     }
 }
 
@@ -12271,12 +12497,14 @@ function buildReadForMeButton() {
  * Asks for an automatic refresh when the server says one is due.
  */
 async function loadAiSummary(ticketId) {
+    const isCurrent = ticketReadGuard(ticketId);
     if (!aiSummaryOn() || !ticketId) return;
     _aiSummaryTicketId = ticketId;
     _aiSummaryState = null;
     try {
         const r = await fetch(`../api/tickets/ai_summary.php?ticket_id=${encodeURIComponent(ticketId)}`);
         const d = await r.json();
+        if (!isCurrent()) return;
         // The ticket may have changed underneath a slow request. Landing an old
         // ticket's summary on a new ticket would be a quiet, confident lie.
         // Confidential and not sent to AI (#62): say so where the summary would
@@ -12295,6 +12523,7 @@ async function loadAiSummary(ticketId) {
            asks, and asking twice cannot bill twice. */
         if (d.auto_due && d.configured) refreshAiSummary(true);
     } catch (e) {
+        if (!isCurrent()) return;
         // A summary that cannot load leaves the ticket exactly as it was.
     }
 }

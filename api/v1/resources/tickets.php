@@ -101,6 +101,7 @@ function apiSerializeTicket(array $r): array {
         // 'normal' or 'confidential' (discussion #62). 'normal' before Database
         // Verification has added the column, which is what every ticket then is.
         'sensitivity'   => $r['sensitivity'] ?? 'normal',
+        'workspace'     => (bool)($r['is_workspace'] ?? false),
         'deleted_at'    => apiIsoDate($r['deleted_datetime']),
     ];
 }

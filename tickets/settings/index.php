@@ -5,6 +5,7 @@
 session_start();
 require_once '../../config.php';
 require_once '../../includes/functions.php';
+require_once '../../includes/ticket_workspace.php';
 require_once '../../includes/i18n.php';
 require_once '../../includes/theme.php';
 require_once '../../includes/timezone.php';
@@ -1888,6 +1889,16 @@ function renderOversizeFields(string $px, bool $withLimits): void
                         <input type="checkbox" id="reopenOnCustomerReply"> <?php echo htmlspecialchars(t('tickets.settings.general.reopen_toggle')); ?>
                     </label>
                     <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.settings.general.reopen_help')); ?></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="ticketWorkspaceMode"><?php echo htmlspecialchars(t('tickets.workspace.layout')); ?></label>
+                    <select id="ticketWorkspaceMode">
+                        <?php foreach (TicketWorkspaceMode::cases() as $workspaceMode): ?>
+                        <option value="<?php echo $workspaceMode->value; ?>"><?php echo htmlspecialchars(t('tickets.workspace.' . $workspaceMode->value)); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.workspace.mode_help')); ?></small>
                 </div>
 
                 <div class="form-group">
@@ -6794,6 +6805,8 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     // always promised a reply reopens the ticket, so the stored default
                     // matches what customers were already told. Mirrors
                     // customerReplyReopensTickets() in includes/ticket_reply.php.
+                    const mode = data.settings.ticket_workspace_mode;
+                    document.getElementById('ticketWorkspaceMode').value = ['off','selected','all'].includes(mode) ? mode : 'off';
                     const reopen = data.settings.reopen_on_customer_reply;
                     document.getElementById('reopenOnCustomerReply').checked =
                         (reopen === null || reopen === undefined || reopen === '') ? true : (reopen === '1');
@@ -7171,6 +7184,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             e.preventDefault();
 
             const settings = {
+                ticket_workspace_mode: document.getElementById('ticketWorkspaceMode').value,
                 reopen_on_customer_reply: document.getElementById('reopenOnCustomerReply').checked ? '1' : '0',
                 snooze_wake_hour: document.getElementById('snoozeWakeHour').value,
                 ticket_collapse_enabled:       document.getElementById('collapseEnabled').checked ? '1' : '0',

@@ -10942,6 +10942,7 @@ return array (
         array (
           '$ref' => '#/components/schemas/IdNameRef',
         ),
+        'workspace' => array ('type' => 'boolean'),
         'first_time_fix' => 
         array (
           'type' => 'boolean',
@@ -11166,6 +11167,7 @@ return array (
               'type' => 'object',
               'nullable' => true,
             ),
+            'workspace' => array ('type' => 'boolean'),
             'first_time_fix' => 
             array (
               'type' => 'boolean',
@@ -15579,6 +15581,13 @@ return array (
   ),
   'requestBodies' => 
   array (
+    'PATCH /tickets/{id}' => [
+      'type' => 'object',
+      'properties' => [
+        'workspace' => ['type' => 'boolean', 'description' => 'Audited ticket workspace flag. A flag-only update does not trigger workflow events.'],
+      ],
+      'additionalProperties' => true,
+    ],
     // Custom fields are dynamic, so their keys/types come from the asset's
     // field catalogue. Other existing core input properties remain accepted.
     'POST /assets' => [

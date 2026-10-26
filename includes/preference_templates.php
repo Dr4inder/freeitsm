@@ -63,6 +63,7 @@ const PREF_TEMPLATE_SECTIONS = [
                                                                          'change_management_sidebar_mode', 'asset_management_sidebar_mode',
                                                                          'system_wiki_sidebar_mode']],
     'multi-select'   => ['system.preferences.multiselect_heading',     ['tickets_multiselect_pane']],
+    'ticket-workspace' => ['system.preferences.ticket_workspace_heading', ['ticket_workspace']],
     'morning-checks' => ['system.preferences.mc_heading',              ['mc_chart_fill_style']],
 ];
 
