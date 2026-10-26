@@ -450,6 +450,10 @@ $translationNamespaces = ['common', 'cmdb'];
                             <p><?php echo t('cmdb.help.synthesis_card4_body'); ?></p>
                         </div>
                     </div>
+
+                    <div class="help-note">
+                        <?php echo t('cmdb.help.synthesis_grades'); ?>
+                    </div>
                 </div>
 
                 <!-- 10. Linking tickets -->
@@ -492,7 +496,7 @@ $translationNamespaces = ['common', 'cmdb'];
                         <span class="help-section-num">11</span>
                         <div>
                             <h3><?php echo t('cmdb.help.settings_heading'); ?></h3>
-                            <p><?php echo t('cmdb.help.settings_intro'); ?></p>
+                            <p><?php echo t('cmdb.help.settings_intro_tabs'); ?></p>
                         </div>
                     </div>
 
@@ -512,6 +516,14 @@ $translationNamespaces = ['common', 'cmdb'];
                         <div class="help-card">
                             <h4><?php echo t('cmdb.help.settings_card4_title'); ?></h4>
                             <p><?php echo t('cmdb.help.settings_card4_body'); ?></p>
+                        </div>
+                        <div class="help-card">
+                            <h4><?php echo t('cmdb.help.settings_card5_title'); ?></h4>
+                            <p><?php echo t('cmdb.help.settings_card5_body'); ?></p>
+                        </div>
+                        <div class="help-card">
+                            <h4><?php echo t('cmdb.help.settings_card6_title'); ?></h4>
+                            <p><?php echo t('cmdb.help.settings_card6_body'); ?></p>
                         </div>
                     </div>
                 </div>
@@ -597,6 +609,10 @@ $translationNamespaces = ['common', 'cmdb'];
                     <div class="help-note">
                         <?php echo t('cmdb.help.assets_tip'); ?>
                     </div>
+
+                    <h4><?php echo t('cmdb.help.discovered_heading'); ?></h4>
+                    <p><?php echo t('cmdb.help.discovered_body'); ?></p>
+                    <p><?php echo t('cmdb.help.discovered_rules'); ?></p>
                 </div>
 
                 <?php if ($showTenancyHelp): ?>
