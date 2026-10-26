@@ -2964,7 +2964,10 @@ async function setTicketWorkspace(value) {
         });
         const result = await response.json();
         if (!response.ok || !result.success) throw new Error(result.error || t('tickets.workspace.save_failed'));
-        if (Number(currentEmail?.ticket_id) === id) currentEmail.is_workspace = value ? 1 : 0;
+        if (Number(currentEmail?.ticket_id) === id) {
+            TicketWorkspace.releaseTask();
+            currentEmail.is_workspace = value ? 1 : 0;
+        }
     } catch (error) {
         showToast(error.message || t('tickets.workspace.save_failed'), 'error');
     } finally {
@@ -3353,7 +3356,7 @@ function displayEmail(email, recordings) {
         header: headerHtml + summaryHtml + companyWarningBanner + bannersHtml + actionsHtml,
         properties: propertiesHtml,
         conversation: attachmentHtml + aiHtml + recordingsHtml + threadHtml + notesHtml,
-        work: checklistHtml + '<div class="tw-task-list" id="twTaskList"></div>',
+        work: checklistHtml + '<div class="tw-task-list" id="twTaskList"></div><div class="tw-tasks" id="twTaskArea"></div>',
         links: linksHtml,
         time: timeHtml,
     }) : propertiesHtml + companyWarningBanner + headerHtml + attachmentHtml + bannersHtml
@@ -3963,6 +3966,7 @@ async function loadTicketTasks(ticketId) {
         if (!data.success) throw new Error('Task lookup failed');
         window.TicketWorkspace?.setSectionState(ticketId, 'work', 'ready', null, 'tasks');
         tasksForTicket = data.tasks || [];
+        window.TicketWorkspace?.tasksLoaded(ticketId, tasksForTicket);
         renderTicketTasks(ticketId);
     } catch (e) {
         if (!isCurrent()) return;
@@ -3992,7 +3996,8 @@ function renderTicketTasks(ticketId) {
         // nothing — a link that looks like it worked. Same trap the notification
         // deep-links document for `?ticket_id=`.
         return `<a class="${cls}" href="../tasks/index.php?task=${tk.id}" target="_blank"
-                   title="${escapeHtml(bits.join(' · '))}">
+                   title="${escapeHtml(bits.join(' · '))}"
+                   ${window.TicketWorkspace?.isActive() ? `onclick="if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) { event.preventDefault(); TicketWorkspace.openTask(${ticketId}, ${tk.id}); }"` : ''}>
             ${box} ${escapeHtml(tk.title)}${prog}
             ${rpBadge('task', tk.id)}
             <span class="pm-ticket-unlink" title="${escapeHtml(t('tickets.tasks.unlink_title'))}"

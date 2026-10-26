@@ -6,6 +6,7 @@ window.TicketWorkspace = (() => {
     const boundRoots = new WeakSet();
     let changingMode = false, deferredRender = null;
     const propertyDrafts = new Map();
+    let taskFrame = null, taskContext = null, leaveRequest = null, frameGeneration = 0;
 
     function hasPropertyDrafts() {
         let dirty = false;
@@ -88,6 +89,7 @@ window.TicketWorkspace = (() => {
     }
 
     function prepare(pane, context) {
+        if (root !== pane || Number(context.ticketId) !== ticketId || !context.enabled) disposeTask();
         if (root !== pane || Number(context.ticketId) !== ticketId) active = 'conversation';
         root = pane;
         ticketId = Number(context.ticketId);
@@ -169,6 +171,7 @@ window.TicketWorkspace = (() => {
     }
 
     async function canLeave() {
+        if (taskFrame && !await taskCanLeave()) return false;
         if (typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites > 0) return false;
         const dirty = hasPropertyDrafts() || (typeof ticketHasUnsavedInput === 'function' && ticketHasUnsavedInput());
         const accepted = !dirty || (typeof showConfirm === 'function'
@@ -181,8 +184,86 @@ window.TicketWorkspace = (() => {
         return true;
     }
 
+    function disposeTask() {
+        frameGeneration++;
+        if (leaveRequest) { clearTimeout(leaveRequest.timer); leaveRequest.resolve(false); leaveRequest = null; }
+        taskFrame?.remove(); taskFrame = null; taskContext = null;
+    }
+
+    function taskCanLeave() {
+        if (!taskFrame || taskContext?.unavailable) return Promise.resolve(true);
+        if (leaveRequest) return leaveRequest.promise;
+        const requestId = crypto.randomUUID();
+        let resolve;
+        const promise = new Promise(done => { resolve = done; });
+        const timer = setTimeout(() => { if (leaveRequest?.requestId === requestId) { leaveRequest = null; resolve(false); } }, 45000);
+        leaveRequest = {requestId, resolve, promise, timer, generation:frameGeneration};
+        taskFrame.contentWindow.postMessage({type:'freeitsm:task-embed:leave',requestId}, location.origin);
+        return promise;
+    }
+
+    async function openTask(id, taskId) {
+        if (!root || Number(id) !== ticketId || !Number.isInteger(Number(taskId)) || Number(taskId) <= 0) return false;
+        if (taskContext?.taskId === Number(taskId)) { activate('work'); return true; }
+        if (!await taskCanLeave() || Number(id) !== ticketId) return false;
+        const area = root.querySelector('#twTaskArea');
+        if (!area) return false;
+        disposeTask();
+        taskContext = {ticketId, taskId:Number(taskId)};
+        taskFrame = element('iframe', 'tw-task-frame');
+        taskFrame.title = text('task');
+        taskFrame.src = '../tasks/embedded.php?task=' + taskContext.taskId + '&ticket_id=' + ticketId;
+        taskFrame.addEventListener('load', event => {
+            if (event.currentTarget !== taskFrame) return;
+            try {
+                if (!taskFrame.contentWindow.TaskEmbedBridge) {
+                    taskContext.unavailable = true;
+                    setSectionState(ticketId, 'work', 'error', null, 'task-editor');
+                }
+            } catch (_) { taskContext.unavailable = true; }
+        });
+        const controls = element('div', 'tw-task-controls');
+        const external = element('a', 'btn btn-secondary', text('open_task'));
+        external.href = '../tasks/index.php?task=' + taskContext.taskId; external.target='_blank'; external.rel='noopener';
+        const close = element('button', 'btn btn-secondary', text('close_task'));
+        close.type='button';
+        close.addEventListener('click', async () => { if (await taskCanLeave()) { disposeTask(); area.replaceChildren(); flushRender(); } });
+        controls.append(external,close);
+        area.replaceChildren(controls,taskFrame);
+        activate('work');
+        return true;
+    }
+
+    window.addEventListener('message', event => {
+        const message = event.data;
+        if (!taskFrame || !taskContext || event.origin !== location.origin || event.source !== taskFrame.contentWindow
+            || !message || message.ticketId !== taskContext.ticketId || message.taskId !== taskContext.taskId) return;
+        if (message.type === 'freeitsm:task-embed:leave-result') {
+            if (leaveRequest?.requestId !== message.requestId || leaveRequest.generation !== frameGeneration) return;
+            const request = leaveRequest; leaveRequest = null; clearTimeout(request.timer);
+            request.resolve(message.canLeave === true); return;
+        }
+        if (message.type !== 'freeitsm:task-embed') return;
+        if (message.event === 'resize' && Number.isFinite(message.height) && message.height > 0) {
+            taskFrame.style.height = Math.min(50000, Math.max(300, message.height)) + 'px';
+        } else if (message.event === 'changed') {
+            if (typeof loadTicketTasks === 'function') loadTicketTasks(ticketId);
+        } else if (message.event === 'error') {
+            const controls = root.querySelector('.tw-task-controls');
+            if (controls) controls.hidden = false;
+            setSectionState(ticketId, 'work', 'error', null, 'task-editor');
+        } else if (message.event === 'closed') {
+            disposeTask(); root.querySelector('#twTaskArea')?.replaceChildren(); flushRender();
+        } else if (message.event === 'ready') {
+            // Keep the outer actions as a fallback if the native editor cannot load.
+            const controls = root.querySelector('.tw-task-controls');
+            if (controls) controls.hidden = message.hasActions === true;
+            setSectionState(ticketId, 'work', 'ready', null, 'task-editor');
+        }
+    });
+
     function flushRender() {
-        if (hasPropertyDrafts() || (typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites)
+        if (taskFrame || hasPropertyDrafts() || (typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites)
             || (typeof ticketHasUnsavedInput === 'function' && ticketHasUnsavedInput())) return;
         const render = deferredRender; deferredRender = null;
         if (render && Number(render.email.ticket_id) === ticketId) displayEmail(render.email, render.recordings);
@@ -203,7 +284,7 @@ window.TicketWorkspace = (() => {
             });
             const result = await response.json();
             if (!response.ok || !result.success) throw new Error(text('save_failed'));
-            deferredRender = null;
+            disposeTask(); deferredRender = null;
             config.personal = value;
             if (typeof currentEmail !== 'undefined' && currentEmail) displayEmail(currentEmail, currentRecordings);
             return true;
@@ -224,16 +305,23 @@ window.TicketWorkspace = (() => {
     });
 
     return {
-        enabled, render, fieldGroup, prepare, activate, updateSla, revealMissing, setSectionState, requestPersonal, canLeave, flushRender,
+        enabled, render, fieldGroup, prepare, activate, openTask, releaseTask: disposeTask, updateSla, revealMissing, setSectionState, requestPersonal, canLeave, flushRender,
         propertySaved(field) { propertyDrafts.set(field, field.value); },
         holdRender(email, recordings) {
-            const busy = hasPropertyDrafts() || (typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites)
+            const busy = taskFrame || hasPropertyDrafts() || (typeof ticketPendingWrites !== 'undefined' && ticketPendingWrites)
                 || (typeof ticketHasUnsavedInput === 'function' && ticketHasUnsavedInput());
             if (!root?.classList.contains('ticket-workspace') || !busy || Number(email.ticket_id) !== ticketId) return false;
             deferredRender = {email, recordings}; return true;
         },
+        tasksLoaded(id, tasks) {
+            if (taskFrame && Number(id) === ticketId && !tasks.some(task => Number(task.id) === taskContext.taskId)) {
+                taskFrame.contentWindow.postMessage({type:'freeitsm:task-embed:context-lost'}, location.origin);
+                setSectionState(id,'work','error',null,'task-editor');
+            }
+        },
         refresh(id, section) { if (Number(id) === ticketId) setSectionState(id, section, 'ready'); },
         dispose() {
+            disposeTask();
             root?.classList.remove('ticket-workspace');
             document.body.classList.remove('ticket-workspace-mode');
             deferredRender = null; root = null; ticketId = 0; active = 'conversation';
