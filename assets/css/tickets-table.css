@@ -1,0 +1,16 @@
+#ticketTableContainer { min-height:0; flex:1; display:flex; flex-direction:column; overflow:hidden; }
+#ticketTableContainer[hidden], #emailList[hidden] { display:none !important; }
+#ticketTableContainer .dt-toolbar { flex-wrap:wrap; }
+#ticketTableContainer .dt-search { min-width:160px; }
+#ticketTableContainer .ticket-content-search { padding:8px; font-size:12px; }
+#ticketTableContainer .ticket-queue-row { display:table-row; padding:0; }
+#ticketTableContainer .ticket-queue-row.selected { background:var(--surface-selected, #e3eff9); }
+#ticketTableContainer .ticket-queue-row.kb-focus { outline:2px solid var(--accent); outline-offset:-2px; }
+#ticketTableContainer .dt-wrap { display:flex; flex-direction:column; }
+#ticketTableContainer .dt-table { flex:none; }
+#ticketTableContainer .dt-pagination { position:sticky; bottom:0; background:var(--surface); }
+.ticket-table-mode .email-list-container { flex:0 1 360px; width:360px; min-width:260px; max-width:42vw; }
+@media(max-width:768px){.ticket-table-mode .email-list-container{width:100%;max-width:100%;min-width:0;}}
+
+
+.ticket-list-choice { display:flex; align-items:center; gap:8px; font-size:12px; }

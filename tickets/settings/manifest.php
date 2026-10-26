@@ -261,6 +261,7 @@ return [
             'label_key'    => 'tickets.settings.tabs.general',
             'grant'        => 'Manage general ticket settings',
             'setting_keys' => ['reopen_on_customer_reply', 'snooze_wake_hour', 'ticket_workspace_mode',
+                                'ticket_list_export',
                                 // How long messages are displayed (discussion #104).
                                 'ticket_collapse_enabled', 'ticket_collapse_lines',
                                 'ticket_collapse_expand_newest', 'ticket_collapse_quoted',
