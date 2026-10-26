@@ -184,6 +184,23 @@ try {
     VirtualEstateCmdbService::decide($conn, $ctx, $cid, 'vm', $vm2Virt, 'unbind');
     VirtualEstateCmdbService::sync($conn, $cid);
     ok('an unbound object is left alone - no new CI on the next sync', $ciOf('vm', $vm2Virt) === 0 && (int)$q("SELECT COUNT(*) FROM cmdb_objects WHERE id = $vm2Ci") === 1);
+
+    // ---- The suggestion reuses only a type that behaves the same ----------------------------------------------
+    ok('🔴 the suggested plain "runs on" carries impact from the host to the VM, whatever else is called "runs on"',
+        $q("SELECT CONCAT(impact_direction, '/', redundancy) FROM cmdb_relationship_types WHERE id = {$s['runs_on_type_id']}") === 'to_from/none');
+
+    // ---- Deleting the connection ---------------------------------------------------------------------------------
+    $live = (int)$q("SELECT COUNT(*) FROM cmdb_object_sources WHERE connection_id = $cid AND ended_at IS NULL");
+    $conn->beginTransaction();
+    VirtualEstateCmdbService::connectionDeleted($conn, $ctx, $cid);
+    $conn->commit();
+    ok('🔴 deleting a connection ends every live binding, keeping the rows', $live > 0
+        && (int)$q("SELECT COUNT(*) FROM cmdb_object_sources WHERE connection_id = $cid AND ended_at IS NULL") === 0
+        && (int)$q("SELECT COUNT(*) FROM cmdb_object_sources WHERE connection_id = $cid AND end_reason = 'connection_deleted'") === $live);
+    ok('...its mapping, decisions and managed edges go; the CIs stay', (int)$q("SELECT COUNT(*) FROM virt_cmdb_mappings WHERE connection_id = $cid") === 0
+        && (int)$q("SELECT COUNT(*) FROM cmdb_relationship_sources WHERE connection_id = $cid") === 0
+        && (int)$q("SELECT COUNT(*) FROM virt_cmdb_decisions WHERE connection_id = $cid") === 0
+        && (int)$q("SELECT COUNT(*) FROM cmdb_objects WHERE id = $vm1Ci") === 1);
 } catch (Throwable $e) {
     $fail++;
     echo "  FAIL  unexpected: " . $e->getMessage() . ' @ ' . basename($e->getFile()) . ':' . $e->getLine() . "\n";

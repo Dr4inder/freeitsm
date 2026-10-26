@@ -937,6 +937,18 @@ return [
         'reimport_title'   => 'Replace demo data',
         'reimport_confirm' => 'Replace the {module} demo data? The sample records from the last import are removed and a fresh set added. Your own records are not affected.',
         'connection_failed' => 'Connection failed: {message}',
+
+        // Virtualisation demo (includes/demo_virtualisation.php) - built through the real
+        // services, so it has its own card, endpoint and Remove.
+        'virt_label'       => 'Virtualisation',
+        'virt_title'       => 'Hyper-V, Proxmox and VMware',
+        'virt_desc'        => 'A Hyper-V cluster and a standalone host reporting through the real collector format, built into the CMDB, with assets linked to their configuration items. Beside it a Proxmox cluster, a Cloud Director organisation and some vCenter VMs, so Assets -> Servers shows every source at once. Does not need Core.',
+        'virt_detail'      => 'Includes a live migration, a VM no longer seen, an identity change to review, a same-name CI to confirm, two records of one machine to merge, and two assets for "Create linked CI". The Proxmox and Cloud Director connections are switched off, so nothing tries to reach them.',
+        'virt_counts'      => '{hyperv} Hyper-V, {proxmox} Proxmox, {vcloud} Cloud Director and {vcenter} vCenter VMs, {cis} CIs, {assets} assets',
+        'remove'           => 'Remove',
+        'removing'         => 'Removing...',
+        'remove_title'     => 'Remove demo data',
+        'remove_confirm'   => 'Remove the {module} demo data? Only the sample records it created are removed, including any configuration items made in its demo classes. Your own records are not affected.',
     ],
 
     // Encryption page (system/encryption/index.php)

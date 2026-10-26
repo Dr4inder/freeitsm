@@ -2197,6 +2197,7 @@ return [
         'unlink_reason'     => 'VARCHAR(20) NULL',
         'ci_name'           => 'VARCHAR(255) NULL',
         'ci_class_name'     => 'VARCHAR(150) NULL',
+        'is_demo'                    => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the Virtualisation demo (System -> Demo Data)
     ],
 
     // GH #200 part D: matching cases kept for a person to decide.
@@ -2433,6 +2434,7 @@ return [
         'guest_os'              => 'VARCHAR(255) NULL',
         'last_synced'           => 'DATETIME NULL',
         'raw_data'              => 'LONGTEXT NULL',
+        'is_demo'                    => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the Virtualisation demo (System -> Demo Data)
     ],
 
     // Proxmox VE servers (several per install). Passwords are encrypted at rest.
@@ -2449,6 +2451,7 @@ return [
         'last_sync_status'      => 'VARCHAR(20) NULL',
         'last_sync_message'     => 'TEXT NULL',
         'created_datetime'      => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'is_demo'                    => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the Virtualisation demo (System -> Demo Data)
     ],
 
     'proxmox_nodes' => [
@@ -2479,6 +2482,7 @@ return [
         'mac_addresses'     => 'TEXT NULL',
         'details_json'      => 'LONGTEXT NULL',
         'last_seen_datetime'=> 'DATETIME NULL',
+        'is_demo'                    => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the Virtualisation demo (System -> Demo Data)
     ],
 
     // VMware Cloud Director servers (several per install). Passwords are encrypted at rest.
@@ -2497,6 +2501,7 @@ return [
         'last_sync_status'      => 'VARCHAR(20) NULL',
         'last_sync_message'     => 'TEXT NULL',
         'created_datetime'      => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'is_demo'                    => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the Virtualisation demo (System -> Demo Data)
     ],
 
     'vcloud_vms' => [
@@ -2514,6 +2519,7 @@ return [
         'mac_addresses'     => 'TEXT NULL',
         'details_json'      => 'LONGTEXT NULL',
         'last_seen_datetime'=> 'DATETIME NULL',
+        'is_demo'                    => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the Virtualisation demo (System -> Demo Data)
     ],
 
     'vcloud_edge_gateways' => [
@@ -2546,6 +2552,7 @@ return [
         'collector_json'             => 'TEXT NULL',
         'created_by_id'              => 'INT NULL',
         'created_datetime'           => 'DATETIME NULL',
+        'is_demo'                    => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the Virtualisation demo (System -> Demo Data)
     ],
 
     'virt_clusters' => [

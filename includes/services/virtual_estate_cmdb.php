@@ -121,8 +121,18 @@ final class VirtualEstateCmdbService
             return (int)$conn->lastInsertId();
         };
         $type = function (string $verb, string $inverse, string $direction, string $redundancy) use ($conn): int {
-            $st = $conn->prepare('SELECT id FROM cmdb_relationship_types WHERE LOWER(verb) = LOWER(?) AND COALESCE(is_active, 1) = 1 LIMIT 1');
+            // TRAP: a type is reused only when it BEHAVES the same - verb, impact direction and
+            // redundancy. A "runs on" made by hand with impact from_to would otherwise be picked,
+            // and a failed host would then grade nothing above it.
+            $st = $conn->prepare('SELECT id FROM cmdb_relationship_types WHERE LOWER(verb) = LOWER(?) AND impact_direction = ? AND redundancy = ? AND COALESCE(is_active, 1) = 1 LIMIT 1');
+            $st->execute([$verb, $direction, $redundancy]);
+            if ($id = $st->fetchColumn()) { return (int)$id; }
+            // One of that name that behaves differently: a distinct name, so the two can be told apart.
+            $st = $conn->prepare('SELECT 1 FROM cmdb_relationship_types WHERE LOWER(verb) = LOWER(?) LIMIT 1');
             $st->execute([$verb]);
+            if ($st->fetchColumn()) { $verb .= ' (discovered)'; $inverse .= ' (discovered)'; }
+            $st = $conn->prepare('SELECT id FROM cmdb_relationship_types WHERE LOWER(verb) = LOWER(?) AND impact_direction = ? AND redundancy = ? AND COALESCE(is_active, 1) = 1 LIMIT 1');
+            $st->execute([$verb, $direction, $redundancy]);
             if ($id = $st->fetchColumn()) { return (int)$id; }
             $conn->prepare('INSERT INTO cmdb_relationship_types (verb, inverse_verb, description, impact_direction, redundancy, display_order, is_active, created_datetime)
                 VALUES (?, ?, ?, ?, ?, 0, 1, UTC_TIMESTAMP())')->execute([$verb, $inverse, 'Made for Hyper-V discovery (GH #199).', $direction, $redundancy]);
@@ -360,6 +370,26 @@ final class VirtualEstateCmdbService
     // ======================================================================
 
     /**
+     * A connection is about to be deleted (api/assets/hyperv_connections.php, inside its
+     * transaction). Its CIs are kept and become ordinary CIs: every live binding ends with the
+     * row kept (the CI still says it was discovered once), and the relationships the sync made
+     * stay as a person's own. The mapping and the remembered decisions go - they mean nothing
+     * without the connection.
+     */
+    public static function connectionDeleted(PDO $conn, ActorContext $ctx, int $connectionId): void
+    {
+        if (!self::ready($conn)) { return; }
+        $st = $conn->prepare('SELECT * FROM cmdb_object_sources WHERE connection_id = ? AND ended_at IS NULL');
+        $st->execute([$connectionId]);
+        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $b) {
+            self::end($conn, $b, 'connection_deleted', $ctx->actorId > 0 ? $ctx->actorId : null, $ctx->source === 'api' ? 'api' : 'ui');
+        }
+        foreach (['cmdb_relationship_sources', 'virt_cmdb_decisions', 'virt_cmdb_mappings'] as $t) {
+            $conn->prepare("DELETE FROM $t WHERE connection_id = ?")->execute([$connectionId]);
+        }
+    }
+
+    /**
      * CIs are being deleted by a person (CmdbService::deleteObject, inside its transaction):
      * their bindings end, and their objects wait for a decision instead of being recreated
      * on the next report. Sync-owned relationships touching them go with the relationships.
@@ -416,7 +446,8 @@ final class VirtualEstateCmdbService
     {
         $out = ['ready' => self::ready($conn), 'current' => null, 'history' => []];
         if (!$out['ready']) { return $out; }
-        $st = $conn->prepare('SELECT s.*, c.name AS connection_name FROM cmdb_object_sources s JOIN virt_connections c ON c.id = s.connection_id
+        // LEFT JOIN: a binding ended by its connection being deleted is still history.
+        $st = $conn->prepare('SELECT s.*, c.name AS connection_name FROM cmdb_object_sources s LEFT JOIN virt_connections c ON c.id = s.connection_id
             WHERE s.cmdb_object_id = ? ORDER BY s.id DESC');
         $st->execute([$ciId]);
         foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $b) {

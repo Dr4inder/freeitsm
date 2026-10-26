@@ -2049,6 +2049,7 @@ CREATE TABLE IF NOT EXISTS `proxmox_connections` (
     `last_sync_status`      VARCHAR(20) NULL,
     `last_sync_message`     TEXT NULL,
     `created_datetime`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `is_demo`                    TINYINT(1) NOT NULL DEFAULT 0,   -- set by the Virtualisation demo (System -> Demo Data)
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2083,6 +2084,7 @@ CREATE TABLE IF NOT EXISTS `proxmox_vms` (
     `mac_addresses`      TEXT NULL,
     `details_json`       LONGTEXT NULL,
     `last_seen_datetime` DATETIME NULL,
+    `is_demo`                    TINYINT(1) NOT NULL DEFAULT 0,   -- set by the Virtualisation demo (System -> Demo Data)
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_proxmox_vm` (`connection_id`, `vmid`),
     CONSTRAINT `fk_proxmox_vms_connection` FOREIGN KEY (`connection_id`) REFERENCES `proxmox_connections` (`id`) ON DELETE CASCADE
@@ -2104,6 +2106,7 @@ CREATE TABLE IF NOT EXISTS `vcloud_connections` (
     `last_sync_status`      VARCHAR(20) NULL,
     `last_sync_message`     TEXT NULL,
     `created_datetime`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `is_demo`                    TINYINT(1) NOT NULL DEFAULT 0,   -- set by the Virtualisation demo (System -> Demo Data)
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2122,6 +2125,7 @@ CREATE TABLE IF NOT EXISTS `vcloud_vms` (
     `mac_addresses`      TEXT NULL,
     `details_json`       LONGTEXT NULL,
     `last_seen_datetime` DATETIME NULL,
+    `is_demo`                    TINYINT(1) NOT NULL DEFAULT 0,   -- set by the Virtualisation demo (System -> Demo Data)
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_vcloud_vm` (`connection_id`, `vm_uuid`),
     CONSTRAINT `fk_vcloud_vms_connection` FOREIGN KEY (`connection_id`) REFERENCES `vcloud_connections` (`id`) ON DELETE CASCADE
@@ -2168,6 +2172,7 @@ CREATE TABLE IF NOT EXISTS `virt_connections` (
     `collector_json`            TEXT NULL,
     `created_by_id`             INT NULL,
     `created_datetime`          DATETIME NULL,
+    `is_demo`                    TINYINT(1) NOT NULL DEFAULT 0,   -- set by the Virtualisation demo (System -> Demo Data)
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_virt_connections_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3673,6 +3678,7 @@ CREATE TABLE IF NOT EXISTS `asset_ci_links` (
     `unlink_reason`      VARCHAR(20) NULL,
     `ci_name`            VARCHAR(255) NULL,
     `ci_class_name`      VARCHAR(150) NULL,
+    `is_demo`                    TINYINT(1) NOT NULL DEFAULT 0,   -- set by the Virtualisation demo (System -> Demo Data)
     PRIMARY KEY (`id`),
     KEY `idx_asset_ci_links_asset` (`asset_id`, `unlinked_at`),
     KEY `idx_asset_ci_links_ci` (`cmdb_object_id`, `unlinked_at`),
@@ -4096,6 +4102,7 @@ CREATE TABLE IF NOT EXISTS `servers` (
     `guest_os`          VARCHAR(255) NULL,
     `last_synced`       DATETIME NULL,
     `raw_data`          LONGTEXT NULL,
+    `is_demo`                    TINYINT(1) NOT NULL DEFAULT 0,   -- set by the Virtualisation demo (System -> Demo Data)
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

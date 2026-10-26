@@ -23,6 +23,7 @@ require_once '../../includes/rbac.php';
 require_once '../../includes/tenancy.php';
 require_once '../../includes/public_url.php';
 require_once '../../includes/services/virtual_estate.php';
+require_once '../../includes/services/virtual_estate_cmdb.php';
 
 header('Content-Type: application/json');
 if (!isset($_SESSION['analyst_id'])) { http_response_code(401); echo json_encode(['success' => false, 'error' => 'Not authenticated']); exit; }
@@ -149,6 +150,8 @@ try {
             $conn->beginTransaction();
             if ($c['api_key_id']) { $conn->prepare('UPDATE api_keys SET active = 0 WHERE id = ?')->execute([(int)$c['api_key_id']]); }
             $conn->prepare('DELETE FROM job_runs WHERE job_key = ?')->execute([VirtualEstateService::jobKey((int)$c['id'])]);
+            // Its CIs stay; their bindings end, and the mapping and decisions go (they have no FK).
+            VirtualEstateCmdbService::connectionDeleted($conn, ActorContext::fromSession($conn), (int)$c['id']);
             $conn->prepare('DELETE FROM virt_connections WHERE id = ?')->execute([(int)$c['id']]);   // its estate goes by cascade
             $conn->commit();
             echo json_encode(['success' => true]);
