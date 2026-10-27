@@ -45,6 +45,8 @@ try {
     // Normal / Confidential (discussion #62), guarded the same way.
     require_once '../../includes/ticket_sensitivity.php';
     $sensCol = ticketSensitivityReady($conn) ? "t.sensitivity," : "'normal' AS sensitivity,";
+    require_once '../../includes/ticket_workspace.php';
+    $workspaceCol = ticketWorkspaceReady($conn) ? 't.is_workspace,' : '0 AS is_workspace,';
 
     // Query full email details with ticket information
     $sql = "SELECT
@@ -79,6 +81,7 @@ try {
                 t.resolution_code_id,
                 t.assigned_team_id,
                 $sensCol
+                $workspaceCol
                 t.assigned_analyst_id,
                 t.origin_id,
                 t.first_time_fix,

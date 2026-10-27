@@ -13,10 +13,13 @@ require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
 require_once '../includes/ticket_snooze.php';
 require_once '../includes/inbox_display.php';   // what each row shows, per analyst
+require_once '../includes/ticket_workspace.php';
 I18n::initFromSession();
 Tz::init();
 
 requireModuleAccess('tickets');
+$workspaceConfig = ticketWorkspaceConfig(connectToDatabase(), (int)$_SESSION['analyst_id']);
+$workspaceConfig['can_write'] = analystCanWriteModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'tickets');
 
 $current_page = 'inbox';
 // Module id for per-module theme/palette resolution (account-menu picker).
@@ -37,7 +40,8 @@ $translationNamespaces = ['common', 'tickets'];
     <link rel="stylesheet" href="../checklists/ticket_checklist.css?v=4">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/ticket-fields.css?v=1">
-    <link rel="stylesheet" href="../assets/css/reading-pane.css?v=1">
+    <link rel="stylesheet" href="../assets/css/reading-pane.css?v=2">
+    <link rel="stylesheet" href="../assets/css/ticket-workspace.css?v=1">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -49,12 +53,13 @@ $translationNamespaces = ['common', 'tickets'];
     try { $snoozeWakeHour = snoozeWakeHour(connectToDatabase()); } catch (Exception $e) {}
     ?>
     <script>window.SNOOZE_WAKE_HOUR = <?php echo (int)$snoozeWakeHour; ?>;</script>
+    <script>window.TICKET_WORKSPACE = <?php echo json_encode($workspaceConfig); ?>;</script>
     <script src="../assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="../assets/css/record-preview.css?v=1">
     <script src="../assets/js/record-preview.js?v=1"></script>
     <script src="../assets/js/tinymce/tinymce.min.js?v=8.10.0"></script>
 </head>
-<body class="inbox-page">
+<body class="inbox-page<?php echo $workspaceConfig['mode'] === 'selected' ? ' workspace-choice-available' : ''; ?>">
     <?php include 'includes/header.php'; ?>
     <?php require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('tickets.nav.inbox'), [actionRowNew('openNewTicketModal()', t('tickets.list.new_ticket_btn'))]); ?>
@@ -106,6 +111,15 @@ $translationNamespaces = ['common', 'tickets'];
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
                         </button>
                         <div class="view-filter-menu" id="viewFilterMenu" role="dialog" aria-label="<?php echo htmlspecialchars(t('tickets.list.filter_btn')); ?>">
+                            <?php if ($workspaceConfig['mode'] !== 'off'): ?>
+                            <label class="view-filter-row">
+                                <span><?php echo htmlspecialchars(t('tickets.workspace.preference')); ?></span>
+                                <span class="toggle-switch">
+                                    <input type="checkbox" id="ticketWorkspacePreference" <?php echo $workspaceConfig['personal'] ? 'checked' : ''; ?> onchange="TicketWorkspace.requestPersonal(this.checked)">
+                                    <span class="toggle-slider"></span>
+                                </span>
+                            </label>
+                            <?php endif; ?>
                             <?php /* HIDDEN, not disabled, in Analyst grouping: there
                                      "My tickets" is a folder, and a greyed-out
                                      control you cannot click reads as broken (Ed). */ ?>
@@ -1038,10 +1052,11 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/schedule.js?v=1"></script>
     <script src="../checklists/search_scoring.js?v=1"></script>
-    <script src="../checklists/ticket_view.js?v=10"></script>
+    <script src="../checklists/ticket_view.js?v=11"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
-    <script src="../assets/js/inbox.js?v=159"></script>
-    <script src="../assets/js/mobile.js?v=83"></script>
+    <script src="../assets/js/ticket-workspace.js?v=1"></script>
+    <script src="../assets/js/inbox.js?v=160"></script>
+    <script src="../assets/js/mobile.js?v=84"></script>
     <script>
     // Auto-check mailboxes every 60 seconds - and refresh the inbox whenever
     // ANYTHING new has arrived, however it came in.

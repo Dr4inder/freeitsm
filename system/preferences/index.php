@@ -9,6 +9,7 @@ require_once '../../includes/theme.php';
 require_once '../../includes/i18n.php';
 require_once '../../includes/timezone.php';
 require_once '../../includes/money.php';
+require_once '../../includes/ticket_workspace.php';
 I18n::initFromSession();
 Tz::init();
 
@@ -94,12 +95,15 @@ $prefDefaults = [
     // once. Read by assets/js/inbox.js. 'summary' is the default because it puts
     // what you are about to act on, and the actions themselves, on screen.
     'tickets_multiselect_pane'   => 'summary',
+    'ticket_workspace'          => '1',
     // Which front door "/" sends you to (discussion #63). Empty string means
     // "whatever the administrator chose" — the only value that is NOT a landing
     // key, because "follow the install default" is a real third choice here.
     'default_landing_page'       => '',
 ];
 $prefs = $prefDefaults;
+$showTicketWorkspace = ticketWorkspaceMode(connectToDatabase()) !== TicketWorkspaceMode::Off
+    && analystCanAccessModule(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0), 'tickets');
 if (isset($_SESSION['analyst_id'])) {
     try {
         $conn = connectToDatabase();
@@ -989,6 +993,20 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 <div id="sidebarPanelsList" class="sidebar-panels-list"></div>
             </div>
 
+            <?php if ($showTicketWorkspace): ?>
+            <div class="pref-section">
+                <h3 id="ticket-workspace"><?php echo htmlspecialchars(t('system.preferences.ticket_workspace_heading')); ?></h3>
+                <p><?php echo htmlspecialchars(t('system.preferences.ticket_workspace_desc')); ?></p>
+                <label class="toggle-group">
+                    <span class="toggle-switch">
+                        <input type="checkbox" id="ticketWorkspacePref" <?php echo ticketWorkspacePersonal($prefs['ticket_workspace']) ? 'checked' : ''; ?>>
+                        <span class="toggle-slider"></span>
+                    </span>
+                    <span class="toggle-label"><?php echo htmlspecialchars(t('system.preferences.ticket_workspace_label')); ?></span>
+                </label>
+            </div>
+            <?php endif; ?>
+
             <div class="pref-section">
                 <h3 id="multi-select"><?php echo htmlspecialchars(t('system.preferences.multiselect_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.multiselect_desc')); ?></p>
@@ -1636,6 +1654,12 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             const el = document.getElementById('multiSelectPaneHint');
             if (el) el.textContent = MULTISELECT_HINTS[v] || '';
         }
+        document.getElementById('ticketWorkspacePref')?.addEventListener('change', async function () {
+            this.disabled = true;
+            const ok = await savePref('ticket_workspace', this.checked ? '1' : '0');
+            if (!ok) this.checked = !this.checked;
+            this.disabled = false;
+        });
         setMultiSelectHint(INITIAL_PREFS.tickets_multiselect_pane);
         wireToggle('multiSelectPaneToggle', 'msmode', 'tickets_multiselect_pane',
                    INITIAL_PREFS.tickets_multiselect_pane, setMultiSelectHint);

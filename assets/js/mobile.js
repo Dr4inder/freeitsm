@@ -1556,6 +1556,7 @@
     function relocateSections() {
         if (!mq.matches) return;
         var rp = document.getElementById('readingPane');
+        if (rp && rp.classList.contains('ticket-workspace')) return;
         if (!rp) return;
         var toolbar = rp.querySelector('.action-toolbar');
         if (!toolbar) return;
@@ -1667,6 +1668,7 @@
     function buildToolbarOverflow() {
         if (!mq.matches) return;
         var rp = document.getElementById('readingPane');
+        if (rp && rp.classList.contains('ticket-workspace')) return;
         if (!rp) return;
         var toolbar = rp.querySelector('.action-toolbar');
         if (!toolbar || toolbar.querySelector('.mobile-more-btn')) return;
@@ -1732,7 +1734,8 @@
          * desktop table modal.
          */
         window.showAuditHistory = function () {
-            if (mq.matches) { openAuditSheet(); return; }
+            // The workspace already has an inline History panel, on phones too.
+            if (mq.matches && arguments[0] !== true) { openAuditSheet(); return; }
             return _showAudit.apply(this, arguments);
         };
     }

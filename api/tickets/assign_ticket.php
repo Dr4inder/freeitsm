@@ -16,6 +16,8 @@ require_once '../../includes/services/tickets.php';
 header('Content-Type: application/json');
 if (!isset($_SESSION['analyst_id'])) { echo json_encode(['success' => false, 'error' => 'Not authenticated']); exit; }
 requireModuleAccessJson('tickets');
+requireModuleWriteJson('tickets');
+csrfRequireWriteMethod();
 
 try {
     $data = json_decode(file_get_contents('php://input'), true) ?: [];
@@ -37,6 +39,7 @@ try {
               // Normal / Confidential (discussion #62). Lowering it is only ever done here,
               // by a person; see includes/ticket_sensitivity.php.
               'sensitivity',
+              'workspace',
               // ⚠️ NOT a ticket field (#142). A one-off note for the closure
               // email only: nothing stores it, and it is ignored unless this
               // request is the one that closes the ticket.

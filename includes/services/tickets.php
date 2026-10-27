@@ -43,6 +43,7 @@ require_once __DIR__ . '/checklists.php';              // mandatory SOP steps at
 require_once __DIR__ . '/mandatory_fields.php';        // mandatory ticket fields at closure
 require_once __DIR__ . '/ticket_fields.php';           // custom ticket fields (#179)
 require_once __DIR__ . '/../ticket_sensitivity.php';   // Normal / Confidential (discussion #62)
+require_once __DIR__ . '/../ticket_workspace.php';
 
 class TicketsService
 {
@@ -329,6 +330,24 @@ class TicketsService
         $updates = [];
         $args    = [];
         $audits  = [];
+
+        // A presentation choice, shared by every channel. Always audit it here,
+        // including UI calls, so changing layout cannot lose its history.
+        $workspaceChanged = false;
+        if (array_key_exists('workspace', $in)) {
+            if (!is_bool($in['workspace'])) {
+                throw new ServiceError('validation', 'invalid_field', "'workspace' must be a boolean.");
+            }
+            if (!ticketWorkspaceReady($conn)) {
+                throw new ServiceError('validation', 'invalid_field', 'Run System → Database Verification before changing the workspace flag.');
+            }
+            if ($in['workspace'] !== (bool)($current['is_workspace'] ?? false)) {
+                $updates[] = 'is_workspace = ?';
+                $args[] = (int)$in['workspace'];
+                $audits[] = ['Workspace', empty($current['is_workspace']) ? 'off' : 'on', $in['workspace'] ? 'on' : 'off', true];
+                $workspaceChanged = true;
+            }
+        }
 
         if (array_key_exists('subject', $in)) {
             $subject = trim((string)$in['subject']);
@@ -677,38 +696,51 @@ class TicketsService
             MandatoryFieldsService::assertClosureAllowed($conn, $closeTenant, $emptyOnClose);
         }
 
-        $updates[] = 'updated_datetime = UTC_TIMESTAMP()';
-        $args[]    = $ticketId;
-        $conn->prepare('UPDATE tickets SET ' . implode(', ', $updates) . ' WHERE id = ?')->execute($args);
-        if (in_array('tenant_id = ?', $updates, true)) {
-            ticketsFollowCompanyMove($conn, [$ticketId], (int)$in['company_id']);   // its tasks and search entries
-        }
-
-        if ($customValues !== null) {
-            TicketFieldsService::write($conn, $ctx, $ticketId, $customDefs, $customValues);
-        }
-
-        // ⚠️ AN ENTRY FLAGGED `forced` IS WRITTEN EVEN WHEN $writeAudit IS FALSE.
-        //
-        // The UI normally audits client-side, so this service stays quiet for it.
-        // That works because the UI knows what it asked for — but the category
-        // auto-clear (#1540) is a change the SERVER makes on its own, when a new
-        // ticket type orphans the category the ticket was carrying. The client
-        // never asked for it and cannot log what it does not know happened, so
-        // the field would empty itself with nothing in the trail to say why.
-        foreach ($audits as $entry) {
-            [$field, $old, $new] = $entry;
-            if ($writeAudit || !empty($entry[3])) {
-                self::auditWrite($conn, $ticketId, $actorId, $field, $old, $new);
+        // TRAP: test what actually changed, not just which keys the client sent.
+        // A mixed save still runs its ordinary notifications/workflows, but a
+        // layout-only save must not reconcile calendars or trigger automation.
+        $workspaceOnly = $workspaceChanged && count($updates) === 1 && $customValues === null;
+        $ownWorkspaceTransaction = $workspaceChanged && !$conn->inTransaction();
+        if ($ownWorkspaceTransaction) $conn->beginTransaction();
+        try {
+            $updates[] = 'updated_datetime = UTC_TIMESTAMP()';
+            $args[]    = $ticketId;
+            $conn->prepare('UPDATE tickets SET ' . implode(', ', $updates) . ' WHERE id = ?')->execute($args);
+            if (in_array('tenant_id = ?', $updates, true)) {
+                ticketsFollowCompanyMove($conn, [$ticketId], (int)$in['company_id']);   // its tasks and search entries
             }
-        }
 
-        // Moved into a confidential department: raise it. Writes its own audit
-        // entry whatever $writeAudit says, because the UI asked only for the move
-        // and cannot log a change it does not know the server made.
-        if ($departmentChanged) {
-            ticketSensitivityApplyDefaults($conn, $ticketId);
+            if ($customValues !== null) {
+                TicketFieldsService::write($conn, $ctx, $ticketId, $customDefs, $customValues);
+            }
+
+            // ⚠️ AN ENTRY FLAGGED `forced` IS WRITTEN EVEN WHEN $writeAudit IS FALSE.
+            //
+            // The UI normally audits client-side, so this service stays quiet for it.
+            // That works because the UI knows what it asked for — but the category
+            // auto-clear (#1540) is a change the SERVER makes on its own, when a new
+            // ticket type orphans the category the ticket was carrying. The client
+            // never asked for it and cannot log what it does not know happened, so
+            // the field would empty itself with nothing in the trail to say why.
+            foreach ($audits as $entry) {
+                [$field, $old, $new] = $entry;
+                if ($writeAudit || !empty($entry[3])) {
+                    self::auditWrite($conn, $ticketId, $actorId, $field, $old, $new);
+                }
+            }
+
+            // Moved into a confidential department: raise it. Writes its own audit
+            // entry whatever $writeAudit says, because the UI asked only for the move
+            // and cannot log a change it does not know the server made.
+            if ($departmentChanged) {
+                ticketSensitivityApplyDefaults($conn, $ticketId);
+            }
+            if ($ownWorkspaceTransaction) $conn->commit();
+        } catch (Throwable $e) {
+            if ($ownWorkspaceTransaction && $conn->inTransaction()) $conn->rollBack();
+            throw $e;
         }
+        if ($workspaceOnly) return;
 
         // Template emails + CSAT — non-blocking, same as assign_ticket.php.
         try {

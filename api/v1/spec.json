@@ -393,6 +393,13 @@
                             "req": false
                         },
                         {
+                            "name": "workspace",
+                            "in": "body",
+                            "desc": "Boolean. Mark this ticket as a workspace. Audited as Workspace on/off; changing only this flag does not trigger workflow events. Requires Database Verification. Display still follows the install mode and each analyst's preference.",
+                            "type": "boolean",
+                            "req": false
+                        },
+                        {
                             "name": "company_id",
                             "in": "body",
                             "desc": "Move the ticket to another company (key must be scoped to both)",

@@ -1214,6 +1214,9 @@ return [
         'feed_note'    => 'Analysts may always choose to publish less than this, never more. Switching this off immediately stops links that have already been handed out.',
     ],
     'preferences' => [
+        'ticket_workspace_heading' => 'Tickets',
+        'ticket_workspace_label' => 'Use the workspace',
+        'ticket_workspace_desc' => 'Use the workspace for the tickets enabled by your administrator. Switch off to keep using the reading pane.',
         'title'    => 'Preferences',
         'subtitle' => 'Personal settings saved to your account — they follow you across browsers.',
 
