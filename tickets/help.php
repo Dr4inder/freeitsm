@@ -121,6 +121,10 @@ try {
                 <span class="help-nav-num"><?php echo $showTenancyHelp ? 16 : 15; ?></span>
                 <?php echo htmlspecialchars(t('tickets.help.case.nav')); ?>
             </a>
+            <a href="#workspace" class="help-nav-link" data-section="workspace">
+                <span class="help-nav-num"><?php echo $showTenancyHelp ? 17 : 16; ?></span>
+                <?php echo htmlspecialchars(t('tickets.help.workspace.nav')); ?>
+            </a>
         </div>
 
         <!-- Main content area -->
@@ -1253,6 +1257,25 @@ try {
                     <p><?php echo t('tickets.help.case.who'); ?></p>
                     <p><?php echo t('tickets.help.case.recorded'); ?></p>
                     <p class="help-note"><?php echo t('tickets.help.case.note'); ?></p>
+                </div>
+
+                <!-- The ticket workspace and the ticket table (PR #211, #212, #213) -->
+                <div class="help-section" id="workspace">
+                    <div class="help-section-header">
+                        <span class="help-section-num"><?php echo $showTenancyHelp ? 17 : 16; ?></span>
+                        <div>
+                            <h3><?php echo htmlspecialchars(t('tickets.help.workspace.heading')); ?></h3>
+                            <p><?php echo t('tickets.help.workspace.intro'); ?></p>
+                        </div>
+                    </div>
+                    <h4><?php echo htmlspecialchars(t('tickets.help.workspace.ws_title')); ?></h4>
+                    <?php foreach (['ws_what', 'ws_admin', 'ws_make', 'ws_own', 'ws_tasks', 'ws_safe'] as $k): ?>
+                    <p><?php echo t('tickets.help.workspace.' . $k); ?></p>
+                    <?php endforeach; ?>
+                    <h4><?php echo htmlspecialchars(t('tickets.help.workspace.tb_title')); ?></h4>
+                    <?php foreach (['tb_what', 'tb_same', 'tb_export'] as $k): ?>
+                    <p><?php echo t('tickets.help.workspace.' . $k); ?></p>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>

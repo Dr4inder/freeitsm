@@ -19,6 +19,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2635 | Tickets           | Feature     | Ticket table (PR #213, @Dr4inder): the inbox list as a paginated, server-side table with column filters and saved views, sharing the message list's query (`includes/ticket_list.php`); CSV export of the whole list behind Tickets -> Settings -> General -> Who can export the ticket list (Administrators only by default). |
 | 2636 | Tickets           | Improvement | `api/tickets/assign_ticket.php` refuses a GET, like the other ticket write endpoints (PR #211). |
 | 2637 | Tickets           | Improvement | Review of PR #206's three follow-ups: house style and comments through the new code, `TicketListExport` enum, one enum check in the settings save, the two settings side by side, `crypto.randomUUID()` (HTTPS-only) replaced so a task editor can be left on a plain-HTTP install, the live tests no longer assume a web-root install, three Feature Bingo cards. |
+| 2638 | Tickets           | Improvement | Tickets help: a Workspace and ticket table section (switching it on, Make workspace, your own switch, tasks in place, the table, who can export). |
 
 
 
