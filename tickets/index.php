@@ -41,7 +41,7 @@ $translationNamespaces = ['common', 'tickets'];
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/ticket-fields.css?v=1">
     <link rel="stylesheet" href="../assets/css/reading-pane.css?v=2">
-    <link rel="stylesheet" href="../assets/css/ticket-workspace.css?v=1">
+    <link rel="stylesheet" href="../assets/css/ticket-workspace.css?v=2">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -1054,8 +1054,8 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../checklists/search_scoring.js?v=1"></script>
     <script src="../checklists/ticket_view.js?v=11"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
-    <script src="../assets/js/ticket-workspace.js?v=1"></script>
-    <script src="../assets/js/inbox.js?v=160"></script>
+    <script src="../assets/js/ticket-workspace.js?v=2"></script>
+    <script src="../assets/js/inbox.js?v=161"></script>
     <script src="../assets/js/mobile.js?v=84"></script>
     <script>
     // Auto-check mailboxes every 60 seconds - and refresh the inbox whenever

@@ -3607,6 +3607,9 @@ return [
         ],
     ],
     'workspace' => [
+        'task' => 'Task',
+        'open_task' => 'Open separately',
+        'close_task' => 'Close',
         'layout' => 'Ticket workspace',
         'preference' => 'Use the workspace',
         'badge' => 'Workspace',

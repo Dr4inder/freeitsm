@@ -76,3 +76,9 @@ body.ticket-popout .ticket-workspace .ticket-properties-container { position:sta
 .tw-workspace-badge { color:var(--accent); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:12px; }
 .ticket-workspace .action-toolbar .pane-secondary { display:none; }
 .ticket-workspace .pane-more-wrap { display:block; position:relative; }
+
+.ticket-workspace .tw-task-controls { display: flex; justify-content: flex-end; gap: 4px; flex-wrap: wrap; padding: 0 0 8px; }
+.ticket-workspace .tw-task-controls[hidden] { display: none; }
+.ticket-workspace .tw-task-controls .btn { min-height: 28px; padding: 4px 8px; font-size: 12px; line-height: 18px; background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
+.ticket-workspace .tw-task-controls .btn:hover { background: var(--surface-hover); color: var(--text); }
+.ticket-workspace .tw-task-frame { display: block; width: 100%; height: 650px; min-height: 300px; border: 1px solid var(--border); background: var(--surface); }
