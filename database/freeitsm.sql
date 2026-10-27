@@ -6085,6 +6085,14 @@ CREATE TABLE IF NOT EXISTS `forms` (
     -- unconfigured so it can never hold requests hostage (submitForm skips the gate).
     `requires_approval` TINYINT(1) NOT NULL DEFAULT 0,
     `approver_id`       INT NULL,
+    -- Group approval (GH #220): a team decides instead of approver_id when this is
+    -- set - approvals_required different members approve, rejections_required
+    -- different members reject. NULL = the named-person approval, unchanged.
+    `approval_team_id`           INT NULL,
+    `approvals_required`         INT NOT NULL DEFAULT 1,
+    `rejections_required`        INT NOT NULL DEFAULT 1,
+    -- Named-person mode only: refuse the requester approving their own request.
+    `approval_exclude_requester` TINYINT(1) NOT NULL DEFAULT 0,
     -- What happens when this form is submitted, approved or rejected (#95).
     -- JSON: {"submitted":[…],"approved":[…],"rejected":[…]}, each a list of
     -- {type, args} in the workflow engine's own action shape — they ARE workflow
@@ -6128,6 +6136,8 @@ CREATE TABLE IF NOT EXISTS `forms` (
     -- SET NULL: losing the approver shouldn't delete the catalogue item, it just
     -- becomes unconfigured (and stops gating) until a new approver is chosen.
     CONSTRAINT `fk_forms_approver` FOREIGN KEY (`approver_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL,
+    -- SET NULL, like the approver: a deleted team leaves the form unconfigured.
+    CONSTRAINT `fk_forms_approval_team` FOREIGN KEY (`approval_team_id`) REFERENCES `teams` (`id`) ON DELETE SET NULL,
     -- SET NULL: deleting a collection leaves its forms unpaired, which is a
     -- legitimate state. Contrast form_submissions below, where it is not.
     CONSTRAINT `fk_forms_collection` FOREIGN KEY (`collection_id`) REFERENCES `form_collections` (`id`) ON DELETE SET NULL
@@ -6191,6 +6201,14 @@ CREATE TABLE IF NOT EXISTS `form_submissions` (
     `approval_decided_by_id`     INT NULL,
     `approval_decided_datetime`  DATETIME NULL,
     `approval_comment`           TEXT NULL,
+    -- Group approval (GH #220), snapshotted from the form at submit time like
+    -- approver_id. approval_round goes up when an administrator moves the request;
+    -- only the current round's votes count.
+    `approval_team_id`           INT NULL,
+    `approvals_required`         INT NULL,
+    `rejections_required`        INT NULL,
+    `approval_exclude_requester` TINYINT(1) NOT NULL DEFAULT 0,
+    `approval_round`             INT NOT NULL DEFAULT 1,
     -- Which collection this submission WAS part of, stamped at submit time
     -- from forms.collection_id. The two are ALLOWED TO DISAGREE and that is
     -- the point: re-pairing a form must never rewrite what last year's
@@ -6212,6 +6230,7 @@ CREATE TABLE IF NOT EXISTS `form_submissions` (
     UNIQUE KEY `uq_form_submissions_task_ref` (`task_id`, `client_reference`),
     KEY `idx_form_submissions_ticket` (`ticket_id`),
     KEY `idx_form_submissions_approval` (`approval_status`, `approver_id`),
+    KEY `idx_form_submissions_team` (`approval_status`, `approval_team_id`),
     -- The collection view reads every submission for a collection across
     -- several forms, so this is the column it filters on.
     KEY `idx_form_submissions_collection` (`collection_id`),
@@ -6220,10 +6239,47 @@ CREATE TABLE IF NOT EXISTS `form_submissions` (
     CONSTRAINT `fk_form_submissions_ticket` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_form_submissions_approver` FOREIGN KEY (`approver_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_form_submissions_decided_by` FOREIGN KEY (`approval_decided_by_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_form_submissions_approval_team` FOREIGN KEY (`approval_team_id`) REFERENCES `teams` (`id`) ON DELETE SET NULL,
     -- RESTRICT (no delete rule), DELIBERATELY: a collection holding
     -- submissions can be CLOSED but not deleted. SET NULL here would quietly
     -- destroy the very record this column exists to keep.
     CONSTRAINT `fk_form_submissions_collection` FOREIGN KEY (`collection_id`) REFERENCES `form_collections` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Group approval votes (GH #220). One row per person per request per round: the
+-- UNIQUE key makes a second click from the same person count once, even when two
+-- clicks race. was_member: they were in the team when they voted. A vote is kept
+-- when its voter leaves the team or the company - it is the record of a decision.
+CREATE TABLE IF NOT EXISTS `form_submission_votes` (
+    `id`             INT NOT NULL AUTO_INCREMENT,
+    `submission_id`  INT NOT NULL,
+    `approval_round` INT NOT NULL DEFAULT 1,
+    `analyst_id`     INT NULL,
+    `decision`       VARCHAR(20) NOT NULL,            -- approved / rejected
+    `comment`        TEXT NULL,
+    `was_member`     TINYINT(1) NOT NULL DEFAULT 1,
+    `voted_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_form_submission_votes` (`submission_id`, `approval_round`, `analyst_id`),
+    CONSTRAINT `fk_form_submission_votes_submission` FOREIGN KEY (`submission_id`) REFERENCES `form_submissions` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_form_submission_votes_analyst` FOREIGN KEY (`analyst_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- An administrator's actions on a request (GH #220): override (decided without
+-- the votes, with a reason) or moved (to another team or person, with a reason).
+-- Kept apart from the votes on purpose: an override is never counted as votes.
+CREATE TABLE IF NOT EXISTS `form_submission_approval_events` (
+    `id`             INT NOT NULL AUTO_INCREMENT,
+    `submission_id`  INT NOT NULL,
+    `analyst_id`     INT NULL,
+    `action`         VARCHAR(30) NOT NULL,            -- override_approved / override_rejected / moved
+    `detail`         TEXT NULL,
+    `reason`         TEXT NULL,
+    `event_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `idx_form_submission_approval_events` (`submission_id`),
+    CONSTRAINT `fk_form_submission_approval_events_submission` FOREIGN KEY (`submission_id`) REFERENCES `form_submissions` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_form_submission_approval_events_analyst` FOREIGN KEY (`analyst_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `form_submission_data` (

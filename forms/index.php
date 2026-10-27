@@ -319,6 +319,12 @@ $translationNamespaces = ['common', 'forms'];
         .ca-field label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; }
         .ca-field select { width: 100%; padding: 9px 11px; border: 1px solid var(--border, #ddd); border-radius: 5px; font-size: 13px; background: var(--surface, #fff); color: var(--text, #333); }
         .ca-hint { display: block; margin-top: 6px; font-size: 12px; color: var(--text-faint, #999); }
+        /* Who decides (GH #220): the person / team choice, and the team's two numbers. */
+        .ca-field .ca-check { display: flex; margin-bottom: 0; font-weight: 400; }
+        .ca-mode { display: flex; gap: 22px; }
+        .ca-numbers { display: flex; gap: 14px; margin-top: 12px; }
+        .ca-numbers label { flex: 1; }
+        .ca-numbers input { width: 100%; box-sizing: border-box; margin-top: 6px; padding: 8px 10px; border: 1px solid var(--border, #ddd); border-radius: 5px; font-size: 13px; background: var(--surface, #fff); color: var(--text, #333); }
         .ca-note { margin: 14px 0 0; padding: 9px 12px; border-radius: 6px; font-size: 12.5px; background: var(--warning-bg, #fef3c7); color: var(--warning-text, #92400e); }
         .ca-modal-footer { padding: 14px 22px; border-top: 1px solid var(--border, #e0e0e0); display: flex; gap: 10px; justify-content: flex-end; }
         .ca-btn { padding: 9px 18px; border: none; border-radius: 5px; cursor: pointer; font-size: 13px; font-weight: 500; }
@@ -356,10 +362,36 @@ $translationNamespaces = ['common', 'forms'];
                     <input type="checkbox" id="approvalRequired" onchange="onApprovalRequiredChange()">
                     <span><?php echo htmlspecialchars(t('forms.approval.requires_label')); ?></span>
                 </label>
+                <?php /* Who decides (GH #220): a named person, exactly as before, or a team
+                         where several different members must approve. */ ?>
+                <div class="ca-field" id="approvalModeField" style="display:none;">
+                    <label><?php echo htmlspecialchars(t('forms.approval.who_decides')); ?></label>
+                    <div class="ca-mode">
+                        <label class="ca-check"><input type="radio" name="approvalMode" value="person" onchange="onApprovalRequiredChange()" checked> <span><?php echo htmlspecialchars(t('forms.approval.mode_person')); ?></span></label>
+                        <label class="ca-check"><input type="radio" name="approvalMode" value="team" onchange="onApprovalRequiredChange()"> <span><?php echo htmlspecialchars(t('forms.approval.mode_team')); ?></span></label>
+                    </div>
+                </div>
                 <div class="ca-field" id="approverField" style="display:none;">
                     <label for="approverSelect"><?php echo htmlspecialchars(t('forms.approval.approver_label')); ?></label>
                     <select id="approverSelect"></select>
                     <small class="ca-hint"><?php echo htmlspecialchars(t('forms.approval.approver_hint')); ?></small>
+                    <label class="ca-check" style="margin-top:10px;">
+                        <input type="checkbox" id="approvalExcludeRequester">
+                        <span><?php echo htmlspecialchars(t('forms.approval.exclude_requester_label')); ?></span>
+                    </label>
+                    <small class="ca-hint"><?php echo htmlspecialchars(t('forms.approval.exclude_requester_hint')); ?></small>
+                </div>
+                <div class="ca-field" id="approvalTeamField" style="display:none;">
+                    <label for="approvalTeamSelect"><?php echo htmlspecialchars(t('forms.approval.team_label')); ?></label>
+                    <select id="approvalTeamSelect" onchange="onApprovalRequiredChange()"></select>
+                    <div class="ca-numbers">
+                        <label><?php echo htmlspecialchars(t('forms.approval.approvals_needed')); ?>
+                            <input type="number" id="approvalsRequired" min="1" max="20" value="1" oninput="onApprovalRequiredChange()"></label>
+                        <label><?php echo htmlspecialchars(t('forms.approval.rejections_needed')); ?>
+                            <input type="number" id="rejectionsRequired" min="1" max="20" value="1"></label>
+                    </div>
+                    <small class="ca-hint"><?php echo htmlspecialchars(t('forms.approval.team_hint')); ?></small>
+                    <p class="ca-note" id="approvalTeamWarn" style="display:none;"></p>
                 </div>
                 <p class="ca-note" id="approvalPortalNote" style="display:none;"><?php echo htmlspecialchars(t('forms.approval.not_portal_note')); ?></p>
             </div>
@@ -526,9 +558,12 @@ $translationNamespaces = ['common', 'forms'];
                     : '';
                 // Catalogue-request approval (#928): a distinct amber pill so it reads
                 // as "gated", separate from being active or in the catalogue.
-                const approvalPill = (f.requires_approval == 1 && f.approver_id)
+                // Approved by a team (GH #220) or a named person - the same pill, a different tooltip.
+                const approvalPill = (f.requires_approval == 1 && (f.approver_id || f.approval_team_id))
                     ? '<span class="ft-pill" style="background:var(--warning-bg,#fef3c7);color:var(--warning-text,#92400e);" title="'
-                      + escAttr(window.t('forms.list.approval_on_title', { name: f.approver_name || '' })) + '">'
+                      + escAttr(f.approval_team_id
+                          ? window.t('forms.list.approval_team_title', { n: f.approvals_required || 1, team: f.approval_team_name || '' })
+                          : window.t('forms.list.approval_on_title', { name: f.approver_name || '' })) + '">'
                       + esc(window.t('forms.list.approval_on')) + '</span>'
                     : '';
 
@@ -670,6 +705,16 @@ $translationNamespaces = ['common', 'forms'];
         // ===== Catalogue-request approval (#928) =====
         let approvalFormId = null;
         let approvalAnalysts = null;   // active analysts, fetched once and cached
+        let approvalTeams = null;      // active teams with member counts (GH #220), fetched once
+
+        async function ensureApprovalTeams() {
+            if (approvalTeams) return approvalTeams;
+            try {
+                const data = await (await fetch(API_BASE + 'approval_teams.php')).json();
+                approvalTeams = data.success ? data.teams : [];
+            } catch (e) { approvalTeams = []; }
+            return approvalTeams;
+        }
 
         async function ensureApprovalAnalysts() {
             if (approvalAnalysts) return approvalAnalysts;
@@ -790,6 +835,17 @@ $translationNamespaces = ['common', 'forms'];
 
             document.getElementById('approvalRequired').checked = (form.requires_approval == 1);
             sel.value = form.approver_id ? String(form.approver_id) : '';
+            // Team approval (GH #220). The named approver is kept when a team is
+            // chosen, so switching back to A person restores them.
+            const teams = await ensureApprovalTeams();
+            const tsel = document.getElementById('approvalTeamSelect');
+            tsel.innerHTML = '<option value="">' + esc(window.t('forms.approval.team_none')) + '</option>'
+                + teams.map(tm => `<option value="${tm.id}">${esc(tm.name)} (${esc(window.t('forms.approval.team_members', { n: tm.member_count }))})</option>`).join('');
+            tsel.value = form.approval_team_id ? String(form.approval_team_id) : '';
+            document.querySelector(`input[name="approvalMode"][value="${form.approval_team_id ? 'team' : 'person'}"]`).checked = true;
+            document.getElementById('approvalsRequired').value = form.approvals_required || 1;
+            document.getElementById('rejectionsRequired').value = form.rejections_required || 1;
+            document.getElementById('approvalExcludeRequester').checked = (form.approval_exclude_requester == 1);
             // Approval only bites on catalogue (portal) submissions — flag it if this
             // form isn't offered in the catalogue, so the setting isn't a silent no-op.
             document.getElementById('approvalPortalNote').style.display = (form.is_portal_visible == 1) ? 'none' : '';
@@ -800,7 +856,17 @@ $translationNamespaces = ['common', 'forms'];
 
         function onApprovalRequiredChange() {
             const on = document.getElementById('approvalRequired').checked;
-            document.getElementById('approverField').style.display = on ? '' : 'none';
+            const team = document.querySelector('input[name="approvalMode"]:checked')?.value === 'team';
+            document.getElementById('approvalModeField').style.display = on ? '' : 'none';
+            document.getElementById('approverField').style.display = on && !team ? '' : 'none';
+            document.getElementById('approvalTeamField').style.display = on && team ? '' : 'none';
+            // Say so before saving if the team cannot supply the approvals asked for.
+            const warn = document.getElementById('approvalTeamWarn');
+            const tm = (approvalTeams || []).find(x => String(x.id) === document.getElementById('approvalTeamSelect').value);
+            const need = parseInt(document.getElementById('approvalsRequired').value, 10) || 1;
+            const small = on && team && tm && tm.member_count < need;
+            warn.style.display = small ? '' : 'none';
+            if (small) warn.textContent = window.t('forms.approval.team_too_small', { n: tm.member_count });
         }
 
         function closeApprovalModal() {
@@ -812,8 +878,14 @@ $translationNamespaces = ['common', 'forms'];
             if (!approvalFormId) return;
             const required = document.getElementById('approvalRequired').checked;
             const approverId = document.getElementById('approverSelect').value;
-            if (required && !approverId) {
+            const team = document.querySelector('input[name="approvalMode"]:checked')?.value === 'team';
+            const teamId = document.getElementById('approvalTeamSelect').value;
+            if (required && !team && !approverId) {
                 showToast(window.t('forms.approval.need_approver'), 'error');
+                return;
+            }
+            if (required && team && !teamId) {
+                showToast(window.t('forms.approval.need_team'), 'error');
                 return;
             }
             const btn = document.getElementById('approvalSaveBtn');
@@ -824,11 +896,19 @@ $translationNamespaces = ['common', 'forms'];
                     headers: { 'Content-Type': 'application/json' },
                     // Partial update — only these two keys, so nothing else about the
                     // form is touched (same contract as togglePortal).
-                    body: JSON.stringify({
+                    // Team mode (GH #220) leaves approver_id as it was, so switching
+                    // back to A person restores the person chosen before.
+                    body: JSON.stringify(Object.assign({
                         id: approvalFormId,
                         requires_approval: required ? 1 : 0,
-                        approver_id: required ? Number(approverId) : null
-                    })
+                        approval_team_id: required && team ? Number(teamId) : null,
+                    }, required && team ? {
+                        approvals_required: parseInt(document.getElementById('approvalsRequired').value, 10) || 1,
+                        rejections_required: parseInt(document.getElementById('rejectionsRequired').value, 10) || 1,
+                    } : {
+                        approver_id: required ? Number(approverId) : null,
+                        approval_exclude_requester: document.getElementById('approvalExcludeRequester').checked ? 1 : 0,
+                    }))
                 });
                 const data = await res.json();
                 if (!data.success) { showToast(data.error || window.t('forms.approval.save_failed'), 'error'); btn.disabled = false; return; }

@@ -4553,6 +4553,16 @@ return [
         // in freeitsm.sql. requires_approval on + approver_id NULL = unconfigured.
         'requires_approval' => 'TINYINT(1) NOT NULL DEFAULT 0',
         'approver_id'       => 'INT NULL',
+        // Group approval (GH #220): approval_team_id set = a TEAM decides instead of
+        // approver_id - approvals_required different members approve, and
+        // rejections_required different members reject (1 = the first "no"
+        // declines). NULL = the named-person approval above, exactly as before.
+        // approval_exclude_requester: in named-person mode, refuse the requester
+        // approving their own request (team mode always does). FK in freeitsm.sql.
+        'approval_team_id'           => 'INT NULL',
+        'approvals_required'         => 'INT NOT NULL DEFAULT 1',
+        'rejections_required'        => 'INT NOT NULL DEFAULT 1',
+        'approval_exclude_requester' => 'TINYINT(1) NOT NULL DEFAULT 0',
         // What happens when this form is submitted, approved or rejected
         // (discussion #95). JSON: {"submitted":[…],"approved":[…],"rejected":[…]},
         // each a list of {type, args} in the same shape the workflow engine's
@@ -4637,6 +4647,15 @@ return [
         'approval_decided_by_id'     => 'INT NULL',
         'approval_decided_datetime'  => 'DATETIME NULL',
         'approval_comment'           => 'TEXT NULL',
+        // Group approval (GH #220), SNAPSHOTTED from the form at submit time like
+        // approver_id, so editing the form never reroutes or lowers the bar for a
+        // request already waiting. approval_round goes up each time an
+        // administrator moves the request; only votes from the current round count.
+        'approval_team_id'           => 'INT NULL',
+        'approvals_required'         => 'INT NULL',
+        'rejections_required'        => 'INT NULL',
+        'approval_exclude_requester' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'approval_round'             => 'INT NOT NULL DEFAULT 1',
         // Which collection this submission WAS part of, stamped at submit
         // time from forms.collection_id. 🔑 The two are allowed to disagree:
         // re-pairing a form must never rewrite what last year's responses
@@ -4649,6 +4668,32 @@ return [
         'client_reference'  => 'VARCHAR(64) NULL',
         'superseded_by_id'  => 'INT NULL',
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
+    ],
+
+    // Group approval votes (GH #220): one row per person per request per round -
+    // the UNIQUE key is what makes a second click from the same person count once,
+    // even when two clicks race. was_member: they were in the team when they voted.
+    'form_submission_votes' => [
+        'id'             => 'INT NOT NULL AUTO_INCREMENT',
+        'submission_id'  => 'INT NOT NULL',
+        'approval_round' => 'INT NOT NULL DEFAULT 1',
+        'analyst_id'     => 'INT NULL',
+        'decision'       => 'VARCHAR(20) NOT NULL',
+        'comment'        => 'TEXT NULL',
+        'was_member'     => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'voted_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+    ],
+
+    // The administrator's actions on a request (GH #220): an override decision or
+    // a move to another team or person, each with its reason. Never a vote.
+    'form_submission_approval_events' => [
+        'id'              => 'INT NOT NULL AUTO_INCREMENT',
+        'submission_id'   => 'INT NOT NULL',
+        'analyst_id'      => 'INT NULL',
+        'action'          => 'VARCHAR(30) NOT NULL',
+        'detail'          => 'TEXT NULL',
+        'reason'          => 'TEXT NULL',
+        'event_datetime'  => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
     ],
 
     'form_submission_data' => [

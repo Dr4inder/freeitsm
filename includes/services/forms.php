@@ -1067,6 +1067,7 @@ class FormsService
                         : []),
                     $formId,
                 ]);
+                self::saveApprovalPolicy($conn, $formId, $in);   // GH #220
                 if ($fields !== null) {
                     self::syncFields($conn, $formId, $fields);
                 }
@@ -1106,6 +1107,7 @@ class FormsService
                 $ctx->actorId,
             ]);
             $formId = (int)$conn->lastInsertId();
+            self::saveApprovalPolicy($conn, $formId, $in);   // GH #220
             // Same path as an update, so a brand-new form's conditions get resolved
             // and stored by exactly the same code rather than a second copy of it.
             self::syncFields($conn, $formId, $fields);
@@ -1358,6 +1360,11 @@ class FormsService
                     : []),
             ]);
             $newId = (int)$conn->lastInsertId();
+            // The group-approval policy travels with the version (GH #220) - the trap
+            // above, again: a per-form setting left out of the copy is a setting that
+            // pressing Save deletes, and here a team-approved form would fall back to
+            // its named approver (or to no gate at all) the moment somebody edited it.
+            self::copyApprovalPolicy($conn, $src, $newId);
 
             // Copied row by row rather than INSERT..SELECT because a condition stores
             // the form_fields.id it depends on: a bulk copy would leave the new
@@ -1743,10 +1750,14 @@ class FormsService
         // analyst filling a form internally has no requester to raise one for. A form
         // flagged requires_approval but with no approver is treated as unconfigured so
         // it can never strand a request nobody can clear.
-        $gateApproverId = ($portalUserId !== null && !empty($form['requires_approval']) && !empty($form['approver_id']))
-            ? (int) $form['approver_id']
-            : null;
-        $approvalStatus = $gateApproverId !== null ? 'pending' : 'not_required';
+        //
+        // GH #220: one rule, catalogueApprovalGate(), for both ways of deciding - a
+        // named person or a team - and it returns what to SNAPSHOT onto the
+        // submission, so a later edit of the form never reroutes a waiting request.
+        require_once __DIR__ . '/../catalogue_approvals.php';
+        $gate = catalogueApprovalGate($form, $portalUserId);
+        $approvalStatus = $gate !== null ? 'pending' : 'not_required';
+        $teamColumns = catalogueTeamApprovalAvailable($conn);
 
         $conn->beginTransaction();
         try {
@@ -1769,8 +1780,16 @@ class FormsService
                 $portalUserId !== null ? null : $ctx->actorId,
                 $portalUserId,
                 $approvalStatus,
-                $gateApproverId,
+                $gate['approver_id'] ?? null,
             ];
+            // The group-approval snapshot (GH #220) - only once Database Verification
+            // has added the columns; before that every form is named-person only.
+            if ($teamColumns) {
+                $cols .= ', approval_team_id, approvals_required, rejections_required, approval_exclude_requester';
+                $vals .= ', ?, ?, ?, ?';
+                array_push($args, $gate['approval_team_id'] ?? null, $gate['approvals_required'] ?? null,
+                    $gate['rejections_required'] ?? null, (int)($gate['approval_exclude_requester'] ?? 0));
+            }
             if ($hasCollections) {
                 $cols .= ', collection_id';
                 $vals .= ', ?';
@@ -1838,8 +1857,13 @@ class FormsService
             // rule on that event would jump the approval gate and raise the ticket
             // anyway. It fires catalogue_request.submitted instead — the hook to
             // notify the approver that something is waiting for them.
-            if ($gateApproverId !== null) {
-                $payload['approver'] = ['id' => $gateApproverId];
+            if ($gate !== null) {
+                // Who decides: the named approver, or the team (GH #220) - so a rule
+                // can tell whoever it is that something is waiting for them.
+                if ($gate['approver_id'] !== null) $payload['approver'] = ['id' => $gate['approver_id']];
+                if ($gate['approval_team_id'] !== null) {
+                    $payload['approval_team'] = ['id' => $gate['approval_team_id'], 'approvals_required' => $gate['approvals_required']];
+                }
                 WorkflowEngine::dispatch('catalogue_request.submitted', $payload);
             } else {
                 WorkflowEngine::dispatch('form.submitted', $payload);
@@ -1860,7 +1884,7 @@ class FormsService
         // A gated request runs NOTHING here, for the same reason it fires a
         // different event: its actions belong to the approval decision, and
         // raising a ticket at submission time would step straight over the gate.
-        if ($gateApproverId === null) {
+        if ($gate === null) {
             try {
                 $lists = self::actionLists($conn, $formId);
                 if (!empty($lists['submitted'])) {
@@ -1964,6 +1988,73 @@ class FormsService
      *
      * @param int $id  the form to load
      */
+    /**
+     * Store a form's group-approval policy (GH #220), each part only when sent and
+     * only once Database Verification has added the columns - so an adapter that
+     * knows nothing about teams (the REST API, an older page) cannot clear one by
+     * saving something else, and an un-migrated install saves exactly as before.
+     *
+     * approval_team_id set = a team decides, approvals_required different members;
+     * null = the named approver (approver_id), unchanged. The two are kept apart, so
+     * switching back to a named person restores the person who was chosen before.
+     *
+     * @param array $in  the save payload: approval_team_id, approvals_required, rejections_required, approval_exclude_requester
+     */
+    private static function saveApprovalPolicy(PDO $conn, int $formId, array $in): void
+    {
+        require_once __DIR__ . '/../catalogue_approvals.php';
+        if (!catalogueTeamApprovalAvailable($conn)) return;
+        $set = [];
+        $args = [];
+        if (array_key_exists('approval_team_id', $in)) {
+            $teamId = ($in['approval_team_id'] === null || $in['approval_team_id'] === '') ? null : (int)$in['approval_team_id'];
+            if ($teamId !== null) {
+                $t = $conn->prepare('SELECT 1 FROM teams WHERE id = ? AND is_active = 1');
+                $t->execute([$teamId]);
+                if (!$t->fetchColumn()) throw new ServiceError('validation', 'invalid_field', 'That team was not found.');
+            }
+            $set[] = 'approval_team_id = ?';
+            $args[] = $teamId;
+        }
+        foreach (['approvals_required', 'rejections_required'] as $k) {
+            if (!array_key_exists($k, $in)) continue;
+            $n = (int)$in[$k];
+            if ($n < 1 || $n > 20) {
+                throw new ServiceError('validation', 'invalid_field', "'$k' must be between 1 and 20.");
+            }
+            $set[] = "$k = ?";
+            $args[] = $n;
+        }
+        if (array_key_exists('approval_exclude_requester', $in)) {
+            $set[] = 'approval_exclude_requester = ?';
+            $args[] = (int)(bool)$in['approval_exclude_requester'];
+        }
+        if (!$set) return;
+        $args[] = $formId;
+        $conn->prepare('UPDATE forms SET ' . implode(', ', $set) . ' WHERE id = ?')->execute($args);
+    }
+
+    /**
+     * Carry the group-approval policy to a new version of the form (GH #220).
+     *
+     * @param array $src  the version being copied (loadFormRow())
+     * @param int $newId  the new version's id
+     */
+    private static function copyApprovalPolicy(PDO $conn, array $src, int $newId): void
+    {
+        require_once __DIR__ . '/../catalogue_approvals.php';
+        if (!catalogueTeamApprovalAvailable($conn) || !array_key_exists('approval_team_id', $src)) return;
+        $conn->prepare(
+            'UPDATE forms SET approval_team_id = ?, approvals_required = ?, rejections_required = ?, approval_exclude_requester = ? WHERE id = ?'
+        )->execute([
+            $src['approval_team_id'] !== null ? (int)$src['approval_team_id'] : null,
+            max(1, (int)($src['approvals_required'] ?? 1)),
+            max(1, (int)($src['rejections_required'] ?? 1)),
+            (int)($src['approval_exclude_requester'] ?? 0),
+            $newId,
+        ]);
+    }
+
     private static function loadFormRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare(

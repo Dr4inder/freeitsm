@@ -46,13 +46,23 @@ try {
         : ",
                    0 AS audience_count";
 
+    // Group approval (GH #220): the team, how many must approve / reject, and the
+    // named-person "not your own request" switch. Guarded until Database Verification.
+    require_once '../../includes/catalogue_approvals.php';
+    $teamApproval = catalogueTeamApprovalAvailable($conn);
+    $teamSelect = $teamApproval
+        ? " f.approval_team_id, apt.name AS approval_team_name, f.approvals_required, f.rejections_required, f.approval_exclude_requester,"
+        : " NULL AS approval_team_id, NULL AS approval_team_name, 1 AS approvals_required, 1 AS rejections_required, 0 AS approval_exclude_requester,";
+    $teamJoin = $teamApproval ? "
+            LEFT JOIN teams apt ON apt.id = f.approval_team_id" : '';
+
     $collectionJoin = $hasCollections
         ? "
             LEFT JOIN form_collections col ON col.id = f.collection_id"
         : '';
 
     $sql = "SELECT f.id, f.title, f.description, f.is_active, f.is_portal_visible,
-                   f.requires_approval, f.approver_id, apr.full_name AS approver_name,
+                   f.requires_approval, f.approver_id, apr.full_name AS approver_name," . $teamSelect . "
                    f.created_by,  ca.full_name AS created_by_name,
                    DATE_FORMAT(f.created_date,  '%Y-%m-%d %H:%i:%s') AS created_date,
                    f.modified_by, ma.full_name AS modified_by_name,
@@ -63,7 +73,7 @@ try {
             FROM forms f
             LEFT JOIN analysts ca  ON f.created_by  = ca.id
             LEFT JOIN analysts ma  ON f.modified_by = ma.id
-            LEFT JOIN analysts apr ON f.approver_id = apr.id" . $collectionJoin . "
+            LEFT JOIN analysts apr ON f.approver_id = apr.id" . $teamJoin . $collectionJoin . "
             WHERE NOT EXISTS (SELECT 1 FROM forms ch WHERE ch.parent_form_id = f.id)
             ORDER BY f.modified_date DESC";
 

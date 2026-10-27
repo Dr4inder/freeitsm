@@ -638,6 +638,13 @@ function sessionIsFormApproverOnly(): bool
         );
         $st->execute([$aid, $aid]);
         $memo = (bool)$st->fetchColumn();
+        // GH #220: a member of a team that approves gets the same door. The one
+        // definition lives in catalogue_approvals.php (catalogueApproverCanEnter()).
+        if (!$memo) {
+            require_once __DIR__ . '/catalogue_approvals.php';
+            $conn = connectToDatabase();
+            $memo = catalogueTeamApprovalAvailable($conn) && catalogueAnalystApprovesAsTeam($conn, $aid);
+        }
     } catch (Throwable $e) { /* no door rather than a broken page */ }
     return $memo;
 }

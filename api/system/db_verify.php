@@ -1053,6 +1053,26 @@ try {
         }
     }
 
+    // Group catalogue approvals (GH #220). A deleted team leaves its forms and waiting
+    // requests unconfigured (SET NULL) - visible as stuck, never silently approved. A
+    // vote or an administrator's action goes with its request, and outlives the
+    // person (SET NULL), because it is the record of a decision.
+    $groupApprovalFks = [
+        ['forms',                           'fk_forms_approval_team',                        'teams',            'approval_team_id', 'id', 'SET NULL'],
+        ['form_submissions',                'fk_form_submissions_approval_team',             'teams',            'approval_team_id', 'id', 'SET NULL'],
+        ['form_submission_votes',           'fk_form_submission_votes_submission',           'form_submissions', 'submission_id',    'id', 'CASCADE'],
+        ['form_submission_votes',           'fk_form_submission_votes_analyst',              'analysts',         'analyst_id',       'id', 'SET NULL'],
+        ['form_submission_approval_events', 'fk_form_submission_approval_events_submission', 'form_submissions', 'submission_id',    'id', 'CASCADE'],
+        ['form_submission_approval_events', 'fk_form_submission_approval_events_analyst',    'analysts',         'analyst_id',       'id', 'SET NULL'],
+    ];
+    foreach ($groupApprovalFks as [$table, $name, $refTable, $col, $refCol, $onDelete]) {
+        if ($tableExists($table) && $tableExists($refTable) && !$fkExists($table, $name)) {
+            try {
+                $conn->exec("ALTER TABLE {$table} ADD CONSTRAINT {$name} FOREIGN KEY ({$col}) REFERENCES {$refTable} ({$refCol}) ON DELETE {$onDelete}");
+            } catch (Exception $e) {}
+        }
+    }
+
     // Ticket team assignment (#1566). SET NULL, never CASCADE: deleting a team
     // must not take its tickets with it. They return to "no team", which is
     // visible on screen and fixable; vanishing is neither.
