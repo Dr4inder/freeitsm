@@ -1269,7 +1269,7 @@ try {
                         </div>
                     </div>
                     <h4><?php echo htmlspecialchars(t('tickets.help.workspace.ws_title')); ?></h4>
-                    <?php foreach (['ws_what', 'ws_admin', 'ws_make', 'ws_own', 'ws_tasks', 'ws_safe'] as $k): ?>
+                    <?php foreach (['ws_what', 'ws_admin', 'ws_make', 'ws_own', 'ws_checklist', 'ws_tasks', 'ws_safe'] as $k): ?>
                     <p><?php echo t('tickets.help.workspace.' . $k); ?></p>
                     <?php endforeach; ?>
                     <h4><?php echo htmlspecialchars(t('tickets.help.workspace.tb_title')); ?></h4>
