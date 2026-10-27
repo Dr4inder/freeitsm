@@ -275,7 +275,9 @@ $translationNamespaces = ['common', 'system'];
         if (!enabled) {
             const ok = await showConfirm({
                 title: 'Switch off ' + m.name + '?',
-                message: m.name + ' will disappear for everyone, including you: menus, buttons in other modules, the REST API, workflows and scheduled jobs. Nothing is deleted - switch it back on and it returns as it was.',
+                message: m.name + ' will disappear for everyone, including you: menus, buttons in other modules, the REST API, workflows and scheduled jobs. Nothing is deleted - switch it back on and it returns as it was.'
+                    // A project's plan is made of task rows and belongs to Projects, so it stays (GH #217).
+                    + (key === 'tasks' ? ' Project plans keep working inside Projects.' : ''),
                 okLabel: 'Switch off', okClass: 'danger'
             });
             if (!ok) { box.checked = true; return; }
