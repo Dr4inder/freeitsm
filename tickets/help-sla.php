@@ -99,6 +99,8 @@ $translationNamespaces = ['common', 'tickets'];
                 </div>
                 <p><?php echo t('tickets.help_sla.overview.p1'); ?></p>
 
+                <p class="help-note"><?php echo t('tickets.help_sla.overview.switch_note'); ?></p>
+
                 <p><?php echo t('tickets.help_sla.overview.p2'); ?></p>
 
                 <div class="help-list">

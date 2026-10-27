@@ -3208,6 +3208,7 @@ return [
             'modes_heading' => '<strong>Two trigger modes &mdash; pick one</strong>',
             'mode_auto'   => '<strong>Auto on close</strong> &mdash; survey is queued automatically when a ticket transitions into any closed status. The analyst doesn\'t need to do anything &mdash; resolution drives the survey.',
             'mode_manual' => '<strong>Manual only</strong> &mdash; analyst clicks the ⭐ <strong>Feedback</strong> button in the ticket toolbar when they want to ask. Useful when you\'d rather decide ticket-by-ticket whether to invite feedback.',
+            'switch_note' => 'Don\'t use CSAT at all? Switch it off under <strong>System &rarr; Modules &rarr; Availability &rarr; Ticket features</strong> and it disappears: no surveys, no CSAT page, no Request feedback button, and old survey links say feedback is no longer being collected. Nothing is deleted.',
             'mode_off'    => '<strong>Off</strong> &mdash; no surveys are sent. The CSAT page and the results stay; to remove CSAT altogether, switch it off under <strong>System &rarr; Modules &rarr; Availability</strong>.',
             'modes_choose'=> 'Choose under <strong>Tickets &rarr; Settings &rarr; CSAT</strong>. The manual button still works in <em>auto</em> mode &mdash; analysts can re-request feedback on a ticket that\'s already been surveyed if needed.',
             'template_heading' => '<strong>The email template</strong>',
@@ -3289,6 +3290,7 @@ return [
             'tip'      => 'Use date range filters on individual widgets to compare current performance against previous periods. For example, a "This Month vs Last Month" view helps you spot trends in ticket volume early.',
         ],
         'cal_rota' => [
+            'switch_note' => 'Don\'t use the duty rota? Switch it off under <strong>System &rarr; Modules &rarr; Availability &rarr; Ticket features</strong> - the page, its settings and the War Room bot\'s <em>who is on call</em> go, and nothing is deleted.',
             'heading' => 'Calendar &amp; rota',
             'intro'   => 'Two scheduling tools help your team stay organised: a ticket calendar that visualises workload over time, and a staff rota for managing shifts and on-call availability.',
             'cal_heading' => '<strong>Calendar view</strong>',
@@ -3495,6 +3497,7 @@ return [
             'heading' => 'Overview',
             'sub'     => 'What SLAs are, why they matter, and how the FreeITSM engine works at a high level.',
             'p1'      => 'A Service Level Agreement (SLA) is a promise about how quickly your team will respond to and resolve a ticket. FreeITSM tracks two clocks per ticket: <strong>response</strong> (time from ticket creation to first analyst action) and <strong>resolution</strong> (time from ticket creation to ticket closure). Both targets are set per priority &mdash; so a P1 might have 30 minutes for response and 4 hours for resolution, while a P4 might have 8 working hours and 5 working days.',
+            'switch_note' => 'Don\'t use SLAs? Switch SLA off under <strong>System &rarr; Modules &rarr; Availability &rarr; Ticket features</strong>: clocks, breach warnings and SLA workflow triggers stop, while the business calendars stay for web chat\'s opening hours. Switching it back on asks whether to send the warnings missed while it was off, or skip them.',
             'p2'      => 'FreeITSM\'s SLA engine has four design choices worth understanding:',
             'choice_business' => '<strong>Business hours, not wall clock.</strong> A P2 raised at 4:30pm with a 1-hour response target doesn\'t breach at 5:30pm if the office closes at 5pm. The clock resumes at 9am the next working day. This is the industry standard and the only fair model when analysts go home at night.',
             'choice_pause'    => '<strong>Pause-able.</strong> When a ticket is in a status flagged "Pause SLA" (such as <em>Awaiting Response</em> or <em>On Hold</em>), the clock stops. It resumes when the ticket moves back to a working status.',

@@ -507,6 +507,8 @@ try {
                         </div>
                     </div>
 
+                    <p class="help-note"><?php echo t('tickets.help.csat.switch_note'); ?></p>
+
                     <p><?php echo t('tickets.help.csat.modes_heading'); ?></p>
                     <div class="help-list">
                         <div><?php echo t('tickets.help.csat.mode_auto'); ?></div>
@@ -658,6 +660,7 @@ try {
                         <h3><?php echo t('tickets.help.cal_rota.heading'); ?></h3>
                     </div>
                     <p><?php echo t('tickets.help.cal_rota.intro'); ?></p>
+                    <p class="help-note"><?php echo t('tickets.help.cal_rota.switch_note'); ?></p>
 
                     <p><?php echo t('tickets.help.cal_rota.cal_heading'); ?></p>
                     <p><?php echo t('tickets.help.cal_rota.cal_body'); ?></p>
