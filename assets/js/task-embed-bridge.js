@@ -207,7 +207,7 @@ window.TaskEmbedBridge = (() => {
             error.setAttribute('role', 'alert');
             document.body.append(error);
         }
-        error.textContent = text('unavailable');
+        error.textContent = text(context.ticketId ? 'unavailable' : 'unavailable_tasks');   // no ticket to blame from Tasks' own views (GH #219)
         post('error');
     }
 
@@ -221,7 +221,10 @@ window.TaskEmbedBridge = (() => {
         if (validating || unavailableState) return;
         validating = true;
         try {
-            const url = window.API_BASE + 'get.php?id=' + context.taskId + '&embed_root_id=' + context.taskId + '&ticket_id=' + context.ticketId;
+            // From a ticket: the link to it is re-checked too. From Tasks' own views
+            // (no ticket, GH #219): the task alone, by Tasks' own rules.
+            const url = window.API_BASE + 'get.php?id=' + context.taskId
+                + (context.ticketId ? '&embed_root_id=' + context.taskId + '&ticket_id=' + context.ticketId : '');
             const response = await fetch(url);
             const data = await response.json();
             if (!response.ok || !data.success) unavailable();

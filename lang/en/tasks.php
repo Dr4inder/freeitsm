@@ -17,6 +17,7 @@ return [
         'discard'         => 'Discard unsaved changes and leave this task?',
         'discard_button'  => 'Discard',
         'unavailable' => 'This task is no longer available in this ticket. Reload the ticket to check its current links and permissions.',
+        'unavailable_tasks' => 'This task is no longer available to you. Close it and reload the page to check your permissions.',   // GH #219: opened from the Table, Calendar or Timeline
     ],
     'title' => 'Tasks',
 
@@ -152,7 +153,7 @@ return [
         'tab_history'    => 'History',
         'view_not_saved' => 'View changed, but it could not be remembered for next time',
         'open_full'      => 'Open full editor',
-        'description_preview_hint' => 'Open the full editor to edit the description.',
+        'description_preview_hint' => 'Open the full task here, to edit the description, subtasks, checklists and comments.',
         'no_description' => 'No description.',
         'status'         => 'Status',
         'priority'       => 'Priority',
@@ -1011,7 +1012,7 @@ return [
         'table_intro'   => 'The Table view is a full-screen Excel-style grid &mdash; one row per task, with editable cells. It\'s the fastest place to triage a list, bulk-tweak fields, or build the exact column layout you want to live in.',
         'table_edit_heading' => 'Edit straight in the cell',
         'table_open_heading' => 'Opening a task',
-        'table_open_body'    => 'Every row starts with an <strong>open</strong> icon (or right-click a row and choose <strong>Open</strong>). It opens the same quick-look panel as the Calendar and Timeline, over the table, so your filters, sort and place stay put; the panel\'s launch icon takes you to the full task on the board. Ctrl- or middle-click the icon to open the full task in a new tab instead. Clicking a cell still edits it, as before.',
+        'table_open_body'    => 'Every row starts with an <strong>open</strong> icon (or right-click a row and choose <strong>Open</strong>). It opens the same panel as the Calendar and Timeline, over the table, so your filters, sort and place stay put. The panel is a quick look - status, dates, assignee and the description - with an <strong>Edit</strong> button that turns it into the full task, right there; or choose <strong>The full task</strong> under <strong>Preferences &rarr; Opening a task</strong> to always get the full task, as on the board. The launch icon at the top goes to the task on the board. Ctrl- or middle-click the icon to open the full task in a new tab instead. Clicking a cell still edits it, as before.',
         'table_edit_body'    => 'Most columns render an editable control instead of static text. Pick a new status or priority from its dropdown, swap the assignee or team, type a new title, type or pick a new start / due date &mdash; each cell saves on change with no Save button to hunt for. Status and priority show a coloured dot that updates in place after the save.',
         'table_views_heading'      => 'Saved views',
         'table_views_body'         => 'Once the table looks how you want it &mdash; the right columns, sorted and filtered &mdash; <strong>Save view</strong> in the toolbar keeps that arrangement under a name, and <strong>Views</strong> beside it opens the library. A view can be visible to <strong>only you</strong>, to <strong>one of your teams</strong>, or to <strong>everyone</strong>; the star makes one your default so the table opens with it. The library can be searched by name, description or who made it, and shown as a list or as cards.',

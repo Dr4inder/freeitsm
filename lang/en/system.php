@@ -1258,6 +1258,10 @@ return [
         'task_view_desc'    => 'Whether a task opens in the panel at the side of the board, or in a large window with room for the description and comments.',
         'task_view_panel'   => 'In the side panel',
         'task_view_modal'   => 'In a large window',
+        // GH #219: the Table, Calendar and Timeline open a task in a side panel too.
+        'task_open_other_desc'  => 'From the Table, Calendar and Timeline, a task opens in a panel at the side, so you keep your place. Choose what that panel shows.',
+        'task_open_quick'       => 'A quick look - status, dates, assignee and the description',
+        'task_open_full'        => 'The full task - the same as on the board, with subtasks, checklists and comments',
         'desktop_heading'   => 'Desktop notifications',
         'desktop_desc'      => 'Show each new notification from the bell as a notification on your computer - in Edge on Windows, a Windows notification - so you see it even when you are working in another window. FreeITSM needs to be open in a browser tab for these to arrive.',
         'desktop_label'     => 'Show desktop notifications',

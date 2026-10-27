@@ -34,7 +34,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks', t('tasks.nav.table'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=54">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=56">
     <link rel="stylesheet" href="../../assets/css/data-table.css?v=6">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -123,7 +123,10 @@ $translationNamespaces = ['common', 'tasks'];
 
     <script src="../../assets/js/data-table.js?v=8"></script>
     <script src="../../assets/js/tasks-ctx-menu.js?v=5"></script>
-    <script src="../../assets/js/tasks-quick-panel.js?v=3"></script>
+    <?php /* The panel renders a description through the shared cleaner - without it
+             the HTML showed as text (GH #219). Calendar and Timeline load it too. */ ?>
+    <script src="../../assets/js/safe-html.js?v=4"></script>
+    <script src="../../assets/js/tasks-quick-panel.js?v=5"></script>
     <script src="../../assets/js/tasks-table.js?v=6"></script>
     <script src="../../assets/js/mobile.js?v=83"></script>
 </body>

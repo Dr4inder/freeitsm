@@ -61,6 +61,7 @@ $prefDefaults = [
     // preference — the drawer keeps the board visible behind it, the modal gives
     // the description and comments room to breathe.
     'tasks_detail_view'          => 'panel',
+    'tasks_open_panel'           => 'quick',   // GH #219: the Table, Calendar and Timeline's panel
     // Whether clicking away closes the draggable search panel (#144, asked for
     // by mbsouth). '' — only the ✕ or Escape — because the panel is draggable:
     // it is meant to be parked somewhere useful while you work, and a
@@ -610,6 +611,13 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                     <option value="modal" <?php echo $prefs['tasks_detail_view'] === 'modal' ? 'selected' : ''; ?>><?php echo htmlspecialchars(t('system.preferences.task_view_modal')); ?></option>
                 </select>
                 <span class="pref-saving-hint" id="taskViewSavingHint"><?php echo htmlspecialchars(t('system.preferences.saving')); ?></span>
+                <?php /* GH #219: the same question for Tasks' other views - their side panel. */ ?>
+                <p style="margin-top:14px;"><?php echo htmlspecialchars(t('system.preferences.task_open_other_desc')); ?></p>
+                <select id="taskOpenSelect" class="pref-language-select">
+                    <option value="quick" <?php echo $prefs['tasks_open_panel'] !== 'full' ? 'selected' : ''; ?>><?php echo htmlspecialchars(t('system.preferences.task_open_quick')); ?></option>
+                    <option value="full" <?php echo $prefs['tasks_open_panel'] === 'full' ? 'selected' : ''; ?>><?php echo htmlspecialchars(t('system.preferences.task_open_full')); ?></option>
+                </select>
+                <span class="pref-saving-hint" id="taskOpenSavingHint"><?php echo htmlspecialchars(t('system.preferences.saving')); ?></span>
             </div>
 
             <!-- Closing the search panel (#144). Sits beside "Opening a task"
@@ -1333,6 +1341,15 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
         // ===== How a task opens (tasks_detail_view) =====
         const taskViewSelect = document.getElementById('taskViewSelect');
         const taskViewHint   = document.getElementById('taskViewSavingHint');
+        const taskOpenSelect = document.getElementById('taskOpenSelect');   // GH #219
+        if (taskOpenSelect) {
+            taskOpenSelect.addEventListener('change', async function() {
+                const hint = document.getElementById('taskOpenSavingHint');
+                hint.classList.add('show');
+                await savePref('tasks_open_panel', taskOpenSelect.value);
+                setTimeout(() => hint.classList.remove('show'), 1200);
+            });
+        }
         if (taskViewSelect) {
             taskViewSelect.addEventListener('change', async function() {
                 taskViewHint.classList.add('show');

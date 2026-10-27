@@ -125,7 +125,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks')); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/tasks.css?v=54">
+    <link rel="stylesheet" href="../assets/css/tasks.css?v=56">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
@@ -383,7 +383,7 @@ $translationNamespaces = ['common', 'tasks'];
     <!-- Toast -->
     <script>window.CASE_REPORT_URL = <?php echo json_encode(BASE_URL . 'tasks/case-report.php'); ?>; window.API_BASE = '../api/tasks/';
     window.APP_BASE = '<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>';
-    window.TASK_HOST = <?php echo json_encode($taskEmbedded ? 'ticket' : 'module'); ?>;
+    window.TASK_HOST = <?php echo json_encode(!$taskEmbedded ? 'module' : (empty($taskEmbedContext['ticketId']) ? 'tasks' : 'ticket')); ?>;   // 'tasks': a side panel in Tasks' own views (GH #219)
     <?php if ($taskEmbedded): ?>window.TASK_EMBED_CONTEXT = <?php echo json_encode($taskEmbedContext); ?>;<?php endif; ?>
     window.TASK_DETAIL_VIEW = <?php echo json_encode($taskEmbedded ? 'modal' : $taskDetailView); ?>;
     window.TASK_MODAL_LAYOUT = <?php echo json_encode($taskModalLayout); ?>;
@@ -400,8 +400,8 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../assets/js/tasks-ctx-menu.js?v=5"></script>
     <!-- The one cleaner for HTML from elsewhere: Knowledge procedure bodies and task instructions in the Work view (GH #190). -->
     <script src="../assets/js/safe-html.js?v=4"></script>
-    <?php if ($taskEmbedded): ?><script src="../assets/js/task-embed-bridge.js?v=1"></script><?php endif; ?>
-    <script src="../assets/js/tasks.js?v=70"></script>
+    <?php if ($taskEmbedded): ?><script src="../assets/js/task-embed-bridge.js?v=2"></script><?php endif; ?>
+    <script src="../assets/js/tasks.js?v=71"></script>
     <?php if (!$taskEmbedded): ?><script src="../assets/js/mobile.js?v=84"></script><?php endif; ?>
 
 </body>

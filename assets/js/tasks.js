@@ -66,7 +66,8 @@ const ANALYST_ID = document.body.dataset.analystId;
 document.addEventListener('DOMContentLoaded', async () => {
     await loadCardSettings();
     await loadLookups();          // statuses drive the board columns
-    if (window.TASK_HOST === 'ticket') {
+    // Embedded - in a ticket's Work tab, or a side panel in Tasks' own views (GH #219).
+    if (window.TASK_EMBED_CONTEXT) {
         await loadDropdowns();
         await openDetailPanel(window.TASK_EMBED_CONTEXT.taskId);
         return;
@@ -190,7 +191,7 @@ async function loadDropdowns() {
  * text, refreshes the Project and Contractor filters and redraws the board or list.
  */
 async function loadTasks() {
-    if (window.TASK_HOST === 'ticket') {
+    if (window.TASK_EMBED_CONTEXT) {
         window.TaskEmbedBridge?.changed();
         return;
     }
@@ -1779,7 +1780,7 @@ async function openDetailPanel(taskId) {
     // Prevent opening from drag
     if (dragState) return;
 
-    if (window.TASK_HOST === 'ticket' && selectedTaskId && selectedTaskId !== taskId && !await TaskEmbedBridge.canLeave()) return;
+    if (window.TASK_EMBED_CONTEXT && selectedTaskId && selectedTaskId !== taskId && !await TaskEmbedBridge.canLeave()) return;
     selectedTaskId = taskId;
     const generation = ++taskDetailGeneration;
     const embedQuery = window.TASK_HOST === 'ticket'
@@ -1832,7 +1833,7 @@ async function openDetailPanel(taskId) {
 
 /** Closes the task panel, destroys the description editor and reloads the board. */
 async function closeDetailPanel() {
-    if (window.TASK_HOST === 'ticket' && !await TaskEmbedBridge.canLeave()) return;
+    if (window.TASK_EMBED_CONTEXT && !await TaskEmbedBridge.canLeave()) return;
     document.getElementById('detailPanel').classList.remove('open');
     document.getElementById('detailOverlay').classList.remove('open');
     if (tinyEditor) { tinyEditor.destroy(); tinyEditor = null; }
