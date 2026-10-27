@@ -67,6 +67,14 @@ try {
         }
     }
 
+    // Validate the export enum before writing ANY of a combined settings post.
+    if (array_key_exists('ticket_list_export', $settings)
+        && !in_array($settings['ticket_list_export'], ['admins','ticket_users','nobody'], true)) {
+        http_response_code(400);
+        echo json_encode(['success'=>false,'error'=>'Invalid ticket list export policy']);
+        exit;
+    }
+
     foreach ($settings as $key => $value) {
         if ($key === 'ticket_workspace_mode') {
             require_once '../../includes/ticket_workspace.php';

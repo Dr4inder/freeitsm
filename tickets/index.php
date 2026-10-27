@@ -14,12 +14,14 @@ require_once '../includes/timezone.php';
 require_once '../includes/ticket_snooze.php';
 require_once '../includes/inbox_display.php';   // what each row shows, per analyst
 require_once '../includes/ticket_workspace.php';
+require_once '../includes/ticket_list.php';
 I18n::initFromSession();
 Tz::init();
 
 requireModuleAccess('tickets');
 $workspaceConfig = ticketWorkspaceConfig(connectToDatabase(), (int)$_SESSION['analyst_id']);
 $workspaceConfig['can_write'] = analystCanWriteModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'tickets');
+$ticketListLayout = ticketListLayout(connectToDatabase(), (int)$_SESSION['analyst_id']);
 
 $current_page = 'inbox';
 // Module id for per-module theme/palette resolution (account-menu picker).
@@ -43,6 +45,8 @@ $translationNamespaces = ['common', 'tickets'];
     <link rel="stylesheet" href="../assets/css/reading-pane.css?v=2">
     <link rel="stylesheet" href="../assets/css/ticket-workspace.css?v=2">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
+    <link rel="stylesheet" href="../assets/css/data-table.css?v=5">
+    <link rel="stylesheet" href="../assets/css/tickets-table.css?v=1">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <?php
@@ -52,6 +56,7 @@ $translationNamespaces = ['common', 'tickets'];
     $snoozeWakeHour = 9;
     try { $snoozeWakeHour = snoozeWakeHour(connectToDatabase()); } catch (Exception $e) {}
     ?>
+    <script>window.TICKETS_LIST_LAYOUT = <?php echo json_encode($ticketListLayout); ?>;</script>
     <script>window.SNOOZE_WAKE_HOUR = <?php echo (int)$snoozeWakeHour; ?>;</script>
     <script>window.TICKET_WORKSPACE = <?php echo json_encode($workspaceConfig); ?>;</script>
     <script src="../assets/js/i18n.js?v=3"></script>
@@ -62,7 +67,8 @@ $translationNamespaces = ['common', 'tickets'];
 <body class="inbox-page<?php echo $workspaceConfig['mode'] === 'selected' ? ' workspace-choice-available' : ''; ?>">
     <?php include 'includes/header.php'; ?>
     <?php require_once __DIR__ . '/../includes/action_row.php';
-          renderActionRow(t('tickets.nav.inbox'), [actionRowNew('openNewTicketModal()', t('tickets.list.new_ticket_btn'))]); ?>
+          renderActionRow(t('tickets.nav.inbox'), [actionRowNew('openNewTicketModal()', t('tickets.list.new_ticket_btn'))],
+              ['extra' => ticketListSelector($ticketListLayout)]); ?>
 
     <div class="main-container">
         <!-- Folder Navigation -->
@@ -149,6 +155,15 @@ $translationNamespaces = ['common', 'tickets'];
                      until more than one ticket is selected AND that mode is chosen —
                      the other two modes never show it. */ ?>
             <div class="selection-bar" id="selectionBar" style="display: none;"></div>
+            <div id="ticketTableContainer" hidden>
+                <label class="ticket-content-search"><input type="checkbox" id="ticketTableContent"> <?php echo htmlspecialchars(t('tickets.queue.search_content')); ?></label>
+                <?php
+                $dtSearchPlaceholder=t('tickets.queue.search');
+                $dtShowCsv=ticketListCanExport(connectToDatabase(), (int)$_SESSION['analyst_id']);
+                $dtCsvTitle=t('tickets.queue.export_title');
+                include '../includes/data-table-skeleton.php';
+                ?>
+            </div>
             <div class="email-list" id="emailList">
                 <div class="reading-pane-empty"><?php echo htmlspecialchars(t('tickets.list.select_folder')); ?></div>
             </div>
@@ -1055,7 +1070,9 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../checklists/ticket_view.js?v=11"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
     <script src="../assets/js/ticket-workspace.js?v=2"></script>
-    <script src="../assets/js/inbox.js?v=161"></script>
+    <script src="../assets/js/data-table.js?v=7"></script>
+    <script src="../assets/js/inbox.js?v=163"></script>
+    <script src="../assets/js/tickets-table.js?v=1"></script>
     <script src="../assets/js/mobile.js?v=84"></script>
     <script>
     // Auto-check mailboxes every 60 seconds - and refresh the inbox whenever

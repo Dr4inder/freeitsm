@@ -1574,7 +1574,7 @@ let dragHoverFolderId = null;
  * Dragging several rows shows a stacked-sheets drag image with the count; dragend clears all drag state.
  */
 function attachEmailDragHandlers() {
-    document.querySelectorAll('#emailList .email-item').forEach(el => {
+    document.querySelectorAll(ticketRowSelector('')).forEach(el => {
         el.addEventListener('dragstart', (e) => {
             if (ticketMenuIsSheet()) { e.preventDefault(); return; }
             const mailId = Number(el.dataset.emailId);
@@ -1601,7 +1601,7 @@ function attachEmailDragHandlers() {
             // whichever rows happen to be painted `.selected`, so the dimming can
             // never disagree with what is actually being dragged.
             selectedEmailIds.forEach(id => {
-                const r = document.querySelector(`#emailList .email-item[data-email-id="${id}"]`);
+                const r = document.querySelector(ticketRowSelector(`[data-email-id="${id}"]`));
                 if (r) r.classList.add('dragging');
             });
 
@@ -1636,7 +1636,7 @@ function attachEmailDragHandlers() {
             }
         });
         el.addEventListener('dragend', () => {
-            document.querySelectorAll('#emailList .email-item.dragging').forEach(r => r.classList.remove('dragging'));
+            document.querySelectorAll(ticketRowSelector('.dragging')).forEach(r => r.classList.remove('dragging'));
             draggedTicketId = null;
             draggedTicketNumber = null;
             draggedTicketIds = [];
@@ -1932,6 +1932,7 @@ async function handleTicketDrop(targetEl, ticketId, ticketNumber) {
 
 // Load emails based on current filter
 async function loadEmails() {
+    if (window.TicketTable?.isActive()) return TicketTable.reload();
     try {
         let url = API_BASE + 'get_emails.php?';
 
@@ -2023,6 +2024,7 @@ function companyChip(email) {
 
 // Render email list
 function renderEmailList() {
+    if (window.TicketTable?.isActive()) { renderSelectionUi(); return; }
     const emailListEl = document.getElementById('emailList');
 
     if (emails.length === 0) {
@@ -2087,7 +2089,7 @@ function renderEmailList() {
  * stays empty. Re-rendering the list (e.g. on filter change) re-runs this.
  */
 async function loadInboxSlaIndicators() {
-    const slots = document.querySelectorAll('#emailList [data-sla-slot]');
+    const slots = document.querySelectorAll((window.TicketTable?.isActive() ? '#ticketTableContainer' : '#emailList') + ' [data-sla-slot]');
     if (!slots.length) return;
     const ids = Array.from(slots).map(el => el.getAttribute('data-sla-slot')).filter(Boolean);
     if (!ids.length) return;
@@ -2162,9 +2164,9 @@ function setSelectedEmailRow(emailId) {
     // function would otherwise strip `.selected` off the other rows and leave the
     // list looking like one ticket is selected while an action hits several.
     if (selectedEmailIds && selectedEmailIds.size > 1) { renderSelectionUi(); return; }
-    document.querySelectorAll('#emailList .email-item.selected')
+    document.querySelectorAll(ticketRowSelector('.selected'))
         .forEach(el => el.classList.remove('selected'));
-    const row = document.querySelector(`#emailList .email-item[data-email-id="${emailId}"]`);
+    const row = document.querySelector(ticketRowSelector(`[data-email-id="${emailId}"]`));
     if (row) row.classList.add('selected');
 }
 
@@ -2198,15 +2200,20 @@ let selectedEmailIds   = new Set();   // every row in the selection
 let selectionAnchorId  = null;        // where a Shift range measures from
 let selectionFocusId   = null;        // the keyboard cursor
 
+/** Selection belongs to the displayed list, never hidden previous rows. */
+function ticketRowSelector(suffix = '') {
+    return (window.TicketTable?.isActive() ? '#ticketTableContainer' : '#emailList') + ' .email-item' + suffix;
+}
+
 /** Email ids in the order they are on screen — range selection follows what you SEE. */
 function visibleEmailIds() {
-    return Array.from(document.querySelectorAll('#emailList .email-item'))
+    return Array.from(document.querySelectorAll(ticketRowSelector('')))
         .map(el => Number(el.dataset.emailId));
 }
 
 /** The ticket id behind a row (actions work on tickets; rows are keyed by email). */
 function ticketIdForEmail(emailId) {
-    const row = document.querySelector(`#emailList .email-item[data-email-id="${emailId}"]`);
+    const row = document.querySelector(ticketRowSelector(`[data-email-id="${emailId}"]`));
     if (row && row.dataset.ticketId) return Number(row.dataset.ticketId);
     const rec = emails.find(e => e.id == emailId);
     return rec ? Number(rec.ticket_id) : null;
@@ -2224,7 +2231,7 @@ function selectionCount() {
 
 /** Paint the list: `.selected` on every chosen row, `.kb-focus` on the cursor. */
 function renderSelectionUi() {
-    document.querySelectorAll('#emailList .email-item').forEach(el => {
+    document.querySelectorAll(ticketRowSelector('')).forEach(el => {
         const id = Number(el.dataset.emailId);
         el.classList.toggle('selected', selectedEmailIds.has(id));
         el.classList.toggle('kb-focus', selectionFocusId === id);
@@ -2235,7 +2242,7 @@ function renderSelectionUi() {
     // the browser starts selecting on mousedown and this runs on click. The
     // mousedown handler further down is what actually prevents it; this stays for
     // the drag case.
-    const list = document.getElementById('emailList');
+    const list = document.getElementById(window.TicketTable?.isActive() ? 'ticketTableContainer' : 'emailList');
     if (list) list.classList.toggle('multi-selecting', selectedEmailIds.size > 1);
     // If a selection did start anyway, clear it rather than leave it smeared.
     const sel = window.getSelection && window.getSelection();
@@ -2412,7 +2419,7 @@ async function renderSelectionSummaryPane() {
     window.TicketWorkspace?.dispose();
     const ids  = visibleEmailIds().filter(id => selectedEmailIds.has(id));   // keep list order
     const rows = ids.map(id => {
-        const row = document.querySelector(`#emailList .email-item[data-email-id="${id}"]`);
+        const row = document.querySelector(ticketRowSelector(`[data-email-id="${id}"]`));
         const ref = row ? (row.dataset.ticketNumber || '') : '';
         const rec = emails.find(e => e.id == id);
         return `<div class="sel-summary-row">
@@ -2567,7 +2574,7 @@ function moveSelectionCursor(delta, { extend = false, keepSelection = false }) {
 
 /** Scrolls the list's own scroll container so the row is visible, never the page itself. */
 function scrollRowIntoView(emailId) {
-    const row = document.querySelector(`#emailList .email-item[data-email-id="${emailId}"]`);
+    const row = document.querySelector(ticketRowSelector(`[data-email-id="${emailId}"]`));
     if (!row) return;
 
     // Scroll ONLY the list's own scroll container, never the page. Element.scrollIntoView()
@@ -3720,7 +3727,7 @@ async function undoMerge(mergeId) {
 
 /** Jump to a ticket by its reference — used by the merge banner's button. */
 async function openTicketByNumber(ticketNumber) {
-    const row = Array.from(document.querySelectorAll('#emailList .email-item'))
+    const row = Array.from(document.querySelectorAll(ticketRowSelector('')))
         .find(el => (el.dataset.ticketNumber || '') === ticketNumber);
     if (row) { handleEmailRowClick({ ctrlKey: false, shiftKey: false, metaKey: false }, Number(row.dataset.emailId)); return; }
     // Not in the current folder's list — search for it so the jump works from
@@ -7718,7 +7725,7 @@ async function openMergeModal() {
     const s = await loadMergeSettings();
 
     mergeCandidateList = ids.map(id => {
-        const row = document.querySelector(`#emailList .email-item[data-email-id="${id}"]`);
+        const row = document.querySelector(ticketRowSelector(`[data-email-id="${id}"]`));
         const rec = emails.find(e => e.id == id);
         return {
             emailId:  id,
@@ -7982,7 +7989,7 @@ function discardMergeSummary() {
 
 /** Open whichever list row belongs to a ticket id (after a merge, the survivor). */
 function selectEmailByTicketId(ticketId) {
-    const row = document.querySelector(`#emailList .email-item[data-ticket-id="${ticketId}"]`);
+    const row = document.querySelector(ticketRowSelector(`[data-ticket-id="${ticketId}"]`));
     if (row) handleEmailRowClick({ ctrlKey: false, shiftKey: false, metaKey: false }, Number(row.dataset.emailId));
 }
 
@@ -10881,7 +10888,7 @@ function openTicketMenuLevel(menu, label, sub) {
     document.addEventListener('touchstart', function (e) {
         fired = false;
         if (!ticketMenuIsSheet() || e.touches.length !== 1) return;
-        const row = e.target.closest && e.target.closest('#emailList .email-item');
+        const row = e.target.closest && e.target.closest(ticketRowSelector(''));
         if (!row) return;
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
@@ -11614,7 +11621,7 @@ async function emptyTrash() {
  */
 document.addEventListener('mousedown', function (e) {
     if (!e.shiftKey) return;
-    if (e.target.closest && e.target.closest('#emailList')) e.preventDefault();
+    if (e.target.closest && e.target.closest('#emailList, #ticketTableContainer')) e.preventDefault();
 });
 
 // Outside click + Escape close the menus
