@@ -51,7 +51,7 @@ $translationNamespaces = ['common', 'tickets'];
     <link rel="stylesheet" href="../assets/css/ticket-workspace.css?v=2">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
     <link rel="stylesheet" href="../assets/css/data-table.css?v=5">
-    <link rel="stylesheet" href="../assets/css/tickets-table.css?v=1">
+    <link rel="stylesheet" href="../assets/css/tickets-table.css?v=2">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <?php
