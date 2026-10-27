@@ -1490,6 +1490,9 @@ class WorkflowEngine
                     // be on holiday. Empty on an install with no teams.
                     'assigned_team_id'    => ['type' => 'lookup', 'label' => 'Assign to team', 'lookup' => 'team'],
                     'assigned_analyst_id' => ['type' => 'lookup', 'label' => 'Assign to', 'lookup' => 'analyst'],
+                    // GH #216. Without a mailbox a ticket cannot be emailed at all -
+                    // not by a later "Send an email", not by an analyst's Reply.
+                    'mailbox_id'          => ['type' => 'lookup', 'label' => 'Mailbox (replies go from it; blank = the mailbox of the ticket that fired the rule)', 'lookup' => 'mailbox'],
                     'from_email'          => ['type' => 'text', 'label' => 'Requester email', 'default' => '{{ticket.requester_email}}', 'supports_vars' => true],
                     'from_name'           => ['type' => 'text', 'label' => 'Requester name', 'supports_vars' => true],
                 ],
@@ -2865,9 +2868,15 @@ class WorkflowEngine
         // that is usually not what you want, so the arg is left blank there; when
         // there is no ticket it is the only way to know who is sending.
         if ($mailboxId) {
+            // 🔴 Decrypted, like every other mailbox read. The tenant id, client
+            // secret, IMAP/SMTP logins and the address are stored encrypted, so the
+            // raw row built a token URL with ciphertext for a tenant and Microsoft
+            // answered 404 - "Failed to obtain a valid access token" on every send
+            // from a chosen mailbox, while ticket replies from the same mailbox
+            // worked. Reported by Abdullah31H in GH #216.
             $mb = $conn->prepare('SELECT * FROM target_mailboxes WHERE id = ?');
             $mb->execute([$mailboxId]);
-            $mailbox = $mb->fetch(PDO::FETCH_ASSOC) ?: null;
+            $mailbox = decryptMailboxRow($mb->fetch(PDO::FETCH_ASSOC) ?: null);
             if (!$mailbox) throw new Exception("Mailbox not found: {$mailboxId}");
         } else {
             $mailbox = templateGetMailboxForTicket($conn, $ticketId);
@@ -3115,6 +3124,7 @@ class WorkflowEngine
         $typeId             = self::argInt($args, 'type_id',             $payload);
         $assignedTeamId     = self::argInt($args, 'assigned_team_id',    $payload);
         $assignedAnalystId  = self::argInt($args, 'assigned_analyst_id', $payload);
+        $mailboxId          = self::argInt($args, 'mailbox_id',          $payload);
         $fromEmail          = self::argString($args, 'from_email', $payload);
         $fromName           = self::argString($args, 'from_name',  $payload);
 
@@ -3134,6 +3144,7 @@ class WorkflowEngine
             $conn = connectToDatabase();
             self::assertRecordInRunCompany($conn, 'form_submissions', $submissionId, 'form submission');
             if ($assignedAnalystId) self::assertAnalystReachesRunCompany($conn, $assignedAnalystId);
+            $mailboxId = self::mailboxForNewTicket($conn, $mailboxId, $payload);
             return catalogueRaiseTicketFromSubmissionId($conn, $submissionId, [
                 // Blank means "not configured", so it must not reach the shared
                 // path as an override — that is what lets the submission supply
@@ -3145,6 +3156,7 @@ class WorkflowEngine
                 'ticket_type_id'      => $typeId,
                 'assigned_team_id'    => $assignedTeamId,
                 'assigned_analyst_id' => $assignedAnalystId,
+                'mailbox_id'          => $mailboxId,
                 'from_email'          => $fromEmail,
                 'from_name'           => $fromName,
                 'audit_note'          => 'Raised from a form submission by a workflow',
@@ -3155,6 +3167,7 @@ class WorkflowEngine
 
         $conn = connectToDatabase();
         if ($assignedAnalystId) self::assertAnalystReachesRunCompany($conn, $assignedAnalystId);
+        $mailboxId = self::mailboxForNewTicket($conn, $mailboxId, $payload);
         $conn->beginTransaction();
         try {
             // Resolve / upsert the user row by email so the ticket has a
@@ -3217,15 +3230,18 @@ class WorkflowEngine
             require_once dirname(__DIR__, 2) . '/includes/ticket_numbering.php';
             $ticketNumber = TicketNumbering::next($conn, $typeId ? (int)$typeId : null, $ticketTenant);
 
+            // owner_id with assigned_analyst_id, as every other path that creates
+            // or assigns a ticket sets both: the Owner field reads owner_id, so the
+            // ticket showed "Unassigned" (GH #216).
             $conn->prepare(
                 "INSERT INTO tickets (ticket_number, subject, status_id, priority_id,
                                      department_id, ticket_type_id, assigned_team_id,
-                                     assigned_analyst_id,
+                                     assigned_analyst_id, owner_id,
                                      user_id, tenant_id, created_datetime, updated_datetime)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
             )->execute([
                 $ticketNumber, $subject, $statusId, $priorityId,
-                $departmentId, $typeId, $assignedTeamId, $assignedAnalystId, $userId, $ticketTenant,
+                $departmentId, $typeId, $assignedTeamId, $assignedAnalystId, $assignedAnalystId, $userId, $ticketTenant,
             ]);
             $newTicketId = (int)$conn->lastInsertId();
             // Confidential defaults (discussion #62) - the rule may have put it in a
@@ -3243,14 +3259,14 @@ class WorkflowEngine
                 "INSERT INTO emails (subject, from_address, from_name, to_recipients,
                                     received_datetime, body_preview, body_content, body_type,
                                     has_attachments, importance, is_read, ticket_id,
-                                    is_initial, direction)
-                 VALUES (?, ?, ?, ?, UTC_TIMESTAMP(), ?, ?, 'html', 0, 'normal', 1, ?, 1, 'Manual')"
+                                    is_initial, direction, mailbox_id)
+                 VALUES (?, ?, ?, ?, UTC_TIMESTAMP(), ?, ?, 'html', 0, 'normal', 1, ?, 1, 'Manual', ?)"
             )->execute([
                 $subject,
                 $fromEmail !== '' ? $fromEmail : '',
                 $fromName  !== '' ? $fromName  : ($fromEmail ?: 'Workflow Engine'),
                 $fromEmail !== '' ? $fromEmail : '',
-                $bodyPreview, $bodyHtml, $newTicketId,
+                $bodyPreview, $bodyHtml, $newTicketId, $mailboxId,
             ]);
 
             $conn->prepare(
@@ -3268,6 +3284,36 @@ class WorkflowEngine
             $conn->rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * The mailbox a workflow-raised ticket belongs to: the one the rule chose,
+     * else the mailbox of the ticket that fired the rule, else none.
+     *
+     * A ticket's mailbox is the one on its opening message (emails.mailbox_id),
+     * and every send - a Reply, a "Send an email" step - looks there. A ticket
+     * raised with none can never be emailed, which is what GH #216 ran into.
+     * Inheriting the firing ticket's mailbox keeps a fan-out ("new starter" ->
+     * an IT ticket) replying from the address the requester already wrote to.
+     *
+     * @param int|null $mailboxId  the action's mailbox_id arg, if set
+     * @param array $payload  the run's payload; ticket.id is the ticket that fired the rule
+     */
+    private static function mailboxForNewTicket(PDO $conn, ?int $mailboxId, array $payload): ?int
+    {
+        if ($mailboxId) {
+            self::assertSharedOrRunCompany($conn, 'target_mailboxes', $mailboxId, 'mailbox');
+            return $mailboxId;
+        }
+        $firedFor = (int)(self::dotGet($payload, 'ticket.id') ?? 0);
+        if ($firedFor <= 0) return null;
+        $stmt = $conn->prepare(
+            'SELECT mailbox_id FROM emails WHERE ticket_id = ? AND mailbox_id IS NOT NULL
+              ORDER BY is_initial DESC, received_datetime ASC LIMIT 1'
+        );
+        $stmt->execute([$firedFor]);
+        $v = $stmt->fetchColumn();
+        return $v !== false ? (int)$v : null;
     }
 
     /**

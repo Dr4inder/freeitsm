@@ -216,7 +216,8 @@ function catalogueApprovalDecide(PDO $conn, int $actorId, int $submissionId, str
  * @param array $sub  the form_submissions row plus form_title, as loaded by catalogueApprovalDecide()
  * @param array $overrides  optional ticket settings that win over the submission: subject, body_html,
  *     status_id, priority_id, department_id, ticket_type_id, assigned_analyst_id, assigned_team_id,
- *     from_email/from_name (requester when the submission has no account), audit_note
+ *     mailbox_id (the mailbox replies go from), from_email/from_name (requester when the submission
+ *     has no account), audit_note
  * @return array [int ticketId, string ticketNumber]
  */
 function catalogueCreateTicketFromSubmission(PDO $conn, array $sub, array $overrides = []): array {
@@ -297,20 +298,25 @@ function catalogueCreateTicketFromSubmission(PDO $conn, array $sub, array $overr
     // straight into a team's queue — "guest Wi-Fi requests go to Infrastructure"
     // — without naming a person. Null unless the rule set one.
     $teamId       = isset($overrides['assigned_team_id'])    && $overrides['assigned_team_id']    ? (int)$overrides['assigned_team_id']    : null;
+    // GH #216. The mailbox on the opening message is the one every reply goes
+    // from; with none, the ticket cannot be emailed. Checked by the caller.
+    $mailboxId    = isset($overrides['mailbox_id'])          && $overrides['mailbox_id']          ? (int)$overrides['mailbox_id']          : null;
 
     // TRAP: the install's numbering, never a number made here - see
     //   messagingGenerateTicketNumber() for what went wrong when it was.
     $ticketNumber = TicketNumbering::next($conn, $typeId, $tenantId !== null ? (int)$tenantId : null);
 
+    // owner_id with assigned_analyst_id, as every path that creates or assigns a
+    // ticket sets both: the Owner field reads owner_id (GH #216).
     $conn->prepare(
         "INSERT INTO tickets (ticket_number, subject, status_id, priority_id,
                               department_id, ticket_type_id, assigned_team_id,
-                              assigned_analyst_id,
+                              assigned_analyst_id, owner_id,
                               user_id, tenant_id, created_datetime, updated_datetime)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
     )->execute([
         $ticketNumber, $subject, $statusId, $priorityId,
-        $departmentId, $typeId, $teamId, $analystId,
+        $departmentId, $typeId, $teamId, $analystId, $analystId,
         $userId, $tenantId,
     ]);
     $ticketId = (int)$conn->lastInsertId();
@@ -321,9 +327,9 @@ function catalogueCreateTicketFromSubmission(PDO $conn, array $sub, array $overr
 
     $conn->prepare(
         "INSERT INTO emails (subject, from_address, from_name, to_recipients, received_datetime,
-             body_preview, body_content, body_type, has_attachments, importance, is_read, ticket_id, is_initial, direction)
-         VALUES (?, ?, ?, ?, UTC_TIMESTAMP(), ?, ?, 'html', 0, 'normal', 0, ?, 1, 'Portal')"
-    )->execute([$subject, $fromEmail, $fromName, $fromEmail, $bodyPreview, $bodyHtml, $ticketId]);
+             body_preview, body_content, body_type, has_attachments, importance, is_read, ticket_id, is_initial, direction, mailbox_id)
+         VALUES (?, ?, ?, ?, UTC_TIMESTAMP(), ?, ?, 'html', 0, 'normal', 0, ?, 1, 'Portal', ?)"
+    )->execute([$subject, $fromEmail, $fromName, $fromEmail, $bodyPreview, $bodyHtml, $ticketId, $mailboxId]);
 
     // Provenance. Without this a ticket raised from a form is indistinguishable
     // from one somebody typed, and the first question asked about a surprising
