@@ -8685,6 +8685,16 @@ function togglePaneMoreMenu(event) {
     });
     menu.insertAdjacentHTML('beforeend', buildWorkspaceAction(currentEmail));
     menu.hidden = false;
+    // The menu hangs leftwards from More (right: 0 in reading-pane.css). When the
+    // toolbar wraps and More starts a new line, that runs past the pane's left
+    // edge and the pane clips it - so open it rightwards instead when it would.
+    menu.style.left = '';
+    menu.style.right = '';
+    const pane = menu.closest('.reading-pane') || document.body;
+    if (menu.getBoundingClientRect().left < pane.getBoundingClientRect().left) {
+        menu.style.left = '0';
+        menu.style.right = 'auto';
+    }
     const close = e => { if (!menu.contains(e.target)) { menu.hidden = true; document.removeEventListener('click', close); } };
     setTimeout(() => document.addEventListener('click', close), 0);
 }
