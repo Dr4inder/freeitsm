@@ -28,6 +28,20 @@
         display: flex; flex-direction: column; justify-content: center;
     }
     .reading-pane .pane-strips > .ai-summary[hidden] { display: none; }
+    /* The Links strip is one row: "Links", the pills (which truncate, then fold
+       into "+N" - fitLinksStrip in inbox.js), and Link to… always on the right.
+       It wraps only while a picker is open (the picker takes a row of its own)
+       or after "+N" has unfolded it. */
+    .reading-pane .pane-strips > .links-strip { flex-wrap: nowrap; gap: 6px; padding-top: 6px; padding-bottom: 6px; }
+    .reading-pane .pane-strips > .links-strip:has(> .strip-picker-host:not([hidden])),
+    .reading-pane .pane-strips > .links-strip.links-unfolded { flex-wrap: wrap; }
+    .reading-pane .pane-strips > .links-strip > .problem-strip-label,
+    .reading-pane .pane-strips > .links-strip > .link-add-wrap { flex: none; }
+    .reading-pane .pane-strips .links-strip-pills { display: flex; align-items: center; gap: 6px; flex: 1 1 auto; min-width: 0; overflow: hidden; }
+    .reading-pane .pane-strips .links-unfolded .links-strip-pills { flex-wrap: wrap; overflow: visible; }
+    .reading-pane .pane-strips .links-strip-pills .pm-ticket-badge { flex: 0 1 auto; min-width: 0; white-space: nowrap; }
+    .reading-pane .pane-strips .links-strip-pills .pill-text { min-width: 0; max-width: 18em; overflow: hidden; text-overflow: ellipsis; }
+    .reading-pane .pane-strips .links-strip-pills .pill-folded { display: none; }
     /* A summary that has been opened up needs the width to be read. */
     .reading-pane .pane-strips:has(.ai-summary-body) { flex-wrap: wrap; }
     .reading-pane .pane-strips:has(.ai-summary-body) > .ai-summary { flex-basis: 100%; border-left: none; border-top: 1px solid var(--border, #e0e0e0); }

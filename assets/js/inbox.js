@@ -3410,6 +3410,7 @@ function displayEmail(email, recordings) {
     // Isolate the just-rendered email body in a shadow root (see emailBodyHost).
     hydrateEmailBodies(readingPane);
     watchPaneCompact(readingPane);
+    watchLinksStrip(readingPane);
 
     loadAiSummary(email.ticket_id);
     if (typeof loadTicketChecklists === "function") loadTicketChecklists(email.ticket_id);
@@ -3799,7 +3800,7 @@ function buildLinksSection(email, workspace = false) {
     // Problems (⚠) — open in the Problem module.
     (email.problems || []).forEach(p => {
         pills.push(`<a class="pm-ticket-badge" href="../problem-management/index.php?id=${p.id}" target="_blank" title="Problem: ${escapeHtml(p.title || '')}">
-            ⚠ ${escapeHtml(p.problem_number || ('#' + p.id))}${p.status ? ' · ' + escapeHtml(p.status) : ''}
+            ⚠ <span class="pill-text">${escapeHtml(p.problem_number || ('#' + p.id))}${p.status ? ' · ' + escapeHtml(p.status) : ''}</span>
             ${rpBadge('problem', p.id)}
             <span class="pm-ticket-unlink" onclick="event.preventDefault();event.stopPropagation();unlinkTicketFromProblem(${p.id});">✕</span>
         </a>`);
@@ -3809,7 +3810,7 @@ function buildLinksSection(email, workspace = false) {
     (email.changes || []).forEach(c => {
         const ref = 'CHG-' + String(c.id).padStart(4, '0');
         pills.push(`<a class="pm-ticket-badge" href="../change-management/index.php?id=${c.id}" target="_blank" title="Change: ${escapeHtml(c.title || '')}">
-            🔁 ${escapeHtml(ref)}${c.status ? ' · ' + escapeHtml(c.status) : ''}
+            🔁 <span class="pill-text">${escapeHtml(ref)}${c.status ? ' · ' + escapeHtml(c.status) : ''}</span>
             ${rpBadge('change', c.id)}
             <span class="pm-ticket-unlink" onclick="event.preventDefault();event.stopPropagation();unlinkTicketFromChange(${c.id});">✕</span>
         </a>`);
@@ -3819,7 +3820,7 @@ function buildLinksSection(email, workspace = false) {
     const L = email.linked_tickets || {};
     /** Builds one linked-ticket pill with its relation prefix (Parent, Child, Duplicate...) and an unlink cross. */
     const tp = (item, prefix) => `<a class="pm-ticket-badge" href="#" onclick="event.preventDefault();loadTicketById(${item.ticket_id});" title="${escapeHtml(item.subject || '')}">
-        🔗 ${escapeHtml(prefix)} ${escapeHtml(item.ticket_number || ('#' + item.ticket_id))}${item.status ? ' · ' + escapeHtml(item.status) : ''}
+        🔗 <span class="pill-text">${escapeHtml(prefix)} ${escapeHtml(item.ticket_number || ('#' + item.ticket_id))}${item.status ? ' · ' + escapeHtml(item.status) : ''}</span>
         ${rpBadge('ticket', item.ticket_id)}
         <span class="pm-ticket-unlink" onclick="event.preventDefault();event.stopPropagation();unlinkTicketLink(${item.link_id});">✕</span>
     </a>`;
@@ -3846,7 +3847,7 @@ function buildLinksSection(email, workspace = false) {
         pills.push(`<a class="pm-ticket-badge tracker-badge tracker-${escapeHtml(k.status_category || 'unknown')}"
             href="${escapeHtml(k.external_url || '#')}" target="_blank" rel="noopener"
             title="${escapeHtml(title)}">
-            ${dot} ${escapeHtml(ref)}${bits.length ? ' · ' + escapeHtml(bits.join(' · ')) : ''}
+            ${dot} <span class="pill-text">${escapeHtml(ref)}${bits.length ? ' · ' + escapeHtml(bits.join(' · ')) : ''}</span>
         </a>`);
     });
 
@@ -3863,12 +3864,15 @@ function buildLinksSection(email, workspace = false) {
 
     return `<div class="problem-strip links-strip">
         <span class="problem-strip-label">Links</span>
-        ${body}
-        <span class="strip-pill-group" id="stripAssetPills"></span>
-        <span class="strip-pill-group" id="stripCmdbPills"></span>
-        <span class="strip-pill-group" id="stripDomainPills"></span>
-        <span class="strip-pill-group" id="stripProjectPills"></span>
-        ${workspace ? '' : '<span class="strip-pill-group" id="stripTaskPills"></span>'}
+        <span class="links-strip-pills">
+            ${body}
+            <span class="strip-pill-group" id="stripAssetPills"></span>
+            <span class="strip-pill-group" id="stripCmdbPills"></span>
+            <span class="strip-pill-group" id="stripDomainPills"></span>
+            <span class="strip-pill-group" id="stripProjectPills"></span>
+            ${workspace ? '' : '<span class="strip-pill-group" id="stripTaskPills"></span>'}
+        </span>
+        ${workspace ? '' : '<button type="button" class="links-strip-more" hidden onclick="toggleLinksStripMore(this)"></button>'}
         ${workspace ? '' : buildLinkActions()}
         <div class="strip-picker-host" id="stripPickerHost" hidden></div>
     </div>`;
@@ -4039,7 +4043,7 @@ function renderTicketTasks(ticketId) {
         return `<a class="${cls}" href="../tasks/index.php?task=${tk.id}" target="_blank"
                    title="${escapeHtml(bits.join(' · '))}"
                    ${window.TicketWorkspace?.isActive() ? `onclick="if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) { event.preventDefault(); TicketWorkspace.openTask(${ticketId}, ${tk.id}); }"` : ''}>
-            ${box} ${escapeHtml(tk.title)}${prog}
+            ${box} <span class="pill-text">${escapeHtml(tk.title)}${prog}</span>
             ${rpBadge('task', tk.id)}
             <span class="pm-ticket-unlink" title="${escapeHtml(t('tickets.tasks.unlink_title'))}"
                   onclick="event.preventDefault();event.stopPropagation();unlinkTicketTask(event, ${tk.id}, ${ticketId});">&#10005;</span>
@@ -6130,7 +6134,7 @@ function renderCmdbObjects(ticketId) {
             : '';
         const title = [link.class_name, where].filter(Boolean).join(' · ');
         return `<a class="pm-ticket-badge" href="../cmdb/object.php?id=${link.object_id}" title="${escapeHtml(title)}">
-            🗄️ ${escapeHtml(link.name)}
+            🗄️ <span class="pill-text">${escapeHtml(link.name)}</span>
             <span class="pm-ticket-unlink" title="${escapeHtml(t('tickets.cmdb.unlink_title'))}" onclick="event.preventDefault();event.stopPropagation();removeCmdbObject(event, ${link.link_id}, ${ticketId});">✕</span>
         </a>`;
     }).join('');
@@ -6259,7 +6263,7 @@ function renderTicketDomains(ticketId) {
         const when = dm.expiry_date ? (window.fmtNaiveDate ? fmtNaiveDate(String(dm.expiry_date).slice(0, 10) + 'T00:00:00') : dm.expiry_date) : '';
         const title = when ? t('tickets.domains.expires', { date: when }) : '';
         return `<a class="pm-ticket-badge" href="../${escapeHtml(dm.url)}" title="${escapeHtml(title)}">
-            🌐 ${escapeHtml(dm.name)}
+            🌐 <span class="pill-text">${escapeHtml(dm.name)}</span>
             <span class="pm-ticket-unlink" title="${escapeHtml(t('tickets.domains.unlink_title'))}" onclick="event.preventDefault();event.stopPropagation();removeTicketDomain(event, ${dm.id}, ${ticketId});">✕</span>
         </a>`;
     }).join('');
@@ -6378,7 +6382,7 @@ async function loadTicketProjects(ticketId) {
         }
     }
     host.innerHTML = projectsForTicket.map(p => `<a class="pm-ticket-badge" href="../${escapeHtml(p.url)}" title="${escapeHtml(p.code + ' - ' + (p.status || ''))}">
-            <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${escapeHtml(p.colour)};margin-right:5px"></span>${escapeHtml(p.name)}
+            <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${escapeHtml(p.colour)};margin-right:5px"></span><span class="pill-text">${escapeHtml(p.name)}</span>
             <span class="pm-ticket-unlink" title="${escapeHtml(t('tickets.projects.unlink_title'))}" onclick="event.preventDefault();event.stopPropagation();removeTicketProject(event, ${p.id}, ${ticketId});">&#10005;</span>
         </a>`).join('');
     if (typeof syncLinksStripEmpty === 'function') syncLinksStripEmpty();
@@ -6534,7 +6538,7 @@ function renderTicketAssets(ticketId) {
         if (link.service_tag)   bits.push(t('tickets.assets.serial', { serial: link.service_tag }));
         if (link.location_name) bits.push(link.location_name);
         return `<a class="pm-ticket-badge" href="../asset-management/index.php?asset_id=${link.asset_id}" title="${escapeHtml(bits.join(' · '))}">
-            🖥️ ${escapeHtml(assetDisplayName(link))}
+            🖥️ <span class="pill-text">${escapeHtml(assetDisplayName(link))}</span>
             ${rpBadge('asset', link.asset_id)}
             <span class="pm-ticket-unlink" title="${escapeHtml(t('tickets.assets.unlink_title'))}" onclick="event.preventDefault();event.stopPropagation();removeTicketAsset(event, ${link.link_id}, ${ticketId});">✕</span>
         </a>`;
@@ -8661,6 +8665,100 @@ function watchPaneCompact(pane) {
         if (body.scrollTop > 60) pane.classList.add('pane-compact');
         else if (body.scrollTop < 10) pane.classList.remove('pane-compact');
     }, { passive: true });
+}
+
+/**
+ * The reading pane's Links strip on a desktop is ONE row (reading-pane.css):
+ * "Links", then the pills in a box that takes whatever width is left, then
+ * Link to… - so the button never wraps onto a line of its own. Each pill's name
+ * truncates as the box narrows; once a name would be squeezed below a few
+ * characters, the last pills fold away into a "+N" chip that unfolds the strip
+ * (and "Less" folds it again).
+ *
+ * Measured, not breakpointed: it re-fits whenever the strip is resized (window,
+ * column drags, the AI summary opening) and whenever a loader adds pills - the
+ * equipment, CMDB, domain, project and task pills all arrive after the strip.
+ * Only the chip and classes change here, never the box's children, so the
+ * MutationObserver cannot set itself off.
+ *
+ * The phone (the strip moves into the Links sheet) and the workspace's Links tab
+ * keep wrapping: there the pill box is display: contents and this returns early.
+ */
+let linksStripWatch = null;
+function watchLinksStrip(pane) {
+    linksStripWatch?.disconnect();
+    linksStripWatch = null;
+    const strip = pane?.querySelector('.pane-strips > .links-strip');
+    const box = strip?.querySelector('.links-strip-pills');
+    if (!box || typeof ResizeObserver === 'undefined') return;
+    let queued = false;
+    const refit = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => { queued = false; fitLinksStrip(strip); });
+    };
+    const ro = new ResizeObserver(refit);
+    const mo = new MutationObserver(refit);
+    ro.observe(strip);
+    mo.observe(box, { childList: true, subtree: true });
+    linksStripWatch = { disconnect() { ro.disconnect(); mo.disconnect(); } };
+    refit();
+}
+
+/** A name squeezed to a stub: truncated AND under ~4 characters wide. */
+const LINK_PILL_MIN_TEXT = 48;
+
+/** Folds the strip's last pills into the "+N" chip until the rest fit, and titles the truncated names. */
+function fitLinksStrip(strip) {
+    const box = strip.querySelector('.links-strip-pills');
+    const more = strip.querySelector('.links-strip-more');
+    if (!box || !more) return;
+    const pills = [...box.querySelectorAll('.pm-ticket-badge')];
+    pills.forEach(p => p.classList.remove('pill-folded'));
+    more.hidden = true;
+    if (getComputedStyle(box).display !== 'flex' || !box.clientWidth) return;
+
+    if (strip.classList.contains('links-unfolded')) {
+        more.hidden = false;
+        more.textContent = t('tickets.links.less');
+        more.removeAttribute('aria-label');
+    } else if (pills.length > 1) {
+        const squeezed = () => box.scrollWidth > box.clientWidth + 1 || pills.some(p => {
+            const name = p.querySelector('.pill-text');
+            return !p.classList.contains('pill-folded') && name
+                && name.scrollWidth > name.clientWidth && name.clientWidth < LINK_PILL_MIN_TEXT;
+        });
+        if (squeezed()) {
+            let folded = 0;
+            more.hidden = false;
+            more.textContent = '+' + pills.length;   // room for the widest count before measuring
+            for (let i = pills.length - 1; i > 0 && (folded === 0 || squeezed()); i--) {
+                pills[i].classList.add('pill-folded');
+                folded++;
+                more.textContent = '+' + folded;
+            }
+            more.setAttribute('aria-label', t('tickets.links.more_label', { count: folded }));
+        }
+    }
+
+    // A truncated name is still readable on hover. The pill's own title (the
+    // status, the class, the expiry...) follows it, as it would on the pill.
+    pills.forEach(p => {
+        const name = p.querySelector('.pill-text');
+        if (!name) return;
+        if (name.scrollWidth > name.clientWidth) {
+            name.title = name.textContent.trim() + (p.title ? ' - ' + p.title : '');
+        } else {
+            name.removeAttribute('title');
+        }
+    });
+}
+
+/** The "+N" / "Less" chip: unfolds the whole strip onto as many lines as it needs, or folds it back to one. */
+function toggleLinksStripMore(btn) {
+    const strip = btn.closest('.links-strip');
+    strip.classList.toggle('links-unfolded');
+    fitLinksStrip(strip);
 }
 
 /**

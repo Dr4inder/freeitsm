@@ -409,6 +409,11 @@ return [
         'and_more'      => '…and {count} more',
     ],
 
+    // The reading pane's one-row Links strip (fitLinksStrip in inbox.js).
+    'links' => [
+        'more_label' => 'Show {count} more links',
+        'less'       => 'Less',
+    ],
     'tasks' => [
         'menu_item'          => 'Task',
         'search_placeholder' => 'Search tasks, or type a new one…',

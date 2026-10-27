@@ -14,6 +14,9 @@ $html .= <<<'HTML'
 document.addEventListener=originalAdd;
 const checks=[];
 const check=(label,pass,detail)=>checks.push({label,pass:!!pass,detail});
+// The reading pane's own: History is a tab in the workspace, and the Links
+// strip's "+N" chip only exists where the strip is one row (links-strip.php).
+const readingPaneOnly=a=>a==='showAuditHistory()'||a==='toggleLinksStripMore(this)';
 try {
     // Rendering is real. Only asynchronous reads/presence are replaced; they
     // must not contact any application or install during a layout-only test.
@@ -59,7 +62,7 @@ try {
     check('workspace arranges the real renderer',pane.classList.contains('ticket-workspace')&&pane.querySelector('[role=tablist]'));
     check('every native control survives the layout',ids.every(id=>id==='stripTaskPills'||document.getElementById(id)),ids.length);
     const after=[...pane.querySelectorAll('[onclick],[onchange]')].map(n=>n.getAttribute('onclick')||n.getAttribute('onchange'));
-    check('every native action retains its handler',actions.every(a=>a==='showAuditHistory()'||after.includes(a)),actions.length);
+    check('every native action retains its handler',actions.every(a=>readingPaneOnly(a)||after.includes(a)),actions.length);
     const allIds=[...document.querySelectorAll('[id]')].map(n=>n.id);
     check('no duplicate IDs',allIds.length===new Set(allIds).size);
     if(window.TicketWorkspace){
@@ -85,7 +88,7 @@ try {
             const controls=[...pane.querySelectorAll('[onclick],[onchange]')].map(n=>n.getAttribute('onclick')||n.getAttribute('onchange'));
             window.TICKET_WORKSPACE={mode:'all',personal:true,ready:true,can_write:true};displayEmail({...ticket,...extra},[]);
             const moved=[...pane.querySelectorAll('[onclick],[onchange]')].map(n=>n.getAttribute('onclick')||n.getAttribute('onchange'));
-            check(name+' keeps all conditional native actions',controls.every(a=>a==='showAuditHistory()'||moved.includes(a)),controls.length);
+            check(name+' keeps all conditional native actions',controls.every(a=>readingPaneOnly(a)||moved.includes(a)),controls.length);
             if(name==='trash')check('trashed workspace retains the native disabled-action wrapper',!!pane.querySelector('.tw-grid').closest('[inert]'));
         }
 

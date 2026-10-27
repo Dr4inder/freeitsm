@@ -3880,6 +3880,16 @@ body .tox-tinymce-aux {
    linking a CI is what feeds impact analysis. Shared row, separate identities.
    ========================================================= */
 .strip-pill-group { display: contents; }
+/* The pills' own box. Invisible to the layout everywhere except the desktop
+   reading pane, which makes it the one-row, truncating box (reading-pane.css). */
+.links-strip-pills { display: contents; }
+/* The reading pane's "+N" / "Less" chip (fitLinksStrip in inbox.js). */
+.links-strip-more {
+    flex: none; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer;
+    background: var(--surface, #fff); color: var(--problem-text, #6a1b9a); border: 1px solid var(--problem-border, #cbb6e0);
+}
+.links-strip-more:hover { background: var(--problem-badge-bg, #ede7f6); }
+.links-strip-more[hidden] { display: none; }
 .links-strip-empty { color: var(--text-faint, #9ca3af); font-size: 13px; }
 .links-strip-empty[hidden] { display: none; }
 
