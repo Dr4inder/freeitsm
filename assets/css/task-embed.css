@@ -1,4 +1,9 @@
-/* The native detail editor in normal document flow; outer ticket owns scrolling. */
+/*
+ * A task's detail panel inside a ticket's workspace (PR #212): tasks/embedded.php
+ * adds body.task-embed. The panel is shown as part of the page rather than as a
+ * drawer or modal over a board, at its full height - the ticket around it does
+ * the scrolling, and sizes the frame to fit (task-embed-bridge.js measure()).
+ */
 body.task-embed { display: block; height: auto; min-height: 0; overflow: auto; margin: 0; background: var(--surface); }
 .task-embed .detail-overlay { display: none; }
 .task-embed .detail-panel, .task-embed .detail-panel.as-modal { position: relative; inset: auto; transform: none; width: 100%; max-width: none; height: auto; max-height: none; display: block; border: 0; border-radius: 0; box-shadow: none; }

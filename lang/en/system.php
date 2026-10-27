@@ -1214,12 +1214,14 @@ return [
         'feed_note'    => 'Analysts may always choose to publish less than this, never more. Switching this off immediately stops links that have already been handed out.',
     ],
     'preferences' => [
-        'ticket_workspace_heading' => 'Tickets',
-        'ticket_workspace_label' => 'Use the workspace',
-        'ticket_workspace_desc' => 'Use the workspace for the tickets enabled by your administrator. Switch off to keep using the reading pane.',
-        'ticket_list_heading' => 'Ticket list',
-        'ticket_list_desc' => 'Open tickets as a message list or as a paginated work queue.',
-        'ticket_list_messages' => 'Messages', 'ticket_list_table' => 'Table',
+        // The ticket workspace (PR #211) and the ticket list layout (PR #213).
+        'ticket_workspace_heading' => 'Ticket workspace',
+        'ticket_workspace_label'   => 'Use the workspace',
+        'ticket_workspace_desc'    => 'Use the workspace for the tickets enabled by your administrator. Switch off to keep using the reading pane.',
+        'ticket_list_heading'      => 'Ticket list',
+        'ticket_list_desc'         => 'Open tickets as a message list or as a paginated work queue.',
+        'ticket_list_messages'     => 'Messages',
+        'ticket_list_table'        => 'Table',
         'title'    => 'Preferences',
         'subtitle' => 'Personal settings saved to your account — they follow you across browsers.',
 

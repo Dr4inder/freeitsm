@@ -14,7 +14,7 @@ try {
     $exit=ticketWorkspaceBrowser([],['url'=>$url.'/auth/login.php','verify'=>function(string $ws)use($fixture):array {
         extract($fixture);
         $credentials=json_encode(['username'=>$analysts['full']['username'],'password'=>$analysts['full']['password']]);
-        cdpEvaluate($ws,"fetch('/auth/login.php',{method:'POST',body:new URLSearchParams($credentials)}).then(r=>r.ok?'ok':'failed')",20);
+        cdpEvaluate($ws,"fetch('login.php',{method:'POST',body:new URLSearchParams($credentials)}).then(r=>r.ok?'ok':'failed')",20);
         cdpEvaluate($ws,'',10,['method'=>'Page.navigate','params'=>['url'=>$url.'/tickets/?ticket_id='.$ticket]]);
         usleep(500000);
         $checks=json_decode(cdpEvaluate($ws,<<<JS

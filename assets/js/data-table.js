@@ -31,6 +31,26 @@
  * editable kinds: 'text' | 'date' | 'datetime' | 'bool' |
  *   { kind:'lookup', listKey, valueKey, labelKey, allowNull?, nullLabel?, colourKey? }
  *
+ * Column flags (PR #213): sortable: false and filterable: false hide the sort
+ * arrow and the filter button for that column.
+ *
+ * SERVER MODE (PR #213, the ticket table)
+ * ---------------------------------------
+ * By default a table load()s every row and sorts, filters, searches and exports
+ * in the browser. A table too big for that passes `server` instead:
+ *   server: {
+ *     load: async query => ({rows, total, page, pageSize, facets}),
+ *     exportCsv: async (query + {columns}, abortSignal) => { ...download... },
+ *   }
+ * where query = {page, pageSize, sort, search, filters, context}. The server then
+ * does all of it over the WHOLE list and sends one page; facets are each filter
+ * column's values, labels and counts. Pages of 25/50/100 with Previous / Next.
+ * A failed load keeps the previous rows on screen, greyed and inert, with Retry.
+ * Optional hooks for a server table: manual (start() it yourself), initialFilters,
+ * getContext / applyContext (state outside the table that a saved view should
+ * carry), onLoading, onLoadError, onRowsRendered, onRowContextMenu.
+ * Every other module's table is unchanged: no `server`, no difference.
+ *
  * @wiki Saved-Table-Views-Developer-Guide
  */
 (function () {
@@ -52,7 +72,7 @@
      * Builds one data table from a module's config and wires it up when the page has loaded.
      *
      * Exposed as window.createDataTable. Holds the column, sort, filter and search state in a closure.
-     * @return object  reload, render, findRow(id), getViewRows and getAllRows
+     * @return object  reload, render, findRow(id), getViewRows and getAllRows; start and setQuery for a server table
      */
     function createDataTable(config) {
         const els = Object.assign({}, DEFAULT_ELS, config.els || {});
@@ -75,9 +95,16 @@
         let filters = Object.fromEntries(Object.entries(config.initialFilters || {}).map(([key, values]) => [key, new Set(values)]));
         let searchTerm = '';
         let openPopover = null;
+
+        // Server mode (see the header). Unused, and harmless, for a load() table.
         const server = config.server || null;
-        let page = 1, pageSize = 50, total = 0, facets = {}, generation = 0, signature = '', started = null, booting = false;
-        let exportController = null;
+        let page = 1, pageSize = 50, total = 0;
+        let facets = {};               // filter key => [{value, label, count}], from the server
+        let generation = 0;            // bumped per load, so a slow, older response is dropped
+        let signature = '';            // the query the rows on screen answer, less the page
+        let started = null;            // boot()'s promise, so start() runs it once
+        let booting = false;           // preferences are being applied; do not load yet
+        let exportController = null;   // the running CSV export, so a second click cancels it
         const T = key => window.t('common.table_server.' + key);
 
         // Inject the accent so shared CSS + body-appended popovers pick it up.
@@ -85,6 +112,7 @@
 
         // --- Boot -----------------------------------------------------
         if (!config.manual) document.addEventListener('DOMContentLoaded', start);
+        /** Boot the table once. A `manual` table calls this itself, when it is first shown. */
         function start() { return started || (started = boot()); }
 
         /**
@@ -147,62 +175,131 @@
             render();
         }
 
+        // --- Server mode (PR #213) ------------------------------------
+
+        /** The table's state as the server's query. Filters go as plain arrays. */
         function query() {
-            return {page, pageSize, sort:{...sort}, search:searchTerm,
-                filters:Object.fromEntries(Object.entries(filters).map(([key, values]) => [key, [...values]])),
-                context:config.getContext ? config.getContext() : config.context};
+            return {
+                page,
+                pageSize,
+                sort: { ...sort },
+                search: searchTerm,
+                filters: Object.fromEntries(Object.entries(filters).map(([key, values]) => [key, [...values]])),
+                context: config.getContext ? config.getContext() : config.context,
+            };
         }
 
-        function querySignature() { const q=query(); delete q.page; return JSON.stringify(q); }
+        /** The query less its page: when this changes, the rows on screen answer a different question. */
+        function querySignature() {
+            const q = query();
+            delete q.page;
+            return JSON.stringify(q);
+        }
 
+        /** Show (or, with no message, remove) the failed-load notice and its Retry button. */
         function serverNotice(message) {
             let node = byId(els.table).parentElement.querySelector('.dt-server-error');
             if (!message) { node?.remove(); return; }
-            if (!node) { node=document.createElement('div'); node.className='dt-server-error'; node.setAttribute('role','alert'); byId(els.table).before(node); }
+            if (!node) {
+                node = document.createElement('div');
+                node.className = 'dt-server-error';
+                node.setAttribute('role', 'alert');
+                byId(els.table).before(node);
+            }
             node.replaceChildren(document.createTextNode(message + ' '));
-            const retry=document.createElement('button'); retry.type='button'; retry.textContent=T('retry'); retry.addEventListener('click',reload); node.append(retry);
+            const retry = document.createElement('button');
+            retry.type = 'button';
+            retry.textContent = T('retry');
+            retry.addEventListener('click', reload);
+            node.append(retry);
         }
 
+        /**
+         * Fetch and draw one page. While it loads, the table is inert, so nothing
+         * is clicked on rows that are about to change. If it fails, the old rows
+         * stay, greyed (dt-stale) and inert, with Retry - never acted on, since
+         * they may no longer be true.
+         */
         async function reloadPage() {
             const current = ++generation;
             signature = querySignature();
-            const table=byId(els.table);
-            table.inert=true; table.setAttribute('aria-busy','true');
+            const table = byId(els.table);
+            table.inert = true;
+            table.setAttribute('aria-busy', 'true');
             config.onLoading?.();
             try {
-                const result=await server.load(query());
-                if (current !== generation) return;
-                if (!result || !Array.isArray(result.rows) || !Number.isInteger(result.total) || result.total < 0) throw Error('Invalid table page');
-                allRows=result.rows; total=result.total; page=result.page; pageSize=result.pageSize; facets=result.facets || {};
-                table.inert=false; table.classList.remove('dt-stale'); serverNotice(null);
-                renderHead(); renderBody(); renderPager();
+                const result = await server.load(query());
+                if (current !== generation) return;   // a newer load has started
+                if (!result || !Array.isArray(result.rows) || !Number.isInteger(result.total) || result.total < 0) {
+                    throw Error('Invalid table page');
+                }
+                allRows = result.rows;
+                total = result.total;
+                page = result.page;          // the server may have moved it back (fewer rows now)
+                pageSize = result.pageSize;
+                facets = result.facets || {};
+                table.inert = false;
+                table.classList.remove('dt-stale');
+                serverNotice(null);
+                renderHead();
+                renderBody();
+                renderPager();
             } catch (error) {
                 if (current !== generation) return;
-                table.classList.add('dt-stale'); serverNotice(T('failed'));
+                table.classList.add('dt-stale');
+                serverNotice(T('failed'));
                 config.onLoadError?.();
-            } finally { if(current===generation) table.removeAttribute('aria-busy'); }
-        }
-
-        function renderPager() {
-            let pager=byId(els.table).parentElement.querySelector('.dt-pagination');
-            if(!pager){pager=document.createElement('div');pager.className='dt-pagination';byId(els.table).after(pager);}
-            pager.replaceChildren();
-            for(const [label, next, disabled] of [[T('previous'),page-1,page<=1],[T('next'),page+1,page*pageSize>=total]]) {
-                const button=document.createElement('button');button.type='button';button.textContent=label;button.disabled=disabled;
-                button.addEventListener('click',()=>{page=next;void reloadPage();});pager.append(button);
+            } finally {
+                if (current === generation) table.removeAttribute('aria-busy');
             }
-            const status=document.createElement('span');status.textContent=page+' / '+Math.max(1,Math.ceil(total/pageSize));pager.append(status);
-            const size=document.createElement('select');size.setAttribute('aria-label',T('page_size'));
-            [25,50,100].forEach(n=>{const option=new Option(String(n),String(n));option.selected=n===pageSize;size.add(option);});
-            size.addEventListener('change',()=>{pageSize=Number(size.value);page=1;void reloadPage();});pager.append(size);
         }
 
+        /** Previous / Next, "page / pages", and the rows-per-page choice, under the table. */
+        function renderPager() {
+            let pager = byId(els.table).parentElement.querySelector('.dt-pagination');
+            if (!pager) {
+                pager = document.createElement('div');
+                pager.className = 'dt-pagination';
+                byId(els.table).after(pager);
+            }
+            pager.replaceChildren();
+            const buttons = [
+                [T('previous'), page - 1, page <= 1],
+                [T('next'),     page + 1, page * pageSize >= total],
+            ];
+            for (const [label, next, disabled] of buttons) {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.textContent = label;
+                button.disabled = disabled;
+                button.addEventListener('click', () => { page = next; void reloadPage(); });
+                pager.append(button);
+            }
+            const status = document.createElement('span');
+            status.textContent = page + ' / ' + Math.max(1, Math.ceil(total / pageSize));
+            pager.append(status);
+            const size = document.createElement('select');
+            size.setAttribute('aria-label', T('page_size'));
+            [25, 50, 100].forEach(n => {
+                const option = new Option(String(n), String(n));
+                option.selected = n === pageSize;
+                size.add(option);
+            });
+            size.addEventListener('change', () => { pageSize = Number(size.value); page = 1; void reloadPage(); });
+            pager.append(size);
+        }
+
+        /**
+         * Change the query from outside (a folder click, a context change) and
+         * reload. Anything not given keeps its value, except the page, which goes
+         * back to 1 unless given.
+         */
         async function setQuery(next) {
-            if(next.sort) sort={...next.sort};
-            if(next.search!==undefined) searchTerm=next.search;
-            if(next.filters) filters=Object.fromEntries(Object.entries(next.filters).map(([k,v])=>[k,new Set(v)]));
-            page=next.page || 1;
-            if([25,50,100].includes(next.pageSize)) pageSize=next.pageSize;
+            if (next.sort) sort = { ...next.sort };
+            if (next.search !== undefined) searchTerm = next.search;
+            if (next.filters) filters = Object.fromEntries(Object.entries(next.filters).map(([k, v]) => [k, new Set(v)]));
+            page = next.page || 1;
+            if ([25, 50, 100].includes(next.pageSize)) pageSize = next.pageSize;
             return reload();
         }
 
@@ -785,7 +882,9 @@
 
         /** Redraws the header and the body. */
         function render() {
-            if (server && !booting && signature !== querySignature()) { page=1; void reloadPage(); return; }
+            // Server mode: a sort, filter or search change means different rows, so
+            // fetch page 1 of the new answer rather than redraw the old rows.
+            if (server && !booting && signature !== querySignature()) { page = 1; void reloadPage(); return; }
             renderHead(); renderBody();
         }
 
@@ -817,10 +916,10 @@
 
             head.querySelectorAll('th').forEach(th => {
                 const key = th.dataset.colKey;
-                if (colByKey[key].filterable === false) th.querySelector('.dt-filter-btn').hidden=true;
+                if (colByKey[key].filterable === false) th.querySelector('.dt-filter-btn').hidden = true;
                 th.querySelector('.dt-th-content').addEventListener('click', e => {
                     if (e.target.closest('.dt-filter-btn')) return;
-                    if(colByKey[key].sortable !== false) toggleSort(key);
+                    if (colByKey[key].sortable !== false) toggleSort(key);
                 });
                 th.querySelector('.dt-filter-btn').addEventListener('click', e => {
                     e.stopPropagation();
@@ -1009,9 +1108,9 @@
                     const row = allRows.find(r => String(rowId(r)) === String(tr.dataset.id));
                     if (row) config.onRowClick(row, e);
                 });
-                if(config.onRowContextMenu) tr.addEventListener('contextmenu',e=>{
-                    const row=allRows.find(r=>String(rowId(r))===String(tr.dataset.id));
-                    if(row) config.onRowContextMenu(row,e);
+                if (config.onRowContextMenu) tr.addEventListener('contextmenu', e => {
+                    const row = allRows.find(r => String(rowId(r)) === String(tr.dataset.id));
+                    if (row) config.onRowContextMenu(row, e);
                 });
             });
         }
@@ -1024,7 +1123,7 @@
          * always sort last, whichever the direction. Also exposed as getViewRows and used by the exports.
          */
         function applyFiltersAndSort() {
-            if(server) return allRows;
+            if (server) return allRows;   // the server has already filtered and sorted this page
             const cols = visibleColumns();
             let rows = allRows.filter(row => {
                 for (const colKey in filters) {
@@ -1130,11 +1229,18 @@
                 const key = display === '' ? '(empty)' : display;
                 distinct.set(key, (distinct.get(key) || 0) + 1);
             });
-            const labels=new Map();
-            if(server) {
+            // Server mode: the values come from the server's counts over the whole
+            // list, not from this page's rows, and show the server's label (a
+            // status name) for each value (a status id). A ticked value with no
+            // rows left still appears, at 0, so it can be unticked.
+            const labels = new Map();
+            if (server) {
                 distinct.clear();
-                (facets[colKey] || []).forEach(item=>{distinct.set(String(item.value),item.count);labels.set(String(item.value),item.label);});
-                (filters[colKey] || []).forEach(value=>{if(!distinct.has(value)) distinct.set(value,0);});
+                (facets[colKey] || []).forEach(item => {
+                    distinct.set(String(item.value), item.count);
+                    labels.set(String(item.value), item.label);
+                });
+                (filters[colKey] || []).forEach(value => { if (!distinct.has(value)) distinct.set(value, 0); });
             }
             const sorted = [...distinct.keys()].sort((a, b) =>
                 a === '(empty)' ? -1 : b === '(empty)' ? 1
@@ -1282,14 +1388,23 @@
         // --- Exports --------------------------------------------------
         /** Downloads the filtered, sorted rows (visible columns only) as a CSV, with a BOM so Excel reads UTF-8. */
         async function exportCSV() {
-            if(server) {
-                if(exportController){exportController.abort();return;}
-                exportController=new AbortController();
-                const button=byId(els.csvBtn),label=button?.textContent;
-                if(button)button.textContent=T('cancel_export');
-                try {await server.exportCsv({...query(),columns:visibleColumns().map(c=>c.key)},exportController.signal);}
-                catch(error){if(error.name!=='AbortError')serverNotice(T('export_failed'));}
-                finally{exportController=null;if(button)button.textContent=label;}
+            // Server mode: the server builds the CSV of EVERY matching row (not this
+            // page), with the visible columns. The button reads Cancel export while
+            // it runs, and a second click cancels it.
+            if (server) {
+                if (exportController) { exportController.abort(); return; }
+                exportController = new AbortController();
+                const button = byId(els.csvBtn);
+                const label = button?.textContent;
+                if (button) button.textContent = T('cancel_export');
+                try {
+                    await server.exportCsv({ ...query(), columns: visibleColumns().map(c => c.key) }, exportController.signal);
+                } catch (error) {
+                    if (error.name !== 'AbortError') serverNotice(T('export_failed'));
+                } finally {
+                    exportController = null;
+                    if (button) button.textContent = label;
+                }
                 return;
             }
             const cols = visibleColumns();

@@ -1,10 +1,37 @@
 <?php
-/** Shared permission-scoped ticket reads for the inbox, queue and CSV. */
-require_once __DIR__.'/tenancy.php';
-require_once __DIR__.'/ticket_snooze.php';
-require_once __DIR__.'/inbox_view_filter.php';
+/**
+ * The ticket list query, shared by everything that lists tickets in the inbox:
+ *
+ *   api/tickets/get_emails.php     the message list (one row per ticket)
+ *   api/tickets/table.php          the ticket table, a page at a time (PR #213)
+ *   api/tickets/table_export.php   the ticket table as CSV (PR #213)
+ *
+ * The inbox's query used to live inside get_emails.php. It moved here (PR #213,
+ * by @Dr4inder) so the table and its export start from exactly the same rows -
+ * the same company scope, trash and snooze rules, and "My tickets" / "Hide
+ * closed" filter - and can never show a ticket the message list would not.
+ *
+ * TRAP: change WHICH tickets an analyst may see in ticketListBase() only. A rule
+ * added in one endpoint and not here is a list and a table that disagree.
+ *
+ * @wiki Ticket-Table-Developer-Guide
+ */
+require_once __DIR__ . '/tenancy.php';
+require_once __DIR__ . '/ticket_snooze.php';
+require_once __DIR__ . '/inbox_view_filter.php';
 
-/** Build the original inbox scope, optionally adding queue-only display columns. */
+/**
+ * The inbox's query: one row per ticket the analyst may see in this folder, with
+ * its latest email. Returns [$sql, $params, $snoozeReady], with no ORDER BY - the
+ * caller sorts.
+ *
+ * @param array $request  department_id, assignee_id, team_id, status ('unassigned'
+ *                        for "none"), trashed, snoozed, mine, hide_closed - the
+ *                        message list passes $_GET straight through
+ * @param array $extraColumns  more SELECT expressions, for the table. Trusted
+ *                             code only, never request values.
+ * @param array $extraJoins    the LEFT JOINs those columns need. Same rule.
+ */
 function ticketListBase(PDO $conn, int $analystId, array $request, array $extraColumns = [], array $extraJoins = []): array
 {
     // Get filter parameters
@@ -223,156 +250,387 @@ function ticketListFormat(array $emails): array
     return $emails;
 }
 
-/** Validate the internal queue contract before any SQL is built. */
-function ticketListQuery(array $input): array
+
+// ===========================================================================
+// THE TICKET TABLE (PR #213) - a paginated, server-side queue
+// ===========================================================================
+//
+// Everything below serves api/tickets/table.php (a page of rows plus the filter
+// counts) and api/tickets/table_export.php (the whole matching list as CSV).
+// Both start from ticketListBase(), so the table, its export and the message
+// list can never disagree about which tickets an analyst may see.
+//
+// 🔑 THE REQUEST IS VALIDATED BEFORE ANY SQL IS BUILT. ticketListQuery() turns
+// the raw $_GET into a checked array, and nothing after it reads $_GET. Sort
+// columns, filter columns and export columns are looked up in the fixed maps
+// below - a value the caller sends is only ever a KEY into one of them, never
+// text that reaches the SQL.
+
+/**
+ * How the table can be exported (Tickets -> Settings -> General -> Who can export
+ * the ticket list). The value is stored in system_settings 'ticket_list_export',
+ * so a case's value must never change.
+ *
+ * Administrators only is the default, including on an install that has never
+ * saved the setting: it is a one-click export of the whole filtered queue, a new
+ * way for ticket data to leave FreeITSM, so it starts narrow (design decision 2).
+ */
+enum TicketListExport: string
 {
-    $string = static function (string $key, string $default = '') use ($input): string {
-        if (!isset($input[$key])) return $default;
-        if (!is_scalar($input[$key])) throw new InvalidArgumentException('Invalid '.$key);
-        return (string)$input[$key];
-    };
-    $page=$string('page','1'); $size=$string('page_size','50');
-    if (!ctype_digit($page) || (int)$page<1 || (int)$page>10000000 || !in_array($size,['25','50','100'],true)) throw new InvalidArgumentException('Invalid page');
-    $sort=$string('sort','created_datetime'); $dir=$string('dir','desc'); $view=$string('view','active');
-    if (!isset(ticketListSorts()[$sort]) || !in_array($dir,['asc','desc'],true) || !in_array($view,['active','snoozed','trash'],true)) throw new InvalidArgumentException('Invalid list option');
-    $filters=json_decode($string('filters','{}'),true,16,JSON_THROW_ON_ERROR);
-    if (!is_array($filters) || count($filters)>6) throw new InvalidArgumentException('Invalid filters');
-    foreach ($filters as $key=>&$values) {
-        if (!isset(ticketListFilters()[$key]) || !is_array($values) || count($values)>200) throw new InvalidArgumentException('Invalid filter');
-        foreach ($values as &$value) {
-            if (!is_scalar($value) || ((string)$value!=='unassigned' && (!ctype_digit((string)$value) || (int)$value<1))) throw new InvalidArgumentException('Invalid filter value');
-            $value=(string)$value;
-        } unset($value);
-        $values=array_values(array_unique($values));
-    } unset($values);
-    $bool=static function(string $key,string $default)use($string):bool{ $v=$string($key,$default); if(!in_array($v,['0','1'],true))throw new InvalidArgumentException('Invalid '.$key);return $v==='1'; };
-    $q=trim($string('q'));if(mb_strlen($q)>500)throw new InvalidArgumentException('Search is too long');
-    return ['page'=>(int)$page,'pageSize'=>(int)$size,'sort'=>['key'=>$sort,'dir'=>$dir],'search'=>$q,'filters'=>$filters,
-        'context'=>['view'=>$view,'mine'=>$bool('mine','0'),'includeClosed'=>$bool('include_closed','1'),'searchContent'=>$bool('search_content','0')]];
+    case Admins      = 'admins';         // "Administrators only"
+    case TicketUsers = 'ticket_users';   // "Anyone with Tickets"
+    case Nobody      = 'nobody';
 }
 
-/** Allow only sortable queue columns; never interpolate a caller-supplied column. */
-function ticketListSorts(): array
-{
-    return ['ticket_number'=>'ticket_number','created_datetime'=>'created_datetime','priority'=>'priority_order',
-        'status'=>'status','assigned_analyst_id'=>'assignee_name','work_start_datetime'=>'work_start_datetime',
-        'work_end_datetime'=>'work_end_datetime','snoozed_until'=>'snoozed_until'];
-}
-
-/** Map the six supported facets to fields in the scoped row set. */
+/**
+ * The six columns the table can filter on, and what each needs.
+ *
+ *   key (the column key the browser uses) => [
+ *       the field in a row from ticketListBase(),
+ *       the tickets column to filter in SQL,
+ *       the lookup table and its label column, for the filter's counts,
+ *   ]
+ *
+ * One map for all three uses, so a seventh filter is added in one place.
+ */
 function ticketListFilters(): array
 {
-    return ['department_id'=>'department_id','team_id'=>'assigned_team_id','assignee_id'=>'assigned_analyst_id',
-        'status_id'=>'status_id','ticket_type_id'=>'ticket_type_id','priority_id'=>'priority_id'];
+    return [
+        'department_id'  => ['department_id',       't.department_id',       'departments',       'name'],
+        'team_id'        => ['assigned_team_id',    't.assigned_team_id',    'teams',             'name'],
+        'assignee_id'    => ['assigned_analyst_id', 't.assigned_analyst_id', 'analysts',          'full_name'],
+        'status_id'      => ['status_id',           't.status_id',           'ticket_statuses',   'name'],
+        'ticket_type_id' => ['ticket_type_id',      't.ticket_type_id',      'ticket_types',      'name'],
+        'priority_id'    => ['priority_id',         't.priority_id',         'ticket_priorities', 'name'],
+    ];
 }
 
-/** The same scoped row set feeds pages, faceting and the complete export. */
-function ticketListSql(PDO $conn, int $analystId, array $query, ?string $omitFilter=null): array
+/**
+ * The columns the table can sort on: column key => the field in a row from
+ * ticketListBase() to order by. Priority sorts by its display order, not its
+ * name, so Critical comes before Low rather than after it.
+ */
+function ticketListSorts(): array
 {
-    $ctx=$query['context'];
-    [$sql,$args]=ticketListBase($conn,$analystId,['trashed'=>$ctx['view']==='trash','snoozed'=>$ctx['view']==='snoozed',
-        'mine'=>$ctx['mine'],'hide_closed'=>!$ctx['includeClosed']],
+    return [
+        'ticket_number'       => 'ticket_number',
+        'created_datetime'    => 'created_datetime',
+        'priority_id'         => 'priority_order',
+        'status_id'           => 'status',
+        'assignee_id'         => 'assignee_name',
+        'work_start_datetime' => 'work_start_datetime',
+        'work_end_datetime'   => 'work_end_datetime',
+        'snoozed_until'       => 'snoozed_until',
+    ];
+}
+
+/**
+ * The columns that may leave through the CSV: column key => the field in a row.
+ * Only what the table itself offers - an export is never a way to reach a field
+ * the screen does not show.
+ */
+function ticketListExportColumns(): array
+{
+    return [
+        'ticket_number'       => 'ticket_number',
+        'subject'             => 'subject',
+        'created_datetime'    => 'created_datetime',
+        'priority_id'         => 'priority',
+        'status_id'           => 'status',
+        'assignee_id'         => 'assignee_name',
+        'department_id'       => 'department_name',
+        'team_id'             => 'team_name',
+        'ticket_type_id'      => 'ticket_type_name',
+        'work_start_datetime' => 'work_start_datetime',
+        'work_end_datetime'   => 'work_end_datetime',
+        'snoozed_until'       => 'snoozed_until',
+        'company_name'        => 'company_name',
+    ];
+}
+
+/**
+ * Check the table's request and turn it into the array the functions below take.
+ * Throws InvalidArgumentException (a 400) on anything it does not recognise,
+ * rather than quietly ignoring it - a request the page did not build is not one
+ * worth guessing at.
+ *
+ * Returns:
+ *   page, pageSize    1-based page; 25, 50 or 100 rows
+ *   sort              ['key' => a ticketListSorts() key, 'dir' => 'asc'|'desc']
+ *   search            the search box, trimmed (500 characters at most)
+ *   filters           filter key => list of ids, or 'unassigned' for "none"
+ *   context           what the folder pane says: view (active/snoozed/trash),
+ *                     mine, includeClosed, and searchContent (search message
+ *                     bodies, notes and documents rather than the subject line)
+ *
+ * @param array $input  the request, normally $_GET
+ */
+function ticketListQuery(array $input): array
+{
+    // A scalar parameter as a string. An array where a string belongs (?q[]=x) is
+    // refused rather than turned into "Array".
+    $string = static function (string $key, string $default = '') use ($input): string {
+        if (!isset($input[$key])) return $default;
+        if (!is_scalar($input[$key])) throw new InvalidArgumentException('Invalid ' . $key);
+        return (string)$input[$key];
+    };
+    $bool = static function (string $key, string $default) use ($string): bool {
+        $value = $string($key, $default);
+        if (!in_array($value, ['0', '1'], true)) throw new InvalidArgumentException('Invalid ' . $key);
+        return $value === '1';
+    };
+
+    $page = $string('page', '1');
+    $size = $string('page_size', '50');
+    if (!ctype_digit($page) || (int)$page < 1 || (int)$page > 10000000 || !in_array($size, ['25', '50', '100'], true)) {
+        throw new InvalidArgumentException('Invalid page');
+    }
+
+    $sort = $string('sort', 'created_datetime');
+    $dir  = $string('dir', 'desc');
+    $view = $string('view', 'active');
+    if (!isset(ticketListSorts()[$sort]) || !in_array($dir, ['asc', 'desc'], true)
+        || !in_array($view, ['active', 'snoozed', 'trash'], true)) {
+        throw new InvalidArgumentException('Invalid list option');
+    }
+
+    // Filters arrive as JSON: {"status_id": ["3", "unassigned"], ...}. Bounded so a
+    // hand-built request cannot ask for an IN() list of a million ids.
+    $filters = json_decode($string('filters', '{}'), true, 16, JSON_THROW_ON_ERROR);
+    if (!is_array($filters) || count($filters) > count(ticketListFilters())) {
+        throw new InvalidArgumentException('Invalid filters');
+    }
+    foreach ($filters as $key => &$values) {
+        if (!isset(ticketListFilters()[$key]) || !is_array($values) || count($values) > 200) {
+            throw new InvalidArgumentException('Invalid filter');
+        }
+        foreach ($values as &$value) {
+            // Every filter is an id column, so a value is a positive whole number -
+            // or 'unassigned', which means "this column is empty".
+            $isId = is_scalar($value) && ctype_digit((string)$value) && (int)$value >= 1;
+            if (!$isId && $value !== 'unassigned') throw new InvalidArgumentException('Invalid filter value');
+            $value = (string)$value;
+        }
+        unset($value);
+        $values = array_values(array_unique($values));
+    }
+    unset($values);
+
+    $search = trim($string('q'));
+    if (mb_strlen($search) > 500) throw new InvalidArgumentException('Search is too long');
+
+    return [
+        'page'     => (int)$page,
+        'pageSize' => (int)$size,
+        'sort'     => ['key' => $sort, 'dir' => $dir],
+        'search'   => $search,
+        'filters'  => $filters,
+        'context'  => [
+            'view'          => $view,
+            'mine'          => $bool('mine', '0'),
+            'includeClosed' => $bool('include_closed', '1'),
+            'searchContent' => $bool('search_content', '0'),
+        ],
+    ];
+}
+
+/**
+ * The SQL for every ticket that matches the query - not one page of them. The
+ * page, the filter counts and the CSV all wrap this, so all three answer the same
+ * question.
+ *
+ * 🔑 THE ANALYST'S SCOPE COMES FROM ticketListBase(), the inbox's own query, with
+ * its company filter, trash, snooze and "My tickets" / "Hide closed" rules. The
+ * table only ever narrows that; nothing here can widen it.
+ *
+ * @param array $query  from ticketListQuery()
+ * @param string|null $omitFilter  leave this one filter out. Used for that
+ *                                 filter's own counts, so its list still shows
+ *                                 the values you could switch to.
+ * @return array [$sql, $params]
+ */
+function ticketListSql(PDO $conn, int $analystId, array $query, ?string $omitFilter = null): array
+{
+    $ctx = $query['context'];
+    [$sql, $args] = ticketListBase(
+        $conn,
+        $analystId,
+        [
+            'trashed'     => $ctx['view'] === 'trash',
+            'snoozed'     => $ctx['view'] === 'snoozed',
+            'mine'        => $ctx['mine'],
+            'hide_closed' => !$ctx['includeClosed'],
+        ],
+        // The extra columns the table shows, sorts or filters on. Passed in rather
+        // than spliced into the inbox's SQL, so a later change to that query cannot
+        // make them silently disappear (design page, section 7).
         ['t.created_datetime', 't.status_id', 't.ticket_type_id', 't.priority_id',
          'tp.display_order AS priority_order', 'qd.name AS department_name',
          'qt.name AS team_name', 'qtt.name AS ticket_type_name'],
-        ['LEFT JOIN departments qd ON qd.id=t.department_id',
-         'LEFT JOIN teams qt ON qt.id=t.assigned_team_id',
-         'LEFT JOIN ticket_types qtt ON qtt.id=t.ticket_type_id']);
-    if ($query['search']!=='') {
+        ['LEFT JOIN departments qd ON qd.id = t.department_id',
+         'LEFT JOIN teams qt ON qt.id = t.assigned_team_id',
+         'LEFT JOIN ticket_types qtt ON qtt.id = t.ticket_type_id']
+    );
+
+    if ($query['search'] !== '') {
         if ($ctx['searchContent']) {
-            require_once __DIR__.'/search/search.php';
-            if(!searchCorpusReady($conn))throw new RuntimeException('Content search is unavailable');
-            $parsed=searchParseQuery($query['search'],searchMinTokenSize($conn));
-            if(!$parsed['terms']&&!$parsed['phrases'])throw new InvalidArgumentException('No searchable words; use longer words');
-            [$scope,$scopeArgs]=searchScopeToSql(searchScopeForAnalyst($conn,$analystId,['require_ticket'=>true,'include_internal'=>true,'include_deleted'=>$ctx['view']==='trash']),'sd');
-            $sql.=' AND EXISTS (SELECT 1 FROM search_documents sd WHERE sd.ticket_id=t.id AND MATCH(sd.title,sd.body) AGAINST (? IN BOOLEAN MODE)'.$scope.')';
-            $args=array_merge($args,[$parsed['expr']],$scopeArgs);
+            // "Search message bodies, notes and documents": the same full-text index
+            // and the same per-analyst scope as the search panel (#144), so it finds
+            // nothing the analyst could not find there.
+            require_once __DIR__ . '/search/search.php';
+            if (!searchCorpusReady($conn)) throw new RuntimeException('Content search is unavailable');
+            $parsed = searchParseQuery($query['search'], searchMinTokenSize($conn));
+            if (!$parsed['terms'] && !$parsed['phrases']) {
+                throw new InvalidArgumentException('No searchable words; use longer words');
+            }
+            [$scope, $scopeArgs] = searchScopeToSql(searchScopeForAnalyst($conn, $analystId, [
+                'require_ticket'   => true,
+                'include_internal' => true,
+                'include_deleted'  => $ctx['view'] === 'trash',
+            ]), 'sd');
+            $sql .= ' AND EXISTS (SELECT 1 FROM search_documents sd WHERE sd.ticket_id = t.id'
+                  . ' AND MATCH(sd.title, sd.body) AGAINST (? IN BOOLEAN MODE)' . $scope . ')';
+            $args = array_merge($args, [$parsed['expr']], $scopeArgs);
         } else {
-            $sql.=' AND (t.ticket_number LIKE ? OR t.subject LIKE ? OR u.email LIKE ? OR EXISTS (SELECT 1 FROM emails se WHERE se.ticket_id=t.id AND (se.subject LIKE ? OR se.from_address LIKE ? OR se.to_recipients LIKE ?)))';
-            $args=array_merge($args,array_fill(0,6,'%'.$query['search'].'%'));
+            // The plain search box: number, subject, requester, and any email's
+            // subject, sender or recipients.
+            $sql .= ' AND (t.ticket_number LIKE ? OR t.subject LIKE ? OR u.email LIKE ?'
+                  . ' OR EXISTS (SELECT 1 FROM emails se WHERE se.ticket_id = t.id'
+                  . ' AND (se.subject LIKE ? OR se.from_address LIKE ? OR se.to_recipients LIKE ?)))';
+            $args = array_merge($args, array_fill(0, 6, '%' . $query['search'] . '%'));
         }
     }
-    foreach($query['filters'] as $key=>$values) {
-        if($key===$omitFilter || !$values)continue;
-        $column=['department_id'=>'t.department_id','team_id'=>'t.assigned_team_id','assignee_id'=>'t.assigned_analyst_id','status_id'=>'t.status_id','ticket_type_id'=>'t.ticket_type_id','priority_id'=>'t.priority_id'][$key];
-        $nonnull=array_values(array_filter($values,fn($v)=>$v!=='unassigned'));
-        $parts=[];
-        if(count($nonnull)!==count($values))$parts[]="$column IS NULL";
-        if($nonnull){$parts[]="$column IN (".implode(',',array_fill(0,count($nonnull),'?')).')';$args=array_merge($args,$nonnull);}
-        $sql.=' AND ('.implode(' OR ',$parts).')';
+
+    // Each filter is (column IS NULL OR column IN (...)), the NULL half only when
+    // 'unassigned' was ticked. Filters combine with AND, values within one with OR.
+    foreach ($query['filters'] as $key => $values) {
+        if ($key === $omitFilter || !$values) continue;
+        $column = ticketListFilters()[$key][1];
+        $ids    = array_values(array_filter($values, fn($v) => $v !== 'unassigned'));
+        $parts  = [];
+        if (count($ids) !== count($values)) $parts[] = "$column IS NULL";
+        if ($ids) {
+            $parts[] = "$column IN (" . implode(',', array_fill(0, count($ids), '?')) . ')';
+            $args = array_merge($args, $ids);
+        }
+        $sql .= ' AND (' . implode(' OR ', $parts) . ')';
     }
-    return [$sql,$args];
+
+    return [$sql, $args];
 }
 
-/** Keep null dates last and use ticket ID as a stable pagination tie-breaker. */
+/**
+ * The ORDER BY for the query. Empty values sort last whichever way you sort, and
+ * the ticket id breaks ties - without it, rows with the same value could swap
+ * between two page loads and one would appear on both pages and the other on
+ * neither.
+ */
 function ticketListOrder(array $query): string
 {
-    $column=ticketListSorts()[$query['sort']['key']];
-    return " ORDER BY ($column IS NULL) ASC, $column ".$query['sort']['dir'].', ticket_id DESC';
+    $column = ticketListSorts()[$query['sort']['key']];
+    return " ORDER BY ($column IS NULL) ASC, $column " . $query['sort']['dir'] . ', ticket_id DESC';
 }
 
-/** Read one page and global, self-excluding facet counts under the same scope. */
+/**
+ * One page of rows, the total, and the counts for each filter's list.
+ *
+ * A filter's counts leave that filter out (see ticketListSql's $omitFilter) and
+ * keep every other one, so ticking Status = Open still shows how many are Closed.
+ *
+ * @param array $query  from ticketListQuery()
+ */
 function ticketListRead(PDO $conn, int $analystId, array $query): array
 {
-    [$sql,$args]=ticketListSql($conn,$analystId,$query);
-    $count=$conn->prepare("SELECT COUNT(*) FROM ($sql) queue");$count->execute($args);$total=(int)$count->fetchColumn();
-    $page=min($query['page'],max(1,(int)ceil($total/$query['pageSize'])));
-    $offset=($page-1)*$query['pageSize'];
-    $st=$conn->prepare("SELECT * FROM ($sql) queue".ticketListOrder($query).' LIMIT '.$query['pageSize'].' OFFSET '.$offset);$st->execute($args);
-    $rows=ticketListFormat($st->fetchAll(PDO::FETCH_ASSOC));
-    foreach($rows as &$row)$row['inbox_id']=(int)$row['id'];unset($row);
-    $facets=[];
-    $lookups=['department_id'=>['departments','name'],'team_id'=>['teams','name'],'assignee_id'=>['analysts','full_name'],
-        'status_id'=>['ticket_statuses','name'],'ticket_type_id'=>['ticket_types','name'],'priority_id'=>['ticket_priorities','name']];
-    foreach(ticketListFilters() as $key=>$column) {
-        [$facetSql,$facetArgs]=ticketListSql($conn,$analystId,$query,$key);
-        [$table,$label]=$lookups[$key];
-        $st=$conn->prepare("SELECT COALESCE(CAST(queue.$column AS CHAR),'unassigned') value, COALESCE(l.$label,'—') label, COUNT(*) count FROM ($facetSql) queue LEFT JOIN $table l ON l.id=queue.$column GROUP BY queue.$column,l.$label ORDER BY label");
-        $st->execute($facetArgs);$facets[$key]=$st->fetchAll(PDO::FETCH_ASSOC);
+    [$sql, $args] = ticketListSql($conn, $analystId, $query);
+
+    $count = $conn->prepare("SELECT COUNT(*) FROM ($sql) queue");
+    $count->execute($args);
+    $total = (int)$count->fetchColumn();
+
+    // A page past the end (the list shrank since the last click) shows the last page.
+    $page   = min($query['page'], max(1, (int)ceil($total / $query['pageSize'])));
+    $offset = ($page - 1) * $query['pageSize'];
+    $stmt = $conn->prepare("SELECT * FROM ($sql) queue" . ticketListOrder($query)
+        . ' LIMIT ' . $query['pageSize'] . ' OFFSET ' . $offset);
+    $stmt->execute($args);
+    $rows = ticketListFormat($stmt->fetchAll(PDO::FETCH_ASSOC));
+    // The message list's row id - an email id, or the negative ticket id for a
+    // ticket with no email (see the 🔑 in ticketListBase). Selection, drag and the
+    // reading pane all key off it, so the table rows carry the same one.
+    foreach ($rows as &$row) $row['inbox_id'] = (int)$row['id'];
+    unset($row);
+
+    $facets = [];
+    foreach (ticketListFilters() as $key => [$field, , $table, $label]) {
+        [$facetSql, $facetArgs] = ticketListSql($conn, $analystId, $query, $key);
+        $stmt = $conn->prepare("SELECT COALESCE(CAST(queue.$field AS CHAR), 'unassigned') AS value,
+                                       COALESCE(l.$label, '—') AS label, COUNT(*) AS count
+                                FROM ($facetSql) queue
+                                LEFT JOIN $table l ON l.id = queue.$field
+                                GROUP BY queue.$field, l.$label
+                                ORDER BY label");
+        $stmt->execute($facetArgs);
+        $facets[$key] = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    return ['rows'=>$rows,'total'=>$total,'page'=>$page,'pageSize'=>$query['pageSize'],'facets'=>$facets];
+
+    return ['rows' => $rows, 'total' => $total, 'page' => $page, 'pageSize' => $query['pageSize'], 'facets' => $facets];
 }
 
-/** Only fields offered in the queue can leave through its CSV endpoint. */
-function ticketListExportColumns(): array
-{
-    return ['ticket_number'=>'ticket_number','subject'=>'subject','created_datetime'=>'created_datetime','priority_id'=>'priority',
-        'status_id'=>'status','assignee_id'=>'assignee_name','department_id'=>'department_name','team_id'=>'team_name',
-        'ticket_type_id'=>'ticket_type_name','work_start_datetime'=>'work_start_datetime','work_end_datetime'=>'work_end_datetime',
-        'snoozed_until'=>'snoozed_until','company_name'=>'company_name'];
-}
-
-/** Prevent spreadsheet applications from interpreting exported text as a formula. */
+/**
+ * One CSV cell, made safe to open in a spreadsheet. A cell starting with = + - @
+ * (after any spaces or control characters) is a formula to Excel, and a ticket
+ * subject is text a stranger wrote - "=HYPERLINK(...)" in a subject must arrive
+ * as text, not as a link. A leading apostrophe is the conventional fix.
+ */
 function ticketListCsvCell($value): string
 {
-    $text=(string)($value??'');
-    return preg_match('/^[\s\x00-\x1f]*[=+@\-]/u',$text) ? "'".$text : $text;
+    $text = (string)($value ?? '');
+    return preg_match('/^[\s\x00-\x1f]*[=+@\-]/u', $text) ? "'" . $text : $text;
 }
 
-
-/** Separate personal list choice; independent of how a ticket is rendered. */
-function ticketListLayout(PDO $conn, int $analystId): string
-{
-    $stmt = $conn->prepare('SELECT preference_value FROM user_preferences WHERE analyst_id=? AND preference_key=?');
-    $stmt->execute([$analystId, 'tickets_list_layout']);
-    return $stmt->fetchColumn() === 'table' ? 'table' : 'messages';
-}
-
-function ticketListSelector(string $layout): string
-{
-    $html = '<span class="ticket-list-choice"><label for="ticketListSelect">'.htmlspecialchars(t('tickets.queue.layout')).'</label>';
-    $html .= '<select id="ticketListSelect" class="action-row-search" onchange="TicketTable.requestMode(this.value)">';
-    foreach (['messages','table'] as $value) {
-        $html .= '<option value="'.$value.'"'.($value === $layout ? ' selected' : '').'>'.htmlspecialchars(t('tickets.queue.'.$value)).'</option>';
-    }
-    return $html.'</select></span>';
-}
-
-/** Bulk export starts narrow, including on installs that have never saved it. */
+/**
+ * May this analyst export the ticket list? Checked by table_export.php on EVERY
+ * request, not just by hiding the button, so a direct request is refused too.
+ * The caller has already required Tickets access.
+ */
 function ticketListCanExport(PDO $conn, int $analystId): bool
 {
-    $value = $conn->query("SELECT setting_value FROM system_settings WHERE setting_key='ticket_list_export'")->fetchColumn();
-    if ($value === 'nobody') return false;
-    if ($value === 'ticket_users') return true; // callers also require Tickets access
-    return analystIsAdmin($conn, $analystId);
+    try {
+        $stored = $conn->query("SELECT setting_value FROM system_settings WHERE setting_key = 'ticket_list_export'")->fetchColumn();
+    } catch (Throwable) {
+        $stored = false;
+    }
+    return match (TicketListExport::tryFrom((string)$stored) ?? TicketListExport::Admins) {
+        TicketListExport::Nobody      => false,
+        TicketListExport::TicketUsers => true,
+        TicketListExport::Admins      => analystIsAdmin($conn, $analystId),
+    };
+}
+
+/**
+ * This analyst's choice of list: 'messages' (the default) or 'table'. Personal,
+ * and independent of the workspace - it changes how the list is shown, never how
+ * a ticket is.
+ */
+function ticketListLayout(PDO $conn, int $analystId): string
+{
+    try {
+        $stmt = $conn->prepare('SELECT preference_value FROM user_preferences WHERE analyst_id = ? AND preference_key = ?');
+        $stmt->execute([$analystId, 'tickets_list_layout']);
+        return $stmt->fetchColumn() === 'table' ? 'table' : 'messages';
+    } catch (Throwable) {
+        return 'messages';
+    }
+}
+
+/** The Messages / Table dropdown in the inbox's action row. */
+function ticketListSelector(string $layout): string
+{
+    $html = '<span class="ticket-list-choice"><label for="ticketListSelect">' . htmlspecialchars(t('tickets.queue.layout')) . '</label>';
+    $html .= '<select id="ticketListSelect" class="action-row-search" onchange="TicketTable.requestMode(this.value)">';
+    foreach (['messages', 'table'] as $value) {
+        $html .= '<option value="' . $value . '"' . ($value === $layout ? ' selected' : '') . '>'
+               . htmlspecialchars(t('tickets.queue.' . $value)) . '</option>';
+    }
+    return $html . '</select></span>';
 }

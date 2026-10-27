@@ -19,8 +19,13 @@ I18n::initFromSession();
 Tz::init();
 
 requireModuleAccess('tickets');
+// The ticket workspace (PR #211): the install mode and this analyst's own switch,
+// handed to assets/js/ticket-workspace.js as window.TICKET_WORKSPACE. can_write
+// decides whether More -> Make workspace is offered; Tickets has no Read only
+// level yet, so today it is true for everyone who can open this page.
 $workspaceConfig = ticketWorkspaceConfig(connectToDatabase(), (int)$_SESSION['analyst_id']);
 $workspaceConfig['can_write'] = analystCanWriteModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'tickets');
+// Messages or Table (PR #213) - how the LIST is shown, independent of the workspace.
 $ticketListLayout = ticketListLayout(connectToDatabase(), (int)$_SESSION['analyst_id']);
 
 $current_page = 'inbox';

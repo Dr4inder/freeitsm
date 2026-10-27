@@ -25,12 +25,16 @@ if (!$id) {
 
 try {
     $conn = connectToDatabase();
+    // Read from inside a ticket's workspace (PR #212): the task must still be the
+    // ticket's linked task or one of its subtasks. Re-checked on every read, so an
+    // unlink or a lost permission shows on the next click, not the next page load.
+    // An ordinary read from the Tasks module sends neither parameter.
     if (isset($_GET['embed_root_id']) || isset($_GET['ticket_id'])) {
         requireModuleAccessJson('tickets');
         require_once '../../includes/task_embed.php';
         if (!taskEmbedCanOpen($conn, (int)$_SESSION['analyst_id'], $id, (int)($_GET['embed_root_id'] ?? 0), (int)($_GET['ticket_id'] ?? 0))) {
             http_response_code(404);
-            echo json_encode(['success'=>false, 'error'=>'Task not found']);
+            echo json_encode(['success' => false, 'error' => 'Task not found']);
             exit;
         }
     }

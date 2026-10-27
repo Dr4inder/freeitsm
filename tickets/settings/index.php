@@ -5,7 +5,8 @@
 session_start();
 require_once '../../config.php';
 require_once '../../includes/functions.php';
-require_once '../../includes/ticket_workspace.php';
+require_once '../../includes/ticket_workspace.php';   // TicketWorkspaceMode (PR #211)
+require_once '../../includes/ticket_list.php';        // TicketListExport (PR #213)
 require_once '../../includes/i18n.php';
 require_once '../../includes/theme.php';
 require_once '../../includes/timezone.php';
@@ -1876,15 +1877,6 @@ function renderOversizeFields(string $px, bool $withLimits): void
             </div>
             <p style="margin-bottom: 20px; color: var(--text-muted, #666);"><?php echo t('tickets.settings.intros.general'); ?></p>
             <form id="generalSettingsForm" style="max-width: 600px;">
-                <div class="form-group">
-                    <label for="ticketListExport"><?php echo htmlspecialchars(t('tickets.queue.export_label')); ?></label>
-                    <select id="ticketListExport">
-                        <?php foreach (['admins','ticket_users','nobody'] as $choice): ?>
-                        <option value="<?php echo $choice; ?>"><?php echo htmlspecialchars(t('tickets.queue.export_'.$choice)); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <small><?php echo htmlspecialchars(t('tickets.queue.export_help')); ?></small>
-                </div>
                 <?php /* The system name moved to System -> Branding: it heads every
                          module's page titles, not just Tickets'. A pointer for anyone
                          who still looks here. */ ?>
@@ -1900,6 +1892,9 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.settings.general.reopen_help')); ?></small>
                 </div>
 
+                <?php /* The ticket workspace (PR #211): which tickets may be laid out
+                         for working. Off by default, so an upgrade changes nothing;
+                         see includes/ticket_workspace.php. */ ?>
                 <div class="form-group">
                     <label for="ticketWorkspaceMode"><?php echo htmlspecialchars(t('tickets.workspace.layout')); ?></label>
                     <select id="ticketWorkspaceMode">
@@ -1908,6 +1903,19 @@ function renderOversizeFields(string $px, bool $withLimits): void
                         <?php endforeach; ?>
                     </select>
                     <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.workspace.mode_help')); ?></small>
+                </div>
+
+                <?php /* Who may export the ticket table as CSV (PR #213). A bulk export
+                         of ticket data, so Administrators only unless changed; the
+                         endpoint checks it on every request. */ ?>
+                <div class="form-group">
+                    <label for="ticketListExport"><?php echo htmlspecialchars(t('tickets.queue.export_label')); ?></label>
+                    <select id="ticketListExport">
+                        <?php foreach (TicketListExport::cases() as $exportPolicy): ?>
+                        <option value="<?php echo $exportPolicy->value; ?>"><?php echo htmlspecialchars(t('tickets.queue.export_' . $exportPolicy->value)); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.queue.export_help')); ?></small>
                 </div>
 
                 <div class="form-group">
@@ -6814,13 +6822,19 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     // always promised a reply reopens the ticket, so the stored default
                     // matches what customers were already told. Mirrors
                     // customerReplyReopensTickets() in includes/ticket_reply.php.
-                    const mode = data.settings.ticket_workspace_mode;
-                    document.getElementById('ticketWorkspaceMode').value = ['off','selected','all'].includes(mode) ? mode : 'off';
                     const reopen = data.settings.reopen_on_customer_reply;
-                    const exportPolicy = data.settings.ticket_list_export;
-                    document.getElementById('ticketListExport').value = ['admins','ticket_users','nobody'].includes(exportPolicy) ? exportPolicy : 'admins';
                     document.getElementById('reopenOnCustomerReply').checked =
                         (reopen === null || reopen === undefined || reopen === '') ? true : (reopen === '1');
+                    // The workspace (Off) and who may export the list (Administrators
+                    // only) when never saved - the same defaults the server falls
+                    // back to (PR #211, #213).
+                    const setSelect = (id, value, fallback) => {
+                        const sel = document.getElementById(id);
+                        sel.value = value;
+                        if (sel.value !== value) sel.value = fallback;
+                    };
+                    setSelect('ticketWorkspaceMode', data.settings.ticket_workspace_mode, 'off');
+                    setSelect('ticketListExport', data.settings.ticket_list_export, 'admins');
                     // Snooze wake hour (#933) — 09:00 when never saved, matching
                     // snoozeWakeHour() in includes/ticket_snooze.php.
                     // Long-message display (#104). Defaults mirror

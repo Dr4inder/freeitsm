@@ -416,7 +416,27 @@ function assignableAnalysts(tickets, keepId) {
 let currentEmail = null;
 let ticketRenderGeneration = 0;
 let ticketSelectionGeneration = 0;
+// Writes to the open ticket still in flight (PR #211). While it is above zero the
+// workspace holds back a refresh of the ticket (TicketWorkspace.holdRender) and
+// will not let it be left. assets/js/ticket-workspace.js counts each /api/ write
+// itself; trackTicketWrite() below covers a writer's WHOLE handler, for the ones
+// that re-load the thread after saving.
 let ticketPendingWrites = 0;
+
+/**
+ * Run a write handler as one pending write, from its first line until it has
+ * finished re-drawing - so a refresh cannot land between the save and the
+ * handler's own update of the screen. Then draw any refresh that was held back.
+ */
+async function trackTicketWrite(handler) {
+    ticketPendingWrites++;
+    try {
+        return await handler();
+    } finally {
+        ticketPendingWrites--;
+        window.TicketWorkspace?.flushRender();
+    }
+}
 
 /** A delayed response belongs to one rendering, not merely a reusable ticket ID. */
 function ticketReadGuard(ticketId) {
@@ -2264,21 +2284,29 @@ function clearMultiSelection({ repaint = true } = {}) {
  * so the rules live in one readable place rather than spread across handlers.
  */
 async function handleEmailRowClick(event, emailId) {
-    const ctrl = event.ctrlKey || event.metaKey;
+    const ctrl  = event.ctrlKey || event.metaKey;   // ⌘ on a Mac does the same job
     const shift = event.shiftKey;
+    // Work out the new selection BEFORE applying it (PR #211): if it would take an
+    // open workspace off screen, the analyst may still say no to discarding a draft,
+    // and then nothing must have changed.
     let next = new Set(selectedEmailIds);
 
     if (shift) {
-        const ids = visibleEmailIds();
+        // Shift, with or without Ctrl: take the block from the anchor to here.
+        // Plain Shift replaces the selection; Ctrl+Shift adds the block to it.
+        const ids  = visibleEmailIds();
         const from = ids.indexOf(selectionAnchorId !== null ? selectionAnchorId : emailId);
-        const to = ids.indexOf(emailId);
+        const to   = ids.indexOf(emailId);
         if (from === -1 || to === -1) return;
         if (!ctrl) next.clear();
         ids.slice(Math.min(from, to), Math.max(from, to) + 1).forEach(id => next.add(id));
     } else if (ctrl) {
+        // Toggle this one. Ctrl+clicking the only selected row leaves nothing
+        // selected, which is legitimate — the reading pane empties.
         if (next.has(emailId)) next.delete(emailId);
-        else next.add(emailId);
+        else                   next.add(emailId);
     } else {
+        // Plain click — collapse to this one and open it, exactly as before.
         next = new Set([emailId]);
     }
 
@@ -2289,8 +2317,9 @@ async function handleEmailRowClick(event, emailId) {
     if (!retainsEditor && window.TicketWorkspace?.isActive() && !await TicketWorkspace.canLeave()) return;
 
     selectedEmailIds = next;
-    // Shift keeps the original anchor, so another Shift click can shrink the
-    // range. Plain/Ctrl clicks establish a new anchor as in the native list.
+    // The anchor deliberately STAYS PUT on Shift so a second Shift+click
+    // re-measures from the same origin and can shrink the block as well as grow
+    // it. Plain and Ctrl clicks set a new anchor.
     if (!shift) selectionAnchorId = emailId;
     selectionFocusId = emailId;
     renderSelectionUi();
@@ -4791,8 +4820,11 @@ async function sendChannelTemplate(ticketId) {
 
 // Send the analyst's reply out over the ticket's channel.
 async function sendChannelMessage(ticketId) {
-    ticketPendingWrites++;
-    try {
+    return trackTicketWrite(() => sendChannelMessageNow(ticketId));
+}
+
+/** Send the analyst's reply out over the ticket's channel. The body of sendChannelMessage(), counted as one write by trackTicketWrite(). */
+async function sendChannelMessageNow(ticketId) {
     const ta = document.getElementById('channelComposerText');
     const btn = document.getElementById('channelSendBtn');
     if (!ta) return;
@@ -4821,8 +4853,6 @@ async function sendChannelMessage(ticketId) {
     } finally {
         if (btn) { btn.disabled = false; btn.innerHTML = original; }
     }
-    } finally { ticketPendingWrites--;
-        window.TicketWorkspace?.flushRender(); }
 }
 
 // Send a file (image, document, …) picked via the composer's Attach button.
@@ -6074,15 +6104,15 @@ async function loadCmdbObjects(ticketId) {
         if (!isCurrent()) return;
         if (!data.success) throw new Error('Ticket section lookup failed');
         window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'cmdb');
-        if (!data.success) return;
         cmdbObjectsForTicket = data.links || [];
         renderCmdbObjects(ticketId);
     } catch (e) {
+        // The reading pane stays silent — the strip simply shows no CI pills. The
+        // workspace says so on its Links tab (PR #211), where an empty tab would
+        // otherwise look like a ticket with no links.
         if (!isCurrent()) return;
-        if (window.TicketWorkspace?.isActive()) {
-            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'cmdb');
-            return;
-        } /* silent — the strip simply shows no CI pills */ }
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'error', null, 'cmdb');
+    }
 }
 
 /** Draws cmdbObjectsForTicket as CMDB pills, with class and parent in the tooltip and an unlink cross. */
@@ -6202,13 +6232,16 @@ async function loadTicketDomains(ticketId) {
         if (!isCurrent()) return;
         if (!data.success) throw new Error('Ticket section lookup failed');
         window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'domains');
-        if (data.success) domainsForTicket = data.domains || [];
+        domainsForTicket = data.domains || [];
     } catch (e) {
+        // Silent in the reading pane - the strip simply shows no domain pills. The
+        // workspace reports it on its Links tab, and draws nothing over the error.
         if (!isCurrent()) return;
         if (window.TicketWorkspace?.isActive()) {
             TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'domains');
             return;
-        } /* silent - the strip simply shows no domain pills */ }
+        }
+    }
     renderTicketDomains(ticketId);
 }
 
@@ -6329,13 +6362,16 @@ async function loadTicketProjects(ticketId) {
         if (!isCurrent()) return;
         if (!data.success) throw new Error('Ticket section lookup failed');
         window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'projects');
-        if (data.success) projectsForTicket = data.projects || [];
+        projectsForTicket = data.projects || [];
     } catch (e) {
+        // Silent in the reading pane - the strip simply shows no project pills. The
+        // workspace reports it on its Links tab, and draws nothing over the error.
         if (!isCurrent()) return;
         if (window.TicketWorkspace?.isActive()) {
             TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'projects');
             return;
-        } /* silent - the strip simply shows no project pills */ }
+        }
+    }
     host.innerHTML = projectsForTicket.map(p => `<a class="pm-ticket-badge" href="../${escapeHtml(p.url)}" title="${escapeHtml(p.code + ' - ' + (p.status || ''))}">
             <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${escapeHtml(p.colour)};margin-right:5px"></span>${escapeHtml(p.name)}
             <span class="pm-ticket-unlink" title="${escapeHtml(t('tickets.projects.unlink_title'))}" onclick="event.preventDefault();event.stopPropagation();removeTicketProject(event, ${p.id}, ${ticketId});">&#10005;</span>
@@ -6460,15 +6496,14 @@ async function loadTicketAssets(ticketId) {
         if (!isCurrent()) return;
         if (!data.success) throw new Error('Ticket section lookup failed');
         window.TicketWorkspace?.setSectionState(ticketId, 'links', 'ready', null, 'assets');
-        if (!data.success) return;
         assetsForTicket = data.links || [];
         renderTicketAssets(ticketId);
     } catch (e) {
+        // Silent in the reading pane — the strip simply shows no equipment pills.
+        // The workspace reports it on its Links tab.
         if (!isCurrent()) return;
-        if (window.TicketWorkspace?.isActive()) {
-            TicketWorkspace.setSectionState(ticketId, 'links', 'error', null, 'assets');
-            return;
-        } /* silent — the strip simply shows no equipment pills */ }
+        window.TicketWorkspace?.setSectionState(ticketId, 'links', 'error', null, 'assets');
+    }
 }
 
 /** The one-line name for an asset: hostname if it has one, else the tag. */
@@ -7120,8 +7155,11 @@ function closeNoteModal() {
 
 // Save note
 async function saveNote() {
-    ticketPendingWrites++;
-    try {
+    return trackTicketWrite(() => saveNoteNow());
+}
+
+/** Save the note in the note modal. The body of saveNote(), counted as one write by trackTicketWrite(). */
+async function saveNoteNow() {
     const noteText = document.getElementById('noteText').value.trim();
 
     if (!noteText) {
@@ -7198,8 +7236,6 @@ async function saveNote() {
         console.error('Error:', error);
         showToast('Failed to save note', 'error');
     }
-    } finally { ticketPendingWrites--;
-        window.TicketWorkspace?.flushRender(); }
 }
 
 // Open reply modal
@@ -8441,8 +8477,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Send email via Microsoft Graph API
 async function sendEmail() {
-    ticketPendingWrites++;
-    try {
+    return trackTicketWrite(() => sendEmailNow());
+}
+
+/** Send the reply / forward in the email modal. The body of sendEmail(), counted as one write by trackTicketWrite(). */
+async function sendEmailNow() {
     // Get values from form
     const to = document.getElementById('emailTo').value.trim();
     const cc = document.getElementById('emailCc').value.trim();
@@ -8513,8 +8552,6 @@ async function sendEmail() {
         sendBtn.disabled = false;
         sendBtn.textContent = originalText;
     }
-    } finally { ticketPendingWrites--;
-        window.TicketWorkspace?.flushRender(); }
 }
 
 // Prepare attachments by converting to base64

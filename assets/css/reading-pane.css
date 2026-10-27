@@ -36,7 +36,8 @@
        and Delete in a More menu at its end. */
     .action-toolbar .pane-secondary { display: none; }
     .pane-more-wrap { position: relative; }
-
+    /* The More menu itself is styled outside this block, below - the workspace
+       shows it at phone widths too (PR #211). */
 
     /* Scrolled down the thread: the header shrinks to the subject alone, on one
        line, and comes back in full at the top. Toolbar and properties stay. */
@@ -51,7 +52,8 @@
     .pane-more-wrap { display: none; }
 }
 
-/* Shared by the workspace menu at phone widths too. */
+/* The More menu. Outside the desktop-only block above because the ticket
+   workspace keeps More on a phone as well (PR #211). */
 .pane-more-menu {
     position: absolute; top: calc(100% + 4px); right: 0; z-index: 50; min-width: 190px;
     background: var(--surface, #fff); border: 1px solid var(--border, #e0e0e0); border-radius: 6px;

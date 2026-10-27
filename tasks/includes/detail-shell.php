@@ -1,5 +1,10 @@
 <?php
-/** Native task detail shell shared by the module and its ticket embedding. */
+/**
+ * The task detail panel's frame: its header buttons and an empty body that
+ * renderDetailPanel() in assets/js/tasks.js fills. Moved out of tasks/index.php
+ * (PR #212) so the Tasks board and a ticket's workspace draw exactly the same
+ * panel - one copy of the markup, not two that drift.
+ */
 function renderTaskDetailShell(): void
 {
 ?>

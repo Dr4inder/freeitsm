@@ -1,7 +1,15 @@
 <?php
 /**
  * Tasks Module — Kanban Board & List View
+ *
+ * Also the task editor inside a ticket's workspace (PR #212): tasks/embedded.php
+ * checks the ticket and task, sets $taskEmbedContext and requires this file. When
+ * embedded, the board, header, context menus and phone controls are left out and
+ * only the detail panel is drawn - the same panel, saving through the same
+ * endpoints. TRAP: anything added to the detail panel runs inside a ticket too;
+ * see the embedded-page section of the Tasks-on-Tickets developer guide.
  */
+// embedded.php has already started the session.
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 $taskEmbedded = isset($taskEmbedContext);
 require_once '../config.php';
@@ -128,7 +136,7 @@ $translationNamespaces = ['common', 'tasks'];
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
     <?php if ($taskEmbedded): ?><link rel="stylesheet" href="../assets/css/task-embed.css?v=1"><?php endif; ?>
 </head>
-<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>" class="<?php echo ($tasksReadOnly ? 'module-read-only ' : '').($taskEmbedded ? 'task-embed' : ''); ?>">
+<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>" class="<?php echo trim(($tasksReadOnly ? 'module-read-only' : '') . ($taskEmbedded ? ' task-embed' : '')); ?>">
     <?php if (!$taskEmbedded): ?>
     <?php include 'includes/header.php'; ?>
     <?php /* The action row (#185). Tasks had no general New - only the + at the

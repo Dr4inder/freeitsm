@@ -14,6 +14,11 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2633 | Tickets           | Feature     | Ticket workspace (PR #211, @Dr4inder): an optional layout with the properties in a column and conversation / work / links / time / history on tabs; Tickets -> Settings -> General -> Ticket workspace (Off by default / Only tickets turned into a workspace / Every ticket), a personal Use the workspace switch, and an audited More -> Make workspace flag (`tickets.is_workspace`, REST `workspace`). |
+| 2634 | Tickets           | Feature     | A linked task opens its own editor inside the workspace's Work tab (PR #212, @Dr4inder) - `tasks/embedded.php` re-checks the ticket link and the subtask chain on every read; unsaved task edits are protected when leaving. |
+| 2635 | Tickets           | Feature     | Ticket table (PR #213, @Dr4inder): the inbox list as a paginated, server-side table with column filters and saved views, sharing the message list's query (`includes/ticket_list.php`); CSV export of the whole list behind Tickets -> Settings -> General -> Who can export the ticket list (Administrators only by default). |
+| 2636 | Tickets           | Improvement | `api/tickets/assign_ticket.php` refuses a GET, like the other ticket write endpoints (PR #211). |
+| 2637 | Tickets           | Improvement | Review of PR #206's three follow-ups: house style and comments through the new code, `TicketListExport` enum, one enum check in the settings save, the two settings side by side, `crypto.randomUUID()` (HTTPS-only) replaced so a task editor can be left on a plain-HTTP install, the live tests no longer assume a web-root install, three Feature Bingo cards. |
 
 
 

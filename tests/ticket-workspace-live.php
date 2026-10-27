@@ -21,7 +21,7 @@ try {
     $exit=ticketWorkspaceBrowser([],['url'=>$url.'/auth/login.php','verify'=>function(string $ws)use($fixture):array {
         extract($fixture);
         $credentials=json_encode(['username'=>$analysts['full']['username'],'password'=>$analysts['full']['password']]);
-        cdpEvaluate($ws,"fetch('/auth/login.php',{method:'POST',body:new URLSearchParams($credentials)}).then(r=>r.ok?'ok':'failed')",20);
+        cdpEvaluate($ws,"fetch('login.php',{method:'POST',body:new URLSearchParams($credentials)}).then(r=>r.ok?'ok':'failed')",20);
         cdpEvaluate($ws,'',10,['method'=>'Page.addScriptToEvaluateOnNewDocument','params'=>['source'=>"window.__workspaceErrors=[];window.addEventListener('error',e=>__workspaceErrors.push(e.message));window.addEventListener('unhandledrejection',e=>__workspaceErrors.push(String(e.reason)));"]]);
         cdpEvaluate($ws,'',10,['method'=>'Page.navigate','params'=>['url'=>$url.'/tickets/?ticket_id='.$ticket]]);
         usleep(500000);
@@ -44,7 +44,7 @@ try {
 
  let reportUrl='';const nativeOpen=window.open;window.open=url=>{reportUrl=url;};
  document.querySelector('.tw-header [onclick="openCaseReport()"]').click();window.open=nativeOpen;
- check('native ticket report remains available in the workspace',new URL(reportUrl,location.href).pathname==='/tickets/case-report.php'&&new URL(reportUrl,location.href).searchParams.get('id')==='$ticket');
+ check('native ticket report remains available in the workspace',new URL(reportUrl,location.href).pathname.endsWith('/tickets/case-report.php')&&new URL(reportUrl,location.href).searchParams.get('id')==='$ticket');
  TicketWorkspace.activate('work');
  await wait(()=>document.querySelector('#twTaskList a'));
  const taskLink=document.querySelector('#twTaskList a');

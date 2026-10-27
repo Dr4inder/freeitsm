@@ -1,16 +1,30 @@
-#ticketTableContainer { min-height:0; flex:1; display:flex; flex-direction:column; overflow:hidden; }
-#ticketTableContainer[hidden], #emailList[hidden] { display:none !important; }
-#ticketTableContainer .dt-toolbar { flex-wrap:wrap; }
-#ticketTableContainer .dt-search { min-width:160px; }
-#ticketTableContainer .ticket-content-search { padding:8px; font-size:12px; }
-#ticketTableContainer .ticket-queue-row { display:table-row; padding:0; }
-#ticketTableContainer .ticket-queue-row.selected { background:var(--surface-selected, #e3eff9); }
-#ticketTableContainer .ticket-queue-row.kb-focus { outline:2px solid var(--accent); outline-offset:-2px; }
-#ticketTableContainer .dt-wrap { display:flex; flex-direction:column; }
-#ticketTableContainer .dt-table { flex:none; }
-#ticketTableContainer .dt-pagination { position:sticky; bottom:0; background:var(--surface); }
-.ticket-table-mode .email-list-container { flex:0 1 360px; width:360px; min-width:260px; max-width:42vw; }
-@media(max-width:768px){.ticket-table-mode .email-list-container{width:100%;max-width:100%;min-width:0;}}
+/*
+ * The ticket table (PR #213): the shared data table (data-table.css) placed in
+ * the inbox's middle column, in place of the message list. See
+ * assets/js/tickets-table.js.
+ */
 
+/* Exactly one of the two lists is ever shown (TicketTable paint()). */
+#ticketTableContainer { min-height: 0; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+#ticketTableContainer[hidden], #emailList[hidden] { display: none !important; }
+#ticketTableContainer .dt-toolbar { flex-wrap: wrap; }
+#ticketTableContainer .dt-search { min-width: 160px; }
+#ticketTableContainer .ticket-content-search { padding: 8px; font-size: 12px; }
+#ticketTableContainer .dt-wrap { display: flex; flex-direction: column; }
+#ticketTableContainer .dt-table { flex: none; }
+#ticketTableContainer .dt-pagination { position: sticky; bottom: 0; background: var(--surface); }
 
-.ticket-list-choice { display:flex; align-items:center; gap:8px; font-size:12px; }
+/* Rows carry .email-item so the inbox's selection code works on them; these
+   undo the message-list layout that class brings, and show the selection. */
+#ticketTableContainer .ticket-queue-row { display: table-row; padding: 0; }
+#ticketTableContainer .ticket-queue-row.selected { background: var(--surface-selected, #e3eff9); }
+#ticketTableContainer .ticket-queue-row.kb-focus { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* A table needs more width than a message list. */
+.ticket-table-mode .email-list-container { flex: 0 1 360px; width: 360px; min-width: 260px; max-width: 42vw; }
+@media (max-width: 768px) {
+    .ticket-table-mode .email-list-container { width: 100%; max-width: 100%; min-width: 0; }
+}
+
+/* The Messages / Table choice in the action row. */
+.ticket-list-choice { display: flex; align-items: center; gap: 8px; font-size: 12px; }

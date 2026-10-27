@@ -9,11 +9,13 @@
  * right-click menu, the tag picker and the five settings tabs.
  */
 return [
+    // A task opened inside a ticket's workspace (PR #212); see
+    // assets/js/task-embed-bridge.js.
     'embed' => [
         'open_separately' => 'Open separately',
-        'leave_title' => 'Unsaved task changes',
-        'discard' => 'Discard unsaved changes and leave this task?',
-        'discard_button' => 'Discard',
+        'leave_title'     => 'Unsaved task changes',
+        'discard'         => 'Discard unsaved changes and leave this task?',
+        'discard_button'  => 'Discard',
         'unavailable' => 'This task is no longer available in this ticket. Reload the ticket to check its current links and permissions.',
     ],
     'title' => 'Tasks',

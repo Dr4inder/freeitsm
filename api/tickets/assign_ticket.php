@@ -16,7 +16,10 @@ require_once '../../includes/services/tickets.php';
 header('Content-Type: application/json');
 if (!isset($_SESSION['analyst_id'])) { echo json_encode(['success' => false, 'error' => 'Not authenticated']); exit; }
 requireModuleAccessJson('tickets');
+// Tickets has no Read only level yet (MODULES_WITH_READ_ONLY), so today this always
+// passes. It is the right question to ask of a write all the same (PR #211).
 requireModuleWriteJson('tickets');
+// Changes data: never on a GET, which a link on another site can send (csrf.php).
 csrfRequireWriteMethod();
 
 try {

@@ -95,7 +95,12 @@ $prefDefaults = [
     // once. Read by assets/js/inbox.js. 'summary' is the default because it puts
     // what you are about to act on, and the actions themselves, on screen.
     'tickets_multiselect_pane'   => 'summary',
-    'ticket_workspace'          => '1',
+    // Use the ticket workspace (PR #211). On unless turned off, and only offered
+    // when an administrator has switched the workspace on; see
+    // ticketWorkspacePersonal() in includes/ticket_workspace.php.
+    'ticket_workspace'           => '1',
+    // Show the ticket list as Messages or as a Table (PR #213). Read by
+    // tickets/index.php; also switchable from the inbox's action row.
     'tickets_list_layout'        => 'messages',
     // Which front door "/" sends you to (discussion #63). Empty string means
     // "whatever the administrator chose" — the only value that is NOT a landing
@@ -103,8 +108,6 @@ $prefDefaults = [
     'default_landing_page'       => '',
 ];
 $prefs = $prefDefaults;
-$showTicketWorkspace = ticketWorkspaceMode(connectToDatabase()) !== TicketWorkspaceMode::Off
-    && analystCanAccessModule(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0), 'tickets');
 if (isset($_SESSION['analyst_id'])) {
     try {
         $conn = connectToDatabase();
@@ -122,6 +125,18 @@ if (isset($_SESSION['analyst_id'])) {
         }
     } catch (Exception $e) {
         // Defaults stand
+    }
+}
+// The workspace switch is offered only where it can do something: the install has
+// the workspace on, and this analyst can open Tickets at all.
+$showTicketWorkspace = false;
+if (isset($_SESSION['analyst_id'])) {
+    try {
+        $conn = connectToDatabase();
+        $showTicketWorkspace = ticketWorkspaceMode($conn) !== TicketWorkspaceMode::Off
+            && analystCanAccessModule($conn, (int)$_SESSION['analyst_id'], 'tickets');
+    } catch (Throwable $e) {
+        // Not shown
     }
 }
 
@@ -597,16 +612,6 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 <span class="pref-saving-hint" id="taskViewSavingHint"><?php echo htmlspecialchars(t('system.preferences.saving')); ?></span>
             </div>
 
-            <div class="pref-section">
-                <h3 id="ticket-list"><?php echo htmlspecialchars(t('system.preferences.ticket_list_heading')); ?></h3>
-                <p><?php echo htmlspecialchars(t('system.preferences.ticket_list_desc')); ?></p>
-                <select id="ticketListSelect" class="pref-language-select">
-                <?php foreach (['messages','table'] as $layout): ?>
-                    <option value="<?php echo $layout; ?>" <?php echo $prefs['tickets_list_layout']===$layout?'selected':''; ?>><?php echo htmlspecialchars(t('system.preferences.ticket_list_'.$layout)); ?></option>
-                <?php endforeach; ?>
-                </select>
-            </div>
-
             <!-- Closing the search panel (#144). Sits beside "Opening a task"
                  because it is the same kind of choice: how a shared UI surface
                  behaves for YOU. Off by default — see the note by the default. -->
@@ -1004,6 +1009,20 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 <div id="sidebarPanelsList" class="sidebar-panels-list"></div>
             </div>
 
+            <!-- How the ticket list is shown (PR #213): the familiar message list,
+                 or a paginated table with saved views. Per analyst. -->
+            <div class="pref-section">
+                <h3 id="ticket-list"><?php echo htmlspecialchars(t('system.preferences.ticket_list_heading')); ?></h3>
+                <p><?php echo htmlspecialchars(t('system.preferences.ticket_list_desc')); ?></p>
+                <select id="ticketListSelect" class="pref-language-select">
+                    <?php foreach (['messages', 'table'] as $layout): ?>
+                    <option value="<?php echo $layout; ?>" <?php echo $prefs['tickets_list_layout'] === $layout ? 'selected' : ''; ?>><?php echo htmlspecialchars(t('system.preferences.ticket_list_' . $layout)); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Use the ticket workspace (PR #211). Hidden while an administrator
+                 has the workspace off, because then it would change nothing. -->
             <?php if ($showTicketWorkspace): ?>
             <div class="pref-section">
                 <h3 id="ticket-workspace"><?php echo htmlspecialchars(t('system.preferences.ticket_workspace_heading')); ?></h3>
@@ -1299,13 +1318,16 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             soundPreview.addEventListener('click', playSelectedSound);
         }
 
+        // ===== Ticket list: Messages or Table (tickets_list_layout, PR #213) =====
+        // A failed save puts the dropdown back, so it never shows a choice that
+        // was not kept.
         const ticketListSelect = document.getElementById('ticketListSelect');
         let savedTicketList = ticketListSelect.value;
         ticketListSelect.addEventListener('change', async () => {
-            ticketListSelect.disabled=true;
-            if(await savePref('tickets_list_layout',ticketListSelect.value)) savedTicketList=ticketListSelect.value;
-            else ticketListSelect.value=savedTicketList;
-            ticketListSelect.disabled=false;
+            ticketListSelect.disabled = true;
+            if (await savePref('tickets_list_layout', ticketListSelect.value)) savedTicketList = ticketListSelect.value;
+            else ticketListSelect.value = savedTicketList;
+            ticketListSelect.disabled = false;
         });
 
         // ===== How a task opens (tasks_detail_view) =====
@@ -1674,6 +1696,8 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             const el = document.getElementById('multiSelectPaneHint');
             if (el) el.textContent = MULTISELECT_HINTS[v] || '';
         }
+        // Use the ticket workspace (ticket_workspace, PR #211). Same rule: a failed
+        // save puts the switch back.
         document.getElementById('ticketWorkspacePref')?.addEventListener('change', async function () {
             this.disabled = true;
             const ok = await savePref('ticket_workspace', this.checked ? '1' : '0');

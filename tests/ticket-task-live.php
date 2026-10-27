@@ -21,7 +21,7 @@ try {
     $exit=ticketWorkspaceBrowser([],['url'=>$url.'/auth/login.php','verify'=>function(string $ws)use($fixture):array {
         extract($fixture);
         $credentials=json_encode(['username'=>$analysts['full']['username'],'password'=>$analysts['full']['password']]);
-        cdpEvaluate($ws,"fetch('/auth/login.php',{method:'POST',body:new URLSearchParams($credentials)}).then(r=>r.ok?'ok':'failed')",20);
+        cdpEvaluate($ws,"fetch('login.php',{method:'POST',body:new URLSearchParams($credentials)}).then(r=>r.ok?'ok':'failed')",20);
         cdpEvaluate($ws,'',10,['method'=>'Page.navigate','params'=>['url'=>$url.'/tickets/?ticket_id='.$ticket]]);
         usleep(500000);
         return json_decode(cdpEvaluate($ws,<<<JS
@@ -40,7 +40,7 @@ try {
  check('compact task actions share the native header',external?.closest('.detail-panel-actions')&&new URL(external.href).searchParams.get('task')==='$task'&&external.target==='_blank'&&external.getBoundingClientRect().height<=32&&document.querySelector('.tw-task-controls').hidden);
  const nativeTaskOpen=frame.contentWindow.open;frame.contentWindow.open=url=>{reportUrl=url;};
  doc.querySelector('[onclick="openTaskCaseReport()"]').click();frame.contentWindow.open=nativeTaskOpen;
- check('native task report remains available in the embedded editor',new URL(reportUrl,location.href).pathname==='/tasks/case-report.php'&&new URL(reportUrl,location.href).searchParams.get('id')==='$task');
+ check('native task report remains available in the embedded editor',new URL(reportUrl,location.href).pathname.endsWith('/tasks/case-report.php')&&new URL(reportUrl,location.href).searchParams.get('id')==='$task');
  if(doc?.getElementById('detailTitle')){
      const title=doc.getElementById('detailTitle');title.value='ZZ Workspace saved in ticket';title.dispatchEvent(new Event('change',{bubbles:true}));
      const saved=await wait(async()=>{
