@@ -21,8 +21,9 @@
  *
  * NOTHING UNSAVED IS LOST
  * -----------------------
- * Changing ticket, changing layout, or a background refresh of the open ticket
- * could otherwise wipe a half-typed field or land in the middle of a save. So:
+ * Changing ticket, changing layout, or a reload of the open ticket (after it is
+ * dragged to a folder, say) could otherwise wipe a half-typed field or land in
+ * the middle of a save. So:
  *   - canLeave() is asked before the ticket on screen is replaced, and offers
  *     Discard when something is unsaved (inbox.js calls it from selectEmail,
  *     loadTicketById, the selection handlers and Make workspace);
@@ -331,7 +332,8 @@ window.TicketWorkspace = (() => {
 
     /**
      * Hold back a re-render of the ticket on screen while something on it is busy
-     * (the 60-second refresh, or a reload after a save). flushRender() draws it
+     * (loadTicketById() after it is dragged to a folder, escalated to a tracker,
+     * or made a workspace). flushRender() draws it
      * when the work is done. A DIFFERENT ticket is never held - that is a
      * navigation, and canLeave() has already been asked.
      */
