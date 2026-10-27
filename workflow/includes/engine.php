@@ -2051,14 +2051,34 @@ class WorkflowEngine
             // older workflows that stored "1,2" as a string still work.
             case 'in':           return self::value_in_list($actual, $value);
             case 'not_in':       return !self::value_in_list($actual, $value);
-            case 'contains':     return is_string($actual) && is_string($value) && $value !== '' && str_contains($actual, $value);
-            case 'not_contains': return !(is_string($actual) && is_string($value) && $value !== '' && str_contains($actual, $value));
+            case 'contains':     return self::textContains($actual, $value);
+            case 'not_contains': return !self::textContains($actual, $value);
             case 'gt':           return is_numeric($actual) && is_numeric($value) && $actual > $value;
             case 'lt':           return is_numeric($actual) && is_numeric($value) && $actual < $value;
             case 'is_empty':     return $actual === null || $actual === '' || $actual === [];
             case 'is_not_empty': return !($actual === null || $actual === '' || $actual === []);
         }
         return false;
+    }
+
+    /**
+     * The `contains` test: ignores capitals, and spaces around the typed value.
+     *
+     * It was str_contains(), so "abc.com" did not match User@ABC.com and a
+     * pasted "abc.com " matched nothing at all - and the run said only
+     * "conditions did not match". An email domain has no case, a subject's
+     * "Urgent" is the same word as "urgent", and mail rules in Outlook and Gmail
+     * match this way, so this is the behaviour rather than a setting (GH #214).
+     * A blank value matches nothing, as before.
+     *
+     * @param mixed $actual  the value found in the payload
+     * @param mixed $value  the text the condition was configured with
+     */
+    private static function textContains($actual, $value): bool
+    {
+        if (!is_string($actual) || !is_string($value)) return false;
+        $value = trim($value);
+        return $value !== '' && mb_stripos($actual, $value) !== false;
     }
 
     /**
