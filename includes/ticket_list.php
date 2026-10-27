@@ -497,7 +497,7 @@ function ticketListSql(PDO $conn, int $analystId, array $query, ?string $omitFil
             $sql .= ' AND (t.ticket_number LIKE ? OR t.subject LIKE ? OR u.email LIKE ?'
                   . ' OR EXISTS (SELECT 1 FROM emails se WHERE se.ticket_id = t.id'
                   . ' AND (se.subject LIKE ? OR se.from_address LIKE ? OR se.to_recipients LIKE ?)))';
-            $args = array_merge($args, array_fill(0, 6, '%' . $query['search'] . '%'));
+            $args = array_merge($args, array_fill(0, 6, likeContainsPattern($query['search'])));
         }
     }
 

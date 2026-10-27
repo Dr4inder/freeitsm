@@ -336,6 +336,24 @@ function getAnalystAllowedModules($conn, $analyst_id) {
 }
 
 /**
+ * A LIKE pattern for "contains this text", for a search box.
+ *
+ * TRAP: an apostrophe or quote typed in a search must match ANY kind of one.
+ * Email subjects are full of typographic quotes - Gmail and Outlook send
+ * "We’re" with U+2019 - while a keyboard types the straight ', so a plain
+ * '%' . $term . '%' never finds them (the ticket table, 2026-10-27). Each quote
+ * becomes `_` (any one character). The user's own % and _ are escaped first, so
+ * they mean themselves rather than wildcards.
+ *
+ * @param string $term  what was typed, trimmed
+ */
+function likeContainsPattern(string $term): string {
+    $escaped = addcslashes($term, '\\%_');
+    $quotes  = ["'", "\u{2019}", "\u{2018}", "\u{02BC}", '`', "\u{00B4}", '"', "\u{201C}", "\u{201D}"];
+    return '%' . str_replace($quotes, '_', $escaped) . '%';
+}
+
+/**
  * Is this analyst an administrator? Admins are the only accounts allowed into the
  * System module (analyst/team/company management, SSO, security, DB verify, etc.).
  * Authoritative DB check — use this for server-side enforcement (no session lag).
