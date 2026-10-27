@@ -125,7 +125,8 @@ try {
     // question is how the two routes drift apart.
     $taskMode  = (string)(calendarSyncEnrolment($conn, $analystId)['task_mode'] ?? TASK_CAL_OFF);
     $taskRows  = [];
-    if ($taskMode !== TASK_CAL_OFF) {
+    // GH #217: no task rows while Tasks is switched off for the install.
+    if ($taskMode !== TASK_CAL_OFF && moduleIsEnabled($conn, 'tasks')) {
         $stmt = $conn->prepare(
             "SELECT tk.id, tk.title, tk.due_date, tk.updated_datetime,
                     tk.work_start_datetime, tk.work_end_datetime, tk.work_all_day,

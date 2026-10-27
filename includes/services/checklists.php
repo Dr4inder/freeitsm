@@ -142,6 +142,11 @@ class ChecklistsService
      */
     public static function assertClosureAllowed(PDO $conn, int $ticketId, ?int $tenantId = null): void
     {
+        // GH #217. Checklists switched off for the install hold up nothing: nobody
+        // can attach the checklist a "block" rule asks for, or tick its steps, so
+        // honouring the rule would leave tickets that can never be closed.
+        if (function_exists('moduleIsEnabled') && !moduleIsEnabled($conn, 'checklists')) return;
+
         // Nothing attached: the only question is whether this install insists
         // on a checklist. 'warn' is not decided here - a warning is the absence
         // of a refusal, and it is recorded by recordClosureOverride() after the

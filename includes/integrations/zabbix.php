@@ -326,7 +326,8 @@ function zabbixHandleEvent(PDO $conn, array $p): array
             return ['ok' => true, 'action' => 'updated', 'ticket_id' => $ticketId];
         }
 
-        $ci = $cfg['link_cmdb'] ? zabbixFindCmdbItem($conn, $e['host'], $cfg['tenant_id']) : null;
+        // GH #217: no CMDB lookup or link while the CMDB is switched off.
+        $ci = ($cfg['link_cmdb'] && moduleIsEnabled($conn, 'cmdb')) ? zabbixFindCmdbItem($conn, $e['host'], $cfg['tenant_id']) : null;
         // The company: the server's own, when the CMDB knows it - an alert about a
         // client's server belongs in that client's queue. Otherwise the setting.
         $tenantId = ($ci && $ci['tenant_id'] !== null) ? $ci['tenant_id'] : (int)$cfg['tenant_id'];

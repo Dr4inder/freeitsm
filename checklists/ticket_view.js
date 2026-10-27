@@ -81,6 +81,13 @@ function formatStepDatetime(dtStr) {
 // 1. Fetch & Render Checklists for a Ticket
 async function loadTicketChecklists(ticketId) {
     if (!ticketId) return;
+    // Checklists switched off for the install, or not this analyst's (GH #217): no
+    // card, no Checklist button, and nothing for closing a ticket to wait on.
+    if ((window.TICKETS_MODULE_ON || {}).checklists === false) {
+        ticketChecklistsData = [];
+        window.ticketChecklistEmptyClosureMode = 'off';
+        return;
+    }
     const isCurrent = typeof ticketReadGuard === 'function' ? ticketReadGuard(ticketId) : () => currentViewingTicketId === ticketId;
     currentViewingTicketId = ticketId;
     try {

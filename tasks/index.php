@@ -106,8 +106,8 @@ if ($taskBoardSubtasks === null) $taskBoardSubtasks = $taskHideDoneSubtasks ? 'o
 // window offers a Project picker or just names the project.
 $taskCanProjects = false;
 try {
-    $__mods = getAnalystAllowedModules(connectToDatabase(), (int) ($_SESSION['analyst_id'] ?? 0));
-    $taskCanProjects = $__mods === null || in_array('projects', $__mods, true);
+    // analystCanAccessModule(), not the raw grants: Projects may be switched off (GH #217).
+    $taskCanProjects = analystCanAccessModule(connectToDatabase(), (int) ($_SESSION['analyst_id'] ?? 0), 'projects');
 } catch (Throwable $e) { /* leave it off */ }
 I18n::initFromSession();
 Tz::init();

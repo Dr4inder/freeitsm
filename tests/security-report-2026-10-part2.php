@@ -197,7 +197,7 @@ document.getElementById("out").textContent = "RESULT" + JSON.stringify(r) + "END
     ok('nothing under api/ or includes/ reads $_SESSION[\'allowed_modules\'] (it is only written)', !$readers, implode(', ', $readers));
     $restricted = $mkAnalyst('mods', ['can_access_all_modules' => 0]);
     $_SESSION = ['analyst_id' => $restricted, 'allowed_modules' => null];   // a stale "every module"
-    ok('analystAllowedModulesNow() ignores a stale session copy', analystAllowedModulesNow() === getAnalystAllowedModules($conn, $restricted) && analystAllowedModulesNow() !== null);
+    ok('analystAllowedModulesNow() ignores a stale session copy', analystAllowedModulesNow() === modulesWithoutSwitchedOff($conn, getAnalystAllowedModules($conn, $restricted)) && analystAllowedModulesNow() !== null);   // less any switched-off module, GH #217
     $_SESSION = [];
     ok('...and nobody signed in may use nothing', analystAllowedModulesNow() === []);
 

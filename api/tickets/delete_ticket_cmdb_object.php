@@ -18,6 +18,8 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('tickets');
+// GH #217: refused while the cmdb module is switched off for the install.
+requireModuleOnJson(connectToDatabase(), 'cmdb');
 
 try {
     $data = json_decode(file_get_contents('php://input'), true) ?: [];

@@ -123,15 +123,18 @@ function calendarSyncPullForAnalyst(PDO $conn, int $analystId): array
     $st->execute(array_merge([$analystId], $ids));
     foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) $mine[$row['remote_event_id']] = $row;
 
-    $st = $conn->prepare(
-        "SELECT s.*, 'task' AS _entity, tk.title AS _ref, tk.due_date,
-                tk.work_start_datetime, tk.work_end_datetime, tk.work_all_day
-           FROM calendar_sync_events s
-           JOIN tasks tk ON tk.id = s.task_id
-          WHERE s.analyst_id = ? AND s.remote_event_id IN ($in)"
-    );
-    $st->execute(array_merge([$analystId], $ids));
-    foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) $mine[$row['remote_event_id']] = $row;
+    // GH #217: a task slot moved in Outlook does not reach a switched-off Tasks.
+    if (moduleIsEnabled($conn, 'tasks')) {
+        $st = $conn->prepare(
+            "SELECT s.*, 'task' AS _entity, tk.title AS _ref, tk.due_date,
+                    tk.work_start_datetime, tk.work_end_datetime, tk.work_all_day
+               FROM calendar_sync_events s
+               JOIN tasks tk ON tk.id = s.task_id
+              WHERE s.analyst_id = ? AND s.remote_event_id IN ($in)"
+        );
+        $st->execute(array_merge([$analystId], $ids));
+        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) $mine[$row['remote_event_id']] = $row;
+    }
 
     // ── Moves ───────────────────────────────────────────────────────────────
     foreach ($result['changed'] as $change) {

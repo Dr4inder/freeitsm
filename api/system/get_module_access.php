@@ -73,6 +73,9 @@ try {
         'success'  => true,
         'mode'     => getModulePermissionMode($conn),
         'modules'  => $modules,
+        // Availability (GH #217): the switched-off modules, and the ones that never can be.
+        'disabled'  => disabledModules($conn),
+        'always_on' => MODULES_ALWAYS_ON,
         'teams'    => $teams,
         'analysts' => $analysts,
     ]);

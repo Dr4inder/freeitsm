@@ -16,6 +16,10 @@ require_once __DIR__ . '/php_version_guard.php';
 // readable by old PHP so the guard above can speak, and an enum is PHP 8.1.
 require_once __DIR__ . '/mailbox_provider.php';
 
+// Which modules are switched off for the whole install (GH #217) - asked by
+// analystCanAccessModule() below, so every page and endpoint gate honours it.
+require_once __DIR__ . '/module_availability.php';
+
 // Session hardening helpers. Pulled in here rather than added to each of the ten
 // files that establish or change an identity, because every one of them already
 // includes this file — one require instead of ten, and a new sign-in path gets
@@ -220,6 +224,11 @@ function requireModuleWriteJson(string $moduleKey, ?PDO $conn = null): void {
     if (!$ok) {
         http_response_code(403);
         header('Content-Type: application/json');
+        // Switched off for the install (GH #217) - not read-only, so not that message.
+        if (isset($conn) && !moduleIsEnabled($conn, $moduleKey)) {
+            echo json_encode(['success' => false, 'error' => moduleDisabledMessage($moduleKey), 'module_disabled' => $moduleKey]);
+            exit;
+        }
         echo json_encode(['success' => false, 'error' => function_exists('t') ? t('common.module_read_only') : 'You have read-only access to this module.', 'code' => 'read_only']);
         exit;
     }
@@ -408,10 +417,28 @@ function analystAllowedModulesNow(): ?array {
     $id = (int) ($_SESSION['analyst_id'] ?? 0);
     if ($id <= 0) return [];
     try {
-        return getAnalystAllowedModules(connectToDatabase(), $id);
+        $conn = connectToDatabase();
+        return modulesWithoutSwitchedOff($conn, getAnalystAllowedModules($conn, $id));
     } catch (Throwable $e) {
         return [];
     }
+}
+
+/**
+ * An allowed-modules answer (null = all, or a list) with the modules switched off
+ * for the install taken out (GH #217). getAnalystAllowedModules() itself is left
+ * as the GRANTS - System -> Modules shows those, and an all-modules analyst is
+ * still "all modules" there - so anything deciding what an analyst may OPEN from
+ * that list goes through here.
+ *
+ * @param array|null $allowed  getAnalystAllowedModules()'s answer
+ * @return array|null  null only when nothing is switched off
+ */
+function modulesWithoutSwitchedOff(PDO $conn, ?array $allowed): ?array {
+    $off = disabledModules($conn);
+    if (!$off) return $allowed;
+    $base = $allowed ?? array_keys(getModuleRegistry());
+    return array_values(array_diff($base, $off));
 }
 
 /**
@@ -467,6 +494,10 @@ function requireAdminJson(PDO $conn): void {
 function analystCanAccessModule(PDO $conn, int $analystId, string $moduleKey): bool {
     if ($analystId <= 0) return false;
     if ($moduleKey === 'system') return analystIsAdmin($conn, $analystId);
+    // A module switched off for the install is off for everyone, administrators
+    // and all-modules analysts included (GH #217). Asked here, the one question
+    // every page, endpoint and cross-module button already asks.
+    if (!moduleIsEnabled($conn, $moduleKey)) return false;
     $allowed = getAnalystAllowedModules($conn, $analystId); // null = all modules
     if ($allowed === null) return true;
     return in_array($moduleKey, $allowed, true);
@@ -511,14 +542,26 @@ function requireModuleAccess(string $moduleKey, ?PDO $conn = null): void {
  * "Any of these modules" is the honest gate. Use it sparingly: if an endpoint belongs to
  * ONE module, use requireModuleAccessJson().
  *
+ * TRAP: pass $owner when the endpoint's DATA belongs to one module. "Any of these"
+ * otherwise outlives that module being switched off for the install (GH #217):
+ * Knowledge's articles answered anyone with Tickets after Knowledge was switched
+ * off. A shared lookup (cost centres, analysts, settings) has no owner and passes none.
+ *
  * @param array<int,string> $moduleKeys  the module keys that may use the endpoint, e.g. ['knowledge', 'tickets']
+ * @param string|null $owner  the module whose data this is, refused while it is switched off; null for a shared lookup
  */
-function requireAnyModuleAccessJson(array $moduleKeys, ?PDO $conn = null): void {
+function requireAnyModuleAccessJson(array $moduleKeys, ?PDO $conn = null, ?string $owner = null): void {
     if (!isset($_SESSION['analyst_id'])) {
         http_response_code(401);
         header('Content-Type: application/json');
         echo json_encode(['success' => false, 'error' => 'Not authenticated']);
         exit;
+    }
+    if ($owner !== null) {
+        try {
+            if ($conn === null) $conn = connectToDatabase();
+            requireModuleOnJson($conn, $owner);
+        } catch (Throwable $e) { /* the access check below fails closed on its own */ }
     }
     $ok = false;
     try {
@@ -563,7 +606,12 @@ function requireModuleAccessJson(string $moduleKey, ?PDO $conn = null): void {
     if (!$ok) {
         http_response_code(403);
         header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'error' => 'You do not have access to this module']);
+        // Switched off for the install (GH #217) is not a permissions problem, and
+        // saying "no access" would send an administrator hunting through grants.
+        $off = isset($conn) && !moduleIsEnabled($conn, $moduleKey);
+        echo json_encode($off
+            ? ['success' => false, 'error' => moduleDisabledMessage($moduleKey), 'module_disabled' => $moduleKey]
+            : ['success' => false, 'error' => 'You do not have access to this module']);
         exit;
     }
 }
@@ -582,6 +630,7 @@ function sessionIsFormApproverOnly(): bool
     $aid = (int)($_SESSION['analyst_id'] ?? 0);
     $allowed = analystAllowedModulesNow();
     if ($aid <= 0 || $allowed === null || in_array('forms', $allowed, true)) return $memo;   // null = every module
+    if (!portalModuleOn('forms')) return $memo;   // no approver door into a switched-off Forms (GH #217)
     try {
         $st = connectToDatabase()->prepare(
             "SELECT 1 FROM forms WHERE approver_id = ? AND requires_approval = 1

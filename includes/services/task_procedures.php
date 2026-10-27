@@ -53,6 +53,9 @@ class TaskProcedures
     public static function mayReadKnowledge(PDO $conn, int $analystId): bool
     {
         if ($analystId <= 0 || !function_exists('analystCanAccessModule')) return false;
+        // Not while Knowledge itself is switched off for the install (GH #217) -
+        // Tickets or LMS access would otherwise still reach its articles.
+        if (!moduleIsEnabled($conn, 'knowledge')) return false;
         foreach (['knowledge', 'tickets', 'lms'] as $m) {
             if (analystCanAccessModule($conn, $analystId, $m)) return true;
         }

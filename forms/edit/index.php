@@ -49,6 +49,25 @@ $translationNamespaces = ['common', 'forms'];
 // disagree about what the same feature can do.
 require_once '../../workflow/includes/engine.php';
 $formActionDefs = WorkflowEngine::availableActions();
+// GH #217. Only switched-on modules' actions are offered - except the ones this form
+// already uses, so a form with an action on a switched-off module still opens, shows
+// what it was, and saves. Mirrors workflow/editor.php.
+try {
+    $keepActions = [];
+    $editId = (int)($_GET['id'] ?? 0);
+    if ($editId > 0) {
+        $own = $edConn->prepare('SELECT submission_actions FROM forms WHERE id = ?');
+        $own->execute([$editId]);
+        foreach ((json_decode((string)$own->fetchColumn(), true) ?: []) as $list) {
+            if (is_array($list)) $keepActions = array_merge($keepActions, array_column($list, 'type'));
+        }
+    }
+    $allActions = $formActionDefs;
+    $formActionDefs = WorkflowEngine::withoutSwitchedOff($edConn, $formActionDefs, true);
+    foreach ($keepActions as $k) {
+        if (is_string($k) && isset($allActions[$k])) $formActionDefs[$k] = $allActions[$k];
+    }
+} catch (Throwable $e) { /* the full list - the engine still refuses a switched-off module */ }
 
 // Values for every `lookup` argument, resolved once so the dropdowns work
 // without a round trip. Mirrors workflow/editor.php's own export.

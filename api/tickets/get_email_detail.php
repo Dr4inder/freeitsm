@@ -214,7 +214,7 @@ try {
     // Problem Management: problems this incident is linked to (badge + link in the
     // reading pane). Degrades to [] if the module's tables aren't present yet.
     $email['problems'] = [];
-    try {
+    if (moduleIsEnabled($conn, 'problems')) try {   // GH #217: none while Problems is switched off
         $pq = $conn->prepare(
             "SELECT p.id, p.problem_number, p.title, ps.name AS status
              FROM problem_tickets pt
@@ -230,7 +230,7 @@ try {
     // reading pane). Degrades to [] if the module's tables aren't present yet.
     // change_number is derived (CHG-####) from the id, so only id/title/status here.
     $email['changes'] = [];
-    try {
+    if (moduleIsEnabled($conn, 'changes')) try {   // GH #217: none while Changes is switched off
         $cq = $conn->prepare(
             "SELECT c.id, c.title, cs.name AS status
              FROM change_tickets ct

@@ -31,9 +31,14 @@ class TaskFormConflict extends ServiceError
 
 class TaskForms
 {
-    /** Tasks -> Settings -> Checklists -> "Forms on tasks". Off by default. */
+    /**
+     * Tasks -> Settings -> Checklists -> "Forms on tasks". Off by default.
+     * GH #217: also off while the Forms module is switched off - no section, no picker,
+     * and (outstanding() asks this) no form holding a task open that nobody can fill.
+     */
     public static function enabled(PDO $conn): bool
     {
+        if (!moduleIsEnabled($conn, 'forms')) return false;
         try {
             $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'tasks_forms_enabled'");
             $s->execute();

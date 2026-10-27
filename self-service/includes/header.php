@@ -160,14 +160,30 @@ $portalNavCap = function (string $cap) use ($ss_user_id) {
     }
 };
 
+// GH #217. The portal pages that surface an analyst module, by nav key. A module
+// switched off for the install loses its tab here, and its page sends the
+// requester back to the dashboard below - the endpoints behind each page refuse
+// as well (portalRequireModuleJson()), because a hidden tab is not a permission.
+$portalNavModules = [
+    'help_centre' => 'knowledge',
+    'training'    => 'lms',
+    'equipment'   => 'assets',
+    'catalogue'   => 'forms',
+];
 foreach ($portalNav as $navKey => $navItem) {
     if (!empty($navItem['cap']) && !$portalNavCap($navItem['cap'])) {
+        unset($portalNav[$navKey]);
+    } elseif (isset($portalNavModules[$navKey]) && !portalModuleOn($portalNavModules[$navKey])) {
         unset($portalNav[$navKey]);
     }
 }
 unset($navKey, $navItem);
 
 $activeNav  = $activeNav  ?? '';
+if (isset($portalNavModules[$activeNav]) && !portalModuleOn($portalNavModules[$activeNav])) {
+    if (!headers_sent()) header('Location: index.php');
+    exit;
+}
 $bodyClass  = $bodyClass  ?? '';
 $pageStyles = $pageStyles ?? '';
 $pageHead   = $pageHead   ?? '';

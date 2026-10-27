@@ -838,6 +838,7 @@ function leaseSyncCalendar(PDO $conn): void
     try {
         require_once __DIR__ . '/asset_warranty_calendar.php';
         if (!leaseReady($conn) || !awcColumnExists($conn, 'calendar_events', 'source')) return;
+        if (!moduleIsEnabled($conn, 'calendar')) return;   // GH #217: nothing at all while the Calendar is switched off
         $source = 'asset_lease_notice';
         $conn->prepare("DELETE FROM calendar_events WHERE source = ?")->execute([$source]);
         if (!in_array(awcGetSetting($conn, 'asset_lease_surface', 'dashboard'), ['calendar', 'both'], true)) return;

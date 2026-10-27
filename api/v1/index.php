@@ -79,6 +79,9 @@ foreach ($routes as [$routeMethod, $pattern, $permission, $handler]) {
     }
     if ($permission !== null) {
         apiRequirePermission($apiKey, $permission[0], $permission[1]);
+        // A module switched off for the install answers 403 module_disabled,
+        // whatever the key may do (GH #217, lib/modules.php).
+        apiV1RequireModulesEnabled($conn, $permission[0], $path);
     }
     array_shift($matches); // drop the full-match element
     try {

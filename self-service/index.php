@@ -419,6 +419,7 @@ document.addEventListener('DOMContentLoaded', loadTraining);
 
         function renderServiceStatus(services, defaultImpact) {
             const container = document.getElementById('statusContainer');
+            if (!container) return;   // Service Status switched off (GH #217)
 
             if (!services || services.length === 0) {
                 container.innerHTML = '<div class="empty-state">' + escapeHtml(window.t('self-service.dashboard.no_services')) + '</div>';
@@ -528,6 +529,7 @@ require __DIR__ . "/includes/header.php";
                 </span>
                 <span class="portal-action-title"><?php echo htmlspecialchars(t('self-service.dashboard.action_new_ticket')); ?></span>
             </a>
+            <?php if (portalModuleOn('forms')): /* GH #217 */ ?>
             <a class="portal-action" href="catalogue.php"
                title="<?php echo htmlspecialchars(t('self-service.dashboard.action_catalogue_sub')); ?>">
                 <span class="portal-action-icon">
@@ -535,6 +537,7 @@ require __DIR__ . "/includes/header.php";
                 </span>
                 <span class="portal-action-title"><?php echo htmlspecialchars(t('self-service.dashboard.action_catalogue')); ?></span>
             </a>
+            <?php endif; ?>
         </div>
 
         <!-- Outstanding training. ABOVE the ticket counts deliberately: this is
@@ -647,7 +650,8 @@ require __DIR__ . "/includes/header.php";
                 </div>
             </div>
 
-            <!-- System Status -->
+            <!-- System Status. Not drawn while Service Status is switched off (GH #217). -->
+            <?php if (portalModuleOn('service-status')): ?>
             <div class="portal-section">
                 <div class="section-header">
                     <h2><?php echo htmlspecialchars(t('self-service.dashboard.system_status')); ?></h2>
@@ -664,12 +668,14 @@ require __DIR__ . "/includes/header.php";
                          same switch as the incidents above. */ ?>
                 <div id="statusPlanned" hidden></div>
             </div>
+            <?php endif; ?>
         </div>
 
         <!-- Popular articles. Deflection: the answer someone came to raise a
              ticket about is often already written down. Links into the existing
              Knowledge reader (help-centre.php?id=) rather than rendering the
              article here — there is exactly one portal article viewer. -->
+        <?php if (portalModuleOn('knowledge')): /* GH #217 */ ?>
         <div class="portal-section">
             <div class="section-header">
                 <h2><?php echo htmlspecialchars(t('self-service.dashboard.popular_articles')); ?></h2>
@@ -679,4 +685,5 @@ require __DIR__ . "/includes/header.php";
                 <div class="loading-state"><?php echo htmlspecialchars(t('self-service.dashboard.loading_articles')); ?></div>
             </div>
         </div>
+        <?php endif; ?>
 <?php require __DIR__ . "/includes/footer.php";

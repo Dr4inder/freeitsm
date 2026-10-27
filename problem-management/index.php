@@ -259,9 +259,12 @@ $translationNamespaces = ['common', 'problem-management'];
 
     <script src="<?php echo BASE_URL; ?>assets/js/toast.js"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/confirm.js"></script>
-    <script>window.PM_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.PM_BASE = <?php echo json_encode(BASE_URL); ?>;</script>
+    <script>window.PM_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>;
+    // GH #217: no Fix (linked change) section or Link change while Changes is SWITCHED OFF. moduleIsEnabled, not
+    // access: linking a change has only ever needed Problems (api/problem-management/link_change.php).
+    window.PM_SHOW_CHANGES = <?php echo moduleIsEnabled(connectToDatabase(), 'changes') ? 'true' : 'false'; ?>; window.PM_BASE = <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/problem-management.js?v=23"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/problem-management.js?v=24"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=83"></script>
 </body>
 </html>

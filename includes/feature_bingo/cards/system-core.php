@@ -154,6 +154,18 @@ return [
         'link'     => 'system/modules/',
         'check'    => ['setting', 'module_permission_mode', 'nonempty'],
     ],
+    [
+        'id'       => 'system.module_availability',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'organisation',
+        'title'    => 'Switch off modules you do not use',
+        'what'     => 'Switch a whole module off for the installation under System > Modules > Availability: it disappears for everyone, from menus, other modules, the portal, the REST API, workflows and scheduled jobs (GH #217).',
+        'why'      => 'A product with only the parts you use is easier to learn and to support, and nobody stumbles into an empty module. Nothing is deleted, so it is safe to try.',
+        'done'     => 'A module has been switched off, or the list reviewed and a switch saved (switching it back on counts too).',
+        'link'     => 'system/modules/#availability',
+        'check'    => ['setting', 'modules_disabled', 'nonempty'],
+    ],
 
     // ───────────────────────── Roles (RBAC) ─────────────────────────
     [

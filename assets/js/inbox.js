@@ -3354,10 +3354,10 @@ function displayEmail(email, recordings) {
                 <span class="action-btn-icon">📅</span>
                 <span>${escapeHtml(t('tickets.actions.schedule'))}</span>
             </button>
-            <button class="action-btn" onclick="openTicketAiChat()">
+            ${ticketModuleOn('knowledge') ? `<button class="action-btn" onclick="openTicketAiChat()">
                 <span class="action-btn-icon">🤖</span>
                 <span>${escapeHtml(t('tickets.actions.ask_ai'))}</span>
-            </button>
+            </button>` : ''}
             ${buildReadForMeButton()}
             ${workspace ? '' : `<button class="action-btn pane-secondary" onclick="showAuditHistory()">
                 <span class="action-btn-icon">📋</span>
@@ -3798,7 +3798,7 @@ function buildLinksSection(email, workspace = false) {
     const pills = [];
 
     // Problems (⚠) — open in the Problem module.
-    (email.problems || []).forEach(p => {
+    (ticketModuleOn('problems') ? email.problems || [] : []).forEach(p => {
         pills.push(`<a class="pm-ticket-badge" href="../problem-management/index.php?id=${p.id}" target="_blank" title="Problem: ${escapeHtml(p.title || '')}">
             ⚠ <span class="pill-text">${escapeHtml(p.problem_number || ('#' + p.id))}${p.status ? ' · ' + escapeHtml(p.status) : ''}</span>
             ${rpBadge('problem', p.id)}
@@ -3807,7 +3807,7 @@ function buildLinksSection(email, workspace = false) {
     });
 
     // Changes (🔁) — open in the Change module.
-    (email.changes || []).forEach(c => {
+    (ticketModuleOn('changes') ? email.changes || [] : []).forEach(c => {
         const ref = 'CHG-' + String(c.id).padStart(4, '0');
         pills.push(`<a class="pm-ticket-badge" href="../change-management/index.php?id=${c.id}" target="_blank" title="Change: ${escapeHtml(c.title || '')}">
             🔁 <span class="pill-text">${escapeHtml(ref)}${c.status ? ' · ' + escapeHtml(c.status) : ''}</span>
@@ -3878,20 +3878,31 @@ function buildLinksSection(email, workspace = false) {
     </div>`;
 }
 
+/**
+ * May this pane offer that module's part? False when the analyst has no access OR
+ * the module is switched off for the install (GH #217) - tickets/index.php works it
+ * out once as window.TICKETS_MODULE_ON. A module it does not list is offered.
+ *
+ * @param {string} key  a module key, e.g. 'tasks'
+ */
+function ticketModuleOn(key) {
+    return (window.TICKETS_MODULE_ON || {})[key] !== false;
+}
+
 /** Shared by the reading pane's Links strip and the workspace action row. */
 function buildLinkActions() {
     return `        <div class="link-add-wrap">
             <button class="problem-link-btn" onclick="toggleLinkAddMenu(event)">Link to… ▾</button>
             <div class="link-add-menu" id="linkAddMenu">
-                <button type="button" onclick="linkAddChoose('problem')">Problem</button>
-                <button type="button" onclick="linkAddChoose('change')">Change</button>
+                ${ticketModuleOn('problems') ? `<button type="button" onclick="linkAddChoose('problem')">Problem</button>` : ''}
+                ${ticketModuleOn('changes') ? `<button type="button" onclick="linkAddChoose('change')">Change</button>` : ''}
                 <button type="button" onclick="linkAddChoose('ticket')">Ticket</button>
-                <button type="button" onclick="linkAddChoose('equipment')">${escapeHtml(t('tickets.assets.menu_item'))}</button>
-                <button type="button" onclick="linkAddChoose('cmdb')">${escapeHtml(t('tickets.cmdb.menu_item'))}</button>
+                ${ticketModuleOn('assets') ? `<button type="button" onclick="linkAddChoose('equipment')">${escapeHtml(t('tickets.assets.menu_item'))}</button>` : ''}
+                ${ticketModuleOn('cmdb') ? `<button type="button" onclick="linkAddChoose('cmdb')">${escapeHtml(t('tickets.cmdb.menu_item'))}</button>` : ''}
                 ${window.TICKETS_SHOW_DOMAINS ? `<button type="button" onclick="linkAddChoose('domain')">${escapeHtml(t('tickets.domains.menu_item'))}</button>` : ''}
                 ${window.TICKETS_SHOW_PROJECTS ? `<button type="button" onclick="linkAddChoose('project')">${escapeHtml(t('tickets.projects.menu_item'))}</button>` : ''}
                 <button type="button" onclick="linkAddChoose('tracker')">${escapeHtml(t('tickets.tracker.menu_item'))}</button>
-                <button type="button" onclick="linkAddChoose('task')">${escapeHtml(t('tickets.tasks.menu_item'))}</button>
+                ${ticketModuleOn('tasks') ? `<button type="button" onclick="linkAddChoose('task')">${escapeHtml(t('tickets.tasks.menu_item'))}</button>` : ''}
             </div>
         </div>
 `;
@@ -4004,6 +4015,7 @@ async function loadTicketTasks(ticketId) {
     // place, and the close warning then reports a count belonging to a ticket the
     // analyst is no longer looking at.
     tasksForTicket = [];
+    if (!ticketModuleOn('tasks')) return;   // GH #217
     try {
         const res = await fetch('../api/tickets/get_ticket_tasks.php?ticket_id=' + ticketId);
         const data = await res.json();
@@ -6106,7 +6118,7 @@ let cmdbAcHighlightedIdx = -1;
 async function loadCmdbObjects(ticketId) {
     const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripCmdbPills');
-    if (!host) return;
+    if (!host || !ticketModuleOn('cmdb')) return;   // GH #217
     try {
         const res = await fetch('../api/tickets/get_ticket_cmdb_objects.php?ticket_id=' + ticketId);
         const data = await res.json();
@@ -6498,7 +6510,7 @@ let assetAcHighlightedIdx = -1;
 async function loadTicketAssets(ticketId) {
     const isCurrent = ticketReadGuard(ticketId);
     const host = document.getElementById('stripAssetPills');
-    if (!host) return;
+    if (!host || !ticketModuleOn('assets')) return;   // GH #217
     try {
         const res = await fetch('../api/tickets/get_ticket_assets.php?ticket_id=' + ticketId);
         const data = await res.json();

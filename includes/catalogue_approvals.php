@@ -605,6 +605,7 @@ function catalogueSubmissionBodyHtml(PDO $conn, int $submissionId, string $formT
  */
 function catalogueApproverCanEnter(PDO $conn, int $analystId): bool {
     if ($analystId <= 0) return false;
+    if (!moduleIsEnabled($conn, 'forms')) return false;   // GH #217: not into a switched-off Forms
     if (analystCanAccessModule($conn, $analystId, 'forms')) return true;
     try {
         $st = $conn->prepare(

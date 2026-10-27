@@ -82,6 +82,11 @@ if (!$keyExists) {
     exit;
 }
 
+// GH #217: an agent's report is refused while its module is switched off for the
+// install - the device is not recorded, and nothing is queued to arrive later.
+requireModuleOnJson($conn, 'software');
+requireModuleOnJson($conn, 'assets');
+
 // --------------------------------------------------
 // Retrieve raw JSON payload & normalize to UTF-8
 // --------------------------------------------------

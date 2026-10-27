@@ -86,6 +86,16 @@ $translationNamespaces = ['common', 'system'];
 
         .loading-spinner { text-align: center; color: var(--text-muted, #666); padding: 30px; }
 
+        /* Availability (GH #217). */
+        .avail-intro { color: var(--text-muted, #666); font-size: 13px; margin: 0 0 12px; line-height: 1.5; }
+        .avail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 18px; }
+        .avail-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 2px; border-bottom: 1px solid var(--border, #f2f2f2); }
+        .avail-name { font-size: 13px; color: var(--text, #333); }
+        .avail-row.is-off .avail-name { color: var(--text-faint, #999); text-decoration: line-through; }
+        .avail-lock { font-size: 11px; color: var(--text-muted, #666); }
+        .off-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--surface-3, #f1f5f9); color: var(--text-muted, #666); }
+        .mod-row.is-off td { opacity: 0.6; }
+
         /* ---- Dark mode: pale washes and light-on-light text that can't be tokenised ---- */
         [data-theme-mode="dark"] .strict-explainer { background: #3a2e12; border-color: #5a4a1e; color: #fcd34d; }
         [data-theme-mode="dark"] .eff-table .yes { color: #86efac; }
@@ -105,6 +115,13 @@ $translationNamespaces = ['common', 'system'];
         <div class="modules-container">
             <h1 class="page-title"><?php echo htmlspecialchars(t('system.modules.title')); ?></h1>
             <p class="page-subtitle">Control which modules teams and analysts can use. Grant a module to a whole team, or to individuals. (System access is separate — set the Administrator flag on the Analysts screen.)</p>
+
+            <!-- Availability (GH #217): switch a module off for the whole install -->
+            <div class="panel">
+                <h2 id="availability">Availability</h2>
+                <p class="avail-intro">Switch a module off for the <strong>whole installation</strong> if you do not use it. It disappears for everyone, administrators included - from the menus, from other modules' buttons and links, from the REST API, from workflows and from scheduled jobs. <strong>Nothing is deleted</strong>: switch it back on and it returns exactly as it was, with everyone's access unchanged.</p>
+                <div class="avail-grid" id="availGrid"></div>
+            </div>
 
             <!-- Conflict policy -->
             <div class="panel">
@@ -182,6 +199,7 @@ $translationNamespaces = ['common', 'system'];
                 '<option value="">— choose an analyst —</option>' +
                 d.analysts.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('');
             renderAccessLevels();
+            renderAvailability();
             renderSummary();
             document.getElementById('loading').style.display = 'none';
             document.getElementById('summaryTable').style.display = '';
@@ -238,10 +256,46 @@ $translationNamespaces = ['common', 'system'];
         return html;
     }
 
+    // Availability (GH #217): one switch per module. Tickets and System are locked on.
+    const isOff = key => (DATA.disabled || []).includes(key);
+    function renderAvailability() {
+        const locked = DATA.always_on || [];
+        document.getElementById('availGrid').innerHTML = DATA.modules.map(m => {
+            const off = isOff(m.key);
+            const control = locked.includes(m.key)
+                ? '<span class="avail-lock">Always on</span>'
+                : `<label class="toggle-switch" title="${off ? 'Switched off' : 'On'}"><input type="checkbox" ${off ? '' : 'checked'} onchange="setAvailability('${m.key}', this)"><span class="toggle-slider"></span></label>`;
+            return `<div class="avail-row${off ? ' is-off' : ''}"><span class="avail-name">${escapeHtml(m.name)}</span>${control}</div>`;
+        }).join('');
+    }
+
+    async function setAvailability(key, box) {
+        const m = DATA.modules.find(x => x.key === key);
+        const enabled = box.checked;
+        if (!enabled) {
+            const ok = await showConfirm({
+                title: 'Switch off ' + m.name + '?',
+                message: m.name + ' will disappear for everyone, including you: menus, buttons in other modules, the REST API, workflows and scheduled jobs. Nothing is deleted - switch it back on and it returns as it was.',
+                okLabel: 'Switch off', okClass: 'danger'
+            });
+            if (!ok) { box.checked = true; return; }
+        }
+        const d = await (await fetch(API + 'save_module_availability.php', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ module_key: key, enabled })
+        })).json();
+        if (!d.success) { showToast('Failed: ' + (d.error || ''), 'error'); box.checked = !enabled; return; }
+        DATA.disabled = d.disabled;
+        renderAvailability();
+        renderSummary();
+        if (document.getElementById('effAnalyst').value) loadEffective();
+        showToast(enabled ? m.name + ' is on' : m.name + ' is switched off', 'success');
+    }
+
     function renderSummary() {
         document.getElementById('summaryBody').innerHTML = DATA.modules.map(m => `
-            <tr class="mod-row" onclick="openModuleModal('${m.key}')">
-                <td><strong>${escapeHtml(m.name)}</strong></td>
+            <tr class="mod-row${isOff(m.key) ? ' is-off' : ''}" onclick="openModuleModal('${m.key}')">
+                <td><strong>${escapeHtml(m.name)}</strong>${isOff(m.key) ? '<span class="off-tag">Switched off</span>' : ''}</td>
                 <td>${pills(grantedBy(DATA.teams, m.key))}</td>
                 <td>${pills(grantedBy(DATA.analysts, m.key))}</td>
             </tr>`).join('');

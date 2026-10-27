@@ -434,7 +434,7 @@
     }
     /** Follow-up actions (3.3.0): project tasks, each opening on the Tasks board. */
     function raidActionsHtml(r) {
-        if (!r) return '';
+        if (!r || !window.PRJ_TASKS) return '';   // GH #217: they are tasks - none while Tasks is off
         const rows = (r.actions || []).map(a => '<li class="' + (a.is_closed ? 'done' : '') + '"><span class="prj-task-status" style="background:' + esc(a.status_colour || '#94a3b8') + '" title="' + esc(a.status_name || '') + '"></span>'
             + '<a href="' + esc(window.PRJ_BASE + 'tasks/?task=' + a.id) + '">' + esc(a.title) + '</a>'
             + '<span class="prj-muted">' + esc([a.assignee_name, a.due_date ? P.fmtDate(a.due_date) : ''].filter(Boolean).join(' - ')) + '</span>'

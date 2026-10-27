@@ -19,6 +19,18 @@ I18n::initFromSession();
 Tz::init();
 
 requireModuleAccess('tickets');
+
+// Which other modules' parts this pane may offer: false when the analyst has no
+// access OR the module is switched off for the install (GH #217). The context
+// menu below and inbox.js (window.TICKETS_MODULE_ON) both read this one answer.
+$ticketsModuleOn = [];
+foreach (['problems', 'changes', 'assets', 'cmdb', 'tasks', 'checklists', 'knowledge'] as $__m) {
+    try {
+        $ticketsModuleOn[$__m] = analystCanAccessModule(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0), $__m);
+    } catch (Throwable $e) {
+        $ticketsModuleOn[$__m] = true;   // the endpoints still refuse; the button just fails
+    }
+}
 // The ticket workspace (PR #211): the install mode and this analyst's own switch,
 // handed to assets/js/ticket-workspace.js as window.TICKET_WORKSPACE. can_write
 // decides whether More -> Make workspace is offered; Tickets has no Read only
@@ -723,26 +735,34 @@ $translationNamespaces = ['common', 'tickets'];
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             <span><?php echo htmlspecialchars(t('tickets.context.change_subject')); ?></span>
         </button>
+        <?php if ($ticketsModuleOn['cmdb']): ?>
         <button class="ticket-context-menu-item" type="button" onclick="openContextLinkCmdb()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
             <span><?php echo htmlspecialchars(t('tickets.context.link_cmdb')); ?></span>
         </button>
+        <?php endif; ?>
+        <?php if ($ticketsModuleOn['problems']): ?>
         <button class="ticket-context-menu-item" type="button" onclick="openContextLinkProblem()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <span><?php echo htmlspecialchars(t('tickets.context.link_problem')); ?></span>
         </button>
+        <?php endif; ?>
+        <?php if ($ticketsModuleOn['changes']): ?>
         <button class="ticket-context-menu-item" type="button" onclick="openContextLinkChange()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <span><?php echo htmlspecialchars(t('tickets.context.link_change')); ?></span>
         </button>
+        <?php endif; ?>
         <button class="ticket-context-menu-item" type="button" onclick="openContextLinkTicket()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
             <span><?php echo htmlspecialchars(t('tickets.context.link_ticket')); ?></span>
         </button>
+        <?php if ($ticketsModuleOn['tasks']): ?>
         <button class="ticket-context-menu-item" type="button" onclick="openContextLinkTask()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             <span><?php echo htmlspecialchars(t('tickets.context.link_task')); ?></span>
         </button>
+        <?php endif; ?>
         <?php /* Snooze (#933). A parent with the presets as a flyout, so the common
                  case ("tomorrow morning") is one hover and one click, and the custom
                  date lives behind the last row rather than in front of everything. */ ?>
@@ -1047,6 +1067,8 @@ $translationNamespaces = ['common', 'tickets'];
         // Domains on a ticket (3.0.0): Domains' data, so only for analysts who can open it.
         window.TICKETS_SHOW_DOMAINS = <?php echo analystCanAccessModule(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0), 'domains') ? 'true' : 'false'; ?>;
         window.TICKETS_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0), 'projects') ? 'true' : 'false'; ?>;
+        // The other modules this pane offers parts of (GH #217) - see $ticketsModuleOn.
+        window.TICKETS_MODULE_ON = <?php echo json_encode($ticketsModuleOn); ?>;
         window.KB_BASE = '../api/knowledge/';
         // What this analyst's ticket rows show (discussion #61). Resolved
         // server-side — their own choice over the install default — and already
@@ -1072,11 +1094,11 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/schedule.js?v=1"></script>
     <script src="../checklists/search_scoring.js?v=1"></script>
-    <script src="../checklists/ticket_view.js?v=12"></script>
+    <script src="../checklists/ticket_view.js?v=13"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
     <script src="../assets/js/ticket-workspace.js?v=3"></script>
     <script src="../assets/js/data-table.js?v=7"></script>
-    <script src="../assets/js/inbox.js?v=166"></script>
+    <script src="../assets/js/inbox.js?v=167"></script>
     <script src="../assets/js/tickets-table.js?v=1"></script>
     <script src="../assets/js/mobile.js?v=84"></script>
     <script>

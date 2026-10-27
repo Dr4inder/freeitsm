@@ -224,6 +224,9 @@ $translationNamespaces = ['common', 'lms'];
         <div class="modal-content" style="max-width: 560px;">
             <div class="modal-header"><?php echo htmlspecialchars(t('lms.editor.ai_lesson')); ?></div>
             <form id="lessonAiForm" style="padding: 20px 24px;">
+                <?php // GH #217: no article picker while Knowledge is switched off - the AI works from the title alone.
+                // moduleIsEnabled, not analystCanAccessModule: authors need not have Knowledge (api/lms/knowledge_articles.php).
+                if (moduleIsEnabled(connectToDatabase(), 'knowledge')): ?>
                 <div class="form-group">
                     <label><?php echo htmlspecialchars(t('lms.editor.from_article')); ?></label>
                     <select id="aiArticle">
@@ -231,6 +234,7 @@ $translationNamespaces = ['common', 'lms'];
                     </select>
                     <small><?php echo htmlspecialchars(t('lms.editor.from_article_help')); ?></small>
                 </div>
+                <?php endif; ?>
                 <div class="syshelp-callout" style="display:none;"></div>
                 <p class="lms-editor-hint"><?php echo htmlspecialchars(t('lms.editor.ai_lesson_warning')); ?></p>
                 <div class="modal-actions">
@@ -250,7 +254,7 @@ $translationNamespaces = ['common', 'lms'];
             'pass_mark'   => $course['pass_mark'] === null ? null : (int)$course['pass_mark'],
         ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;
     </script>
-    <script src="../assets/js/lms-editor.js?v=6"></script>
+    <script src="../assets/js/lms-editor.js?v=7"></script>
     <script src="../assets/js/mobile.js?v=83"></script>
 </body>
 </html>

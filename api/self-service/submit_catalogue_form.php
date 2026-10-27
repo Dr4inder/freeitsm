@@ -47,6 +47,8 @@ if (!$formId) {
 
 try {
     $conn = connectToDatabase();
+    // GH #217: nothing from a module switched off for the install.
+    requireModuleOnJson($conn, 'forms');
 
     // No analyst is acting. The service re-checks is_portal_visible itself, so
     // a hidden form is refused here even though this adapter never looked.

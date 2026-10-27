@@ -442,7 +442,8 @@ $contract_id = $_GET['id'] ?? null;
                     //
                     // Only on a saved contract. A new one has no id, so there is
                     // nothing to link equipment to yet and nowhere to send them.
-                    if ($contract_id): ?>
+                    // GH #217: not while Assets is off (or not granted) - view.php hides the section too.
+                    if ($contract_id && analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'assets')): ?>
                         <div class="form-section"><?php echo htmlspecialchars(t('contracts.detail.linked_assets')); ?></div>
                         <p class="form-hint">
                             <?php echo t('contracts.edit.equipment_signpost'); ?>

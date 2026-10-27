@@ -2364,10 +2364,10 @@ $translationNamespaces = ['common', 'asset-management'];
                         <button class="detail-tab active" onclick="switchDetailTab('keyinfo')" data-dtab="keyinfo">${window.t('asset-management.detail.tab_keyinfo')}</button>
                         <button class="detail-tab" onclick="switchDetailTab('financial')" data-dtab="financial">${window.t('asset-management.detail.tab_financial')}</button>
                         <button class="detail-tab" onclick="switchDetailTab('devices')" data-dtab="devices">${window.t('asset-management.detail.tab_devices')} <span class="tab-count" id="devicesCountBadge">...</span></button>
-                        <button class="detail-tab" onclick="switchDetailTab('software')" data-dtab="software">${window.t('asset-management.detail.tab_software')} <span class="tab-count" id="softwareCountBadge">...</span></button>
+                        ${window.ASSET_MODULE_ON.software ? `<button class="detail-tab" onclick="switchDetailTab('software')" data-dtab="software">${window.t('asset-management.detail.tab_software')} <span class="tab-count" id="softwareCountBadge">...</span></button>` : ''}<?php /* GH #217 */ ?>
                         <button class="detail-tab" onclick="switchDetailTab('connected')" data-dtab="connected">${window.t('asset-management.detail.tab_connected')} <span class="tab-count" id="connectedCountBadge">...</span></button>
                         <button class="detail-tab" onclick="switchDetailTab('tickets')" data-dtab="tickets">${window.t('asset-management.detail.tab_tickets')} <span class="tab-count" id="ticketsCountBadge">...</span></button>
-                        <button class="detail-tab" onclick="switchDetailTab('contracts')" data-dtab="contracts">${window.t('asset-management.detail.tab_contracts')} <span class="tab-count" id="contractsCountBadge">...</span></button>
+                        ${window.ASSET_MODULE_ON.contracts ? `<button class="detail-tab" onclick="switchDetailTab('contracts')" data-dtab="contracts">${window.t('asset-management.detail.tab_contracts')} <span class="tab-count" id="contractsCountBadge">...</span></button>` : ''}<?php /* GH #217 */ ?>
                         ${window.ASSET_SHOW_PROJECTS ? `<button class="detail-tab" onclick="switchDetailTab('projects')" data-dtab="projects">${window.tf ? window.tf('projects.links_other.title', 'Projects') : 'Projects'}</button>` : ''}
                         <button class="detail-tab" onclick="switchDetailTab('documents')" data-dtab="documents">${window.t('common.documents.heading')}</button>
                     </div>
@@ -2638,17 +2638,17 @@ $translationNamespaces = ['common', 'asset-management'];
             loadAssignedUsers(assetId);
             loadDisks(assetId);
             loadDevices(assetId);
-            loadInstalledSoftware(assetId);
+            if (window.ASSET_MODULE_ON.software) loadInstalledSoftware(assetId);   // GH #217: not while switched off
             loadInventoryStatus(assetId);
             loadConnections(assetId);
             loadIntuneDevice(assetId);
             loadAssetTickets(assetId);
-            loadAssetContracts(assetId);
+            if (window.ASSET_MODULE_ON.contracts) loadAssetContracts(assetId);
             loadAssetCostCentres(selectedAsset);
             // Projects (3.2.0): the projects this asset is part of.
             if (window.ASSET_SHOW_PROJECTS && window.ProjectLinks) ProjectLinks.mount(document.getElementById('assetProjects'), { kind: 'asset', id: assetId, base: window.APP_BASE || '../', bare: true });
             loadCustomFields(assetId);
-            if (window.CiAssetLink) CiAssetLink.mount(document.getElementById('ciLinkSection'), {
+            if (window.CiAssetLink && window.ASSET_MODULE_ON.cmdb) CiAssetLink.mount(   // GH #217: an empty section while CMDB is offdocument.getElementById('ciLinkSection'), {
                 side: 'asset', id: assetId, base: window.APP_BASE || '../',
                 cardClass: 'ci-link-block', headClass: 'section-header', titleClass: 'section-title',
                 onState: s => { if (Number(selectedAssetId) === Number(assetId)) atlSaw('cmdb', s.linked ? 1 : 0); }
@@ -5349,7 +5349,11 @@ $translationNamespaces = ['common', 'asset-management'];
              inert. (#936) */ ?>
     <script src="../assets/js/network-mapper-icons.js?v=3"></script>
     <script>window.ASSET_LAYOUT_NOTICE = <?php echo json_encode(AssetTypeLayout::noticeMode(connectToDatabase())); ?>;</script>
-    <script>window.ASSET_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.APP_BASE = window.APP_BASE || <?php echo json_encode(BASE_URL); ?>;</script>
+    <script>window.ASSET_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>;
+    // GH #217: the Software and Contracts tabs and the CI section go while that module is SWITCHED OFF.
+    // moduleIsEnabled, not access: a reader without the grant keeps today's tab / "restricted" wording.
+    window.ASSET_MODULE_ON = <?php echo json_encode(['software' => moduleIsEnabled(connectToDatabase(), 'software'), 'contracts' => moduleIsEnabled(connectToDatabase(), 'contracts'), 'cmdb' => moduleIsEnabled(connectToDatabase(), 'cmdb')]); ?>;
+    window.APP_BASE = window.APP_BASE || <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="../assets/js/project-links.js?v=1"></script>
     <script src="../assets/js/ci-asset-link.js?v=5"></script>
     <script src="../assets/js/mobile.js?v=83"></script>

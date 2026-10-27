@@ -68,6 +68,10 @@ try {
     exit;
 }
 
+// GH #217: an agent's report is refused while its module is switched off for the
+// install - the device is not recorded, and nothing is queued to arrive later.
+requireModuleOnJson($conn, 'assets');
+
 // --------------------------------------------------
 // Parse JSON payload (with UTF-8 normalization)
 // --------------------------------------------------

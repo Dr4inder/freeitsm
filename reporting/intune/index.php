@@ -17,6 +17,11 @@ require_once '../../includes/timezone.php';
 I18n::initFromSession();
 Tz::init();
 requireModuleAccess('reporting');
+// GH #217: Intune devices are Assets' data - back to the Reporting landing while Assets is switched off.
+if (!moduleIsEnabled(connectToDatabase(), 'assets')) {
+    header('Location: ../');
+    exit;
+}
 
 $current_page = 'intune';
 $path_prefix = '../../';

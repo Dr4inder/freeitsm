@@ -22,6 +22,8 @@ if (!isset($_SESSION["analyst_id"])) {
 
 require_once __DIR__ . "/../../includes/tenancy.php";
 requireModuleAccessJson('tickets');
+// GH #217: refused while the checklists module is switched off for the install.
+requireModuleOnJson(connectToDatabase(), 'checklists');
 
 $analystId = (int)$_SESSION["analyst_id"];
 $analystName = $_SESSION["analyst_name"] ?? ($_SESSION["username"] ?? "Analyst");

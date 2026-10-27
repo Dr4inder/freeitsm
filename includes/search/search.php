@@ -145,7 +145,8 @@ function searchScopeForAnalyst(PDO $conn, int $analystId, array $overrides = [])
         // visibility from the record they hang off, so the corpus row alone
         // cannot answer whether they may be listed — see below.
         // The grants NOW, not the copy taken at sign-in (analystAllowedModulesNow()).
-        'allowed_modules'   => getAnalystAllowedModules($conn, (int)$analystId),
+        // Less any module switched off for the install (GH #217).
+        'allowed_modules'   => modulesWithoutSwitchedOff($conn, getAnalystAllowedModules($conn, (int)$analystId)),
     ];
 
     if (function_exists('isMultiTenant') && isMultiTenant($conn)) {

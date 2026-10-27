@@ -240,6 +240,80 @@ class WorkflowEngine
     }
 
     /**
+     * GH #217. The module each trigger belongs to, by the event's first segment
+     * ('task' in task.created, 'task_status' in task_status.updated). A segment
+     * not listed - ticket.*, sla.*, tracker.*, the ticket lookups - belongs to
+     * Tickets, which is never switched off.
+     *
+     * TRAP: a new trigger family for a switchable module goes here, or its
+     * workflows keep firing while the module is off. tests/module-availability.php
+     * fails for any trigger whose segment is in neither this map nor
+     * TICKET_TRIGGER_SEGMENTS.
+     */
+    const TRIGGER_MODULES = [
+        'form' => 'forms', 'catalogue_request' => 'forms',
+        'task' => 'tasks', 'task_status' => 'tasks', 'task_priority' => 'tasks', 'task_tag' => 'tasks',
+        'change' => 'changes', 'change_status' => 'changes', 'change_type' => 'changes',
+        'change_priority' => 'changes', 'change_impact' => 'changes',
+        'problem' => 'problems', 'problem_status' => 'problems', 'problem_priority' => 'problems',
+        'asset' => 'assets', 'asset_type' => 'assets', 'asset_status' => 'assets', 'asset_location' => 'assets',
+        'cmdb' => 'cmdb', 'cmdb_class' => 'cmdb', 'cmdb_property' => 'cmdb', 'cmdb_relationship_type' => 'cmdb',
+        'knowledge' => 'knowledge',
+        'service_status' => 'service-status', 'status_service' => 'service-status',
+        'incident_status' => 'service-status', 'impact_level' => 'service-status',
+        'morning_check' => 'morning-checks', 'morning_check_status' => 'morning-checks',
+        'software' => 'software', 'software_licence' => 'software',
+        'contract' => 'contracts', 'supplier' => 'contracts', 'supplier_contact' => 'contracts',
+        'contract_status' => 'contracts', 'contract_term_tab' => 'contracts', 'payment_schedule' => 'contracts',
+        'supplier_status' => 'contracts', 'supplier_type' => 'contracts',
+        'domain' => 'domains', 'domain_status' => 'domains',
+        'project' => 'projects',
+        'calendar_event' => 'calendar', 'calendar_category' => 'calendar',
+        'network_diagram' => 'network-mapper',
+    ];
+
+    /** The trigger segments that belong to Tickets (never switched off) - the test's other half. */
+    const TICKET_TRIGGER_SEGMENTS = ['ticket', 'sla', 'tracker', 'ticket_status', 'ticket_priority', 'ticket_type', 'ticket_origin'];
+
+    /** GH #217. The actions that belong to a switchable module; the rest are Tickets' or the engine's own. */
+    const ACTION_MODULES = [
+        'create_task'      => 'tasks',
+        'create_project'   => 'projects',
+        'attach_checklist' => 'checklists',
+    ];
+
+    /**
+     * GH #217. The switched-off module that stops this event's workflows - Workflows
+     * itself, or the module the event belongs to - or null when nothing does.
+     *
+     * @param string $event  a trigger key, e.g. 'task.created'
+     */
+    private static function moduleOffFor(PDO $conn, string $event): ?string
+    {
+        if (!moduleIsEnabled($conn, 'workflow')) return 'workflow';
+        $module = self::TRIGGER_MODULES[explode('.', $event, 2)[0]] ?? null;
+        return ($module !== null && !moduleIsEnabled($conn, $module)) ? $module : null;
+    }
+
+    /**
+     * GH #217. The triggers and actions a NEW workflow may use: those whose module
+     * is switched on. The editor lists these; availableTriggers() and
+     * availableActions() stay complete, so an existing workflow on a switched-off
+     * module still loads, saves and shows what it was.
+     *
+     * @param array $items  availableTriggers() or availableActions(), keyed by trigger / action key
+     * @param bool $actions  true for actions, false for triggers
+     */
+    public static function withoutSwitchedOff(PDO $conn, array $items, bool $actions): array
+    {
+        return array_filter($items, function ($key) use ($conn, $actions) {
+            $module = $actions ? (self::ACTION_MODULES[$key] ?? null)
+                               : (self::TRIGGER_MODULES[explode('.', (string)$key, 2)[0]] ?? null);
+            return $module === null || moduleIsEnabled($conn, $module);
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
      * CRUD + settings entities that each get explicit .created/.updated/.deleted
      * triggers. `[label, [condition field paths]]`. Domain entities carry a few
      * useful fields; settings/lookups carry just id + name (their own id isn't a
@@ -1686,6 +1760,10 @@ class WorkflowEngine
 
         try {
             $conn = connectToDatabase();
+            // GH #217. Nothing runs while Workflows, or the module the event belongs
+            // to, is switched off for the install. Below the notifications and the
+            // search index on purpose: those are not workflows.
+            if (self::moduleOffFor($conn, $event) !== null) return;
             // GH #209. Shared workflows run for every event; a company's own only
             // for that company's. An event that belongs to no company (a supplier
             // saved, a status renamed) runs the shared ones only. Nothing to work
@@ -1756,6 +1834,17 @@ class WorkflowEngine
     private static function run(array $wf, string $event, array $payload, bool $isManual, bool $dryRun = false): array
     {
         $wfId = (int)$wf['id'];
+
+        // GH #217. Test fire and the REST API's fire reach here without dispatch():
+        // a switched-off module gives a visible "aborted" run that says why.
+        try {
+            $off = self::moduleOffFor(connectToDatabase(), $event);
+        } catch (Throwable $e) {
+            $off = null;
+        }
+        if ($off !== null) {
+            return self::recordAbortedRun($wf, $event, $payload, $isManual, $dryRun, moduleDisabledMessage($off));
+        }
 
         if (in_array($wfId, self::$activeWorkflowIds, true)) {
             return self::recordAbortedRun($wf, $event, $payload, $isManual, $dryRun,
@@ -2187,6 +2276,21 @@ class WorkflowEngine
         foreach ($actions as $i => $action) {
             $type = $action['type'] ?? '';
             $args = $action['args'] ?? [];
+
+            // GH #217. An action whose module is switched off for the install is
+            // skipped and says so - like a confidential ticket's email, the run
+            // goes on with the next action rather than failing the whole chain.
+            $actionModule = self::ACTION_MODULES[$type] ?? null;
+            if ($actionModule !== null && !moduleIsEnabled(connectToDatabase(), $actionModule)) {
+                $stepLog[] = [
+                    'kind'   => 'action',
+                    'index'  => $i,
+                    'type'   => $type,
+                    'status' => 'skipped',
+                    'result' => ['skipped' => true, 'reason' => moduleDisabledMessage($actionModule), 'module_disabled' => $actionModule],
+                ];
+                continue;
+            }
 
             // Dry run: resolve the action exactly as far as we can WITHOUT
             // touching anything — substitute the {{variables}} and record the

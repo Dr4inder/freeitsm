@@ -537,7 +537,8 @@ const LMSEditor = (() => {
 
     /** Opens the AI lesson modal, loading the knowledge article list into its drop-down the first time. */
     async function openLessonAiModal() {
-        if (articles === null) {
+        // GH #217: no picker (Knowledge switched off) - nothing to fill.
+        if (articles === null && document.getElementById('aiArticle')) {
             const r = await fetch(`${API}knowledge_articles.php`);
             const d = await r.json();
             articles = d.data || [];
@@ -559,7 +560,7 @@ const LMSEditor = (() => {
     async function generateLesson(e) {
         e.preventDefault();
         const btn = document.getElementById('lessonAiBtn');
-        const articleId = document.getElementById('aiArticle').value;
+        const articleId = (document.getElementById('aiArticle') || {}).value || '';   // GH #217: absent while Knowledge is off
         const title = document.getElementById('lessonTitle').value.trim();
 
         if (!articleId && !title) { showToast(window.t('lms.editor.ai_lesson_need'), 'error'); return; }

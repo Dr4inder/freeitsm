@@ -496,7 +496,7 @@ final class CaseReport
         $st->execute([$type, $parentId]);
         $rows = $st->fetchAll(PDO::FETCH_ASSOC);
         if (!$rows) return [];
-        $allowed = getAnalystAllowedModules($conn, $viewer);
+        $allowed = modulesWithoutSwitchedOff($conn, getAnalystAllowedModules($conn, $viewer));   // GH #217
         if (!documentCanViewParent($conn, $viewer, $allowed, $type, $parentId)) { $r['hidden']['documents'] += count($rows); return []; }
         return array_map(fn($d) => $d + ['where' => $where], $rows);
     }

@@ -1033,6 +1033,9 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
         // unless somebody has said otherwise, so an install that never opens
         // Watchtower → Settings sees exactly what it saw before.
         // Domains is hidden outright from anybody who cannot open the module.
-        'cards'          => array_merge(wtVisibleCards($conn), ($dmAllowed ?? true) ? [] : ['domains' => false], $pjAllowed ? [] : ['projects' => false])
+        // GH #217: and a card whose module is switched off for the install is
+        // hidden from everybody (its 'module' in wtCardRegistry()).
+        'cards'          => array_merge(wtVisibleCards($conn), ($dmAllowed ?? true) ? [] : ['domains' => false], $pjAllowed ? [] : ['projects' => false],
+                               array_map(fn() => false, array_filter(wtCardRegistry(), fn($c) => !moduleIsEnabled($conn, $c['module']))))
     ];
 }

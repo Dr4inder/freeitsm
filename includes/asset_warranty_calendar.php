@@ -36,6 +36,9 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
      */
     function syncAssetWarrantyCalendar(PDO $conn): array
     {
+        // GH #217: nothing at all while the Calendar is switched off - not even the clear-out,
+        // so switching it back on finds the entries as they were until the next sync.
+        if (!moduleIsEnabled($conn, 'calendar')) return ['success' => true, 'synced' => 0];
         try {
             // The feature depends on schema added alongside it; bail quietly if
             // a DB verification hasn't run yet.

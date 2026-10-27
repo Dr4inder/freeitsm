@@ -31,6 +31,10 @@ requireModuleAccess('tickets');
 $settingsManifest = settingsManifestFor('tickets');
 $conn             = connectToDatabase();
 $visibleTabs      = settingsVisibleTabs($conn, (int) $_SESSION['analyst_id'], $settingsManifest);
+// GH #217: no Checklists tab while Checklists is switched off for the install.
+if (!moduleIsEnabled($conn, 'checklists')) {
+    $visibleTabs = array_values(array_filter($visibleTabs, fn($tab) => $tab['id'] !== 'checklists'));
+}
 $activeTabId      = settingsFirstTabId($visibleTabs);
 
 // SOP checklists (PR #141) — resolved server-side so the tab opens on the value

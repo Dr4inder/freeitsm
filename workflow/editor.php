@@ -35,6 +35,30 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $triggers   = WorkflowEngine::availableTriggers();
 $ops        = WorkflowEngine::availableOperators();
 $actionDefs = WorkflowEngine::availableActions();
+// GH #217. Only switched-on modules' triggers and actions are offered - except the
+// ones this workflow already uses, so a workflow on a switched-off module still
+// opens, shows what it was, and saves.
+try {
+    $edConn = connectToDatabase();
+    $keepTrigger = null;
+    $keepActions = [];
+    if ($id > 0) {
+        $own = $edConn->prepare('SELECT trigger_event, actions FROM workflows WHERE id = ?');
+        $own->execute([$id]);
+        if ($ownRow = $own->fetch(PDO::FETCH_ASSOC)) {
+            $keepTrigger = $ownRow['trigger_event'];
+            $keepActions = array_column(json_decode((string)$ownRow['actions'], true) ?: [], 'type');
+        }
+    }
+    $allTriggers = $triggers;
+    $allActions  = $actionDefs;
+    $triggers   = WorkflowEngine::withoutSwitchedOff($edConn, $triggers, false);
+    $actionDefs = WorkflowEngine::withoutSwitchedOff($edConn, $actionDefs, true);
+    if ($keepTrigger !== null && isset($allTriggers[$keepTrigger])) $triggers[$keepTrigger] = $allTriggers[$keepTrigger];
+    foreach ($keepActions as $k) {
+        if (isset($allActions[$k])) $actionDefs[$k] = $allActions[$k];
+    }
+} catch (Throwable $e) { /* the full lists - the engine still refuses a switched-off module */ }
 $fieldsByTrigger = [];
 $varsByTrigger   = [];
 $varPrefixesByTrigger = [];

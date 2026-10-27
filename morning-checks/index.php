@@ -392,6 +392,8 @@ $translationNamespaces = ['common', 'morning-checks'];
                      ticket was why "raise" got used less than it should have. -->
                 <input type="hidden" id="rtCheckId">
                 <input type="hidden" id="rtResultId">
+                <?php // GH #217: no ticket-or-task choice while Tasks is off (or not granted) - it is always a ticket.
+                if (analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'tasks')): ?>
                 <div class="form-group">
                     <label><?php echo htmlspecialchars(t('morning-checks.raise_modal.what')); ?></label>
                     <div class="mc-kind-toggle">
@@ -399,6 +401,7 @@ $translationNamespaces = ['common', 'morning-checks'];
                         <button type="button" class="mc-kind-btn" data-kind="task" onclick="setRaiseKind('task')"><?php echo htmlspecialchars(t('morning-checks.raise_modal.kind_task')); ?></button>
                     </div>
                 </div>
+                <?php endif; ?>
                 <div class="form-group">
                     <label for="rtSubject"><?php echo htmlspecialchars(t('morning-checks.raise_modal.subject')); ?></label>
                     <input type="text" id="rtSubject" required>

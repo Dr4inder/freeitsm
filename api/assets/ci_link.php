@@ -26,7 +26,7 @@ require_once '../../includes/services/asset_ci_links.php';
 
 header('Content-Type: application/json');
 if (!isset($_SESSION['analyst_id'])) { http_response_code(401); echo json_encode(['success' => false, 'error' => 'Not authenticated']); exit; }
-requireAnyModuleAccessJson(['assets', 'cmdb']);
+requireAnyModuleAccessJson(['assets', 'cmdb'], null, 'assets');   // owner: GH #217
 
 /** Ends the request with a JSON error. */
 function ciLinkFail(string $error, int $status = 200, ?string $code = null): never

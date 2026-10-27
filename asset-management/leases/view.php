@@ -63,8 +63,9 @@ $translationNamespaces = ['common', 'asset-management'];
         'api'     => '../../api/assets/leases/',
         'base'    => BASE_URL,
         'multi'   => isMultiTenant($conn),
+        'contracts' => moduleIsEnabled($conn, 'contracts'),   // GH #217: no contract picker or link while Contracts is switched off
     ]); ?>;</script>
-    <script src="../../assets/js/leases.js?v=2"></script>
+    <script src="../../assets/js/leases.js?v=3"></script>
     <?php endif; ?>
     <script src="../../assets/js/mobile.js?v=83"></script>
 </body>

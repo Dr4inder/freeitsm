@@ -181,10 +181,21 @@ function jobRegistry(): array
             'sources' => fn(PDO $c) => jobSourceKeys($c, 'provider:', "SELECT id FROM auth_providers WHERE enabled = 1 AND sync_enabled = 1 AND protocol IN ('ldap','carddav')"),
         ],
     ];
+    // GH #217. A job whose module is switched off for the install is not needed:
+    // it skips by design, and health must not call that overdue.
+    $jobModules = [
+        'lms_reminders' => 'lms', 'domains' => 'domains', 'task_recurrence' => 'tasks',
+        'webhook_deliveries' => 'workflow', 'proxmox_sync' => 'assets', 'vcloud_sync' => 'assets',
+    ];
     foreach ($jobs as $k => &$j) {
         $j['key']         = $k;
         $j['name_key']    = 'reporting.jobs.name_' . $k;
         $j['affects_key'] = 'reporting.jobs.affects_' . $k;
+        if (isset($jobModules[$k])) {
+            $needed = $j['needed'];
+            $module = $jobModules[$k];
+            $j['needed'] = fn(PDO $c) => moduleIsEnabled($c, $module) && $needed($c);
+        }
     }
     unset($j);
     return $jobs;
@@ -206,6 +217,9 @@ function jobRegistry(): array
 function jobRegistryAll(PDO $conn): array
 {
     $jobs = jobRegistry();
+    // GH #217. Hyper-V collectors report into Assets; with Assets switched off they
+    // are refused, so they are not jobs to judge.
+    if (!moduleIsEnabled($conn, 'assets')) return $jobs;
     try {
         $rows = $conn->query("SELECT id, name, expected_interval_minutes, grace_minutes FROM virt_connections WHERE is_active = 1 ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
     } catch (Throwable $e) {
