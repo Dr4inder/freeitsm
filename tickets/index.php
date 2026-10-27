@@ -1076,7 +1076,7 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../assets/js/ticket-fields.js?v=2"></script>
     <script src="../assets/js/ticket-workspace.js?v=2"></script>
     <script src="../assets/js/data-table.js?v=7"></script>
-    <script src="../assets/js/inbox.js?v=163"></script>
+    <script src="../assets/js/inbox.js?v=164"></script>
     <script src="../assets/js/tickets-table.js?v=1"></script>
     <script src="../assets/js/mobile.js?v=84"></script>
     <script>

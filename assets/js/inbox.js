@@ -2986,7 +2986,12 @@ function buildWorkspaceAction(email) {
     const config = window.TICKET_WORKSPACE;
     if (!email || email.deleted_datetime || config?.mode !== 'selected' || !config.ready || !config.can_write) return '';
     const on = Number(email.is_workspace) === 1;
-    return `<button type="button" onclick="setTicketWorkspace(${!on})">${escapeHtml(t('tickets.workspace.' + (on ? 'back_to_pane' : 'make_workspace')))}</button>`;
+    // Same shape as the items togglePaneMoreMenu() copies from the toolbar: an
+    // icon span, then the label, so it lines up with Audit, Export and the rest.
+    return `<button type="button" onclick="setTicketWorkspace(${!on})">
+                <span class="action-btn-icon">${on ? '↩️' : '🗂️'}</span>
+                <span>${escapeHtml(t('tickets.workspace.' + (on ? 'back_to_pane' : 'make_workspace')))}</span>
+            </button>`;
 }
 
 async function setTicketWorkspace(value) {
