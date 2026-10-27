@@ -16,6 +16,11 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccess('tickets');
+// GH #217: duty rota switched off for the install - back to the inbox.
+if (!moduleIsEnabled(connectToDatabase(), 'rota')) {
+    header('Location: ' . BASE_URL . 'tickets/');
+    exit;
+}
 
 $current_page = 'rota';
 

@@ -1535,6 +1535,10 @@
         { cls: 'time',  title: 'Time',             icon: '⏱',  label: 'Time',       sel: '#timeEntriesContainer',      all: false },
         { cls: 'cmdb',  title: 'Objects',          icon: '🖥', label: 'Objects',    sel: '#cmdbObjectsContainer',      all: false }
     ];
+    // No Time sheet while Time tracking is switched off for the install (GH #217).
+    if ((window.TICKETS_MODULE_ON || {})['time-tracking'] === false) {
+        SECTIONS = SECTIONS.filter(function (def) { return def.cls !== 'time'; });
+    }
     SECTIONS.forEach(function (def) {
         var sheet = document.createElement('div');
         sheet.className = 'mobile-sheet mobile-sheet-' + def.cls;

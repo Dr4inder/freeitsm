@@ -17,6 +17,7 @@
 require_once __DIR__ . '/template_email.php';
 require_once __DIR__ . '/encryption.php';   // csat_token_secret is stored encrypted
 require_once __DIR__ . '/session_security.php'; // requestScheme() — proxy-aware (GH #152)
+require_once __DIR__ . '/module_availability.php'; // moduleIsEnabled('csat') - GH #217
 
 /**
  * Read a system_settings key with a default fallback.
@@ -304,6 +305,10 @@ function csatRecordRating(PDO $conn, int $responseId, int $rating): bool {
  * @param bool $force  true to send even when one-survey-per-ticket is on and one already exists
  */
 function sendCsatSurvey(PDO $conn, int $ticketId, ?int $analystId, bool $force = false): array {
+    // GH #217: CSAT switched off for the install - no survey by any route.
+    if (!moduleIsEnabled($conn, 'csat')) {
+        return ['result' => CSAT_RESULT_OFF, 'response_id' => null];
+    }
     $mode = csatGetSetting($conn, 'csat_mode', 'off');
     if ($mode === 'off') {
         return ['result' => CSAT_RESULT_OFF, 'response_id' => null];

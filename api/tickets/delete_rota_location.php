@@ -18,6 +18,7 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('tickets');
+requireModuleOnJson(connectToDatabase(), 'rota');   // GH #217: not while the duty rota is switched off
 requireCapabilityJson(Cap::TICKETS_ROTA_LOCATIONS);   // settings tab — see docs/design/rbac.md
 
 try {

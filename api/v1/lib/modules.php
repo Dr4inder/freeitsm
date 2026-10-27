@@ -21,7 +21,8 @@
 const API_V1_RESOURCE_MODULES = [
     // Tickets (always on)
     'tickets' => ['tickets'], 'ticket_notes' => ['tickets'], 'ticket_thread' => ['tickets'],
-    'ticket_audit' => ['tickets'], 'ticket_sla' => ['tickets'], 'ticket_time_entries' => ['tickets'],
+    // A Tickets feature with its own switch (slice 2) is listed beside Tickets.
+    'ticket_audit' => ['tickets'], 'ticket_sla' => ['tickets', 'sla'], 'ticket_time_entries' => ['tickets', 'time-tracking'],
     'users' => ['tickets'],
     // System (always on)
     'analysts' => ['system'], 'analyst_access' => ['system'], 'companies' => ['system'],

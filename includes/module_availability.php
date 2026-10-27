@@ -34,14 +34,31 @@
 const MODULES_ALWAYS_ON = ['tickets', 'system'];
 
 /**
+ * Features that live INSIDE Tickets and can be switched off on their own (GH #217,
+ * slice 2) - key => English name. They share the modules' switched-off list, so
+ * moduleIsEnabled('sla') and every helper below work for them unchanged; the keys
+ * never collide with a module key.
+ *
+ * TRAP: a feature switch is AVAILABILITY only. Who may use the feature is still
+ * decided by module access and capabilities, exactly as before.
+ */
+const TICKET_FEATURES = [
+    'csat'          => 'Customer satisfaction (CSAT)',
+    'sla'           => 'SLA',
+    'time-tracking' => 'Time tracking',
+    'rota'          => 'Duty rota',
+];
+
+/**
  * The modules switched off for the whole install, cached per request.
  *
+ * @param bool $fresh  true to read the setting again - after saving it in this same request
  * @return string[] module keys from getModuleRegistry(); [] when none, or when the setting cannot be read
  */
-function disabledModules(PDO $conn): array
+function disabledModules(PDO $conn, bool $fresh = false): array
 {
     static $cache = null;
-    if ($cache !== null) return $cache;
+    if ($cache !== null && !$fresh) return $cache;
     $cache = [];
     try {
         $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'modules_disabled'");
@@ -73,6 +90,7 @@ function moduleIsEnabled(PDO $conn, string $moduleKey): bool
  */
 function moduleDisabledMessage(string $moduleKey): string
 {
+    if (isset(TICKET_FEATURES[$moduleKey])) return TICKET_FEATURES[$moduleKey] . ' is switched off for this installation.';
     $name = function_exists('t') ? t("common.modules.$moduleKey.name") : '';
     if ($name === '' || $name === "common.modules.$moduleKey.name") {
         // An endpoint that never loaded the translations: a readable English name.

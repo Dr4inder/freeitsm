@@ -40,7 +40,7 @@ $ok = function (string $label, bool $pass, string $detail = '') use (&$failed) {
     if (!$pass) $failed++;
     echo ($pass ? '  PASS  ' : '  FAIL  ') . $label . ($detail !== '' ? "  [$detail]" : '') . "\n";
 };
-$modules = array_merge(array_keys(getModuleRegistry()), ['system']);
+$modules = array_merge(array_keys(getModuleRegistry()), ['system'], array_keys(TICKET_FEATURES));   // features share the list (slice 2)
 
 // 1. REST resources
 $routes = require __DIR__ . '/../api/v1/lib/routes.php';
@@ -57,6 +57,9 @@ $ok('the REST map names only real modules', !$bad, implode(', ', array_unique($b
 $ok('a project\'s tasks need Tasks as well', apiV1ModulesFor('projects', '/projects/4/tasks') === ['projects', 'tasks']);
 $ok('a task lookup needs Tasks', apiV1ModulesFor('reference', '/task-statuses') === ['tasks']);
 $ok('a ticket lookup needs nothing switchable', apiV1ModulesFor('reference', '/statuses') === []);
+$ok('a ticket\'s SLA needs the SLA feature', apiV1ModulesFor('ticket_sla', '/tickets/4/sla') === ['tickets', 'sla']);
+$ok('a ticket\'s time entries need Time tracking', apiV1ModulesFor('ticket_time_entries', '/tickets/4/time-entries') === ['tickets', 'time-tracking']);
+$ok('no Tickets feature shares a key with a module', !array_intersect(array_keys(TICKET_FEATURES), array_keys(getModuleRegistry())));
 
 // 2. Workflow triggers
 $unmapped = [];

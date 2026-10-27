@@ -265,8 +265,13 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     );
     // ⚠️ Threshold FIRST, then the scope arguments — positional placeholders,
     // and the scope clause is appended after the interval.
-    $tkPausedStmt->execute(array_merge([$pausedThresholdHours], $tkScopeArgs));
-    $tkPausedTooLong = (int)$tkPausedStmt->fetchColumn();
+    // Not counted while SLA is switched off for the install (GH #217): "paused" only
+    // means anything against an SLA clock. Zero raises no attention item.
+    $tkPausedTooLong = 0;
+    if (moduleIsEnabled($conn, 'sla')) {
+        $tkPausedStmt->execute(array_merge([$pausedThresholdHours], $tkScopeArgs));
+        $tkPausedTooLong = (int)$tkPausedStmt->fetchColumn();
+    }
 
     $tickets = [
         // A LIST of every open status, plus the true total. Replaces the three

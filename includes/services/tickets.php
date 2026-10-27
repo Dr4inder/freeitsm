@@ -1040,8 +1040,19 @@ class TicketsService
      *
      * @param array $in  minutes (required, above 0), notes, entry_at (ISO 8601; default now in UTC)
      */
+    /** Refuse a time-entry write while Time tracking is switched off for the install (GH #217). */
+    private static function requireTimeTrackingOn(PDO $conn): void
+    {
+        if (function_exists('moduleIsEnabled') && !moduleIsEnabled($conn, 'time-tracking')) {
+            throw new ServiceError('forbidden', 'module_disabled', moduleDisabledMessage('time-tracking'));
+        }
+    }
+
     public static function createTimeEntry(PDO $conn, ActorContext $ctx, int $ticketId, array $in): int
     {
+        // Time tracking switched off for the install (GH #217): refused here, in the
+        // service, so no caller can skip it - deleting an entry was never gated.
+        self::requireTimeTrackingOn($conn);
         self::loadTicket($conn, $ctx, $ticketId);   // 404
         $minutes = isset($in['minutes']) ? (int)$in['minutes'] : 0;
         if ($minutes <= 0) {
@@ -1066,6 +1077,7 @@ class TicketsService
      */
     public static function updateTimeEntry(PDO $conn, ActorContext $ctx, int $entryId, int $ticketId, array $in): void
     {
+        self::requireTimeTrackingOn($conn);   // GH #217
         self::loadTicket($conn, $ctx, $ticketId);   // 404
         $minutes = isset($in['minutes']) ? (int)$in['minutes'] : 0;
         if ($minutes <= 0) {
@@ -1099,6 +1111,7 @@ class TicketsService
      */
     public static function deleteTimeEntry(PDO $conn, ActorContext $ctx, int $entryId, ?int $ticketId, bool $restrictToOwner): void
     {
+        self::requireTimeTrackingOn($conn);   // GH #217
         if ($ticketId !== null) {
             self::loadTicket($conn, $ctx, $ticketId);   // 404
             $stmt = $conn->prepare("SELECT analyst_id FROM ticket_time_entries WHERE id = ? AND ticket_id = ? AND is_active = 1");

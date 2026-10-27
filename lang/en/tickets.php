@@ -2764,6 +2764,9 @@ return [
             'already_body'     => 'Thanks — we’ve already got your feedback for this ticket. Each survey link can only be used once.',
             'error_heading'    => 'Something went wrong',
             'error_body'       => 'We couldn’t save your response just now. Please try again in a minute, or reply to the original ticket email.',
+            // GH #217: CSAT switched off for the installation - neutral, says nothing about why.
+            'off_heading'      => 'We’re no longer collecting feedback',
+            'off_body'         => 'Thank you.',
             'ticket_line'      => 'Ticket',
             'intro'            => 'Hi {name}, thanks for letting us help. How would you rate the experience?',
             // Used when the requester record has no name to take a first name from.
@@ -3205,7 +3208,7 @@ return [
             'modes_heading' => '<strong>Two trigger modes &mdash; pick one</strong>',
             'mode_auto'   => '<strong>Auto on close</strong> &mdash; survey is queued automatically when a ticket transitions into any closed status. The analyst doesn\'t need to do anything &mdash; resolution drives the survey.',
             'mode_manual' => '<strong>Manual only</strong> &mdash; analyst clicks the ⭐ <strong>Feedback</strong> button in the ticket toolbar when they want to ask. Useful when you\'d rather decide ticket-by-ticket whether to invite feedback.',
-            'mode_off'    => '<strong>Off</strong> &mdash; feature disabled; no survey emails are sent.',
+            'mode_off'    => '<strong>Off</strong> &mdash; no surveys are sent. The CSAT page and the results stay; to remove CSAT altogether, switch it off under <strong>System &rarr; Modules &rarr; Availability</strong>.',
             'modes_choose'=> 'Choose under <strong>Tickets &rarr; Settings &rarr; CSAT</strong>. The manual button still works in <em>auto</em> mode &mdash; analysts can re-request feedback on a ticket that\'s already been surveyed if needed.',
             'template_heading' => '<strong>The email template</strong>',
             'template_body'    => 'The survey email content comes from the existing <strong>Email templates</strong> tab &mdash; create a template with event <strong>CSAT survey</strong> (the new event alongside <em>Ticket assigned</em> / <em>Ticket closed</em>) and embed the <code>[csat_link]</code> merge code wherever you want the rating URL to appear. Standard merge codes (<code>[requester_name]</code>, <code>[ticket_reference]</code>, <code>[analyst_name]</code>) are available as normal.',

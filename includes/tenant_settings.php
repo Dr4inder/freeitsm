@@ -161,15 +161,23 @@ function tenantSettingsForKey(PDO $conn, string $key): array
 const SETTING_TIME_TRACKING_UI  = 'time_tracking_enabled';
 const SETTING_TIME_TRACKING_API = 'time_tracking_api_enabled';
 
-/** Should the time-recording UI appear for a ticket belonging to this company? */
+/**
+ * Should the time-recording UI appear for a ticket belonging to this company?
+ *
+ * Both answers are no while Time tracking is switched off for the whole install
+ * (GH #217), whatever the company or the install-wide setting below says: that
+ * switch sits above these two, and switching back on restores what they said.
+ */
 function timeTrackingUiOn(PDO $conn, ?int $tenantId): bool
 {
+    if (function_exists('moduleIsEnabled') && !moduleIsEnabled($conn, 'time-tracking')) return false;
     return tenantSettingOn($conn, $tenantId, SETTING_TIME_TRACKING_UI, true);
 }
 
 /** Should the REST API serve time entries for a ticket belonging to this company? */
 function timeTrackingApiOn(PDO $conn, ?int $tenantId): bool
 {
+    if (function_exists('moduleIsEnabled') && !moduleIsEnabled($conn, 'time-tracking')) return false;   // GH #217
     return tenantSettingOn($conn, $tenantId, SETTING_TIME_TRACKING_API, true);
 }
 

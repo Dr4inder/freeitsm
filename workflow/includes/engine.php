@@ -270,10 +270,12 @@ class WorkflowEngine
         'project' => 'projects',
         'calendar_event' => 'calendar', 'calendar_category' => 'calendar',
         'network_diagram' => 'network-mapper',
+        // A Tickets feature with its own switch (slice 2): sla.warning / sla.breached.
+        'sla' => 'sla',
     ];
 
     /** The trigger segments that belong to Tickets (never switched off) - the test's other half. */
-    const TICKET_TRIGGER_SEGMENTS = ['ticket', 'sla', 'tracker', 'ticket_status', 'ticket_priority', 'ticket_type', 'ticket_origin'];
+    const TICKET_TRIGGER_SEGMENTS = ['ticket', 'tracker', 'ticket_status', 'ticket_priority', 'ticket_type', 'ticket_origin'];
 
     /** GH #217. The actions that belong to a switchable module; the rest are Tickets' or the engine's own. */
     const ACTION_MODULES = [

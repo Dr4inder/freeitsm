@@ -31,6 +31,17 @@ requireModuleAccess('tickets');
 $settingsManifest = settingsManifestFor('tickets');
 $conn             = connectToDatabase();
 $visibleTabs      = settingsVisibleTabs($conn, (int) $_SESSION['analyst_id'], $settingsManifest);
+// GH #217 slice 2: Tickets features switched off for the install. SLA keeps its tab
+// for the calendars alone (web chat's opening hours use them); the rest lose theirs.
+$slaOff = !moduleIsEnabled($conn, 'sla');
+$featureTabsOff = array_merge(
+    moduleIsEnabled($conn, 'csat') ? [] : ['csat'],
+    moduleIsEnabled($conn, 'time-tracking') ? [] : ['time-tracking'],
+    moduleIsEnabled($conn, 'rota') ? [] : ['rota', 'rota-locations']
+);
+if ($featureTabsOff) {
+    $visibleTabs = array_values(array_filter($visibleTabs, fn($tab) => !in_array($tab['id'], $featureTabsOff, true)));
+}
 // GH #217: no Checklists tab while Checklists is switched off for the install.
 if (!moduleIsEnabled($conn, 'checklists')) {
     $visibleTabs = array_values(array_filter($visibleTabs, fn($tab) => $tab['id'] !== 'checklists'));
@@ -150,6 +161,9 @@ function renderOversizeFields(string $px, bool $withLimits): void
     <script src="../../assets/js/tinymce/tinymce.min.js?v=8.10.0"></script>
     <style>
         /* Page-specific overrides for settings page */
+
+        /* SLA switched off for the install (GH #217): its columns and fields go. */
+        body.sla-off .sla-only { display: none; }
 
         /* Pin the header WITHOUT making it (or <body>) a positioned or flex
          * element:
@@ -673,7 +687,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
          above) and builds its own scroll shell one level down. -->
     <link rel="stylesheet" href="../../assets/css/mobile.css?v=196">
 </head>
-<body data-mobile-page="settings" data-mobile-shell="own">
+<body data-mobile-page="settings" data-mobile-shell="own"<?php echo $slaOff ? ' class="sla-off"' : ''; ?>>
     <div class="settings-shell">
     <?php include '../includes/header.php'; ?>
 
@@ -1050,7 +1064,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
                         <th><?php echo htmlspecialchars(t('tickets.settings.columns.name')); ?></th>
                         <th><?php echo htmlspecialchars(t('tickets.settings.columns.colour')); ?></th>
                         <th><?php echo htmlspecialchars(t('tickets.settings.columns.closed')); ?></th>
-                        <th><?php echo htmlspecialchars(t('tickets.settings.cols.pause_sla')); ?></th>
+                        <th class="sla-only"><?php echo htmlspecialchars(t('tickets.settings.cols.pause_sla')); ?></th>
                         <th><?php echo htmlspecialchars(t('tickets.settings.columns.default')); ?></th>
                         <th><?php echo htmlspecialchars(t('tickets.settings.columns.order')); ?></th>
                         <th><?php echo htmlspecialchars(t('tickets.settings.columns.status')); ?></th>
@@ -1102,6 +1116,9 @@ function renderOversizeFields(string $px, bool $withLimits): void
                 <?php echo t('tickets.settings.sla.intro'); ?>
             </p>
 
+            <?php if ($slaOff): ?>
+            <div class="settings-group"><p style="margin:0;"><strong><?php echo htmlspecialchars(moduleDisabledMessage('sla')); ?></strong> Switch it back on in System &rarr; Modules &rarr; Availability. The business calendars below stay, because web chat uses them for its opening hours.</p></div>
+            <?php else: ?>
             <!-- ===== Global SLA settings ===== -->
             <div class="settings-group">
                 <h3><?php echo htmlspecialchars(t('tickets.settings.sla.global_heading')); ?></h3>
@@ -1192,6 +1209,8 @@ function renderOversizeFields(string $px, bool $withLimits): void
                 </table>
             </div>
 
+            <?php endif; ?>
+
             <!-- ===== Business Calendars ===== -->
             <div class="settings-group">
                 <div class="section-header">
@@ -1216,6 +1235,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
                 </table>
             </div>
 
+            <?php if (!$slaOff): ?>
             <!-- ===== Breach Notifications ===== -->
             <div class="settings-group">
                 <div class="section-header">
@@ -1276,6 +1296,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     </tbody>
                 </table>
             </div>
+            <?php endif; /* !$slaOff */ ?>
         </div>
 
         <!-- ===== Breach Notification rule modal ===== -->
@@ -3987,7 +4008,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     <td><strong>${escapeHtml(s.name)}</strong></td>
                     <td>${swatch}</td>
                     <td>${closed}</td>
-                    <td>${pauseCell}</td>
+                    <td class="sla-only">${pauseCell}</td>
                     <td>${def}</td>
                     <td>${s.display_order}</td>
                     <td><span class="status-badge status-${s.is_active ? 'active' : 'inactive'}">${s.is_active ? 'Active' : 'Inactive'}</span></td>
@@ -4108,7 +4129,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             document.getElementById('itemDescriptionGroup').style.display = isColouredLookup ? 'none' : '';
             document.getElementById('itemColourGroup').style.display      = isColouredLookup ? '' : 'none';
             document.getElementById('itemClosedGroup').style.display      = isStatus ? '' : 'none';
-            document.getElementById('itemPausesSlaGroup').style.display   = isStatus ? '' : 'none';
+            document.getElementById('itemPausesSlaGroup').style.display   = isStatus && !document.body.classList.contains('sla-off') ? '' : 'none';   // GH #217
             document.getElementById('itemConfidentialGroup').style.display = type === 'department' ? '' : 'none';
             document.getElementById('itemDefaultGroup').style.display     = isColouredLookup ? '' : 'none';
         }
@@ -8217,6 +8238,8 @@ function renderOversizeFields(string $px, bool $withLimits): void
                 const data = await res.json();
                 if (!data.success) throw new Error(data.error || 'load failed');
                 slaData = { settings: data.settings || {}, priorities: data.priorities || [], calendars: data.calendars || [] };
+                // SLA switched off for the install (GH #217): only the calendars are on the tab.
+                if (document.body.classList.contains('sla-off')) { renderSlaCalendars(); return; }
                 renderSlaGlobalSettings();
                 renderSlaTargets();
                 renderSlaCalendars();

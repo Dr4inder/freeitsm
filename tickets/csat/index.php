@@ -30,6 +30,11 @@ $translationNamespaces = ['common', 'tickets'];
 $days = max(1, min(365, (int)($_GET['days'] ?? 30)));
 
 $conn = connectToDatabase();
+// GH #217: CSAT switched off for the install - back to the inbox.
+if (!moduleIsEnabled($conn, 'csat')) {
+    header('Location: ' . BASE_URL . 'tickets/');
+    exit;
+}
 
 // GH #157: every figure on this page follows the company switcher in the
 // header, like the ticket list - the company picked there, or every company

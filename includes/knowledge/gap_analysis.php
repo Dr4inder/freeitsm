@@ -391,7 +391,8 @@ function gapBulkRichness(PDO $conn, array $ticketIds): array
         }
     } catch (Throwable) { /* leave at zero */ }
 
-    try {
+    // Not while Time tracking is switched off for the install (GH #217).
+    if (moduleIsEnabled($conn, 'time-tracking')) try {
         foreach ($q("SELECT ticket_id, SUM(time_spent_minutes) AS m
                        FROM ticket_time_entries WHERE is_active = 1 AND ticket_id IN ($in) GROUP BY ticket_id") as $r) {
             $acc[(int)$r['ticket_id']]['minutes'] = (int)$r['m'];

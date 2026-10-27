@@ -93,6 +93,7 @@ $translationNamespaces = ['common', 'system'];
         .avail-name { font-size: 13px; color: var(--text, #333); }
         .avail-row.is-off .avail-name { color: var(--text-faint, #999); text-decoration: line-through; }
         .avail-lock { font-size: 11px; color: var(--text-muted, #666); }
+        .avail-sub { font-size: 13px; margin: 18px 0 4px; color: var(--text, #333); }
         .off-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--surface-3, #f1f5f9); color: var(--text-muted, #666); }
         .mod-row.is-off td { opacity: 0.6; }
 
@@ -121,6 +122,9 @@ $translationNamespaces = ['common', 'system'];
                 <h2 id="availability">Availability</h2>
                 <p class="avail-intro">Switch a module off for the <strong>whole installation</strong> if you do not use it. It disappears for everyone, administrators included - from the menus, from other modules' buttons and links, from the REST API, from workflows and from scheduled jobs. <strong>Nothing is deleted</strong>: switch it back on and it returns exactly as it was, with everyone's access unchanged.</p>
                 <div class="avail-grid" id="availGrid"></div>
+                <h3 class="avail-sub">Ticket features</h3>
+                <p class="avail-intro">Parts of Tickets you can switch off on their own. Tickets keeps working without any of them.</p>
+                <div class="avail-grid" id="availFeatures"></div>
             </div>
 
             <!-- Conflict policy -->
@@ -260,31 +264,51 @@ $translationNamespaces = ['common', 'system'];
     const isOff = key => (DATA.disabled || []).includes(key);
     function renderAvailability() {
         const locked = DATA.always_on || [];
-        document.getElementById('availGrid').innerHTML = DATA.modules.map(m => {
+        const row = m => {
             const off = isOff(m.key);
             const control = locked.includes(m.key)
                 ? '<span class="avail-lock">Always on</span>'
                 : `<label class="toggle-switch" title="${off ? 'Switched off' : 'On'}"><input type="checkbox" ${off ? '' : 'checked'} onchange="setAvailability('${m.key}', this)"><span class="toggle-slider"></span></label>`;
             return `<div class="avail-row${off ? ' is-off' : ''}"><span class="avail-name">${escapeHtml(m.name)}</span>${control}</div>`;
-        }).join('');
+        };
+        document.getElementById('availGrid').innerHTML = DATA.modules.map(row).join('');
+        document.getElementById('availFeatures').innerHTML = (DATA.features || []).map(row).join('');
     }
 
+    // What switching off says, per Tickets feature (the modules share one sentence).
+    const FEATURE_OFF_TEXT = {
+        csat: 'No surveys are sent, the CSAT page and Request feedback button go, and old survey links say feedback is no longer being collected.',
+        sla: 'Clocks, breach warnings and notifications, the SLA settings and sla.* workflow triggers stop. SLA calendars stay editable - web chat uses them for its opening hours.',
+        'time-tracking': 'Recording time goes from every ticket, the REST API and the settings. Entries already logged are kept.',
+        rota: 'The duty rota page and its settings go, the War Room bot stops answering who is on call, and project capacity stops counting rota shifts.'
+    };
+
     async function setAvailability(key, box) {
-        const m = DATA.modules.find(x => x.key === key);
+        const m = DATA.modules.find(x => x.key === key) || (DATA.features || []).find(x => x.key === key);
         const enabled = box.checked;
+        let sendMissed = false;
         if (!enabled) {
             const ok = await showConfirm({
                 title: 'Switch off ' + m.name + '?',
-                message: m.name + ' will disappear for everyone, including you: menus, buttons in other modules, the REST API, workflows and scheduled jobs. Nothing is deleted - switch it back on and it returns as it was.'
+                message: (FEATURE_OFF_TEXT[key] ? FEATURE_OFF_TEXT[key] + ' Nothing is deleted - switch it back on and it returns as it was.' : m.name + ' will disappear for everyone, including you: menus, buttons in other modules, the REST API, workflows and scheduled jobs. Nothing is deleted - switch it back on and it returns as it was.')
                     // A project's plan is made of task rows and belongs to Projects, so it stays (GH #217).
                     + (key === 'tasks' ? ' Project plans keep working inside Projects.' : ''),
                 okLabel: 'Switch off', okClass: 'danger'
             });
             if (!ok) { box.checked = true; return; }
+        } else if (key === 'sla') {
+            // SLA back on: the one choice here. Tickets that crossed a warning or a
+            // breach while it was off are either announced now, all together, or
+            // recorded as announced and left quiet (the default - GH #217).
+            sendMissed = await showConfirm({
+                title: 'Send what was missed?',
+                message: 'Some tickets may have passed an SLA warning or breach while SLA was off. Send those notifications and workflow triggers now, all at once, or skip them? Either way, everything from now on is sent as normal.',
+                okLabel: 'Send', cancelLabel: 'Skip'
+            });
         }
         const d = await (await fetch(API + 'save_module_availability.php', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ module_key: key, enabled })
+            body: JSON.stringify({ module_key: key, enabled, send_missed: sendMissed })
         })).json();
         if (!d.success) { showToast('Failed: ' + (d.error || ''), 'error'); box.checked = !enabled; return; }
         DATA.disabled = d.disabled;

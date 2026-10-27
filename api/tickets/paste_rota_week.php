@@ -42,6 +42,7 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('tickets');
+requireModuleOnJson(connectToDatabase(), 'rota');   // GH #217: not while the duty rota is switched off
 
 $input = json_decode(file_get_contents('php://input'), true);
 if (!$input || empty($input['week_start'])) {

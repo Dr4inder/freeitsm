@@ -89,7 +89,8 @@ function projectCapacity(PDO $conn, int $viewerId, int $weeks = 4): array
     $several = (int)($set['project_capacity_projects'] ?? 3);
     // Projects -> Settings -> Health (3.3.0): which days are working days, and whether rota shifts count.
     $workdays = array_map('intval', explode(',', (string)($set['project_capacity_days'] ?? '1,2,3,4,5'))) ?: [1, 2, 3, 4, 5];
-    $countDesk = ($set['project_capacity_desk'] ?? '1') === '1';
+    $countDesk = ($set['project_capacity_desk'] ?? '1') === '1'
+        && moduleIsEnabled($conn, 'rota');   // GH #217: no desk hours while the duty rota is switched off
 
     $today = gmdate('Y-m-d');
     $monday = gmdate('Y-m-d', strtotime($today . ' 00:00:00 UTC') - ((int)gmdate('N', strtotime($today . ' 00:00:00 UTC')) - 1) * 86400);

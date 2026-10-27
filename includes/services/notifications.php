@@ -427,7 +427,11 @@ class NotificationsService
         foreach (self::ENTITY_MODULES as $type => $module) {
             if (!moduleIsEnabled($conn, $module)) $hidden[] = $conn->quote($type);
         }
-        return $hidden ? ' AND (entity_type IS NULL OR entity_type NOT IN (' . implode(',', $hidden) . '))' : '';
+        $clause = $hidden ? ' AND (entity_type IS NULL OR entity_type NOT IN (' . implode(',', $hidden) . '))' : '';
+        // SLA (a Tickets feature, slice 2): its notifications are about tickets, so
+        // they are picked out by event type instead.
+        if (!moduleIsEnabled($conn, 'sla')) $clause .= " AND event_type NOT IN ('sla.warning', 'sla.breached')";
+        return $clause;
     }
 
     /**

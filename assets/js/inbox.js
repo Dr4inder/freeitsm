@@ -3368,10 +3368,10 @@ function displayEmail(email, recordings) {
                 <span>${escapeHtml(tf('tickets.actions.export', 'Export'))}</span>
             </button>
             ${buildWriteUpButton(email)}
-            <button class="action-btn pane-secondary" onclick="requestCsatSurvey()" title="Send a satisfaction survey to the requester">
+            ${ticketModuleOn('csat') ? `<button class="action-btn pane-secondary" onclick="requestCsatSurvey()" title="Send a satisfaction survey to the requester">
                 <span class="action-btn-icon">⭐</span>
                 <span>${escapeHtml(t('tickets.actions.request_feedback'))}</span>
-            </button>
+            </button>` : ''}
             <button class="action-btn action-btn-danger pane-secondary" onclick="deleteTicket()">
                 <span class="action-btn-icon">🗑️</span>
                 <span>${escapeHtml(t('tickets.actions.delete'))}</span>

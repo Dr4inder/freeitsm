@@ -186,6 +186,7 @@ function jobRegistry(): array
     $jobModules = [
         'lms_reminders' => 'lms', 'domains' => 'domains', 'task_recurrence' => 'tasks',
         'webhook_deliveries' => 'workflow', 'proxmox_sync' => 'assets', 'vcloud_sync' => 'assets',
+        'sla_breach' => 'sla',   // a Tickets feature (slice 2)
     ];
     foreach ($jobs as $k => &$j) {
         $j['key']         = $k;

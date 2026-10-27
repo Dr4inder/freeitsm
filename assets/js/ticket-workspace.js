@@ -152,8 +152,12 @@ window.TicketWorkspace = (() => {
      * holder that activate() fills on first opening.
      */
     function render(parts) {
+        // The Time tab holds the SLA clocks and the time entries; with both switched
+        // off for the install (GH #217) there is nothing to show, so no tab.
+        const on = window.TICKETS_MODULE_ON || {};
+        const timeOff = on.sla === false && on['time-tracking'] === false;
         const tabs = sections.map(section => `<button type="button" class="tw-tab" id="tw-tab-${section}"
-            data-section="${section}" role="tab" aria-controls="tw-panel-${section}"
+            data-section="${section}" role="tab" aria-controls="tw-panel-${section}"${section === 'time' && timeOff ? ' hidden' : ''}
             aria-selected="false" tabindex="-1">${escapeHtml(text(section))}</button>`).join('');
         const panels = sections.map(section => `<section class="tw-panel" id="tw-panel-${section}"
             data-section="${section}" role="tabpanel" aria-labelledby="tw-tab-${section}" hidden>

@@ -269,7 +269,9 @@ function writeupTicketBundle(PDO $conn, int $ticketId): ?array
     $notes = $st->fetchAll(PDO::FETCH_ASSOC);
 
     $minutes = 0;
-    try {
+    // Not while Time tracking is switched off for the install (GH #217): logged
+    // minutes nobody can see should not shape a write-up.
+    if (moduleIsEnabled($conn, 'time-tracking')) try {
         $st = $conn->prepare(
             "SELECT COALESCE(SUM(time_spent_minutes), 0)
                FROM ticket_time_entries

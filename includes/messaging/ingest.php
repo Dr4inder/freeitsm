@@ -71,7 +71,8 @@ function ingestInboundMessage(PDO $conn, array $channel, array $msg): array
             'message_id'   => (string) ($msg['csat']['message_id'] ?? ''),
             'message_text' => (string) ($msg['csat']['message_text'] ?? ''),
         ];
-    } elseif (!$hasMedia && preg_match('/^[1-5]$/', $body)) {
+    } elseif (!$hasMedia && preg_match('/^[1-5]$/', $body) && moduleIsEnabled($conn, 'csat')) {
+        // GH #217: with CSAT switched off a bare digit is an ordinary message.
         $pending = csatPendingRequestForChat($conn, (int) $channel['id'], $from);
         if ($pending !== null) {
             $csatReply = ['response_id' => $pending, 'rating' => (int) $body, 'button' => false];
@@ -816,7 +817,11 @@ function messagingRecordCsatReply(PDO $conn, array $channel, string $chatId, str
     require_once __DIR__ . '/../csat.php';
     require_once __DIR__ . '/../i18n.php';
 
-    $recorded = csatResponseBelongsToChat($conn, $reply['response_id'], (int) $channel['id'], $chatId)
+    // GH #217: CSAT switched off - a button press is swallowed: nothing recorded,
+    // no thanks, no edit to the question; Telegram's spinner is still stopped below.
+    $csatOn = moduleIsEnabled($conn, 'csat');
+    $recorded = $csatOn
+        && csatResponseBelongsToChat($conn, $reply['response_id'], (int) $channel['id'], $chatId)
         && csatRecordRating($conn, $reply['response_id'], $reply['rating']);
 
     $provider = null;
@@ -837,7 +842,7 @@ function messagingRecordCsatReply(PDO $conn, array $channel, string $chatId, str
         // recorded, or, on a second press of an old question, the first one.
         // Only for this chat's own survey; an unanswered (or not ours) one
         // keeps its buttons.
-        $stood = csatResponseBelongsToChat($conn, $reply['response_id'], (int) $channel['id'], $chatId)
+        $stood = $csatOn && csatResponseBelongsToChat($conn, $reply['response_id'], (int) $channel['id'], $chatId)
             ? csatStoredRating($conn, $reply['response_id'])
             : null;
         if ($stood !== null && ($reply['message_id'] ?? '') !== '') {

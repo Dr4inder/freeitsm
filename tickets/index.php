@@ -31,6 +31,11 @@ foreach (['problems', 'changes', 'assets', 'cmdb', 'tasks', 'checklists', 'knowl
         $ticketsModuleOn[$__m] = true;   // the endpoints still refuse; the button just fails
     }
 }
+// And the Tickets features with their own switch (slice 2) - availability only:
+// who may use them is unchanged.
+foreach (array_keys(TICKET_FEATURES) as $__f) {
+    $ticketsModuleOn[$__f] = portalModuleOn($__f);
+}
 // The ticket workspace (PR #211): the install mode and this analyst's own switch,
 // handed to assets/js/ticket-workspace.js as window.TICKET_WORKSPACE. can_write
 // decides whether More -> Make workspace is offered; Tickets has no Read only
@@ -790,10 +795,12 @@ $translationNamespaces = ['common', 'tickets'];
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             <span><?php echo htmlspecialchars(t('tickets.context.schedule')); ?></span>
         </button>
+        <?php if ($ticketsModuleOn['time-tracking']): /* GH #217 */ ?>
         <button class="ticket-context-menu-item" type="button" onclick="openContextRecordTime()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span><?php echo htmlspecialchars(t('tickets.context.record_time')); ?></span>
         </button>
+        <?php endif; ?>
         <!-- Status submenu parent. Hover/focus to reveal the flyout populated
              at menu-open time from the active ticket_statuses. -->
         <div class="ticket-context-menu-item ticket-context-menu-parent" role="menuitem" tabindex="0">
@@ -1096,11 +1103,11 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../checklists/search_scoring.js?v=1"></script>
     <script src="../checklists/ticket_view.js?v=13"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
-    <script src="../assets/js/ticket-workspace.js?v=3"></script>
+    <script src="../assets/js/ticket-workspace.js?v=4"></script>
     <script src="../assets/js/data-table.js?v=7"></script>
-    <script src="../assets/js/inbox.js?v=167"></script>
+    <script src="../assets/js/inbox.js?v=168"></script>
     <script src="../assets/js/tickets-table.js?v=1"></script>
-    <script src="../assets/js/mobile.js?v=84"></script>
+    <script src="../assets/js/mobile.js?v=85"></script>
     <script>
     // Auto-check mailboxes every 60 seconds - and refresh the inbox whenever
     // ANYTHING new has arrived, however it came in.
