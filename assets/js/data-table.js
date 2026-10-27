@@ -12,7 +12,15 @@
  *   - its COLUMNS catalogue (the single source of truth for the grid)
  *   - how to load() its rows
  *   - the accent colour + a preference key + the export filename
- *   - optionally: onSaveCell (inline editing), onRowClick, getLookups, pdf
+ *   - optionally: onSaveCell (inline editing), onRowClick, rowOpen, getLookups, pdf
+ *
+ * rowOpen (GH #219) - an "open" link at the start of every row, for a table whose
+ * cells are edited in place and so cannot also open the record on a click:
+ *   { href: row => url, onOpen?: (row, event) => void, label?: 'Open' }
+ * It is a real link to href, so Ctrl / middle-click / "open in new tab" work as in
+ * any page; a plain left click calls onOpen instead when one is given (a panel that
+ * keeps the analyst's place). Not a column: it is not sorted, filtered, chosen,
+ * reordered or exported.
  *
  * Styling is shared (assets/css/data-table.css); the accent is injected at
  * runtime onto :root as --dt-accent so even body-appended popovers pick it up.
@@ -84,6 +92,7 @@
         const defaultSort = config.defaultSort || { key: columns[0].key, dir: 'asc' };
         const rowId = config.rowId || (r => r.id);
         const editable = typeof config.onSaveCell === 'function';
+        const openLabel = (config.rowOpen && config.rowOpen.label) || 'Open';   // GH #219
 
         // --- State ----------------------------------------------------
         let allRows = [];
@@ -894,7 +903,7 @@
         function renderHead() {
             const head = byId(els.head);
             const cols = visibleColumns();
-            head.innerHTML = `<tr>${cols.map(col => {
+            head.innerHTML = `<tr>${config.rowOpen ? '<th class="dt-open-col" aria-label="' + esc(openLabel) + '"></th>' : ''}${cols.map(col => {
                 const isSorted = sort.key === col.key;
                 const arrow = isSorted ? (sort.dir === 'asc' ? '▲' : '▼') : '↕';
                 const sortedClass = isSorted ? ' sorted' : '';
@@ -914,7 +923,7 @@
                     </th>`;
             }).join('')}</tr>`;
 
-            head.querySelectorAll('th').forEach(th => {
+            head.querySelectorAll('th[data-col-key]').forEach(th => {
                 const key = th.dataset.colKey;
                 if (colByKey[key].filterable === false) th.querySelector('.dt-filter-btn').hidden = true;
                 th.querySelector('.dt-th-content').addEventListener('click', e => {
@@ -967,20 +976,47 @@
             }
 
             if (rows.length === 0) {
-                body.innerHTML = `<tr><td colspan="${cols.length || 1}" class="dt-empty">No ${noun}s match the current filters.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="${(cols.length || 1) + (config.rowOpen ? 1 : 0)}" class="dt-empty">No ${noun}s match the current filters.</td></tr>`;
                 config.onRowsRendered?.(rows);
                 return;
             }
 
             const clickable = typeof config.onRowClick === 'function' ? ' dt-clickable' : '';
             body.innerHTML = rows.map(row => {
-                const tds = cols.map(col => renderCell(row, col)).join('');
+                const tds = (config.rowOpen ? renderOpenCell(row) : '') + cols.map(col => renderCell(row, col)).join('');
                 return `<tr class="dt-row${clickable}" data-id="${esc(rowId(row))}">${tds}</tr>`;
             }).join('');
 
             if (editable) wireEditControls(body);
             if (clickable) wireRowClicks(body, rows);
+            if (config.rowOpen) wireOpenLinks(body);
             config.onRowsRendered?.(rows);
+        }
+
+        /** The rowOpen link cell (GH #219): a real link, so a new tab works like anywhere else. */
+        function renderOpenCell(row) {
+            return `<td class="dt-open-col"><a class="dt-open" href="${esc(config.rowOpen.href(row))}" data-id="${esc(rowId(row))}"
+                title="${esc(openLabel)}" aria-label="${esc(openLabel)}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"></path>
+                <path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg></a></td>`;
+        }
+
+        /**
+         * A plain left click on an open link calls rowOpen.onOpen and stays on the page;
+         * any other click (Ctrl, Shift, middle, keyboard Enter with a modifier) is left
+         * to the browser, which follows or opens the link as usual.
+         */
+        function wireOpenLinks(body) {
+            if (typeof config.rowOpen.onOpen !== 'function') return;
+            body.querySelectorAll('a.dt-open').forEach(a => {
+                a.addEventListener('click', e => {
+                    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+                    const row = allRows.find(r => String(rowId(r)) === String(a.dataset.id));
+                    if (!row) return;
+                    e.preventDefault();
+                    config.rowOpen.onOpen(row, e);
+                });
+            });
         }
 
         /** Returns one cell's HTML - plain text, or an input or select for an editable column. */

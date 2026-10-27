@@ -2704,7 +2704,13 @@ body.module-read-only .tp-remove { display: none !important; }
    what will be refused. */
 body.module-read-only #detailPanelBody input:not([type="search"]),
 body.module-read-only #detailPanelBody select,
-body.module-read-only #detailPanelBody textarea { pointer-events: none; opacity: .75; }
+body.module-read-only #detailPanelBody textarea,
+/* GH #219: the quick-look panel and the table's in-place editors were offered to a
+   read-only analyst too - every save was refused, but the page invited them. */
+body.module-read-only #tqBody input:not([type="search"]),
+body.module-read-only #tqBody select,
+body.module-read-only #tqBody textarea,
+body.module-read-only .dt-edit { pointer-events: none; opacity: .75; }
 body.module-read-only .column-add-btn,
 body.module-read-only .quick-add-container,
 body.module-read-only [onclick^="deleteCurrentTask"],

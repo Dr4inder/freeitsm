@@ -291,6 +291,9 @@ $translationNamespaces = ['common', 'tasks'];
                         </div>
                     </div>
 
+                    <h4><?php echo htmlspecialchars(t('tasks.help.table_open_heading')); ?></h4>
+                    <p><?php echo t('tasks.help.table_open_body'); ?></p>
+
                     <h4><?php echo htmlspecialchars(t('tasks.help.table_edit_heading')); ?></h4>
                     <p><?php echo t('tasks.help.table_edit_body'); ?></p>
 

@@ -143,6 +143,10 @@ table.dt-table {
 .dt-table tbody td:last-child { border-right: none; }
 .dt-table tbody tr:hover { background: var(--surface-2, #fafbfc); }
 .dt-table tbody tr.dt-clickable { cursor: pointer; }
+/* rowOpen (GH #219): the narrow open-link column at the start of each row. */
+.dt-table .dt-open-col { width: 28px; padding-left: 6px; padding-right: 0; }
+.dt-open { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; color: var(--text-muted, #666); }
+.dt-open:hover, .dt-open:focus-visible { color: var(--dt-accent, var(--accent)); background: var(--surface-hover, #f1f5f9); }
 
 /* Drag-reorder affordance on header cells */
 .dt-table thead th.dt-dragging { opacity: 0.4; }
