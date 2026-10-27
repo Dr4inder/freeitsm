@@ -213,9 +213,39 @@ window.TicketWorkspace = (() => {
                 if (next >= 0) { event.preventDefault(); activate(sections[next], true); }
             });
         });
+        watchWorkEmpty(pane);
         // ?section=work and the like open straight on a tab.
         const requested = new URLSearchParams(location.search).get('section');
         activate(sections.includes(requested) ? requested : active);
+    }
+
+    /**
+     * The Work tab's "nothing here yet" note, and how to add something. Shown
+     * while the ticket has no checklist (its container is hidden when there is
+     * none - checklists/ticket_view.js), no linked task and no task open. An
+     * observer keeps it right as the loaders fill the tab in, so none of them has
+     * to know the note exists.
+     */
+    let workObserver = null;
+    function watchWorkEmpty(pane) {
+        workObserver?.disconnect();
+        const panel = pane.querySelector('#tw-panel-work');
+        if (!panel) return;
+        const note = element('p', 'tw-empty', text('work_empty'));
+        panel.append(note);
+        const update = () => {
+            const checklists = panel.querySelector('#ticketChecklistContainer');
+            const hasChecklist = checklists && !checklists.hidden && checklists.childElementCount > 0;
+            const hasTasks = panel.querySelector('#twTaskList')?.childElementCount > 0
+                || panel.querySelector('#twTaskArea')?.childElementCount > 0;
+            // Only when it changes: setting `hidden` is itself a mutation this
+            // observer sees, so setting it every time would never stop.
+            const hide = !!(hasChecklist || hasTasks);
+            if (note.hidden !== hide) note.hidden = hide;
+        };
+        update();
+        workObserver = new MutationObserver(update);
+        workObserver.observe(panel, {childList: true, subtree: true, attributes: true, attributeFilter: ['hidden']});
     }
 
     /** Show one tab. History loads the audit trail the first time it is opened. */
@@ -563,6 +593,7 @@ window.TicketWorkspace = (() => {
         /** The reading pane is being emptied or given to something else (no ticket, a multi-selection summary). */
         dispose() {
             disposeTask();
+            workObserver?.disconnect();
             root?.classList.remove('ticket-workspace');
             document.body.classList.remove('ticket-workspace-mode');
             deferredRender = null;

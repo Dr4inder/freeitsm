@@ -3684,6 +3684,7 @@ return [
         'links'           => 'Links',
         'time'            => 'Time and SLA',
         'history'         => 'History',
+        'work_empty'      => 'No checklists or tasks yet. Use Checklist, or Link to… → Task, to add one.',
         'loading'         => 'Loading…',
         'unavailable'     => 'This section could not be loaded. Refresh to try again.',
         'sla_unavailable' => 'SLA information is unavailable',

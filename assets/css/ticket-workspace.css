@@ -82,6 +82,9 @@
 .ticket-workspace .tw-panel .email-body:empty,
 .ticket-workspace .pane-strips:empty { display: none; }
 .ticket-workspace .tw-panel .links-strip { margin: 0; }
+/* The Work tab's "nothing here yet" note (watchWorkEmpty). */
+.ticket-workspace .tw-empty { margin: 0; color: var(--text-muted); }
+.ticket-workspace .tw-empty[hidden] { display: none; }
 /* A section's loading / could-not-load notice (setSectionState). */
 .ticket-workspace .tw-state { padding: 12px; margin-bottom: 12px; border: 1px solid var(--border); color: var(--text-muted); }
 .ticket-workspace .tw-state[data-state="error"] { border-inline-start: 3px solid var(--danger, var(--accent)); }

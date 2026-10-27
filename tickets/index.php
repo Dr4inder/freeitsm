@@ -48,7 +48,7 @@ $translationNamespaces = ['common', 'tickets'];
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/ticket-fields.css?v=1">
     <link rel="stylesheet" href="../assets/css/reading-pane.css?v=2">
-    <link rel="stylesheet" href="../assets/css/ticket-workspace.css?v=2">
+    <link rel="stylesheet" href="../assets/css/ticket-workspace.css?v=3">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
     <link rel="stylesheet" href="../assets/css/data-table.css?v=5">
     <link rel="stylesheet" href="../assets/css/tickets-table.css?v=2">
@@ -1074,7 +1074,7 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../checklists/search_scoring.js?v=1"></script>
     <script src="../checklists/ticket_view.js?v=11"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
-    <script src="../assets/js/ticket-workspace.js?v=2"></script>
+    <script src="../assets/js/ticket-workspace.js?v=3"></script>
     <script src="../assets/js/data-table.js?v=7"></script>
     <script src="../assets/js/inbox.js?v=165"></script>
     <script src="../assets/js/tickets-table.js?v=1"></script>
