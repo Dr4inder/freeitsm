@@ -65,10 +65,10 @@ $translationNamespaces = ['common', 'tickets'];
     <link rel="stylesheet" href="../assets/css/inbox.css?v=80">
     <link rel="stylesheet" href="../assets/css/ticket-fields.css?v=1">
     <link rel="stylesheet" href="../assets/css/reading-pane.css?v=3">
-    <link rel="stylesheet" href="../assets/css/ticket-workspace.css?v=3">
+    <link rel="stylesheet" href="../assets/css/ticket-workspace.css?v=4">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=196">
-    <link rel="stylesheet" href="../assets/css/data-table.css?v=5">
-    <link rel="stylesheet" href="../assets/css/tickets-table.css?v=2">
+    <link rel="stylesheet" href="../assets/css/data-table.css?v=7">
+    <link rel="stylesheet" href="../assets/css/tickets-table.css?v=3">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <?php
@@ -90,7 +90,7 @@ $translationNamespaces = ['common', 'tickets'];
     <?php include 'includes/header.php'; ?>
     <?php require_once __DIR__ . '/../includes/action_row.php';
           renderActionRow(t('tickets.nav.inbox'), [actionRowNew('openNewTicketModal()', t('tickets.list.new_ticket_btn'))],
-              ['extra' => ticketListSelector($ticketListLayout)]); ?>
+              ['extra' => '<button type="button" id="ticketTableBack" class="action-row-btn" hidden onclick="TicketTable.backToList()" title="' . htmlspecialchars(t('tickets.queue.back_title')) . '">' . htmlspecialchars(t('tickets.queue.back')) . '</button>' . ticketListSelector($ticketListLayout)]); ?>
 
     <div class="main-container">
         <!-- Folder Navigation -->
@@ -190,6 +190,10 @@ $translationNamespaces = ['common', 'tickets'];
                 <div class="reading-pane-empty"><?php echo htmlspecialchars(t('tickets.list.select_folder')); ?></div>
             </div>
         </div>
+
+        <div id="ticketTableSplitter" class="ticket-table-splitter" role="separator" tabindex="0" hidden
+             aria-orientation="vertical" aria-controls="ticketTableContainer readingPane"
+             aria-label="<?php echo htmlspecialchars(t('tickets.queue.resize')); ?>"></div>
 
         <!-- Reading Pane -->
         <div class="reading-pane" id="readingPane">
@@ -1104,9 +1108,9 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../checklists/ticket_view.js?v=13"></script>
     <script src="../assets/js/ticket-fields.js?v=2"></script>
     <script src="../assets/js/ticket-workspace.js?v=4"></script>
-    <script src="../assets/js/data-table.js?v=7"></script>
-    <script src="../assets/js/inbox.js?v=168"></script>
-    <script src="../assets/js/tickets-table.js?v=1"></script>
+    <script src="../assets/js/data-table.js?v=9"></script>
+    <script src="../assets/js/inbox.js?v=169"></script>
+    <script src="../assets/js/tickets-table.js?v=2"></script>
     <script src="../assets/js/mobile.js?v=85"></script>
     <script>
     // Auto-check mailboxes every 60 seconds - and refresh the inbox whenever
